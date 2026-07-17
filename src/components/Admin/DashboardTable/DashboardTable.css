@@ -1,0 +1,32 @@
+.dashboard-table{
+
+width:100%;
+
+margin-top:30px;
+
+background:white;
+
+border-collapse:collapse;
+
+box-shadow:0 3px 10px rgba(0,0,0,.1);
+
+}
+
+.dashboard-table th,
+.dashboard-table td{
+
+padding:18px;
+
+border:1px solid #ddd;
+
+text-align:left;
+
+}
+
+.dashboard-table th{
+
+background:#5fd46d;
+
+color:white;
+
+}

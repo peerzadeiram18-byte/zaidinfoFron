@@ -1,0 +1,91 @@
+.add-category-page{
+
+padding:30px;
+
+background:#f5f7fb;
+
+min-height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:flex-start;
+
+}
+
+.category-box{
+
+width:600px;
+
+background:white;
+
+padding:30px;
+
+border-radius:10px;
+
+box-shadow:0 0 10px rgba(0,0,0,.1);
+
+}
+
+.category-box h2{
+
+margin-bottom:20px;
+
+}
+
+.category-box form{
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
+}
+
+.category-box input,
+
+.category-box textarea{
+
+padding:12px;
+
+border:1px solid #ccc;
+
+border-radius:6px;
+
+font-size:15px;
+
+}
+
+.category-box textarea{
+
+height:120px;
+
+resize:none;
+
+}
+
+.category-box button{
+
+padding:12px;
+
+background:#0d6efd;
+
+color:white;
+
+border:none;
+
+border-radius:6px;
+
+cursor:pointer;
+
+font-size:16px;
+
+}
+
+.category-box button:hover{
+
+background:#084298;
+
+}

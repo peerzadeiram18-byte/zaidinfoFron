@@ -1,0 +1,133 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.employee-list-page{
+
+    width:95%;
+    margin:30px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 5px 20px rgba(0,0,0,.1);
+
+}
+
+.employee-list-page h2{
+
+    text-align:center;
+    color:#0d6efd;
+    margin-bottom:25px;
+
+}
+
+.employee-list-page table{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
+
+.employee-list-page table thead{
+
+    background:#0d6efd;
+    color:white;
+
+}
+
+.employee-list-page table th{
+
+    padding:15px;
+    font-size:16px;
+    text-align:left;
+
+}
+
+.employee-list-page table td{
+
+    padding:14px;
+    border-bottom:1px solid #ddd;
+    font-size:15px;
+
+}
+
+.employee-list-page table tbody tr:hover{
+
+    background:#f5f7ff;
+
+}
+
+.employee-list-page table tbody tr:nth-child(even){
+
+    background:#fafafa;
+
+}
+
+@media(max-width:768px){
+
+.employee-list-page{
+
+overflow:auto;
+
+}
+
+.employee-list-page table{
+
+min-width:700px;
+
+}
+
+}
+
+
+.employee-top{
+
+display:flex;
+
+justify-content:flex-end;
+
+margin-bottom:20px;
+
+}
+
+.employee-top button{
+
+background:#0d6efd;
+
+color:#fff;
+
+border:none;
+
+padding:10px 18px;
+
+border-radius:6px;
+
+cursor:pointer;
+
+font-size:15px;
+
+}
+
+.employee-top button:hover{
+
+background:#084ec2;
+
+}
+
+table select{
+
+padding:8px;
+
+border-radius:6px;
+
+border:1px solid #ccc;
+
+font-size:14px;
+
+cursor:pointer;
+
+width:130px;
+
+}

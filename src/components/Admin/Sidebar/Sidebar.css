@@ -1,0 +1,45 @@
+.sidebar{
+
+width:250px;
+
+background:#222;
+
+color:white;
+
+padding:30px 20px;
+
+}
+
+.sidebar h2{
+
+text-align:center;
+
+margin-bottom:40px;
+
+color:#5fd46d;
+
+}
+
+.sidebar ul{
+
+list-style:none;
+
+}
+
+.sidebar li{
+
+padding:15px;
+
+cursor:pointer;
+
+border-radius:8px;
+
+margin-bottom:10px;
+
+}
+
+.sidebar li:hover{
+
+background:#5fd46d;
+
+}

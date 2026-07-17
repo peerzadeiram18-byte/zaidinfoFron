@@ -1,0 +1,101 @@
+.add-brand-page{
+
+padding:30px;
+
+display:flex;
+
+justify-content:center;
+
+}
+
+.brand-box{
+
+width:600px;
+
+background:#fff;
+
+padding:25px;
+
+border-radius:10px;
+
+box-shadow:0 0 10px rgba(0,0,0,.1);
+
+}
+
+.brand-box h2{
+
+margin-bottom:20px;
+
+}
+
+.brand-box form{
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
+}
+
+.brand-box input,
+
+.brand-box textarea,
+
+.brand-box select{
+
+padding:12px;
+
+font-size:15px;
+
+border:1px solid #ddd;
+
+border-radius:6px;
+
+outline:none;
+
+}
+
+.brand-box textarea{
+
+height:120px;
+
+resize:none;
+
+}
+
+.brand-box button{
+
+padding:12px;
+
+background:#007bff;
+
+color:#fff;
+
+border:none;
+
+border-radius:6px;
+
+cursor:pointer;
+
+font-size:16px;
+
+}
+
+.brand-box button:hover{
+
+background:#0056b3;
+
+}
+
+.brand-preview{
+
+    width:170px;
+    height:170px;
+    object-fit:cover;
+    border-radius:10px;
+    border:1px solid #ddd;
+    display:block;
+    margin:15px auto;
+
+}

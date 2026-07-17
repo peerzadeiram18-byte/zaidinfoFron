@@ -1,0 +1,145 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f7fc;
+}
+
+/* Full Page */
+
+.register-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #0f172a, #1d4ed8);
+}
+
+/* Register Box */
+
+.register-box {
+  width: 100%;
+  max-width: 470px;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+/* Heading */
+
+.register-box h2 {
+  text-align: center;
+  color: #1d4ed8;
+  margin-bottom: 30px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+/* Form */
+
+.register-box form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Inputs */
+
+.register-box input {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.register-box input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 8px rgba(37,99,235,.25);
+}
+
+/* Placeholder */
+
+.register-box input::placeholder {
+  color: #888;
+}
+
+/* Button */
+
+.register-box button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.register-box button:hover {
+  background: #1e40af;
+}
+
+.register-box button:disabled {
+  background: #8caef8;
+  cursor: not-allowed;
+}
+
+/* Bottom Text */
+
+.bottom-text {
+  text-align: center;
+  margin-top: 25px;
+  color: #555;
+  font-size: 15px;
+}
+
+.bottom-text span {
+  color: #2563eb;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 6px;
+  transition: .3s;
+}
+
+.bottom-text span:hover {
+  text-decoration: underline;
+  color: #1e40af;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .register-box {
+    padding: 25px;
+  }
+
+  .register-box h2 {
+    font-size: 24px;
+  }
+
+  .register-box input {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .register-box button {
+    padding: 13px;
+    font-size: 15px;
+  }
+
+}
