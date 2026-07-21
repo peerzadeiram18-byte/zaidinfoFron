@@ -10,7 +10,19 @@ import {
 
 } from "../../services/productService";
 
+import { addToCart } from "../../services/cartService";
+import { useNavigate } from "react-router-dom";
+import {
+
+addToWishlist
+
+} from "../../services/wishlistService";
+
+
 const Shop = () => {
+
+    const navigate = useNavigate();
+
 
     const [products, setProducts] = useState([]);
 
@@ -34,36 +46,37 @@ const Shop = () => {
 }, []);
 
 const loadProducts = async () => {
-
     try {
 
         setLoading(true);
 
         const res = await getShopProducts();
 
-        setProducts(res.data);
+        console.log("Shop API =", res.data);
 
-        setFilteredProducts(res.data);
+        const productList = Array.isArray(res.data.data)
+            ? res.data.data
+            : [];
 
-    }
+        setProducts(productList);
 
-    catch(err){
+        setFilteredProducts(productList);
+
+    } catch (err) {
 
         console.log(err);
 
-    }
-
-    finally{
+    } finally {
 
         setLoading(false);
 
     }
-
 };
-
 useEffect(() => {
 
-    let data = [...products];
+let data = Array.isArray(products)
+    ? [...products]
+    : [];
 
     if(search){
 
@@ -142,6 +155,84 @@ useEffect(() => {
     products
 
 ]);
+
+
+const handleAddToCart = async(product)=>{
+
+    const token = localStorage.getItem("token");
+
+    if(!token){
+
+        alert("Please Login First");
+
+        navigate("/login");
+
+        return;
+
+    }
+
+    try{
+
+        await addToCart({
+
+            product: product._id,
+
+            quantity:1
+
+        });
+
+        alert("Added To Cart");
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        alert(
+            error.response?.data?.message
+        );
+
+    }
+
+};
+
+const handleWishlist = async (product) => {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+
+        alert("Please Login First");
+        navigate("/login");
+        return;
+
+    }
+
+    try {
+
+        console.log("========================");
+        console.log(product);
+
+        console.log(product._id);
+
+        const res = await addToWishlist(product._id);
+
+        console.log(res.data);
+
+        alert("Added To Wishlist");
+
+    }
+
+    catch (error) {
+
+        console.log(error.response?.data);
+
+        alert(error.response?.data?.message);
+
+    }
+
+};
 
 return(
 
@@ -288,33 +379,25 @@ Price High to Low
 
                             <div className="product-image-box">
 
-                                <img
-
-                                    src={
-
-                                        product.images?.length
-
-                                            ? product.images[0]
-
-                                            : "/no-image.png"
-
-                                    }
-
-                                    alt={product.name}
-
-                                    className="product-image"
-
-                                />
+    <img
+    src={
+        product.images?.length
+            ? `http://localhost:5000${product.images[0].url}`
+            : "/no-image.png"
+    }
+    alt={product.name}
+    className="product-image"
+/>
 
                                 {
 
-                                    Number(product.discount) > 0 &&
+                                    Number(product.pricing?.discount) > 0 &&
 
                                     (
 
                                         <span className="discount-badge">
 
-                                            {product.discount}% OFF
+                                            {product.pricing?.discount}% OFF
 
                                         </span>
 
@@ -327,12 +410,7 @@ Price High to Low
                             {/* Product Details */}
 
                             <div className="product-info">
-
-                                <h3>
-
-                                    {product.namename}
-
-                                </h3>
+<h3>{product.name}</h3>
 
                                 <p className="category">
 
@@ -362,45 +440,38 @@ Price High to Low
 
                                     <span className="selling-price">
 
-                                        ₹ {product.sellingPrice}
+                                        ₹ {product.pricing?.sellingPrice}
 
                                     </span>
 
                                     <span className="mrp-price">
 
-                                        ₹ {product.mrp}
+                                        ₹ {product.pricing?.mrp}
 
                                     </span>
 
                                 </div>
 
-                                {
+{
+product.availability === "IN_STOCK"
 
-                                    Number(product.stock) > 0 ?
+?
 
-                                    (
+<span className="stock in-stock">
 
-                                        <span className="stock in-stock">
+In Stock
 
-                                            In Stock
+</span>
 
-                                        </span>
+:
 
-                                    )
+<span className="stock out-stock">
 
-                                    :
+Out Of Stock
 
-                                    (
+</span>
 
-                                        <span className="stock out-stock">
-
-                                            Out Of Stock
-
-                                        </span>
-
-                                    )
-
-                                }
+}
 
                             </div>
 
@@ -420,25 +491,21 @@ Price High to Low
 
                                 </Link>
 
-                                <button
+                            <button
+className="cart-btn"
+onClick={()=>
+handleAddToCart(product)
+}
+>
+Add To Cart
+</button>
 
-                                    className="cart-btn"
-
-                                >
-
-                                    Add To Cart
-
-                                </button>
-
-                                <button
-
-                                    className="wishlist-btn"
-
-                                >
-
-                                    ❤️
-
-                                </button>
+<button
+    className="wishlist-btn"
+    onClick={() => handleWishlist(product)}
+>
+    ❤️
+</button>
 
                             </div>
 

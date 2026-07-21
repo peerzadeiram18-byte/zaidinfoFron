@@ -1,0 +1,177 @@
+.address-page{
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:40px;
+
+}
+
+.address-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+}
+
+.add-address-btn{
+
+    background:#0d6efd;
+
+    color:white;
+
+    padding:10px 20px;
+
+    text-decoration:none;
+
+    border-radius:6px;
+
+}
+
+.address-list{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+
+    gap:20px;
+
+}
+
+.address-card{
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    position:relative;
+
+}
+
+.default-badge{
+
+    position:absolute;
+
+    top:10px;
+
+    right:10px;
+
+    background:green;
+
+    color:white;
+
+    padding:4px 10px;
+
+    border-radius:20px;
+
+    font-size:12px;
+
+}
+
+.loading{
+
+    text-align:center;
+
+    font-size:20px;
+
+}
+
+.no-address{
+
+    text-align:center;
+
+    font-size:20px;
+
+}
+
+.address-buttons{
+
+display:flex;
+
+gap:10px;
+
+margin-top:20px;
+
+flex-wrap:wrap;
+
+}
+
+.address-buttons button{
+
+padding:10px 18px;
+
+border:none;
+
+border-radius:6px;
+
+cursor:pointer;
+
+background:#0d6efd;
+
+color:white;
+
+font-size:14px;
+
+}
+
+.address-buttons button:hover{
+
+background:#0b5ed7;
+
+}
+
+.checkout-section{
+
+margin-top:40px;
+
+text-align:right;
+
+}
+
+.continue-btn{
+
+padding:15px 35px;
+
+background:#198754;
+
+color:white;
+
+border:none;
+
+border-radius:6px;
+
+font-size:16px;
+
+cursor:pointer;
+
+}
+
+.continue-btn:hover{
+
+background:#157347;
+
+}
+
+.continue-btn:disabled{
+
+background:#999;
+
+cursor:not-allowed;
+
+}
+
+.address-card input[type="radio"]{
+
+margin-bottom:15px;
+
+transform:scale(1.2);
+
+}

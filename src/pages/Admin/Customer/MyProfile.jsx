@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
-
 import axios from "axios";
-
 import "./MyProfile.css";
 
 function MyProfile() {
 
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  const [profile, setProfile] = useState({
+    const [profile, setProfile] = useState({
+
+    firstName: "",
+
+    lastName: "",
+
+    email: "",
+
+    phone: "",
 
     gender: "",
 
@@ -20,207 +26,267 @@ function MyProfile() {
 
     state: "",
 
-    pincode: ""
+    pincode: "",
 
-  });
+    role: "",
 
-  useEffect(() => {
+    status: "",
 
-    fetchProfile();
+    profileImage: ""
 
-  }, []);
+});
 
-  const fetchProfile = async () => {
+    useEffect(() => {
 
-    try {
+        fetchProfile();
 
+    }, []);
 
-      const res = await axios.put(
-  "http://localhost:5000/api/users/profile",
-  profile,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
-      // const res = await axios.get(
+    // ==========================
+    // GET PROFILE
+    // ==========================
 
-      //   "http://localhost:5000/api/user/profile",
+    const fetchProfile = async () => {
 
-      //   {
+        try {
 
-      //     headers: {
+            const res = await axios.get(
 
-      //       Authorization: `Bearer ${token}`
+                "http://localhost:5000/api/users/profile",
 
-      //     }
+                {
 
-      //   }
+                    headers: {
 
-      // );
+                        Authorization: `Bearer ${token}`
 
-      setProfile(res.data.data);
+                    }
 
-    }
+                }
 
-    catch (error) {
+            );
 
-      console.log(error);
+            console.log(res.data);
 
-    }
-
-  };
-
-  const handleChange = (e) => {
-
-    setProfile({
-
-      ...profile,
-
-      [e.target.name]: e.target.value
-
-    });
-
-  };
-
-  const saveProfile = async () => {
-
-    try {
-
-      const res = await axios.put(
-
-        "http://localhost:5000/api/user/profile",
-
-        profile,
-
-        {
-
-          headers: {
-
-            Authorization: `Bearer ${token}`
-
-          }
+            setProfile(res.data.data);
 
         }
 
-      );
+        catch (error) {
 
-      alert(res.data.message);
+            console.log(error);
 
-    }
+        }
 
-    catch (error) {
+    };
 
-      alert("Unable to Save");
+    // ==========================
+    // HANDLE CHANGE
+    // ==========================
 
-    }
+    const handleChange = (e) => {
 
-  };
+        setProfile({
 
-  return (
+            ...profile,
 
-    <div className="profile-card">
+            [e.target.name]: e.target.value
 
-      <h2>My Profile</h2>
+        });
 
-      <select
+    };
 
-        name="gender"
+    // ==========================
+    // UPDATE PROFILE
+    // ==========================
 
-        value={profile.gender}
+    const saveProfile = async () => {
 
-        onChange={handleChange}
+        try {
 
-      >
+            const res = await axios.put(
 
-        <option value="">Select Gender</option>
+                "http://localhost:5000/api/users/profile",
 
-        <option value="MALE">Male</option>
+                profile,
 
-        <option value="FEMALE">Female</option>
+                {
 
-        <option value="OTHER">Other</option>
+                    headers: {
 
-      </select>
+                        Authorization: `Bearer ${token}`
 
-      <input
+                    }
 
-        type="date"
+                }
 
-        name="dob"
+            );
 
-        value={profile.dob?.substring(0,10)}
+            alert(res.data.message);
 
-        onChange={handleChange}
+        }
 
-      />
+        catch (error) {
 
-      <input
+            console.log(error);
 
-        type="text"
+            alert(
 
-        name="address"
+                error.response?.data?.message ||
 
-        placeholder="Address"
+                "Unable To Save"
 
-        value={profile.address}
+            );
 
-        onChange={handleChange}
+        }
 
-      />
+    };
 
-      <input
+    return (
 
-        type="text"
+        <div className="profile-card">
 
-        name="city"
+            <h2>My Profile</h2>
 
-        placeholder="City"
+            <input
 
-        value={profile.city}
+                type="text"
 
-        onChange={handleChange}
+                name="fullName"
 
-      />
+                placeholder="Full Name"
 
-      <input
+                value={profile.fullName || ""}
 
-        type="text"
+                onChange={handleChange}
 
-        name="state"
+            />
 
-        placeholder="State"
+            <input
 
-        value={profile.state}
+                type="email"
 
-        onChange={handleChange}
+                name="email"
 
-      />
+                placeholder="Email"
 
-      <input
+                value={profile.email || ""}
 
-        type="text"
+                readOnly
 
-        name="pincode"
+            />
 
-        placeholder="Pincode"
+            <input
 
-        value={profile.pincode}
+                type="text"
 
-        onChange={handleChange}
+                name="phone"
 
-      />
+                placeholder="Phone"
 
-      <button onClick={saveProfile}>
+                value={profile.phone || ""}
 
-        Save Profile
+                readOnly
 
-      </button>
+            />
 
-    </div>
+            <select
 
-  );
+                name="gender"
+
+                value={profile.gender || ""}
+
+                onChange={handleChange}
+
+            >
+
+                <option value="">Select Gender</option>
+
+                <option value="MALE">Male</option>
+
+                <option value="FEMALE">Female</option>
+
+                <option value="OTHER">Other</option>
+
+            </select>
+
+            <input
+
+                type="date"
+
+                name="dob"
+
+                value={profile.dob ? profile.dob.substring(0, 10) : ""}
+
+                onChange={handleChange}
+
+            />
+
+            <input
+
+                type="text"
+
+                name="address"
+
+                placeholder="Address"
+
+                value={profile.address || ""}
+
+                onChange={handleChange}
+
+            />
+
+            <input
+
+                type="text"
+
+                name="city"
+
+                placeholder="City"
+
+                value={profile.city || ""}
+
+                onChange={handleChange}
+
+            />
+
+            <input
+
+                type="text"
+
+                name="state"
+
+                placeholder="State"
+
+                value={profile.state || ""}
+
+                onChange={handleChange}
+
+            />
+
+            <input
+
+                type="text"
+
+                name="pincode"
+
+                placeholder="Pincode"
+
+                value={profile.pincode || ""}
+
+                onChange={handleChange}
+
+            />
+
+            <button onClick={saveProfile}>
+
+                Save Profile
+
+            </button>
+
+        </div>
+
+    );
 
 }
 

@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 
 import "./Cart.css";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { getCart } from "../../../services/cartService";
+
+
 
 const Cart = () => {
+
+      const navigate = useNavigate();
 
     const [cartItems, setCartItems] = useState([]);
 
@@ -14,17 +19,17 @@ const Cart = () => {
 
     const gst = 18;
 
-    useEffect(() => {
+//     useEffect(() => {
 
-    const items = JSON.parse(
+//     const items = JSON.parse(
 
-        localStorage.getItem("cart")
+//         localStorage.getItem("cart")
 
-    ) || [];
+//     ) || [];
 
-    setCartItems(items);
+//     setCartItems(items);
 
-}, []);
+// }, []);
 
 useEffect(() => {
 
@@ -32,7 +37,10 @@ useEffect(() => {
 
     cartItems.forEach((item) => {
 
-        total += item.sellingPrice * item.quantity;
+        total +=
+(item.product.pricing?.sellingPrice || 0)
+*
+item.quantity;
 
     });
 
@@ -81,6 +89,33 @@ const removeItem = (index) => {
 
 };
 
+useEffect(()=>{
+
+loadCart();
+
+},[]);
+
+const loadCart = async()=>{
+
+try{
+
+const res = await getCart();
+
+setCartItems(
+
+res.data.data.items
+
+);
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+};
 
 return (
 
@@ -193,20 +228,14 @@ key={index}
 <img
 
 src={
-
-item.images?.length
-
+item.product.images?.length
 ?
-
-item.images[0]
-
+`http://localhost:5000${item.product.images[0].url}`
 :
-
 "/no-image.png"
-
 }
 
-alt={item.name}
+alt={item.product.name}
 
 />
 
@@ -214,13 +243,13 @@ alt={item.name}
 
 <h4>
 
-{item.name}
+{item.product.name}
 
 </h4>
 
 <p>
 
-{item.brand?.name}
+{item.product.brand?.name}
 
 </p>
 
@@ -230,7 +259,7 @@ alt={item.name}
 
 <div>
 
-₹ {item.sellingPrice}
+₹ {item.product.pricing?.sellingPrice}
 
 </div>
 
@@ -270,7 +299,7 @@ alt={item.name}
 
 <div>
 
-    ₹ {item.sellingPrice * item.quantity}
+    ₹ {item.product.pricing?.sellingPrice * item.quantity}
 
 </div>
 
@@ -381,13 +410,12 @@ Math.round(subtotal * gst / 100)
 </div>
 
 <button
-
 className="checkout-btn"
-
+onClick={()=>
+navigate("/my-address")
+}
 >
-
-Proceed To Checkout
-
+Proceed Checkout
 </button>
 
 </div>

@@ -1,0 +1,79 @@
+.add-address-page{
+
+    width:700px;
+
+    margin:40px auto;
+
+    padding:30px;
+
+    background:white;
+
+    border-radius:10px;
+
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+
+}
+
+.add-address-page h2{
+
+    margin-bottom:20px;
+
+}
+
+.address-form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+.address-form input,
+
+.address-form textarea,
+
+.address-form select{
+
+    padding:12px;
+
+    border:1px solid #ddd;
+
+    border-radius:6px;
+
+    font-size:15px;
+
+}
+
+.address-form textarea{
+
+    resize:none;
+
+    height:100px;
+
+}
+
+.address-form button{
+
+    padding:14px;
+
+    border:none;
+
+    background:#0d6efd;
+
+    color:white;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    border-radius:6px;
+
+}
+
+.address-form button:hover{
+
+    background:#0056d2;
+
+}
