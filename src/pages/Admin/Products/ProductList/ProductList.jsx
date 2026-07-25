@@ -1,95 +1,90 @@
 import React, { useEffect, useState } from "react";
-
 import "./ProductList.css";
 
 import {
-
     getProducts,
-
     deleteProduct,
-
     searchProducts
-
 } from "../../../../services/productService";
 
 const ProductList = () => {
 
     const [products, setProducts] = useState([]);
-
     const [loading, setLoading] = useState(true);
-
     const [search, setSearch] = useState("");
-
     const [currentPage, setCurrentPage] = useState(1);
 
     const itemsPerPage = 10;
 
-        useEffect(() => {
+    // ============================================
+    // LOAD ALL PRODUCTS
+    // ============================================
+
+    const loadProducts = async () => {
+
+        try {
+
+            setLoading(true);
+
+            const res = await getProducts();
+
+            console.log("PRODUCT LIST API RESPONSE:", res.data);
+
+            // Backend response:
+            // {
+            //   success: true,
+            //   message: "...",
+            //   data: [...]
+            // }
+
+            const productData = Array.isArray(res.data?.data)
+                ? res.data.data
+                : Array.isArray(res.data)
+                    ? res.data
+                    : [];
+
+            console.log("PRODUCTS SET TO STATE:", productData);
+
+            setProducts(productData);
+
+            setCurrentPage(1);
+
+        } catch (error) {
+
+            console.error("GET PRODUCTS ERROR:", error);
+
+            setProducts([]);
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
+    };
+
+    // ============================================
+    // FIRST LOAD
+    // ============================================
+
+    useEffect(() => {
 
         loadProducts();
 
     }, []);
 
-    // const loadProducts = async () => {
+    // ============================================
+    // SEARCH PRODUCTS
+    // ============================================
 
-    //     try {
-
-    //         setLoading(true);
-
-    //         const res = await getProducts();
-
-    //         console.log("Products API:", res.data);
-    //     }
-
-    //     catch (err) {
-
-    //         console.log(err);
-
-    //     }
-
-    //     finally {
-
-    //         setLoading(false);
-
-    //     }
-
-    // };
-
-
- const loadProducts = async () => {
-
-    try {
-
-        setLoading(true);
-
-        const res = await getProducts();
-
-        console.log(res.data);
-
-        setProducts(res.data.data || []);
-
-    }
-
-    catch (err) {
-
-        console.log(err);
-
-    }
-
-    finally {
-
-        setLoading(false);
-
-    }
-
-};
-       const handleSearch = async (e) => {
+    const handleSearch = async (e) => {
 
         const keyword = e.target.value;
 
         setSearch(keyword);
 
-        if (keyword === "") {
+        // If search box empty
+        if (!keyword.trim()) {
 
             loadProducts();
 
@@ -99,339 +94,531 @@ const ProductList = () => {
 
         try {
 
+            setLoading(true);
+
             const res = await searchProducts(keyword);
 
-            setProducts(res.data);
+            console.log("SEARCH API RESPONSE:", res.data);
 
-        }
+            const searchData = Array.isArray(res.data?.data)
+                ? res.data.data
+                : Array.isArray(res.data)
+                    ? res.data
+                    : [];
 
-        catch (err) {
+            console.log("SEARCH PRODUCTS:", searchData);
 
-            console.log(err);
+            setProducts(searchData);
 
-        }
+            setCurrentPage(1);
 
-    }; 
+        } catch (error) {
 
-        const handleDelete = async (id) => {
+            console.error("SEARCH ERROR:", error);
 
-        const confirmDelete = window.confirm(
+            setProducts([]);
 
-            "Are you sure you want to delete this product?"
+        } finally {
 
-        );
-
-        if (!confirmDelete) return;
-
-        try {
-
-            await deleteProduct(id);
-
-            loadProducts();
-
-            alert("Product Deleted Successfully");
-
-        }
-
-        catch (err) {
-
-            console.log(err);
-
-            alert("Delete Failed");
+            setLoading(false);
 
         }
 
     };
 
-        const lastIndex = currentPage * itemsPerPage;
+    // ============================================
+    // DELETE PRODUCT
+    // ============================================
+
+    const handleDelete = async (id) => {
+
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this product?"
+        );
+
+        if (!confirmDelete) {
+            return;
+        }
+
+        try {
+
+            setLoading(true);
+
+            console.log("Deleting Product ID:", id);
+
+            await deleteProduct(id);
+
+            alert("Product Deleted Successfully");
+
+            // Reload product list
+            await loadProducts();
+
+        } catch (error) {
+
+            console.error("DELETE PRODUCT ERROR:", error);
+
+            alert(
+                error.response?.data?.message ||
+                "Delete Failed"
+            );
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
+    };
+
+    // ============================================
+    // PAGINATION
+    // ============================================
+
+    const lastIndex = currentPage * itemsPerPage;
 
     const firstIndex = lastIndex - itemsPerPage;
 
     const currentProducts = products.slice(
-
         firstIndex,
-
         lastIndex
-
     );
 
     const totalPages = Math.ceil(
-
         products.length / itemsPerPage
-
     );
 
-        return (
+    // ============================================
+    // IMAGE URL
+    // ============================================
+
+    const getImageUrl = (product) => {
+
+        if (!product?.images?.length) {
+            return null;
+        }
+
+        const imageUrl = product.images[0]?.url;
+
+        if (!imageUrl) {
+            return null;
+        }
+
+        // If backend already returns complete URL
+        if (
+            imageUrl.startsWith("http://") ||
+            imageUrl.startsWith("https://")
+        ) {
+            return imageUrl;
+        }
+
+        // Backend local image
+        return `http://localhost:5000${imageUrl}`;
+
+    };
+
+    // ============================================
+    // UI
+    // ============================================
+
+    return (
 
         <div className="product-list">
 
+            {/* ================= HEADER ================= */}
+
             <div className="page-header">
 
-                <h2>
+                <div>
 
-                    Product List
+                    <h2>Product List</h2>
 
-                </h2>
+                    <p>
+                        Manage all your products
+                    </p>
+
+                </div>
 
                 <input
-
                     type="text"
-
                     placeholder="Search Product..."
-
                     value={search}
-
                     onChange={handleSearch}
-
                     className="search-box"
-
                 />
 
             </div>
 
-                        {
 
-                loading ?
+            {/* ================= LOADING ================= */}
 
-                (
+            {loading ? (
 
-                    <div className="loading">
+                <div className="loading">
 
-                        Loading Products...
+                    Loading Products...
 
-                    </div>
+                </div>
 
-                )
+            ) : (
 
-                :
+                <>
 
-                (
+                    {/* ================= TABLE ================= */}
 
-                    <>
+                    <div className="table-container">
 
                         <table className="product-table">
 
-<thead>
-    <tr>
-        <th>#</th>
-        <th>Image</th>
-        <th>Product Name</th>
-        <th>Category</th>
-        <th>Brand</th>
-        <th>Purchase Price</th>
-        <th>Selling Price</th>
-        <th>MRP</th>
-        <th>Discount</th>
-        <th>GST</th>
-        <th>Stock</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-</thead>
+                            <thead>
 
-<tbody>
+                                <tr>
 
-{
-currentProducts.length > 0 ?
+                                    <th>#</th>
 
-currentProducts.map((product,index)=>(
+                                    <th>Image</th>
 
-<tr key={product._id}>
+                                    <th>Product Name</th>
 
-<td>{firstIndex + index + 1}</td>
+                                    <th>Category</th>
 
-<td>
+                                    <th>Brand</th>
 
-{
-product.images?.length > 0 ?
+                                    <th>Purchase Price</th>
 
-<img
-src={`http://localhost:5000${product.images[0].url}`}
-alt={product.name}
-className="table-image"
-/>
+                                    <th>Selling Price</th>
 
-:
+                                    <th>MRP</th>
 
-"No Image"
+                                    <th>Discount</th>
 
-}
+                                    <th>GST</th>
 
-</td>
+                                    <th>Stock</th>
 
-<td>{product.name}</td>
+                                    <th>Status</th>
 
-<td>{product.category?.name}</td>
+                                    <th>Actions</th>
 
-<td>{product.brand?.name}</td>
+                                </tr>
 
-<td>
-₹ {product.pricing?.purchasePrice}
-</td>
+                            </thead>
 
-<td>
-₹ {product.pricing?.sellingPrice}
-</td>
 
-<td>
-₹ {product.pricing?.mrp}
-</td>
+                            <tbody>
 
-<td>
-{product.pricing?.discount} %
-</td>
+                                {currentProducts.length > 0 ? (
 
-<td>
-{product.pricing?.gst} %
-</td>
+                                    currentProducts.map(
+                                        (product, index) => {
 
-<td>
+                                            const imageUrl =
+                                                getImageUrl(product);
 
-{
-product.inventory?.currentStock ??
+                                            return (
 
-0
-}
+                                                <tr
+                                                    key={
+                                                        product._id ||
+                                                        product.id ||
+                                                        index
+                                                    }
+                                                >
 
-</td>
+                                                    {/* NUMBER */}
 
-<td>
+                                                    <td>
+                                                        {firstIndex + index + 1}
+                                                    </td>
 
-{
-product.status === "ACTIVE"
 
-?
+                                                    {/* IMAGE */}
 
-<span className="active-status">
+                                                    <td>
 
-Active
+                                                        {imageUrl ? (
 
-</span>
+                                                            <img
+                                                                src={imageUrl}
+                                                                alt={
+                                                                    product.name ||
+                                                                    "Product"
+                                                                }
+                                                                className="table-image"
+                                                                onError={(e) => {
+                                                                    e.target.style.display =
+                                                                        "none";
+                                                                }}
+                                                            />
 
-:
+                                                        ) : (
 
-<span className="inactive-status">
+                                                            <div className="no-image">
+                                                                No Image
+                                                            </div>
 
-Inactive
+                                                        )}
 
-</span>
+                                                    </td>
 
-}
 
-</td>
+                                                    {/* PRODUCT NAME */}
 
-<td>
+                                                    <td>
 
-<button
-className="delete-btn"
-onClick={() => handleDelete(product._id)}
->
+                                                        <strong>
+                                                            {product.name ||
+                                                                "N/A"}
+                                                        </strong>
 
-Delete
+                                                    </td>
 
-</button>
 
-</td>
+                                                    {/* CATEGORY */}
 
-</tr>
+                                                    <td>
 
-))
+                                                        {product.category?.name ||
+                                                            "N/A"}
 
-:
+                                                    </td>
 
-<tr>
 
-<td colSpan="13">
+                                                    {/* BRAND */}
 
-No Products Found
+                                                    <td>
 
-</td>
+                                                        {product.brand?.name ||
+                                                            "N/A"}
 
-</tr>
+                                                    </td>
 
-}
 
-</tbody>
+                                                    {/* PURCHASE PRICE */}
+
+                                                    <td>
+
+                                                        ₹{" "}
+                                                        {
+                                                            product.pricing
+                                                                ?.purchasePrice ??
+                                                            0
+                                                        }
+
+                                                    </td>
+
+
+                                                    {/* SELLING PRICE */}
+
+                                                    <td>
+
+                                                        ₹{" "}
+                                                        {
+                                                            product.pricing
+                                                                ?.sellingPrice ??
+                                                            0
+                                                        }
+
+                                                    </td>
+
+
+                                                    {/* MRP */}
+
+                                                    <td>
+
+                                                        ₹{" "}
+                                                        {
+                                                            product.pricing
+                                                                ?.mrp ??
+                                                            0
+                                                        }
+
+                                                    </td>
+
+
+                                                    {/* DISCOUNT */}
+
+                                                    <td>
+
+                                                        {
+                                                            product.pricing
+                                                                ?.discount ??
+                                                            0
+                                                        }%
+
+                                                    </td>
+
+
+                                                    {/* GST */}
+
+                                                    <td>
+
+                                                        {
+                                                            product.pricing
+                                                                ?.gst ??
+                                                            0
+                                                        }%
+
+                                                    </td>
+
+
+                                                    {/* STOCK */}
+
+                                                    <td>
+
+                                                        {
+                                                            product.inventory
+                                                                ?.currentStock ??
+                                                            0
+                                                        }
+
+                                                    </td>
+
+
+                                                    {/* STATUS */}
+
+                                                    <td>
+
+                                                        {product.status ===
+                                                        "ACTIVE" ? (
+
+                                                            <span className="active-status">
+                                                                Active
+                                                            </span>
+
+                                                        ) : (
+
+                                                            <span className="inactive-status">
+                                                                Inactive
+                                                            </span>
+
+                                                        )}
+
+                                                    </td>
+
+
+                                                    {/* ACTIONS */}
+
+                                                    <td>
+
+                                                        <button
+                                                            type="button"
+                                                            className="delete-btn"
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    product._id
+                                                                )
+                                                            }
+                                                        >
+
+                                                            Delete
+
+                                                        </button>
+
+                                                    </td>
+
+                                                </tr>
+
+                                            );
+
+                                        }
+
+                                    )
+
+                                ) : (
+
+                                    <tr>
+
+                                        <td
+                                            colSpan="13"
+                                            className="no-products"
+                                        >
+
+                                            No Products Found
+
+                                        </td>
+
+                                    </tr>
+
+                                )}
+
+                            </tbody>
 
                         </table>
 
+                    </div>
 
-                        {/* ================= Pagination ================= */}
 
-                        {
-                            totalPages > 1 && (
+                    {/* ================= PAGINATION ================= */}
 
-                                <div className="pagination">
+                    {totalPages > 1 && (
+
+                        <div className="pagination">
+
+                            <button
+                                type="button"
+                                disabled={currentPage === 1}
+                                onClick={() =>
+                                    setCurrentPage(
+                                        currentPage - 1
+                                    )
+                                }
+                            >
+
+                                Previous
+
+                            </button>
+
+
+                            {[...Array(totalPages)].map(
+                                (_, index) => (
 
                                     <button
-
-                                        disabled={currentPage === 1}
-
-                                        onClick={() =>
-                                            setCurrentPage(currentPage - 1)
+                                        type="button"
+                                        key={index}
+                                        className={
+                                            currentPage ===
+                                            index + 1
+                                                ? "active-page"
+                                                : ""
                                         }
-
+                                        onClick={() =>
+                                            setCurrentPage(
+                                                index + 1
+                                            )
+                                        }
                                     >
 
-                                        Previous
+                                        {index + 1}
 
                                     </button>
 
-                                    {
+                                )
+                            )}
 
-                                        [...Array(totalPages)].map((_, index) => (
 
-                                            <button
+                            <button
+                                type="button"
+                                disabled={
+                                    currentPage === totalPages
+                                }
+                                onClick={() =>
+                                    setCurrentPage(
+                                        currentPage + 1
+                                    )
+                                }
+                            >
 
-                                                key={index}
+                                Next
 
-                                                className={
-                                                    currentPage === index + 1
-                                                        ? "active-page"
-                                                        : ""
-                                                }
+                            </button>
 
-                                                onClick={() =>
-                                                    setCurrentPage(index + 1)
-                                                }
+                        </div>
 
-                                            >
+                    )}
 
-                                                {index + 1}
+                </>
 
-                                            </button>
-
-                                        ))
-
-                                    }
-
-                                    <button
-
-                                        disabled={
-                                            currentPage === totalPages
-                                        }
-
-                                        onClick={() =>
-                                            setCurrentPage(currentPage + 1)
-                                        }
-
-                                    >
-
-                                        Next
-
-                                    </button>
-
-                                </div>
-
-                            )
-
-                        }
-
-                    </>
-
-                )
-
-            }
+            )}
 
         </div>
 
@@ -440,4 +627,3 @@ No Products Found
 };
 
 export default ProductList;
-

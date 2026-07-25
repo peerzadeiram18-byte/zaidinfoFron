@@ -411,9 +411,7 @@ Math.round(subtotal * gst / 100)
 
 <button
 className="checkout-btn"
-onClick={()=>
-navigate("/my-address")
-}
+onClick={() => navigate("/checkout")}
 >
 Proceed Checkout
 </button>

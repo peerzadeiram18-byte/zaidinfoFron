@@ -1,0 +1,73 @@
+.admin-orders{
+
+    width:95%;
+
+    margin:auto;
+
+    padding:30px;
+
+}
+
+.admin-orders h1{
+
+    margin-bottom:25px;
+
+}
+
+.admin-orders table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:#fff;
+
+}
+
+.admin-orders th{
+
+    background:#1976d2;
+
+    color:white;
+
+    padding:15px;
+
+    text-align:left;
+
+}
+
+.admin-orders td{
+
+    padding:15px;
+
+    border-bottom:1px solid #ddd;
+
+}
+
+.admin-orders tr:hover{
+
+    background:#f8f8f8;
+
+}
+
+.view-btn{
+
+    padding:8px 15px;
+
+    background:#28a745;
+
+    color:white;
+
+    border:none;
+
+    cursor:pointer;
+
+    border-radius:5px;
+
+}
+
+.view-btn:hover{
+
+    background:#218838;
+
+}

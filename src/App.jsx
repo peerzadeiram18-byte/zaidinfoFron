@@ -49,6 +49,17 @@ import Wishlist from "./pages/Shop/Wishlist/Wishlist";
 import MyAddress from "./pages/Profile/MyAddress/MyAddress";
 import AddAddress from "./pages/Profile/AddAddress/AddAddress";
 
+//Order
+import Checkout from "./pages/Shop/Checkout/Checkout";
+import SelectAddress from "./pages/Shop/SelectAddress/SelectAddress";
+import OrderSuccess from "./pages/Shop/OrderSuccess/OrderSuccess";
+import MyOrders from "./pages/Shop/MyOrders/MyOrders";
+import OrderDetails from "./pages/Shop/OrderDetails/OrderDetails";
+import OrderList from "./pages/Admin/Orders/OrderList/OrderList";
+import ViewOrder from "./pages/Admin/Orders/ViewOrder/ViewOrder";
+import Dashboard from "./pages/Admin/Dashboard/Dashboard";
+
+
 function App() {
 
     return (
@@ -185,6 +196,63 @@ function App() {
                 path="/stock-history"
                 element={<StockHistory />}
             />
+            
+            <Route
+               path="/checkout"
+              element={<Checkout />}
+             />
+             <Route
+                path="/select-address"
+                element={<SelectAddress/>}
+             />
+             <Route
+
+                path="/order-success"
+
+               element={<OrderSuccess />}
+
+            />
+
+            <Route
+
+                path="/my-orders"
+
+                element={<MyOrders />}
+
+            />
+
+<Route
+    path="/order/:id"
+    element={<OrderDetails />}
+/>
+<Route
+
+    path="/admin/orders"
+
+    element={<OrderList />}
+
+/>
+<Route
+    path="/admin/orders/:id"
+    element={<ViewOrder />}
+/>
+<Route
+
+    path="/admin-dashboard"
+
+    element={<Dashboard/>}
+
+/>
+
+
+
+
+
+
+
+
+
+
 
         </Routes>
 

@@ -88,7 +88,7 @@ function Sidebar() {
 
                 {/* Orders */}
 
-                <li onClick={() => navigate("/orders")}>
+                <li onClick={() => navigate("/admin/orders")}>
                     Order List
                 </li>
 

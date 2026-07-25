@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/address";
+const API = "http://localhost:5000/api/addresses";
 
 const authHeader = () => ({
 

@@ -9,6 +9,9 @@ import Wishlist from "../../../Shop/Wishlist/Wishlist";
 import Cart from "../../../Shop/Cart/Cart";
 
 import MyAddress from "../../../Profile/MyAddress/MyAddress";
+import MyOrders from "../../../Shop/MyOrders/MyOrders";
+
+
 const CustomerDashboard = () => {
 
     const [activeMenu, setActiveMenu] = useState("profile");
@@ -30,12 +33,8 @@ const CustomerDashboard = () => {
                 return <MyAddress />;
 
             case "orders":
-                return (
-                    <div className="coming-soon">
-                        <h2>My Orders</h2>
-                        <p>Coming Soon...</p>
-                    </div>
-                );
+                return <MyOrders />;
+
 
             case "password":
                 return (
@@ -79,7 +78,7 @@ const CustomerDashboard = () => {
                     👤 My Profile
                 </button>
 
-                <button
+               <button
                     className={activeMenu === "orders" ? "active" : ""}
                     onClick={() => setActiveMenu("orders")}
                 >

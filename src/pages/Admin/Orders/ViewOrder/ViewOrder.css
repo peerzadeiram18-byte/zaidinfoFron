@@ -1,0 +1,143 @@
+.view-order{
+
+    width:95%;
+
+    margin:auto;
+
+    padding:30px;
+
+}
+
+.view-order h1{
+
+    margin-bottom:25px;
+
+}
+
+.order-section{
+
+    background:#fff;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    border-radius:10px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+}
+
+.order-section h2{
+
+    margin-bottom:15px;
+
+}
+
+.product-card{
+
+    display:flex;
+
+    gap:20px;
+
+    align-items:center;
+
+    padding:15px 0;
+
+    border-bottom:1px solid #ddd;
+
+}
+
+.product-card img{
+
+    width:100px;
+
+    height:100px;
+
+    object-fit:cover;
+
+    border-radius:8px;
+
+}
+
+.order-summary{
+
+    background:#fff;
+
+    padding:20px;
+
+    border-radius:10px;
+
+    margin-bottom:20px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+}
+
+.status-section{
+
+    display:flex;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+}
+
+.status-box{
+
+    flex:1;
+
+    min-width:300px;
+
+    background:#fff;
+
+    padding:20px;
+
+    border-radius:10px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+}
+
+.status-box h3{
+
+    margin-bottom:15px;
+
+}
+
+.status-box select{
+
+    width:100%;
+
+    height:45px;
+
+    margin-bottom:15px;
+
+    padding:10px;
+
+}
+
+.status-box button{
+
+    width:100%;
+
+    height:45px;
+
+    border:none;
+
+    background:#1976d2;
+
+    color:white;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+}
+
+.status-box button:hover{
+
+    background:#1256a4;
+
+}

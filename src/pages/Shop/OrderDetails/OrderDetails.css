@@ -1,0 +1,61 @@
+.order-details-page{
+
+    width:90%;
+
+    margin:auto;
+
+    padding:40px;
+
+}
+
+.order-info{
+
+    background:white;
+
+    padding:20px;
+
+    margin-bottom:30px;
+
+    border-radius:8px;
+
+}
+
+.address-box{
+
+    background:white;
+
+    padding:20px;
+
+    margin-bottom:30px;
+
+    border-radius:8px;
+
+}
+
+.product-box{
+
+    display:flex;
+
+    gap:20px;
+
+    background:white;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+    border-radius:8px;
+
+}
+
+.product-box img{
+
+    width:120px;
+
+    height:120px;
+
+    object-fit:cover;
+
+    border-radius:8px;
+
+}
