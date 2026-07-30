@@ -1,34 +1,46 @@
 import { Routes, Route } from "react-router-dom";
 
+// ===============================
+// PUBLIC
+// ===============================
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 
+// ===============================
+// ADMIN
+// ===============================
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 
-// Customer
 import CustomerDashboard from "./pages/Admin/Customer/CustomerDashboard/CustomerDashboard.jsx";
 import CustomerList from "./pages/Admin/Customer/CustomerList";
 
-// Employee
 import AddEmployee from "./pages/Admin/Employee/AddEmployee";
 import EmployeeList from "./pages/Admin/Employee/EmployeeList";
 
-// Dashboards
+// ===============================
+// DASHBOARDS
+// ===============================
 import ReceptionistDashboard from "./pages/Receptionist/ReceptionistDashboard";
 import TechnicianDashboard from "./pages/Technician/TechnicianDashboard";
 import InventoryDashboard from "./pages/Inventory/InventoryDashboard";
 import AccountantDashboard from "./pages/Accountant/AccountantDashboard";
 
-// Category
+// ===============================
+// CATEGORY
+// ===============================
 import AddCategory from "./pages/Admin/Category/AddCategory";
 import CategoryList from "./pages/Admin/Category/CategoryList";
 
-// Brand
+// ===============================
+// BRAND
+// ===============================
 import AddBrand from "./pages/Admin/Brand/AddBrand";
 import BrandList from "./pages/Admin/Brand/BrandList";
 
-// Products
+// ===============================
+// PRODUCTS
+// ===============================
 import ProductList from "./pages/Admin/Products/ProductList/ProductList";
 import AddProduct from "./pages/Admin/Products/AddProduct/AddProduct";
 import EditProduct from "./pages/Admin/Products/EditProduct/EditProduct";
@@ -37,28 +49,62 @@ import ViewProduct from "./pages/Admin/Products/ViewProduct/ViewProduct";
 import Products from "./pages/Products/Products";
 import ProductDetails from "./pages/Shop/ProductDetails/ProductDetails";
 
-// Inventory
+// ===============================
+// INVENTORY
+// ===============================
 import StockHistory from "./pages/Inventory/StockHistory";
 
-// Shop
+// ===============================
+// SHOP
+// ===============================
 import Shop from "./pages/Shop/Shop";
 import Cart from "./pages/Shop/Cart/Cart";
 import Wishlist from "./pages/Shop/Wishlist/Wishlist";
 
-// Address
+// ===============================
+// PROFILE / ADDRESS
+// ===============================
 import MyAddress from "./pages/Profile/MyAddress/MyAddress";
 import AddAddress from "./pages/Profile/AddAddress/AddAddress";
 
-//Order
+// ===============================
+// ORDERS
+// ===============================
 import Checkout from "./pages/Shop/Checkout/Checkout";
 import SelectAddress from "./pages/Shop/SelectAddress/SelectAddress";
 import OrderSuccess from "./pages/Shop/OrderSuccess/OrderSuccess";
 import MyOrders from "./pages/Shop/MyOrders/MyOrders";
 import OrderDetails from "./pages/Shop/OrderDetails/OrderDetails";
+
 import OrderList from "./pages/Admin/Orders/OrderList/OrderList";
 import ViewOrder from "./pages/Admin/Orders/ViewOrder/ViewOrder";
+
+// ===============================
+// ADMIN DASHBOARD
+// ===============================
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 
+// ===============================
+// PAYMENT
+// ===============================
+import Payment from "./pages/Shop/Payment/Payment";
+
+// =====================================================
+// RECEPTIONIST - WALK-IN ORDERS
+// =====================================================
+
+// IMPORTANT:
+// Actual folder is WalkInOrders
+// NOT WalkInOrder
+
+import NewWalkInOrder from "./pages/Receptionist/WalkInOrders/NewWalkInOrder/NewWalkInOrder.jsx";
+
+import WalkInOrders from "./pages/Receptionist/WalkInOrders/WalkInOrders.jsx";
+
+
+// =====================================================
+// APP
+// =====================================================
 
 function App() {
 
@@ -66,11 +112,29 @@ function App() {
 
         <Routes>
 
-            <Route path="/" element={<Home />} />
+            {/* =====================================
+                PUBLIC
+            ===================================== */}
 
-            <Route path="/login" element={<Login />} />
+            <Route
+                path="/"
+                element={<Home />}
+            />
 
-            <Route path="/register" element={<Register />} />
+            <Route
+                path="/login"
+                element={<Login />}
+            />
+
+            <Route
+                path="/register"
+                element={<Register />}
+            />
+
+
+            {/* =====================================
+                ADMIN
+            ===================================== */}
 
             <Route
                 path="/admin-dashboard"
@@ -97,6 +161,11 @@ function App() {
                 element={<EmployeeList />}
             />
 
+
+            {/* =====================================
+                DASHBOARDS
+            ===================================== */}
+
             <Route
                 path="/receptionist-dashboard"
                 element={<ReceptionistDashboard />}
@@ -117,6 +186,11 @@ function App() {
                 element={<AccountantDashboard />}
             />
 
+
+            {/* =====================================
+                CATEGORY
+            ===================================== */}
+
             <Route
                 path="/add-category"
                 element={<AddCategory />}
@@ -127,6 +201,11 @@ function App() {
                 element={<CategoryList />}
             />
 
+
+            {/* =====================================
+                BRAND
+            ===================================== */}
+
             <Route
                 path="/add-brand"
                 element={<AddBrand />}
@@ -136,6 +215,11 @@ function App() {
                 path="/brands"
                 element={<BrandList />}
             />
+
+
+            {/* =====================================
+                PRODUCTS
+            ===================================== */}
 
             <Route
                 path="/products"
@@ -162,6 +246,11 @@ function App() {
                 element={<ViewProduct />}
             />
 
+
+            {/* =====================================
+                SHOP
+            ===================================== */}
+
             <Route
                 path="/shop"
                 element={<Shop />}
@@ -182,6 +271,11 @@ function App() {
                 element={<Wishlist />}
             />
 
+
+            {/* =====================================
+                ADDRESS
+            ===================================== */}
+
             <Route
                 path="/my-address"
                 element={<MyAddress />}
@@ -192,67 +286,113 @@ function App() {
                 element={<AddAddress />}
             />
 
+
+            {/* =====================================
+                INVENTORY
+            ===================================== */}
+
             <Route
                 path="/stock-history"
                 element={<StockHistory />}
             />
-            
+
+
+            {/* =====================================
+                CUSTOMER CHECKOUT
+            ===================================== */}
+
             <Route
-               path="/checkout"
-              element={<Checkout />}
-             />
-             <Route
+                path="/checkout"
+                element={<Checkout />}
+            />
+
+            <Route
                 path="/select-address"
-                element={<SelectAddress/>}
-             />
-             <Route
+                element={<SelectAddress />}
+            />
 
+
+            {/* =====================================
+                CUSTOMER ORDERS
+            ===================================== */}
+
+            <Route
                 path="/order-success"
-
-               element={<OrderSuccess />}
-
+                element={<OrderSuccess />}
             />
 
             <Route
-
                 path="/my-orders"
-
                 element={<MyOrders />}
-
             />
 
-<Route
-    path="/order/:id"
-    element={<OrderDetails />}
-/>
-<Route
-
-    path="/admin/orders"
-
-    element={<OrderList />}
-
-/>
-<Route
-    path="/admin/orders/:id"
-    element={<ViewOrder />}
-/>
-<Route
-
-    path="/admin-dashboard"
-
-    element={<Dashboard/>}
-
-/>
+            <Route
+                path="/order/:id"
+                element={<OrderDetails />}
+            />
 
 
+            {/* =====================================
+                ADMIN ORDERS
+            ===================================== */}
+
+            <Route
+                path="/admin/orders"
+                element={<OrderList />}
+            />
+
+            <Route
+                path="/admin/orders/:id"
+                element={<ViewOrder />}
+            />
 
 
+            {/* =====================================
+                ADMIN DASHBOARD
+            ===================================== */}
+
+            <Route
+                path="/dashboard"
+                element={<Dashboard />}
+            />
 
 
+            {/* =====================================
+                CUSTOMER PAYMENT
+            ===================================== */}
+
+            <Route
+                path="/payment"
+                element={<Payment />}
+            />
 
 
+            {/* =================================================
+                RECEPTIONIST - WALK-IN POS
+            ================================================= */}
+
+            {/* Receptionist Dashboard */}
+
+            <Route
+                path="/receptionist-dashboard"
+                element={<ReceptionistDashboard />}
+            />
 
 
+            {/* New Walk-in Order */}
+
+            <Route
+                path="/receptionist/walk-in-order/new"
+                element={<NewWalkInOrder />}
+            />
+
+
+            {/* Walk-in Orders List */}
+
+            <Route
+                path="/receptionist/walk-in-orders"
+                element={<WalkInOrders />}
+            />
 
         </Routes>
 

@@ -1,22 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, {
+    useEffect,
+    useMemo,
+    useState
+} from "react";
 
 import "./Shop.css";
 
-import { Link } from "react-router-dom";
+import {
+    Link,
+    useNavigate
+} from "react-router-dom";
 
 import {
-
     getShopProducts
-
 } from "../../services/productService";
 
-import { addToCart } from "../../services/cartService";
-import { useNavigate } from "react-router-dom";
 import {
+    addToCart
+} from "../../services/cartService";
 
-addToWishlist
-
+import {
+    addToWishlist
 } from "../../services/wishlistService";
+
+import {
+    getShopInventory
+} from "../../services/inventoryService";
 
 
 const Shop = () => {
@@ -24,521 +33,1515 @@ const Shop = () => {
     const navigate = useNavigate();
 
 
-    const [products, setProducts] = useState([]);
+    // ==================================================
+    // STATES
+    // ==================================================
 
-    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [products, setProducts] =
+        useState([]);
 
-    const [loading, setLoading] = useState(true);
+    const [inventory, setInventory] =
+        useState([]);
 
-    const [search, setSearch] = useState("");
+    const [loading, setLoading] =
+        useState(true);
 
-    const [category, setCategory] = useState("");
+    const [inventoryLoading, setInventoryLoading] =
+        useState(true);
 
-    const [brand, setBrand] = useState("");
+    const [search, setSearch] =
+        useState("");
 
-    const [sort, setSort] = useState("");
+    const [category, setCategory] =
+        useState("");
 
+    const [brand, setBrand] =
+        useState("");
+
+    const [sort, setSort] =
+        useState("");
+
+    const [addingCartId, setAddingCartId] =
+        useState(null);
+
+    const [wishlistLoadingId, setWishlistLoadingId] =
+        useState(null);
+
+
+    // ==================================================
+    // LOAD SHOP DATA
+    // ==================================================
 
     useEffect(() => {
 
-    loadProducts();
+        loadShopData();
 
-}, []);
+    }, []);
 
-const loadProducts = async () => {
-    try {
 
-        setLoading(true);
+    const loadShopData = async () => {
 
-        const res = await getShopProducts();
+        try {
 
-        console.log("Shop API =", res.data);
+            setLoading(true);
+            setInventoryLoading(true);
 
-        const productList = Array.isArray(res.data.data)
-            ? res.data.data
-            : [];
 
-        setProducts(productList);
+            // ==========================================
+            // PRODUCTS
+            // ==========================================
 
-        setFilteredProducts(productList);
+            const productResponse =
+                await getShopProducts();
 
-    } catch (err) {
 
-        console.log(err);
+            console.log(
+                "SHOP PRODUCTS RESPONSE:",
+                productResponse.data
+            );
 
-    } finally {
 
-        setLoading(false);
+            const productData =
+                Array.isArray(
+                    productResponse.data?.data
+                )
 
-    }
-};
-useEffect(() => {
+                    ? productResponse.data.data
 
-let data = Array.isArray(products)
-    ? [...products]
-    : [];
+                    : [];
 
-    if(search){
 
-        data = data.filter(product =>
+            setProducts(
+                productData
+            );
 
-            product.name
 
-            .toLowerCase()
+            // ==========================================
+            // PUBLIC INVENTORY
+            // ==========================================
 
-            .includes(search.toLowerCase())
+            try {
 
-        );
+                const inventoryResponse =
+                    await getShopInventory();
 
-    }
 
-    if(category){
+                console.log(
+                    "SHOP INVENTORY RESPONSE:",
+                    inventoryResponse.data
+                );
 
-        data = data.filter(
 
-            product =>
+                const inventoryData =
+                    Array.isArray(
+                        inventoryResponse.data?.data
+                    )
 
-            product.category?.name === category
+                        ? inventoryResponse.data.data
 
-        );
+                        : [];
 
-    }
 
-    if(brand){
+                setInventory(
+                    inventoryData
+                );
 
-        data = data.filter(
+            }
 
-            product =>
+            catch (inventoryError) {
 
-            product.brand?.name === brand
+                console.error(
+                    "SHOP INVENTORY ERROR:",
+                    inventoryError
+                );
 
-        );
 
-    }
+                console.error(
+                    "INVENTORY BACKEND RESPONSE:",
+                    inventoryError.response?.data
+                );
 
-    if(sort==="low"){
 
-        data.sort(
+                setInventory([]);
 
-            (a,b)=>
+            }
 
-            a.sellingPrice-b.sellingPrice
+        }
 
-        );
+        catch (error) {
 
-    }
+            console.error(
+                "SHOP DATA ERROR:",
+                error
+            );
 
-    if(sort==="high"){
 
-        data.sort(
+            console.error(
+                "BACKEND RESPONSE:",
+                error.response?.data
+            );
 
-            (a,b)=>
 
-            b.sellingPrice-a.sellingPrice
+            setProducts([]);
 
-        );
+        }
 
-    }
+        finally {
 
-    setFilteredProducts(data);
+            setLoading(false);
 
-},[
+            setInventoryLoading(false);
 
-    search,
+        }
 
-    category,
+    };
 
-    brand,
 
-    sort,
+    // ==================================================
+    // INVENTORY MAP
+    // ==================================================
 
-    products
+    const inventoryMap =
+        useMemo(() => {
 
-]);
+            const map = {};
 
 
-const handleAddToCart = async(product)=>{
+            inventory.forEach(
+                (item) => {
 
-    const token = localStorage.getItem("token");
+                    const productId =
+                        item.product?._id ||
+                        item.product;
 
-    if(!token){
 
-        alert("Please Login First");
+                    if (!productId) {
 
-        navigate("/login");
+                        return;
 
-        return;
+                    }
 
-    }
 
-    try{
+                    const currentStock =
+                        Number(
+                            item.currentStock || 0
+                        );
 
-        await addToCart({
 
-            product: product._id,
+                    const reservedStock =
+                        Number(
+                            item.reservedStock || 0
+                        );
 
-            quantity:1
 
-        });
+                    const availableStock =
+                        item.availableStock !== undefined
 
-        alert("Added To Cart");
+                            ?
 
-    }
+                            Number(
+                                item.availableStock
+                            )
 
-    catch(error){
+                            :
 
-        console.log(error);
+                            Math.max(
+                                currentStock -
+                                reservedStock,
+                                0
+                            );
 
-        alert(
-            error.response?.data?.message
-        );
 
-    }
+                    map[
+                        productId.toString()
+                    ] = {
 
-};
+                        ...item,
 
-const handleWishlist = async (product) => {
+                        currentStock,
 
-    const token = localStorage.getItem("token");
+                        reservedStock,
+
+                        availableStock
+
+                    };
+
+                }
+
+            );
+
+
+            return map;
+
+        }, [inventory]);
+
+
+    // ==================================================
+    // GET PRODUCT INVENTORY
+    // ==================================================
+
+    const getProductInventory =
+        (product) => {
+
+            if (!product?._id) {
+
+                return {
+
+                    currentStock: 0,
+
+                    reservedStock: 0,
+
+                    availableStock: 0,
+
+                    status:
+                        "OUT_OF_STOCK"
+
+                };
+
+            }
+
+
+            const item =
+                inventoryMap[
+                    product._id.toString()
+                ];
+
+
+            if (!item) {
+
+                return {
+
+                    currentStock: 0,
+
+                    reservedStock: 0,
+
+                    availableStock: 0,
+
+                    status:
+                        "OUT_OF_STOCK"
+
+                };
+
+            }
+
+
+            return item;
+
+        };
+
+
+    // ==================================================
+    // FILTER PRODUCTS
+    // ==================================================
+
+    const filteredProducts =
+        useMemo(() => {
+
+            let data = [
+                ...products
+            ];
+
+
+            // SEARCH
+
+            if (
+                search.trim()
+            ) {
+
+                const searchText =
+                    search
+                        .trim()
+                        .toLowerCase();
+
+
+                data =
+                    data.filter(
+                        (product) => {
+
+                            const name =
+                                (
+                                    product.name ||
+                                    ""
+                                ).toLowerCase();
+
+
+                            const sku =
+                                (
+                                    product.sku ||
+                                    ""
+                                ).toLowerCase();
+
+
+                            const categoryName =
+                                (
+                                    product.category?.name ||
+                                    ""
+                                ).toLowerCase();
+
+
+                            const brandName =
+                                (
+                                    product.brand?.name ||
+                                    ""
+                                ).toLowerCase();
+
+
+                            return (
+
+                                name.includes(
+                                    searchText
+                                )
+
+                                ||
+
+                                sku.includes(
+                                    searchText
+                                )
+
+                                ||
+
+                                categoryName.includes(
+                                    searchText
+                                )
+
+                                ||
+
+                                brandName.includes(
+                                    searchText
+                                )
+
+                            );
+
+                        }
+
+                    );
+
+            }
+
+
+            // CATEGORY
+
+            if (category) {
+
+                data =
+                    data.filter(
+
+                        product =>
+                            product.category?.name ===
+                            category
+
+                    );
+
+            }
+
+
+            // BRAND
+
+            if (brand) {
+
+                data =
+                    data.filter(
+
+                        product =>
+                            product.brand?.name ===
+                            brand
+
+                    );
+
+            }
+
+
+            // PRICE LOW
+
+            if (
+                sort === "low"
+            ) {
+
+                data.sort(
+
+                    (a, b) =>
+
+                        Number(
+                            a.pricing?.sellingPrice || 0
+                        )
+
+                        -
+
+                        Number(
+                            b.pricing?.sellingPrice || 0
+                        )
+
+                );
+
+            }
+
+
+            // PRICE HIGH
+
+            if (
+                sort === "high"
+            ) {
+
+                data.sort(
+
+                    (a, b) =>
+
+                        Number(
+                            b.pricing?.sellingPrice || 0
+                        )
+
+                        -
+
+                        Number(
+                            a.pricing?.sellingPrice || 0
+                        )
+
+                );
+
+            }
+
+
+            return data;
+
+        }, [
+
+            products,
+            search,
+            category,
+            brand,
+            sort
+
+        ]);
+
+
+    // ==================================================
+    // ADD TO CART
+    // ==================================================
+
+const handleAddToCart = async (product) => {
+
+    // ==================================================
+    // CHECK LOGIN
+    // ==================================================
+
+    const token =
+        localStorage.getItem("token");
+
 
     if (!token) {
 
-        alert("Please Login First");
-        navigate("/login");
+        alert(
+            "Please Login First"
+        );
+
+        navigate(
+            "/login"
+        );
+
         return;
 
     }
 
+
+    // ==================================================
+    // CHECK PRODUCT
+    // ==================================================
+
+    if (!product?._id) {
+
+        alert(
+            "Invalid product"
+        );
+
+        return;
+
+    }
+
+
+    // ==================================================
+    // CHECK PRICE
+    // ==================================================
+
+    const sellingPrice =
+        Number(
+            product.pricing?.sellingPrice || 0
+        );
+
+
+    if (
+        sellingPrice <= 0
+    ) {
+
+        alert(
+            "Product price is not available"
+        );
+
+        return;
+
+    }
+
+
+    // ==================================================
+    // CHECK INVENTORY
+    // ==================================================
+
+    const stock =
+        getProductInventory(
+            product
+        );
+
+
+    const availableStock =
+        Number(
+            stock.availableStock || 0
+        );
+
+
+    if (
+        availableStock <= 0
+    ) {
+
+        alert(
+            "Product is currently out of stock"
+        );
+
+        return;
+
+    }
+
+
+    // ==================================================
+    // ADD TO CART
+    // ==================================================
+
     try {
 
-        console.log("========================");
-        console.log(product);
+        setAddingCartId(
+            product._id
+        );
 
-        console.log(product._id);
 
-        const res = await addToWishlist(product._id);
+        const cartData = {
 
-        console.log(res.data);
+            product:
+                product._id,
 
-        alert("Added To Wishlist");
+            quantity:
+                1
+
+        };
+
+
+        console.log(
+            "ADDING PRODUCT TO CART:",
+            product._id
+        );
+
+
+        console.log(
+            "CART REQUEST DATA:",
+            cartData
+        );
+
+
+        const response =
+            await addToCart(
+                cartData
+            );
+
+
+        console.log(
+            "ADD TO CART RESPONSE:",
+            response.data
+        );
+
+
+        alert(
+            "Product Added To Cart Successfully"
+        );
+
+
+        // Go to cart
+
+        navigate(
+            "/cart"
+        );
 
     }
 
     catch (error) {
 
-        console.log(error.response?.data);
+        console.error(
+            "================================"
+        );
 
-        alert(error.response?.data?.message);
+
+        console.error(
+            "ADD TO CART ERROR"
+        );
+
+
+        console.error(
+            "STATUS:",
+            error.response?.status
+        );
+
+
+        console.error(
+            "BACKEND RESPONSE:",
+            error.response?.data
+        );
+
+
+        console.error(
+            "ERROR:",
+            error
+        );
+
+
+        console.error(
+            "================================"
+        );
+
+
+        alert(
+
+            error.response?.data?.message ||
+
+            "Failed to add product to cart"
+
+        );
+
+    }
+
+    finally {
+
+        setAddingCartId(
+            null
+        );
 
     }
 
 };
 
-return(
 
-<div className="shop-page">
+    // ==================================================
+    // WISHLIST
+    // ==================================================
 
-<div className="shop-header">
+    const handleWishlist =
+        async (product) => {
 
-<h2>
+            const token =
+                localStorage.getItem(
+                    "token"
+                );
 
-Shop
 
-</h2>
+            if (!token) {
 
-<p>
+                alert(
+                    "Please Login First"
+                );
 
-Browse All Products
+                navigate(
+                    "/login"
+                );
 
-</p>
+                return;
 
-</div>
+            }
 
-<div className="shop-filters">
 
-<input
+            try {
 
-type="text"
+                setWishlistLoadingId(
+                    product._id
+                );
 
-placeholder="Search Product..."
 
-value={search}
+                const response =
+                    await addToWishlist(
+                        product._id
+                    );
 
-onChange={(e)=>
 
-setSearch(e.target.value)
+                console.log(
+                    "WISHLIST RESPONSE:",
+                    response.data
+                );
 
-}
 
-/>
+                alert(
+                    "Added To Wishlist"
+                );
 
-<input
+            }
 
-type="text"
+            catch (error) {
 
-placeholder="Category"
+                console.error(
+                    "WISHLIST ERROR:",
+                    error
+                );
 
-value={category}
 
-onChange={(e)=>
+                alert(
 
-setCategory(e.target.value)
+                    error.response?.data?.message ||
 
-}
+                    "Failed to add to wishlist"
 
-/>
+                );
 
-<input
+            }
 
-type="text"
+            finally {
 
-placeholder="Brand"
+                setWishlistLoadingId(
+                    null
+                );
 
-value={brand}
+            }
 
-onChange={(e)=>
+        };
 
-setBrand(e.target.value)
 
-}
+    // ==================================================
+    // IMAGE URL
+    // ==================================================
 
-/>
+    const getImageUrl =
+        (product) => {
 
-<select
+            const image =
+                product?.images?.[0];
 
-value={sort}
 
-onChange={(e)=>
+            if (!image) {
 
-setSort(e.target.value)
+                return "/no-image.png";
 
-}
+            }
 
->
 
-<option value="">
+            const imageUrl =
+                typeof image === "string"
 
-Sort By
+                    ?
 
-</option>
+                    image
 
-<option value="low">
+                    :
 
-Price Low to High
+                    image.url;
 
-</option>
 
-<option value="high">
+            if (!imageUrl) {
 
-Price High to Low
+                return "/no-image.png";
 
-</option>
+            }
 
-</select>
 
-</div>
+            if (
+                imageUrl.startsWith(
+                    "http"
+                )
+            ) {
 
-{/* ================= Products ================= */}
+                return imageUrl;
 
-{
-    loading ?
+            }
 
-    (
 
-        <div className="loading">
+            return (
+                `http://localhost:5000${imageUrl}`
+            );
 
-            Loading Products...
+        };
 
-        </div>
 
-    )
+    // ==================================================
+    // CATEGORIES
+    // ==================================================
 
-    :
+    const categories =
+        useMemo(() => {
 
-    (
+            const values =
+                products
 
-        <div className="product-grid">
+                    .map(
+                        product =>
+                            product.category?.name
+                    )
 
-            {
+                    .filter(Boolean);
 
-                filteredProducts.length > 0 ?
 
-                (
+            return [
+                ...new Set(values)
+            ];
 
-                    filteredProducts.map((product) => (
+        }, [products]);
 
-                        <div
 
-                            className="product-card"
+    // ==================================================
+    // BRANDS
+    // ==================================================
 
-                            key={product._id}
+    const brands =
+        useMemo(() => {
 
-                        >
+            const values =
+                products
 
-                            {/* Product Image */}
+                    .map(
+                        product =>
+                            product.brand?.name
+                    )
 
-                            <div className="product-image-box">
+                    .filter(Boolean);
 
-    <img
-    src={
-        product.images?.length
-            ? `http://localhost:5000${product.images[0].url}`
-            : "/no-image.png"
+
+            return [
+                ...new Set(values)
+            ];
+
+        }, [products]);
+
+
+    // ==================================================
+    // LOADING
+    // ==================================================
+
+    if (loading) {
+
+        return (
+
+            <div className="shop-page">
+
+                <div className="loading">
+
+                    Loading Products...
+
+                </div>
+
+            </div>
+
+        );
+
     }
-    alt={product.name}
-    className="product-image"
-/>
 
-                                {
 
-                                    Number(product.pricing?.discount) > 0 &&
+    // ==================================================
+    // UI
+    // ==================================================
 
-                                    (
+    return (
 
-                                        <span className="discount-badge">
+        <div className="shop-page">
 
-                                            {product.pricing?.discount}% OFF
 
-                                        </span>
+            <div className="shop-header">
 
-                                    )
+                <div>
 
-                                }
+                    <h2>
+                        Shop
+                    </h2>
 
-                            </div>
+                    <p>
+                        Browse All Products
+                    </p>
 
-                            {/* Product Details */}
+                </div>
 
-                            <div className="product-info">
-<h3>{product.name}</h3>
 
-                                <p className="category">
+                <div className="product-count">
 
-                                    {
+                    Showing{" "}
 
-                                        product.category?.name ||
+                    <strong>
+                        {filteredProducts.length}
+                    </strong>
 
-                                        "No Category"
+                    {" "}products
 
-                                    }
+                </div>
 
-                                </p>
+            </div>
 
-                                <p className="brand">
 
-                                    {
+            {/* ==========================================
+                FILTERS
+            ========================================== */}
 
-                                        product.brand?.name ||
+            <div className="shop-filters">
 
-                                        "No Brand"
 
-                                    }
+                <input
 
-                                </p>
+                    type="text"
 
-                                <div className="price-section">
+                    placeholder="Search Product / SKU..."
 
-                                    <span className="selling-price">
+                    value={search}
 
-                                        ₹ {product.pricing?.sellingPrice}
+                    onChange={
+                        (e) =>
+                            setSearch(
+                                e.target.value
+                            )
+                    }
 
-                                    </span>
+                />
 
-                                    <span className="mrp-price">
 
-                                        ₹ {product.pricing?.mrp}
+                <select
 
-                                    </span>
+                    value={category}
 
-                                </div>
+                    onChange={
+                        (e) =>
+                            setCategory(
+                                e.target.value
+                            )
+                    }
 
-{
-product.availability === "IN_STOCK"
+                >
 
-?
+                    <option value="">
 
-<span className="stock in-stock">
+                        All Categories
 
-In Stock
+                    </option>
 
-</span>
 
-:
+                    {
+                        categories.map(
+                            (name) => (
 
-<span className="stock out-stock">
-
-Out Of Stock
-
-</span>
-
-}
-
-                            </div>
-
-                            {/* Buttons */}
-
-                            <div className="product-buttons">
-
-                                <Link
-
-                                    to={`/shop/product/${product._id}`}
-
-                                    className="details-btn"
-
+                                <option
+                                    key={name}
+                                    value={name}
                                 >
 
-                                    View Details
+                                    {name}
 
-                                </Link>
+                                </option>
 
-                            <button
-className="cart-btn"
-onClick={()=>
-handleAddToCart(product)
-}
->
-Add To Cart
-</button>
+                            )
+                        )
+                    }
 
-<button
-    className="wishlist-btn"
-    onClick={() => handleWishlist(product)}
->
-    ❤️
-</button>
+                </select>
 
-                            </div>
 
-                        </div>
+                <select
 
-                    ))
+                    value={brand}
 
-                )
+                    onChange={
+                        (e) =>
+                            setBrand(
+                                e.target.value
+                            )
+                    }
 
-                :
+                >
 
-                (
+                    <option value="">
 
-                    <div className="no-products">
+                        All Brands
 
-                        No Products Found
+                    </option>
+
+
+                    {
+                        brands.map(
+                            (name) => (
+
+                                <option
+                                    key={name}
+                                    value={name}
+                                >
+
+                                    {name}
+
+                                </option>
+
+                            )
+                        )
+                    }
+
+                </select>
+
+
+                <select
+
+                    value={sort}
+
+                    onChange={
+                        (e) =>
+                            setSort(
+                                e.target.value
+                            )
+                    }
+
+                >
+
+                    <option value="">
+
+                        Sort By
+
+                    </option>
+
+                    <option value="low">
+
+                        Price Low to High
+
+                    </option>
+
+                    <option value="high">
+
+                        Price High to Low
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            {/* ==========================================
+                INVENTORY LOADING
+            ========================================== */}
+
+            {
+                inventoryLoading && (
+
+                    <div className="inventory-loading">
+
+                        Loading stock information...
 
                     </div>
 
                 )
+            }
+
+
+            {/* ==========================================
+                PRODUCTS
+            ========================================== */}
+
+            {
+                filteredProducts.length > 0
+
+                    ?
+
+                    (
+
+                        <div className="product-grid">
+
+                            {
+                                filteredProducts.map(
+                                    (product) => {
+
+                                        const stock =
+                                            getProductInventory(
+                                                product
+                                            );
+
+
+                                        const currentStock =
+                                            Number(
+                                                stock.currentStock || 0
+                                            );
+
+
+                                        const reservedStock =
+                                            Number(
+                                                stock.reservedStock || 0
+                                            );
+
+
+                                        const availableStock =
+                                            Number(
+                                                stock.availableStock || 0
+                                            );
+
+
+                                        const inStock =
+                                            availableStock > 0;
+
+
+                                        const discount =
+                                            Number(
+                                                product.pricing?.discount || 0
+                                            );
+
+
+                                        return (
+
+                                            <div
+                                                className="product-card"
+                                                key={product._id}
+                                            >
+
+
+                                                {/* IMAGE */}
+
+                                                <div className="product-image-box">
+
+                                                    <img
+
+                                                        src={
+                                                            getImageUrl(
+                                                                product
+                                                            )
+                                                        }
+
+                                                        alt={
+                                                            product.name ||
+                                                            "Product"
+                                                        }
+
+                                                        className="product-image"
+
+                                                        onError={
+                                                            (e) => {
+
+                                                                e.currentTarget.src =
+                                                                    "/no-image.png";
+
+                                                            }
+                                                        }
+
+                                                    />
+
+
+                                                    {
+                                                        discount > 0 && (
+
+                                                            <span className="discount-badge">
+
+                                                                {discount}%
+                                                                {" "}
+                                                                OFF
+
+                                                            </span>
+
+                                                        )
+                                                    }
+
+                                                </div>
+
+
+                                                {/* DETAILS */}
+
+                                                <div className="product-info">
+
+                                                    <h3>
+
+                                                        {product.name}
+
+                                                    </h3>
+
+
+                                                    <p className="category">
+
+                                                        {
+                                                            product.category?.name ||
+                                                            "No Category"
+                                                        }
+
+                                                    </p>
+
+
+                                                    <p className="brand">
+
+                                                        {
+                                                            product.brand?.name ||
+                                                            "No Brand"
+                                                        }
+
+                                                    </p>
+
+
+                                                    <p className="sku">
+
+                                                        SKU:
+                                                        {" "}
+                                                        {
+                                                            product.sku ||
+                                                            "-"
+                                                        }
+
+                                                    </p>
+
+
+                                                    {/* PRICE */}
+
+                                                    <div className="price-section">
+
+                                                        <span className="selling-price">
+
+                                                            ₹{" "}
+
+                                                            {
+                                                                product.pricing?.sellingPrice ??
+                                                                0
+                                                            }
+
+                                                        </span>
+
+
+                                                        {
+                                                            Number(
+                                                                product.pricing?.mrp || 0
+                                                            ) >
+                                                            Number(
+                                                                product.pricing?.sellingPrice || 0
+                                                            )
+
+                                                            &&
+
+                                                            (
+
+                                                                <span className="mrp-price">
+
+                                                                    ₹{" "}
+
+                                                                    {
+                                                                        product.pricing.mrp
+                                                                    }
+
+                                                                </span>
+
+                                                            )
+
+                                                        }
+
+                                                    </div>
+
+
+                                                    {/* STOCK */}
+
+                                                    <div className="stock-information">
+
+
+                                                        {
+                                                            inStock
+
+                                                                ?
+
+                                                                (
+
+                                                                    <>
+
+                                                                        <span className="stock in-stock">
+
+                                                                            In Stock
+
+                                                                        </span>
+
+
+                                                                        <span className="available-stock">
+
+                                                                            {availableStock}
+
+                                                                            {" "}
+                                                                            available
+
+                                                                        </span>
+
+                                                                    </>
+
+                                                                )
+
+                                                                :
+
+                                                                (
+
+                                                                    <span className="stock out-stock">
+
+                                                                        Out Of Stock
+
+                                                                    </span>
+
+                                                                )
+
+                                                        }
+
+
+                                                        {
+                                                            reservedStock > 0 && (
+
+                                                                <span className="reserved-stock">
+
+                                                                    Reserved:
+                                                                    {" "}
+                                                                    {reservedStock}
+
+                                                                </span>
+
+                                                            )
+                                                        }
+
+
+                                                        {
+                                                            inStock &&
+                                                            currentStock > 0 &&
+                                                            availableStock <= 5 && (
+
+                                                                <span className="low-stock-message">
+
+                                                                    Only{" "}
+                                                                    {availableStock}
+                                                                    {" "}
+                                                                    left
+
+                                                                </span>
+
+                                                            )
+                                                        }
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                {/* BUTTONS */}
+
+                                                <div className="product-buttons">
+
+
+                                                    <Link
+
+                                                        to={
+                                                            `/shop/product/${product._id}`
+                                                        }
+
+                                                        className="details-btn"
+
+                                                    >
+
+                                                        View Details
+
+                                                    </Link>
+
+
+                                                    <button
+
+                                                        className="cart-btn"
+
+                                                        onClick={() =>
+                                                            handleAddToCart(
+                                                                product
+                                                            )
+                                                        }
+
+                                                        disabled={
+                                                            !inStock ||
+                                                            addingCartId ===
+                                                            product._id
+                                                        }
+
+                                                    >
+
+                                                        {
+                                                            addingCartId ===
+                                                            product._id
+
+                                                                ?
+
+                                                                "Adding..."
+
+                                                                :
+
+                                                            inStock
+
+                                                                ?
+
+                                                                "Add To Cart"
+
+                                                                :
+
+                                                                "Out Of Stock"
+
+                                                        }
+
+                                                    </button>
+
+
+                                                    <button
+
+                                                        className="wishlist-btn"
+
+                                                        onClick={() =>
+                                                            handleWishlist(
+                                                                product
+                                                            )
+                                                        }
+
+                                                        disabled={
+                                                            wishlistLoadingId ===
+                                                            product._id
+                                                        }
+
+                                                    >
+
+                                                        {
+                                                            wishlistLoadingId ===
+                                                            product._id
+
+                                                                ?
+
+                                                                "..."
+
+                                                                :
+
+                                                                "❤️"
+
+                                                        }
+
+                                                    </button>
+
+                                                </div>
+
+                                            </div>
+
+                                        );
+
+                                    }
+                                )
+                            }
+
+                        </div>
+
+                    )
+
+                    :
+
+                    (
+
+                        <div className="no-products">
+
+                            No Products Found
+
+                        </div>
+
+                    )
 
             }
 
         </div>
 
-    )
-
-}
-
-</div>
-
-);
+    );
 
 };
+
 
 export default Shop;

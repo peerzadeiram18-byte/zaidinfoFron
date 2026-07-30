@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+
 import "./AddProduct.css";
 
-import {createProduct} from "../../../../services/productService";
+import { createProduct } from "../../../../services/productService";
 
-import {
-    getCategories
-} from "../../../../services/categoryService";
+import { getCategories } from "../../../../services/categoryService";
 
-import {
-    getBrands
-} from "../../../../services/brandService";
+import { getBrands } from "../../../../services/brandService";
+
 
 const AddProduct = () => {
+
+    // ==========================================
+    // STATES
+    // ==========================================
 
     const [loading, setLoading] = useState(false);
 
@@ -20,13 +22,6 @@ const AddProduct = () => {
     const [brands, setBrands] = useState([]);
 
     const [previewImages, setPreviewImages] = useState([]);
-
-    const [specifications, setSpecifications] = useState([
-        {
-            key: "",
-            value: ""
-        }
-    ]);
 
     const [formData, setFormData] = useState({
 
@@ -50,21 +45,16 @@ const AddProduct = () => {
 
         gst: "",
 
-        // stock: "",
-
-        // minimumStock: "",
-
-        // metaTitle: "",
-
-        // metaDescription: "",
-
-        // status: "Active",
-
         images: []
 
     });
 
-        useEffect(() => {
+
+    // ==========================================
+    // LOAD CATEGORIES + BRANDS
+    // ==========================================
+
+    useEffect(() => {
 
         loadCategories();
 
@@ -72,319 +62,389 @@ const AddProduct = () => {
 
     }, []);
 
-const loadCategories = async () => {
 
-    try {
+    // ==========================================
+    // LOAD CATEGORIES
+    // ==========================================
 
-        const res = await getCategories();
+    const loadCategories = async () => {
 
-        console.log("Category API Response:", res.data);
+        try {
 
-        setCategories(
-            Array.isArray(res.data)
-                ? res.data
-                : Array.isArray(res.data.categories)
-                ? res.data.categories
-                : Array.isArray(res.data.data)
-                ? res.data.data
-                : []
-        );
+            const res = await getCategories();
 
-    }
+            console.log(
+                "CATEGORY API RESPONSE:",
+                res.data
+            );
 
-    catch (err) {
 
-        console.log("Category Error:", err);
+            const categoryData =
+                Array.isArray(res.data)
+                    ? res.data
+                    : Array.isArray(res.data?.data)
+                        ? res.data.data
+                        : Array.isArray(res.data?.categories)
+                            ? res.data.categories
+                            : [];
 
-        setCategories([]);
 
-    }
+            setCategories(categoryData);
 
-};
-    const loadBrands = async () => {
+        }
 
-    try {
+        catch (error) {
 
-        const res = await getBrands();
+            console.log(
+                "CATEGORY ERROR:",
+                error
+            );
 
-        console.log("Brand API Response:", res.data);
+            setCategories([]);
 
-        setBrands(
-            Array.isArray(res.data)
-                ? res.data
-                : Array.isArray(res.data.brands)
-                ? res.data.brands
-                : Array.isArray(res.data.data)
-                ? res.data.data
-                : []
-        );
-
-    }
-
-    catch (err) {
-
-        console.log("Brand Error:", err);
-
-        setBrands([]);
-
-    }
-
-};
-
-        const handleChange = (e) => {
-
-        const { name, value } = e.target;
-
-        setFormData({
-
-            ...formData,
-
-            [name]: value
-
-        });
+        }
 
     };
 
-        const handleImageChange = (e) => {
 
-        const files = Array.from(e.target.files);
+    // ==========================================
+    // LOAD BRANDS
+    // ==========================================
 
-        setFormData({
+    const loadBrands = async () => {
 
-            ...formData,
+        try {
+
+            const res = await getBrands();
+
+            console.log(
+                "BRAND API RESPONSE:",
+                res.data
+            );
+
+
+            const brandData =
+                Array.isArray(res.data)
+                    ? res.data
+                    : Array.isArray(res.data?.data)
+                        ? res.data.data
+                        : Array.isArray(res.data?.brands)
+                            ? res.data.brands
+                            : [];
+
+
+            setBrands(brandData);
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "BRAND ERROR:",
+                error
+            );
+
+            setBrands([]);
+
+        }
+
+    };
+
+
+    // ==========================================
+    // HANDLE INPUT
+    // ==========================================
+
+    const handleChange = (e) => {
+
+        const {
+            name,
+            value
+        } = e.target;
+
+
+        setFormData((prev) => ({
+
+            ...prev,
+
+            [name]: value
+
+        }));
+
+    };
+
+
+    // ==========================================
+    // IMAGE CHANGE
+    // ==========================================
+
+    const handleImageChange = (e) => {
+
+        const files =
+            Array.from(e.target.files || []);
+
+
+        setFormData((prev) => ({
+
+            ...prev,
 
             images: files
 
-        });
+        }));
 
-        const preview = files.map(file => URL.createObjectURL(file));
+
+        const preview =
+            files.map((file) =>
+                URL.createObjectURL(file)
+            );
+
 
         setPreviewImages(preview);
 
     };
 
-        const addSpecification = () => {
 
-        setSpecifications([
+    // ==========================================
+    // SUBMIT
+    // ==========================================
 
-            ...specifications,
+    const handleSubmit = async (e) => {
 
-            {
+        e.preventDefault();
 
-                key: "",
 
-                value: ""
+        if (!formData.name.trim()) {
 
-            }
+            alert("Please enter product name");
 
-        ]);
+            return;
+
+        }
+
+
+        if (!formData.category) {
+
+            alert("Please select category");
+
+            return;
+
+        }
+
+
+        if (!formData.brand) {
+
+            alert("Please select brand");
+
+            return;
+
+        }
+
+
+        try {
+
+            setLoading(true);
+
+
+            // ==================================
+            // FORM DATA
+            // ==================================
+
+            const data = new FormData();
+
+
+            data.append(
+                "name",
+                formData.name
+            );
+
+
+            data.append(
+                "category",
+                formData.category
+            );
+
+
+            data.append(
+                "brand",
+                formData.brand
+            );
+
+
+            data.append(
+                "shortDescription",
+                formData.shortDescription
+            );
+
+
+            data.append(
+                "description",
+                formData.description
+            );
+
+
+            data.append(
+                "purchasePrice",
+                formData.purchasePrice || 0
+            );
+
+
+            data.append(
+                "sellingPrice",
+                formData.sellingPrice || 0
+            );
+
+
+            data.append(
+                "mrp",
+                formData.mrp || 0
+            );
+
+
+            data.append(
+                "discount",
+                formData.discount || 0
+            );
+
+
+            data.append(
+                "gst",
+                formData.gst || 0
+            );
+
+
+            // ==================================
+            // IMAGES
+            // ==================================
+
+            formData.images.forEach((image) => {
+
+                data.append(
+                    "images",
+                    image
+                );
+
+            });
+
+
+            // ==================================
+            // API
+            // ==================================
+
+            const response =
+                await createProduct(data);
+
+
+            console.log(
+                "CREATE PRODUCT RESPONSE:",
+                response.data
+            );
+
+
+            alert(
+                "Product Added Successfully"
+            );
+
+
+            // ==================================
+            // RESET FORM
+            // ==================================
+
+            setFormData({
+
+                name: "",
+
+                category: "",
+
+                brand: "",
+
+                shortDescription: "",
+
+                description: "",
+
+                purchasePrice: "",
+
+                sellingPrice: "",
+
+                mrp: "",
+
+                discount: "",
+
+                gst: "",
+
+                images: []
+
+            });
+
+
+            setPreviewImages([]);
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "CREATE PRODUCT ERROR:",
+                error
+            );
+
+
+            console.log(
+                "STATUS:",
+                error.response?.status
+            );
+
+
+            console.log(
+                "BACKEND RESPONSE:",
+                error.response?.data
+            );
+
+
+            alert(
+                error.response?.data?.message ||
+                "Failed to add product"
+            );
+
+        }
+
+        finally {
+
+            setLoading(false);
+
+        }
 
     };
 
-        const removeSpecification = (index) => {
 
-        const list = [...specifications];
+    // ==========================================
+    // UI
+    // ==========================================
 
-        list.splice(index, 1);
-
-        setSpecifications(list);
-
-    };
-
-        const handleSpecification = (index, e) => {
-
-        const { name, value } = e.target;
-
-        const list = [...specifications];
-
-        list[index][name] = value;
-
-        setSpecifications(list);
-
-    };
-
-  const handleSubmit = async (e) => {
-
-    e.preventDefault();
-
-    setLoading(true);
-
-    try {
-
-        const data = new FormData();
-
-data.append(
-    "name",
-    formData.name
-);
-        data.append("category", formData.category);
-
-        data.append("brand", formData.brand);
-
-        data.append(
-            "shortDescription",
-            formData.shortDescription
-        );
-
-        data.append(
-            "description",
-            formData.description
-        );
-
-        data.append(
-            "purchasePrice",
-            formData.purchasePrice
-        );
-
-        data.append(
-            "sellingPrice",
-            formData.sellingPrice
-        );
-
-        data.append(
-            "mrp",
-            formData.mrp
-        );
-
-        data.append(
-            "discount",
-            formData.discount
-        );
-
-        data.append(
-            "gst",
-            formData.gst
-        );
-
-        // data.append(
-        //     "stock",
-        //     formData.stock
-        // );
-
-        // data.append(
-        //     "minimumStock",
-        //     formData.minimumStock
-        // );
-
-        // data.append(
-        //     "metaTitle",
-        //     formData.metaTitle
-        // );
-
-        // data.append(
-        //     "metaDescription",
-        //     formData.metaDescription
-        // );
-
-        // data.append(
-        //     "status",
-        //     formData.status
-        // );
-
-        // data.append(
-        //     "specifications",
-        //     JSON.stringify(specifications)
-        // );
-
-        formData.images.forEach((image) => {
-
-            data.append("images", image);
-
-        });
-
-        await createProduct(data);
-
-        alert("Product Added Successfully");
-
-        setFormData({
-
-            name:"" ,
-
-            category: "",
-
-            brand: "",
-
-            shortDescription: "",
-
-            description: "",
-
-            purchasePrice: "",
-
-            sellingPrice: "",
-
-            mrp: "",
-
-            discount: "",
-
-            gst: "",
-
-            // stock: "",
-
-            // minimumStock: "",
-
-            // metaTitle: "",
-
-            // metaDescription: "",
-
-            // status: "Active",
-
-            images: []
-
-        });
-
-        setPreviewImages([]);
-
-        setSpecifications([
-
-            {
-
-                key: "",
-
-                value: ""
-
-            }
-
-        ]);
-
-    }
-
-
-    catch (error) {
-
-    console.log("Status:", error.response?.status);
-
-    console.log("Backend Response:", error.response?.data);
-
-    alert(JSON.stringify(error.response?.data));
-
-}
-    // catch (error) {
-
-    //     console.log(error);
-
-    //     alert("Failed to Add Product");
-
-    // }
-
-    finally {
-
-        setLoading(false);
-
-    }
-
-};
-
-        return (
+    return (
 
         <div className="add-product">
 
+
+            {/* =================================
+                HEADER
+            ================================= */}
+
             <div className="page-header">
 
-                <h2>Add Product</h2>
+                <h2>
+                    Add Product
+                </h2>
 
-                <p>Create New Product</p>
+                <p>
+                    Create New Product
+                </p>
 
             </div>
+
+
+            {/* =================================
+                FORM
+            ================================= */}
 
             <form
                 className="product-form"
@@ -392,533 +452,526 @@ data.append(
             >
 
 
-            {/* ================= Basic Information ================= */}
+                {/* =================================
+                    BASIC INFORMATION
+                ================================= */}
 
-<div className="form-section">
+                <div className="form-section">
 
-    <h3>Basic Information</h3>
+                    <h3>
+                        Basic Information
+                    </h3>
 
-    <div className="form-grid">
 
-        <div className="form-group">
+                    <div className="form-grid">
 
-            <label>Product Name</label>
 
-            <input
-                type="text"
-                   name="name"
+                        {/* PRODUCT NAME */}
 
-                  value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter Product Name"
-                required
-            />
+                        <div className="form-group">
 
-        </div>
+                            <label>
+                                Product Name
+                            </label>
 
-        <div className="form-group">
 
-            <label>Category</label>
+                            <input
 
-            <select
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                required
-            >
+                                type="text"
 
-                <option value="">Select Category</option>
+                                name="name"
 
-                {
-                    categories.map((cat) => (
+                                value={
+                                    formData.name
+                                }
 
-                        <option
-                            key={cat._id}
-                            value={cat._id}
-                        >
-                            {cat.name}
-                        </option>
+                                onChange={
+                                    handleChange
+                                }
 
-                    ))
-                }
+                                placeholder="Enter Product Name"
 
-            </select>
+                                required
 
-        </div>
+                            />
 
-        <div className="form-group">
+                        </div>
 
-            <label>Brand</label>
 
-            <select
-                name="brand"
-                value={formData.brand}
-                onChange={handleChange}
-            >
+                        {/* CATEGORY */}
 
-                <option value="">Select Brand</option>
+                        <div className="form-group">
 
-                {
-                    brands.map((brand) => (
+                            <label>
+                                Category
+                            </label>
 
-                        <option
-                            key={brand._id}
-                            value={brand._id}
-                        >
-                            {brand.name}
-                        </option>
 
-                    ))
-                }
+                            <select
 
-            </select>
+                                name="category"
 
-        </div>
+                                value={
+                                    formData.category
+                                }
 
-    </div>
+                                onChange={
+                                    handleChange
+                                }
 
-</div>
+                                required
 
+                            >
 
-{/* ================= Description ================= */}
+                                <option value="">
+                                    Select Category
+                                </option>
 
-<div className="form-section">
 
-    <h3>Description</h3>
+                                {
 
-    <div className="form-group">
+                                    categories.map(
+                                        (category) => (
 
-        <label>Short Description</label>
+                                            <option
 
-        <textarea
+                                                key={
+                                                    category._id
+                                                }
 
-            name="shortDescription"
+                                                value={
+                                                    category._id
+                                                }
 
-            value={formData.shortDescription}
+                                            >
 
-            onChange={handleChange}
+                                                {
+                                                    category.name
+                                                }
 
-            rows={3}
+                                            </option>
 
-        />
+                                        )
+                                    )
 
-    </div>
+                                }
 
-    <div className="form-group">
+                            </select>
 
-        <label>Description</label>
+                        </div>
 
-        <textarea
 
-            name="description"
+                        {/* BRAND */}
 
-            value={formData.description}
+                        <div className="form-group">
 
-            onChange={handleChange}
+                            <label>
+                                Brand
+                            </label>
 
-            rows={8}
 
-        />
+                            <select
 
-    </div>
+                                name="brand"
 
-</div>
+                                value={
+                                    formData.brand
+                                }
 
+                                onChange={
+                                    handleChange
+                                }
 
-{/* ================= Pricing ================= */}
+                                required
 
-<div className="form-section">
+                            >
 
-    <h3>Pricing</h3>
+                                <option value="">
+                                    Select Brand
+                                </option>
 
-    <div className="form-grid">
 
-        <div className="form-group">
+                                {
 
-            <label>Purchase Price</label>
+                                    brands.map(
+                                        (brand) => (
 
-            <input
+                                            <option
 
-                type="number"
+                                                key={
+                                                    brand._id
+                                                }
 
-                name="purchasePrice"
+                                                value={
+                                                    brand._id
+                                                }
 
-                value={formData.purchasePrice}
+                                            >
 
-                onChange={handleChange}
+                                                {
+                                                    brand.name
+                                                }
 
-            />
+                                            </option>
 
-        </div>
+                                        )
+                                    )
 
-        <div className="form-group">
+                                }
 
-            <label>Selling Price</label>
+                            </select>
 
-            <input
+                        </div>
 
-                type="number"
 
-                name="sellingPrice"
+                    </div>
 
-                value={formData.sellingPrice}
+                </div>
 
-                onChange={handleChange}
 
-            />
+                {/* =================================
+                    DESCRIPTION
+                ================================= */}
 
-        </div>
+                <div className="form-section">
 
-        <div className="form-group">
+                    <h3>
+                        Description
+                    </h3>
 
-            <label>MRP</label>
 
-            <input
+                    <div className="form-group">
 
-                type="number"
+                        <label>
+                            Short Description
+                        </label>
 
-                name="mrp"
 
-                value={formData.mrp}
+                        <textarea
 
-                onChange={handleChange}
+                            name="shortDescription"
 
-            />
+                            value={
+                                formData.shortDescription
+                            }
 
-        </div>
+                            onChange={
+                                handleChange
+                            }
 
-        <div className="form-group">
+                            rows={3}
 
-            <label>Discount (%)</label>
+                            placeholder="Enter short description"
 
-            <input
+                        />
 
-                type="number"
+                    </div>
 
-                name="discount"
 
-                value={formData.discount}
+                    <div className="form-group">
 
-                onChange={handleChange}
+                        <label>
+                            Description
+                        </label>
 
-            />
 
-        </div>
+                        <textarea
 
-        <div className="form-group">
+                            name="description"
 
-            <label>GST (%)</label>
+                            value={
+                                formData.description
+                            }
 
-            <input
+                            onChange={
+                                handleChange
+                            }
 
-                type="number"
+                            rows={8}
 
-                name="gst"
+                            placeholder="Enter product description"
 
-                value={formData.gst}
+                        />
 
-                onChange={handleChange}
+                    </div>
 
-            />
+                </div>
 
-        </div>
 
-    </div>
+                {/* =================================
+                    PRICING
+                ================================= */}
 
-</div>
+                <div className="form-section">
 
+                    <h3>
+                        Pricing
+                    </h3>
 
-{/* ================= Stock ================= */}
-{/*
-<div className="form-section">
 
-    <h3>Inventory</h3>
+                    <div className="form-grid">
 
-    <div className="form-grid">
 
-        <div className="form-group">
+                        {/* PURCHASE PRICE */}
 
-            <label>Stock</label>
+                        <div className="form-group">
 
-            <input
+                            <label>
+                                Purchase Price
+                            </label>
 
-                type="number"
 
-                name="stock"
+                            <input
 
-                value={formData.stock}
+                                type="number"
 
-                onChange={handleChange}
+                                name="purchasePrice"
 
-            />
+                                value={
+                                    formData.purchasePrice
+                                }
 
-        </div>
+                                onChange={
+                                    handleChange
+                                }
 
-        <div className="form-group">
+                                min="0"
 
-            <label>Minimum Stock</label>
+                            />
 
-            <input
+                        </div>
 
-                type="number"
 
-                name="minimumStock"
+                        {/* SELLING PRICE */}
 
-                value={formData.minimumStock}
+                        <div className="form-group">
 
-                onChange={handleChange}
+                            <label>
+                                Selling Price
+                            </label>
 
-            />
 
-        </div>
+                            <input
 
-        <div className="form-group">
+                                type="number"
 
-            <label>Status</label>
+                                name="sellingPrice"
 
-            <select
+                                value={
+                                    formData.sellingPrice
+                                }
 
-                name="status"
+                                onChange={
+                                    handleChange
+                                }
 
-                value={formData.status}
+                                min="0"
 
-                onChange={handleChange}
+                            />
 
-            >
+                        </div>
 
-                <option value="Active">Active</option>
 
-                <option value="Inactive">Inactive</option>
+                        {/* MRP */}
 
-            </select>
+                        <div className="form-group">
 
-        </div>
+                            <label>
+                                MRP
+                            </label>
 
-    </div>
 
-</div>*/}
+                            <input
 
+                                type="number"
 
-{/* ================= Images ================= */}
+                                name="mrp"
 
-<div className="form-section">
+                                value={
+                                    formData.mrp
+                                }
 
-    <h3>Product Images</h3>
+                                onChange={
+                                    handleChange
+                                }
 
-    <div className="form-group">
+                                min="0"
 
-        <input
+                            />
 
-            type="file"
+                        </div>
 
-            multiple
 
-            accept="image/*"
+                        {/* DISCOUNT */}
 
-            onChange={handleImageChange}
+                        <div className="form-group">
 
-        />
+                            <label>
+                                Discount (%)
+                            </label>
 
-    </div>
 
-    <div className="image-preview">
+                            <input
 
-        {
+                                type="number"
 
-            previewImages.map((img, index) => (
+                                name="discount"
 
-                <img
+                                value={
+                                    formData.discount
+                                }
 
-                    key={index}
+                                onChange={
+                                    handleChange
+                                }
 
-                    src={img}
+                                min="0"
 
-                    alt="preview"
+                            />
 
-                    className="preview-img"
+                        </div>
 
-                />
 
-            ))
+                        {/* GST */}
 
-        }
+                        <div className="form-group">
 
-    </div>
+                            <label>
+                                GST (%)
+                            </label>
 
-</div>
 
-{/* ================= Specifications ================= */}
-{/*
-<div className="form-section">
+                            <input
 
-    <h3>Specifications</h3>
+                                type="number"
 
-    {
+                                name="gst"
 
-        specifications.map((item, index) => (
+                                value={
+                                    formData.gst
+                                }
 
-            <div
-                className="specification-row"
-                key={index}
-            >
+                                onChange={
+                                    handleChange
+                                }
 
-                <input
+                                min="0"
 
-                    type="text"
+                            />
 
-                    placeholder="Specification Name"
+                        </div>
 
-                    name="key"
 
-                    value={item.key}
+                    </div>
 
-                    onChange={(e) =>
-                        handleSpecification(index, e)
+                </div>
+
+
+                {/* =================================
+                    PRODUCT IMAGES
+                ================================= */}
+
+                <div className="form-section">
+
+                    <h3>
+                        Product Images
+                    </h3>
+
+
+                    <div className="form-group">
+
+                        <input
+
+                            type="file"
+
+                            multiple
+
+                            accept="image/*"
+
+                            onChange={
+                                handleImageChange
+                            }
+
+                        />
+
+                    </div>
+
+
+                    {
+
+                        previewImages.length > 0 && (
+
+                            <div className="image-preview">
+
+                                {
+
+                                    previewImages.map(
+                                        (image, index) => (
+
+                                            <img
+
+                                                key={index}
+
+                                                src={image}
+
+                                                alt={`Preview ${index + 1}`}
+
+                                                className="preview-img"
+
+                                            />
+
+                                        )
+                                    )
+
+                                }
+
+                            </div>
+
+                        )
+
                     }
 
-                />
+                </div>
 
-                <input
 
-                    type="text"
+                {/* =================================
+                    SUBMIT
+                ================================= */}
 
-                    placeholder="Specification Value"
+                <div className="submit-section">
 
-                    name="value"
+                    <button
 
-                    value={item.value}
+                        type="submit"
 
-                    onChange={(e) =>
-                        handleSpecification(index, e)
-                    }
+                        className="submit-btn"
 
-                />
+                        disabled={loading}
 
-                <button
+                    >
 
-                    type="button"
+                        {
 
-                    className="remove-btn"
+                            loading
 
-                    onClick={() =>
-                        removeSpecification(index)
-                    }
+                                ? "Saving Product..."
 
-                >
+                                : "Save Product"
 
-                    Remove
+                        }
 
-                </button>
+                    </button>
 
-            </div>
+                </div>
 
-        ))
 
-    }
+            </form>
 
-    <button
+        </div>
 
-        type="button"
-
-        className="add-btn"
-
-        onClick={addSpecification}
-
-    >
-
-        + Add Specification
-
-    </button>
-
-</div>
-*/}
-
-
-{/* ================= SEO ================= */}
-{/*
-<div className="form-section">
-
-    <h3>SEO Information</h3>
-
-    <div className="form-group">
-
-        <label>Meta Title</label>
-
-        <input
-
-            type="text"
-
-            name="metaTitle"
-
-            value={formData.metaTitle}
-
-            onChange={handleChange}
-
-        />
-
-    </div>
-
-    <div className="form-group">
-
-        <label>Meta Description</label>
-
-        <textarea
-
-            rows={4}
-
-            name="metaDescription"
-
-            value={formData.metaDescription}
-
-            onChange={handleChange}
-
-        />
-
-    </div>
-
-</div>
-*/}
-
-
-<div className="submit-section">
-
-    <button
-
-        type="submit"
-
-        className="submit-btn"
-
-        disabled={loading}
-
-    >
-
-        {
-
-            loading
-
-                ? "Saving Product..."
-
-                : "Save Product"
-
-        }
-
-    </button>
-
-</div>
-
-</form>
-
-</div>
-
-);
+    );
 
 };
 
+
 export default AddProduct;
-
-
-
-
-
-
-

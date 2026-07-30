@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/payments";
+const API = `${import.meta.env.VITE_API_URL}/payments`;
+
+// ============================================
+// GET TOKEN
+// ============================================
 
 const getToken = () => {
 
@@ -8,9 +12,30 @@ const getToken = () => {
 
 };
 
-// =============================
+
+// ============================================
+// GET CONFIG
+// ============================================
+
+const getConfig = () => {
+
+    return {
+
+        headers: {
+
+            Authorization:
+                `Bearer ${getToken()}`
+
+        }
+
+    };
+
+};
+
+
+// ============================================
 // CREATE PAYMENT
-// =============================
+// ============================================
 
 export const createPayment = async (data) => {
 
@@ -20,15 +45,7 @@ export const createPayment = async (data) => {
 
         data,
 
-        {
-
-            headers: {
-
-                Authorization: `Bearer ${getToken()}`
-
-            }
-
-        }
+        getConfig()
 
     );
 
@@ -36,9 +53,10 @@ export const createPayment = async (data) => {
 
 };
 
-// =============================
+
+// ============================================
 // GET MY PAYMENTS
-// =============================
+// ============================================
 
 export const getMyPayments = async () => {
 
@@ -46,15 +64,7 @@ export const getMyPayments = async () => {
 
         `${API}/my`,
 
-        {
-
-            headers: {
-
-                Authorization: `Bearer ${getToken()}`
-
-            }
-
-        }
+        getConfig()
 
     );
 
@@ -62,9 +72,10 @@ export const getMyPayments = async () => {
 
 };
 
-// =============================
+
+// ============================================
 // GET SINGLE PAYMENT
-// =============================
+// ============================================
 
 export const getPayment = async (id) => {
 
@@ -72,15 +83,7 @@ export const getPayment = async (id) => {
 
         `${API}/${id}`,
 
-        {
-
-            headers: {
-
-                Authorization: `Bearer ${getToken()}`
-
-            }
-
-        }
+        getConfig()
 
     );
 
@@ -88,16 +91,14 @@ export const getPayment = async (id) => {
 
 };
 
-// =============================
+
+// ============================================
 // PAYMENT SUCCESS
-// =============================
+// ============================================
 
 export const paymentSuccess = async (
-
     id,
-
     data
-
 ) => {
 
     const res = await axios.patch(
@@ -106,15 +107,7 @@ export const paymentSuccess = async (
 
         data,
 
-        {
-
-            headers: {
-
-                Authorization: `Bearer ${getToken()}`
-
-            }
-
-        }
+        getConfig()
 
     );
 
@@ -122,16 +115,14 @@ export const paymentSuccess = async (
 
 };
 
-// =============================
+
+// ============================================
 // PAYMENT FAILED
-// =============================
+// ============================================
 
 export const paymentFailed = async (
-
     id,
-
     data
-
 ) => {
 
     const res = await axios.patch(
@@ -140,15 +131,7 @@ export const paymentFailed = async (
 
         data,
 
-        {
-
-            headers: {
-
-                Authorization: `Bearer ${getToken()}`
-
-            }
-
-        }
+        getConfig()
 
     );
 

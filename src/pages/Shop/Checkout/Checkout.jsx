@@ -3,79 +3,113 @@ import React, {
     useState
 } from "react";
 
+
 import axios from "axios";
+
 
 import {
     useNavigate
 } from "react-router-dom";
 
+
 import "./Checkout.css";
+
 
 import {
     createPayment
 } from "../../../services/paymentService";
 
 
+const API =
+    "http://localhost:5000";
+
+
 const Checkout = () => {
 
-    const navigate = useNavigate();
+    const navigate =
+        useNavigate();
 
-    const token = localStorage.getItem("token");
+
+    const token =
+        localStorage.getItem("token");
 
 
-    // ==========================
+    // =================================
     // STATES
-    // ==========================
+    // =================================
 
-    const [cart, setCart] = useState([]);
-
-    const [addresses, setAddresses] = useState([]);
-
-    const [selectedAddress, setSelectedAddress] = useState("");
-
-    const [loading, setLoading] = useState(false);
+    const [cart, setCart] =
+        useState([]);
 
 
-    // ==========================
+    const [addresses, setAddresses] =
+        useState([]);
+
+
+    const [selectedAddress, setSelectedAddress] =
+        useState("");
+
+
+    const [loading, setLoading] =
+        useState(false);
+
+
+    const [cartLoading, setCartLoading] =
+        useState(true);
+
+
+    const shippingCharge = 100;
+
+    const gst = 18;
+
+
+
+    // =================================
     // LOAD DATA
-    // ==========================
+    // =================================
 
     useEffect(() => {
 
-        getCart();
+        loadCart();
 
         getAddresses();
 
     }, []);
 
 
-    // ==========================
-    // GET CART
-    // ==========================
 
-    const getCart = async () => {
+    // =================================
+    // GET CART
+    // =================================
+
+    const loadCart = async () => {
 
         try {
 
-            const res = await axios.get(
+            setCartLoading(true);
 
-                "http://localhost:5000/api/cart",
 
-                {
+            const res =
+                await axios.get(
 
-                    headers: {
+                    `${API}/api/cart`,
 
-                        Authorization: `Bearer ${token}`
+                    {
+
+                        headers: {
+
+                            Authorization:
+                                `Bearer ${token}`
+
+                        }
 
                     }
 
-                }
-
-            );
+                );
 
 
             console.log(
-                "FULL CART RESPONSE",
+                "CHECKOUT CART:",
                 res.data
             );
 
@@ -96,39 +130,51 @@ const Checkout = () => {
 
         catch (err) {
 
-            console.log(
+            console.error(
                 "GET CART ERROR:",
                 err.response?.data || err
             );
+
+
+            setCart([]);
+
+        }
+
+        finally {
+
+            setCartLoading(false);
 
         }
 
     };
 
 
-    // ==========================
+
+    // =================================
     // GET ADDRESSES
-    // ==========================
+    // =================================
 
     const getAddresses = async () => {
 
         try {
 
-            const res = await axios.get(
+            const res =
+                await axios.get(
 
-                "http://localhost:5000/api/addresses",
+                    `${API}/api/addresses`,
 
-                {
+                    {
 
-                    headers: {
+                        headers: {
 
-                        Authorization: `Bearer ${token}`
+                            Authorization:
+                                `Bearer ${token}`
+
+                        }
 
                     }
 
-                }
-
-            );
+                );
 
 
             console.log(
@@ -153,7 +199,7 @@ const Checkout = () => {
 
         catch (err) {
 
-            console.log(
+            console.error(
                 "GET ADDRESS ERROR:",
                 err.response?.data || err
             );
@@ -163,39 +209,70 @@ const Checkout = () => {
     };
 
 
-    // ==========================
-    // TOTAL
-    // ==========================
 
-    const total = cart.reduce(
+    // =================================
+    // SUBTOTAL
+    // =================================
 
-        (sum, item) => {
+    const subtotal =
+        cart.reduce(
 
-            const price =
-                Number(
-                    item.product?.pricing?.sellingPrice || 0
+            (sum, item) => {
+
+                const price =
+                    Number(
+                        item.product?.pricing?.sellingPrice || 0
+                    );
+
+
+                const quantity =
+                    Number(
+                        item.quantity || 0
+                    );
+
+
+                return (
+                    sum +
+                    price * quantity
                 );
 
-            const quantity =
-                Number(
-                    item.quantity || 0
-                );
+            },
+
+            0
+
+        );
 
 
-            return sum + (
-                price * quantity
-            );
 
-        },
+    // =================================
+    // GST
+    // =================================
 
-        0
+    const gstAmount =
+        Math.round(
 
-    );
+            subtotal *
+            gst /
+            100
+
+        );
 
 
-    // ==========================
+
+    // =================================
+    // GRAND TOTAL
+    // =================================
+
+    const grandTotal =
+        subtotal +
+        shippingCharge +
+        gstAmount;
+
+
+
+    // =================================
     // PLACE ORDER
-    // ==========================
+    // =================================
 
     const placeOrder = async () => {
 
@@ -206,9 +283,9 @@ const Checkout = () => {
         }
 
 
-        // --------------------------
-        // CHECK ADDRESS
-        // --------------------------
+        // -------------------------------
+        // ADDRESS CHECK
+        // -------------------------------
 
         if (!selectedAddress) {
 
@@ -221,12 +298,14 @@ const Checkout = () => {
         }
 
 
-        const address = addresses.find(
+        const address =
+            addresses.find(
 
-            (item) =>
-                item._id === selectedAddress
+                item =>
+                    item._id ===
+                    selectedAddress
 
-        );
+            );
 
 
         if (!address) {
@@ -240,9 +319,9 @@ const Checkout = () => {
         }
 
 
-        // --------------------------
-        // CHECK CART
-        // --------------------------
+        // -------------------------------
+        // CART CHECK
+        // -------------------------------
 
         if (!cart.length) {
 
@@ -255,10 +334,9 @@ const Checkout = () => {
         }
 
 
-        // ==========================
-        // IMPORTANT
-        // BACKEND EXPECTS THESE NAMES
-        // ==========================
+        // =================================
+        // SHIPPING ADDRESS
+        // =================================
 
         const shippingAddress = {
 
@@ -308,9 +386,10 @@ const Checkout = () => {
         };
 
 
-        // ==========================
-        // FRONTEND VALIDATION
-        // ==========================
+
+        // =================================
+        // VALIDATION
+        // =================================
 
         if (!shippingAddress.fullName) {
 
@@ -378,48 +457,55 @@ const Checkout = () => {
         }
 
 
-        // ==========================
+
+        // =================================
         // ORDER ITEMS
-        // ==========================
+        // =================================
 
-        const orderItems = cart.map(
+        const orderItems =
+            cart.map(
 
-            (item) => ({
+                item => ({
 
-                product:
-                    item.product?._id,
-
-
-                title:
-                    item.product?.name || "",
+                    product:
+                        item.product?._id,
 
 
-                quantity:
-                    Number(item.quantity || 1),
+                    title:
+                        item.product?.name ||
+                        "",
 
 
-                price:
-                    Number(
-                        item.product?.pricing?.sellingPrice || 0
-                    ),
+                    quantity:
+                        Number(
+                            item.quantity || 1
+                        ),
 
 
-                imageUrl:
-                    item.product?.images?.[0]?.url || ""
-
-            })
-
-        );
+                    price:
+                        Number(
+                            item.product?.pricing?.sellingPrice || 0
+                        ),
 
 
-        // ==========================
+                    imageUrl:
+                        item.product?.images?.[0]?.url ||
+                        ""
+
+                })
+
+            );
+
+
+
+        // =================================
         // CHECK PRODUCT IDS
-        // ==========================
+        // =================================
 
         const invalidProduct =
             orderItems.some(
 
-                (item) =>
+                item =>
                     !item.product
 
             );
@@ -436,25 +522,113 @@ const Checkout = () => {
         }
 
 
-        // ==========================
-        // FINAL ORDER DATA
-        // ==========================
+
+        // =================================
+        // ORDER DATA
+        // =================================
+
+        // const orderData = {
+
+        //     orderItems,
+
+        //     shippingAddress,
+
+        //     // Same total as checkout UI
+        //     totalAmount:
+        //         Number(grandTotal)
+
+        // };
+
+        // =================================
+        // ORDER DATA
+        // =================================
+        // IMPORTANT:
+        // Backend Joi validation requires:
+        // originalPrice, price, quantity, product, title
+        // and shippingAddress must be the COMPLETE address object.
 
         const orderData = {
+            orderItems: cart.map((item) => {
+                const sellingPrice = Number(
+                    item.product?.pricing?.sellingPrice ?? 0
+                );
 
-            orderItems,
+                const originalPrice = Number(
+                    item.product?.pricing?.originalPrice ??
+                    item.originalPrice ??
+                    sellingPrice
+                );
+
+                const quantity = Number(item.quantity ?? 1);
+
+                const discountAmount = Number(
+                    item.discountAmount ??
+                    Math.max(originalPrice - sellingPrice, 0)
+                );
+
+                return {
+                    product:
+                        item.product?._id ||
+                        item.product ||
+                        "",
+
+                    title:
+                        item.product?.name ||
+                        item.title ||
+                        "",
+
+                    quantity,
+
+                    originalPrice,
+
+                    discountAmount,
+
+                    price: sellingPrice,
+
+                    offer:
+                        item.offer ||
+                        null,
+
+                    imageUrl:
+                        item.product?.images?.[0]?.url ||
+                        item.imageUrl ||
+                        "",
+                };
+            }),
 
             shippingAddress,
 
-            totalAmount: Number(total)
+            totalAmount:
+                Number(grandTotal),
 
+            orderSource:
+                "ONLINE",
         };
 
+        // Extra frontend safety check before API call
+        const invalidOrderItem = orderData.orderItems.some(
+            (item) =>
+                !item.product ||
+                !item.title ||
+                !Number.isFinite(item.quantity) ||
+                item.quantity < 1 ||
+                !Number.isFinite(item.originalPrice) ||
+                !Number.isFinite(item.price)
+        );
+
+        if (invalidOrderItem) {
+            alert(
+                "Some product information is missing. Please refresh the cart and try again."
+            );
+            return;
+        }
 
         console.log(
             "FINAL ORDER DATA:",
             orderData
         );
+
+        
 
 
         try {
@@ -462,14 +636,14 @@ const Checkout = () => {
             setLoading(true);
 
 
-            // ==========================
+            // =================================
             // CREATE ORDER
-            // ==========================
+            // =================================
 
             const orderRes =
                 await axios.post(
 
-                    "http://localhost:5000/api/orders",
+                    `${API}/api/orders`,
 
                     orderData,
 
@@ -509,9 +683,10 @@ const Checkout = () => {
             }
 
 
-            // ==========================
+
+            // =================================
             // CREATE PAYMENT
-            // ==========================
+            // =================================
 
             const paymentRes =
                 await createPayment({
@@ -540,9 +715,10 @@ const Checkout = () => {
             );
 
 
-            // ==========================
+
+            // =================================
             // SUCCESS
-            // ==========================
+            // =================================
 
             alert(
                 "Order placed successfully!"
@@ -572,7 +748,7 @@ const Checkout = () => {
 
         catch (err) {
 
-            console.log(
+            console.error(
                 "ORDER / PAYMENT ERROR:",
                 err
             );
@@ -580,7 +756,16 @@ const Checkout = () => {
 
             console.log(
                 "BACKEND ERROR:",
-                err.response?.data
+                JSON.stringify(
+                    err.response?.data,
+                    null,
+                    2
+                )
+            );
+
+            console.log(
+                "VALIDATION ERRORS:",
+                err.response?.data?.errors
             );
 
 
@@ -603,18 +788,45 @@ const Checkout = () => {
     };
 
 
-    // ==========================
+
+    // =================================
+    // LOADING
+    // =================================
+
+    if (cartLoading) {
+
+        return (
+
+            <div className="checkout">
+
+                <div className="checkout-right">
+
+                    <h2>
+                        Loading Cart...
+                    </h2>
+
+                </div>
+
+            </div>
+
+        );
+
+    }
+
+
+
+    // =================================
     // UI
-    // ==========================
+    // =================================
 
     return (
 
         <div className="checkout">
 
 
-            {/* ==========================
+            {/* =================================
                 LEFT
-            ========================== */}
+            ================================= */}
 
             <div className="checkout-left">
 
@@ -623,134 +835,119 @@ const Checkout = () => {
                 </h2>
 
 
-                {
+                {addresses.length === 0 ? (
 
-                    addresses.length === 0 ? (
+                    <p>
+                        No Address Found
+                    </p>
 
-                        <p>
-                            No Address Found
-                        </p>
+                ) : (
 
-                    ) : (
+                    addresses.map(
 
-                        addresses.map(
+                        address => (
 
-                            (address) => (
+                            <div
+                                className="address-card"
+                                key={
+                                    address._id
+                                }
+                            >
 
-                                <div
-
-                                    className="address-card"
-
-                                    key={
+                                <input
+                                    type="radio"
+                                    name="deliveryAddress"
+                                    checked={
+                                        selectedAddress ===
                                         address._id
                                     }
-
-                                >
-
-                                    <input
-
-                                        type="radio"
-
-                                        name="deliveryAddress"
-
-                                        checked={
-
-                                            selectedAddress ===
+                                    onChange={() =>
+                                        setSelectedAddress(
                                             address._id
+                                        )
+                                    }
+                                />
 
+
+                                <div>
+
+                                    <h4>
+
+                                        {
+                                            address.fullName ||
+                                            address.name ||
+                                            "Customer"
                                         }
 
-                                        onChange={() =>
+                                    </h4>
 
-                                            setSelectedAddress(
-                                                address._id
-                                            )
 
+                                    <p>
+
+                                        {
+                                            address.phone ||
+                                            address.mobile ||
+                                            ""
                                         }
 
-                                    />
+                                    </p>
 
 
-                                    <div>
+                                    <p>
 
-                                        <h4>
+                                        {
+                                            address.addressLine ||
+                                            address.address ||
+                                            address.streetAddress ||
+                                            ""
+                                        }
 
-                                            {
-                                                address.fullName ||
-                                                address.name ||
-                                                "Customer"
-                                            }
-
-                                        </h4>
-
-
-                                        <p>
-
-                                            {
-                                                address.phone ||
-                                                address.mobile ||
-                                                ""
-                                            }
-
-                                        </p>
+                                    </p>
 
 
-                                        <p>
+                                    <p>
 
-                                            {
-                                                address.addressLine ||
-                                                address.address ||
-                                                address.streetAddress ||
-                                                ""
-                                            }
+                                        {
+                                            address.city ||
+                                            ""
+                                        }
 
-                                        </p>
+                                        ,{" "}
 
+                                        {
+                                            address.state ||
+                                            ""
+                                        }
 
-                                        <p>
-
-                                            {
-                                                address.city ||
-                                                ""
-                                            }
-
-                                            ,{" "}
-
-                                            {
-                                                address.state ||
-                                                ""
-                                            }
-
-                                        </p>
+                                    </p>
 
 
-                                        <p>
+                                    <p>
 
-                                            {
-                                                address.pincode ||
-                                                ""
-                                            }
+                                        {
+                                            address.pincode ||
+                                            ""
+                                        }
 
-                                        </p>
-
-                                    </div>
+                                    </p>
 
                                 </div>
 
-                            )
+                            </div>
 
                         )
 
                     )
 
-                }
+                )}
 
             </div>
 
 
-            {/* ==========================
+
+            {/* =================================
                 RIGHT
-            ========================== */}
+            ================================= */}
 
             <div className="checkout-right">
 
@@ -759,117 +956,198 @@ const Checkout = () => {
                 </h2>
 
 
-                {
+                {cart.length === 0 ? (
 
-                    cart.length === 0 ? (
+                    <div>
 
                         <p>
                             Cart is empty
                         </p>
 
-                    ) : (
 
-                        cart.map(
+                        <button
+                            type="button"
+                            onClick={() =>
+                                navigate("/shop")
+                            }
+                        >
 
-                            (item) => {
+                            Continue Shopping
 
-                                const productId =
-                                    item.product?._id ||
-                                    item._id;
+                        </button>
 
+                    </div>
 
-                                const price =
-                                    Number(
-                                        item.product?.pricing?.sellingPrice || 0
-                                    );
+                ) : (
 
+                    cart.map(
 
-                                return (
+                        (item, index) => {
 
-                                    <div
-
-                                        className="summary-item"
-
-                                        key={
-                                            `${productId}-${item.quantity}`
-                                        }
-
-                                    >
-
-                                        <p>
-
-                                            {
-                                                item.product?.name
-                                            }
-
-                                        </p>
+                            const productId =
+                                item.product?._id ||
+                                item._id;
 
 
-                                        <p>
-
-                                            Qty :{" "}
-
-                                            {
-                                                item.quantity
-                                            }
-
-                                        </p>
-
-
-                                        <p>
-
-                                            ₹{" "}
-
-                                            {
-                                                price
-                                            }
-
-                                        </p>
-
-                                    </div>
-
+                            const price =
+                                Number(
+                                    item.product?.pricing?.sellingPrice || 0
                                 );
 
-                            }
 
-                        )
+                            const quantity =
+                                Number(
+                                    item.quantity || 0
+                                );
+
+
+                            const itemTotal =
+                                price *
+                                quantity;
+
+
+                            return (
+
+                                <div
+                                    className="summary-item"
+                                    key={
+                                        productId ||
+                                        index
+                                    }
+                                >
+
+                                    <p>
+
+                                        {
+                                            item.product?.name
+                                        }
+
+                                    </p>
+
+
+                                    <p>
+
+                                        Qty:{" "}
+
+                                        {
+                                            quantity
+                                        }
+
+                                    </p>
+
+
+                                    <p>
+
+                                        ₹ {price}
+
+                                    </p>
+
+
+                                    <p>
+
+                                        Item Total: ₹{" "}
+
+                                        {
+                                            itemTotal
+                                        }
+
+                                    </p>
+
+                                </div>
+
+                            );
+
+                        }
 
                     )
 
-                }
+                )}
 
 
-                <hr />
+
+                {cart.length > 0 && (
+
+                    <>
+
+                        <hr />
 
 
-                <h2>
+                        {/* Subtotal */}
 
-                    Total : ₹ {total}
+                        <div className="summary-row">
 
-                </h2>
+                            <span>
+                                Subtotal
+                            </span>
+
+                            <span>
+                                ₹ {subtotal}
+                            </span>
+
+                        </div>
 
 
-                <button
+                        {/* Shipping */}
 
-                    type="button"
+                        <div className="summary-row">
 
-                    onClick={placeOrder}
+                            <span>
+                                Shipping
+                            </span>
 
-                    disabled={loading}
+                            <span>
+                                ₹ {shippingCharge}
+                            </span>
 
-                >
+                        </div>
 
-                    {
 
-                        loading
+                        {/* GST */}
 
-                            ? "Placing Order..."
+                        <div className="summary-row">
 
-                            : "Place Order"
+                            <span>
+                                GST ({gst}%)
+                            </span>
 
-                    }
+                            <span>
+                                ₹ {gstAmount}
+                            </span>
 
-                </button>
+                        </div>
+
+
+                        <hr />
+
+
+                        <h2>
+
+                            Total : ₹ {grandTotal}
+
+                        </h2>
+
+
+                        <button
+                            type="button"
+                            onClick={placeOrder}
+                            disabled={loading}
+                        >
+
+                            {
+
+                                loading
+
+                                    ? "Placing Order..."
+
+                                    : "Place Order"
+
+                            }
+
+                        </button>
+
+                    </>
+
+                )}
 
             </div>
 

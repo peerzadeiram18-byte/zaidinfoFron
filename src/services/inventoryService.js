@@ -1,71 +1,131 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/inventory";
+const API =
+    "http://localhost:5000/api/inventory";
 
-const token = localStorage.getItem("token");
 
-const config = {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
+// ======================================================
+// AUTH CONFIG
+// ======================================================
+
+const getConfig = () => {
+
+    const token =
+        localStorage.getItem("token");
+
+    return {
+
+        headers: {
+
+            Authorization:
+                `Bearer ${token}`
+
+        }
+
+    };
+
 };
 
-// =========================
-// Get Inventory List
-// =========================
+
+// ======================================================
+// ADMIN INVENTORY
+// Protected API
+// ======================================================
 
 export const getInventory = async () => {
-  return await axios.get(API, config);
+
+    return await axios.get(
+        API,
+        getConfig()
+    );
+
 };
 
-// =========================
-// Add Stock
-// =========================
+
+// ======================================================
+// SHOP INVENTORY
+// PUBLIC API
+// Customer ke liye
+// ======================================================
+
+export const getShopInventory = async () => {
+
+    return await axios.get(
+        `${API}/shop`
+    );
+
+};
+
+
+// ======================================================
+// ADD STOCK
+// ======================================================
 
 export const addStock = async (data) => {
-  return await axios.patch(
-    `${API}/add-stock`,
-    data,
-    config
-  );
+
+    return await axios.patch(
+
+        `${API}/add-stock`,
+
+        data,
+
+        getConfig()
+
+    );
+
 };
 
-// =========================
-// Remove Stock
-// =========================
+
+// ======================================================
+// REMOVE STOCK
+// ======================================================
 
 export const removeStock = async (data) => {
-  return await axios.patch(
-    `${API}/remove-stock`,
-    data,
-    config
-  );
+
+    return await axios.patch(
+
+        `${API}/remove-stock`,
+
+        data,
+
+        getConfig()
+
+    );
+
 };
 
-// =========================
-// Return Stock
-// =========================
+
+// ======================================================
+// RETURN STOCK
+// ======================================================
 
 export const returnStock = async (data) => {
-  return await axios.patch(
-    `${API}/return-stock`,
-    data,
-    config
-  );
+
+    return await axios.patch(
+
+        `${API}/return-stock`,
+
+        data,
+
+        getConfig()
+
+    );
+
 };
 
-// =========================
-// Stock History
-// =========================
+
+// ======================================================
+// STOCK HISTORY
+// ======================================================
 
 export const getStockHistory = async (productId) => {
 
-  return await axios.get(
+    return await axios.get(
 
-    `http://localhost:5000/api/stock-transactions/product/${productId}`,
+        `http://localhost:5000/api/stock-transactions/product/${productId}`,
 
-    config
+        getConfig()
 
-  );
+    );
 
 };

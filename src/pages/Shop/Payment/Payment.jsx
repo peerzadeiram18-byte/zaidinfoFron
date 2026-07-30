@@ -1,30 +1,65 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 import "./Payment.css";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
 import {
-
+    createPayment,
     paymentSuccess,
-
-    paymentFailed
-
+    paymentFailed,
 } from "../../../services/paymentService";
 
 const Payment = () => {
 
     const location = useLocation();
-
     const navigate = useNavigate();
 
-    const {
+    const { order, payment } = location.state || {};
 
-        order,
+    const [loading, setLoading] = useState(false);
 
-        payment
+    // =====================================================
+    // RAZORPAY SCRIPT LOAD
+    // =====================================================
 
-    } = location.state || {};
+    useEffect(() => {
+
+        const loadRazorpay = () => {
+
+            return new Promise((resolve) => {
+
+                if (window.Razorpay) {
+                    resolve(true);
+                    return;
+                }
+
+                const script = document.createElement("script");
+
+                script.src =
+                    "https://checkout.razorpay.com/v1/checkout.js";
+
+                script.onload = () => {
+                    resolve(true);
+                };
+
+                script.onerror = () => {
+                    resolve(false);
+                };
+
+                document.body.appendChild(script);
+
+            });
+
+        };
+
+        loadRazorpay();
+
+    }, []);
+
+
+    // =====================================================
+    // NO PAYMENT DATA
+    // =====================================================
 
     if (!order || !payment) {
 
@@ -34,81 +69,482 @@ const Payment = () => {
 
                 <h2>No Payment Found</h2>
 
+                <button
+                    onClick={() => navigate("/cart")}
+                >
+                    Go To Cart
+                </button>
+
             </div>
 
         );
 
     }
 
-    // ===================================
+
+    // =====================================================
     // PAY NOW
-    // ===================================
+    // =====================================================
 
     const handlePayment = async () => {
 
         try {
 
-            await paymentSuccess(
+            setLoading(true);
 
-                payment._id,
-
-                {
-
-                    transactionId:
-
-                        "TXN" + Date.now(),
-
-                    gatewayPaymentId:
-
-                        "PAY" + Date.now(),
-
-                    gateway:
-
-                        "COD",
-
-                    gatewayResponse: {}
-
-                }
-
+            console.log(
+                "================================="
             );
 
-            navigate(
+            console.log(
+                "PAYMENT STARTED"
+            );
 
-                "/order-success",
+            console.log(
+                "ORDER =",
+                order
+            );
 
-                {
+            console.log(
+                "PAYMENT =",
+                payment
+            );
 
-                    state: {
 
-                        order
+            // =================================================
+            // CHECK RAZORPAY
+            // =================================================
+
+            if (!window.Razorpay) {
+
+                alert(
+                    "Razorpay SDK is not loaded. Please refresh the page."
+                );
+
+                setLoading(false);
+
+                return;
+
+            }
+
+
+            // =================================================
+            // CREATE PAYMENT
+            // =================================================
+
+            const paymentData = {
+
+                paymentFor: "ORDER",
+
+                referenceId: order._id,
+
+                amount:
+                    Number(order.totalAmount) ||
+                    Number(payment.amount),
+
+                paymentMethod:
+                    payment.paymentMethod || "ONLINE",
+
+            };
+
+
+            console.log(
+                "PAYMENT DATA =",
+                paymentData
+            );
+
+
+            const response =
+                await createPayment(paymentData);
+
+
+            console.log(
+                "CREATE PAYMENT RESPONSE =",
+                response
+            );
+
+
+            // =================================================
+            // GET PAYMENT FROM RESPONSE
+            // =================================================
+
+            const createdPayment =
+                response?.data ||
+                response?.payment;
+
+
+            if (!createdPayment) {
+
+                console.error(
+                    "Payment response missing:",
+                    response
+                );
+
+                throw new Error(
+                    "Payment could not be created"
+                );
+
+            }
+
+
+            console.log(
+                "CREATED PAYMENT =",
+                createdPayment
+            );
+
+
+            // =================================================
+            // PAYMENT ID
+            // =================================================
+
+            const paymentId =
+                createdPayment._id ||
+                createdPayment.id;
+
+
+            if (!paymentId) {
+
+                throw new Error(
+                    "Payment ID not received from backend"
+                );
+
+            }
+
+
+            // =================================================
+            // RAZORPAY ORDER ID
+            // =================================================
+
+            const razorpayOrderId =
+                createdPayment.razorpayOrderId ||
+                createdPayment.razorpay_order_id ||
+                createdPayment.orderId;
+
+
+            // =================================================
+            // RAZORPAY KEY
+            // =================================================
+
+            const razorpayKey =
+                import.meta.env.VITE_RAZORPAY_KEY_ID;
+
+
+            console.log(
+                "RAZORPAY KEY =",
+                razorpayKey
+            );
+
+            console.log(
+                "RAZORPAY ORDER ID =",
+                razorpayOrderId
+            );
+
+
+            if (!razorpayKey) {
+
+                throw new Error(
+                    "VITE_RAZORPAY_KEY_ID is missing in frontend .env"
+                );
+
+            }
+
+
+            if (!razorpayOrderId) {
+
+                throw new Error(
+                    "Razorpay Order ID not received from backend"
+                );
+
+            }
+
+
+            // =================================================
+            // RAZORPAY OPTIONS
+            // =================================================
+
+            const options = {
+
+                key: razorpayKey,
+
+                amount:
+                    Number(
+                        createdPayment.amount ||
+                        payment.amount ||
+                        order.totalAmount
+                    ) * 100,
+
+                currency: "INR",
+
+                name: "Zaid Infotech",
+
+                description:
+                    `Payment for Order #${order._id}`,
+
+                order_id:
+                    razorpayOrderId,
+
+
+                // =================================================
+                // SUCCESS
+                // =================================================
+
+                handler: async function (razorpayResponse) {
+
+                    try {
+
+                        console.log(
+                            "RAZORPAY SUCCESS =",
+                            razorpayResponse
+                        );
+
+
+                        // ==========================================
+                        // VERIFY PAYMENT
+                        // ==========================================
+
+                        const verifyData = {
+
+                            orderId: order._id,
+
+                            razorpayOrderId:
+                                razorpayResponse.razorpay_order_id,
+
+                            razorpayPaymentId:
+                                razorpayResponse.razorpay_payment_id,
+
+                            razorpaySignature:
+                                razorpayResponse.razorpay_signature,
+
+                        };
+
+
+                        console.log(
+                            "VERIFY DATA =",
+                            verifyData
+                        );
+
+
+                        await paymentSuccess(
+                            paymentId,
+                            verifyData
+                        );
+
+
+                        // ==========================================
+                        // SUCCESS PAGE
+                        // ==========================================
+
+                        navigate(
+                            "/payment-success",
+                            {
+                                state: {
+
+                                    order: order,
+
+                                    payment: {
+                                        ...createdPayment,
+
+                                        paymentStatus:
+                                            "PAID",
+
+                                    },
+
+                                },
+
+                            }
+                        );
+
+                    }
+
+                    catch (error) {
+
+                        console.error(
+                            "PAYMENT VERIFICATION ERROR =",
+                            error
+                        );
+
+                        alert(
+                            error?.response?.data?.message ||
+                            error?.message ||
+                            "Payment verification failed"
+                        );
+
+                    }
+
+                    finally {
+
+                        setLoading(false);
+
+                    }
+
+                },
+
+
+                // =================================================
+                // PREFILL
+                // =================================================
+
+                prefill: {
+
+                    name:
+                        order.shippingAddress?.fullName ||
+                        "",
+
+                    contact:
+                        order.shippingAddress?.phone ||
+                        "",
+
+                    email:
+                        order.email ||
+                        "",
+
+                },
+
+
+                // =================================================
+                // THEME
+                // =================================================
+
+                theme: {
+
+                    color: "#2563eb",
+
+                },
+
+
+                // =================================================
+                // MODAL CLOSE
+                // =================================================
+
+                modal: {
+
+                    ondismiss: function () {
+
+                        console.log(
+                            "Razorpay popup closed"
+                        );
+
+                        setLoading(false);
+
+                    },
+
+                },
+
+            };
+
+
+            console.log(
+                "RAZORPAY OPTIONS =",
+                options
+            );
+
+
+            // =================================================
+            // OPEN RAZORPAY
+            // =================================================
+
+            const razorpay =
+                new window.Razorpay(options);
+
+
+            // =================================================
+            // PAYMENT FAILED
+            // =================================================
+
+            razorpay.on(
+                "payment.failed",
+                async function (response) {
+
+                    console.error(
+                        "RAZORPAY PAYMENT FAILED =",
+                        response
+                    );
+
+
+                    try {
+
+                        await paymentFailed(
+                            paymentId,
+                            {
+
+                                failureReason:
+                                    response?.error?.description ||
+                                    "Razorpay Payment Failed",
+
+                            }
+                        );
+
+                    }
+
+                    catch (error) {
+
+                        console.error(
+                            "FAILED PAYMENT UPDATE ERROR =",
+                            error
+                        );
+
+                    }
+
+                    finally {
+
+                        setLoading(false);
 
                     }
 
                 }
-
             );
+
+
+            razorpay.open();
 
         }
 
-        catch (err) {
+        catch (error) {
 
-            console.log(err);
+            console.error(
+                "PAYMENT ERROR =",
+                error
+            );
 
-            alert("Payment Failed");
+
+            console.error(
+                "BACKEND RESPONSE =",
+                error?.response?.data
+            );
+
+
+            alert(
+
+                error?.response?.data?.message ||
+
+                error?.response?.data?.errors?.join(
+                    "\n"
+                ) ||
+
+                error?.message ||
+
+                "Unable to start payment"
+
+            );
+
+
+            setLoading(false);
 
         }
 
     };
 
 
-
-    // ===================================
-    // CANCEL
-    // ===================================
+    // =====================================================
+    // CANCEL PAYMENT
+    // =====================================================
 
     const cancelPayment = async () => {
 
         try {
+
+            setLoading(true);
+
 
             await paymentFailed(
 
@@ -117,26 +553,40 @@ const Payment = () => {
                 {
 
                     failureReason:
-
-                        "Cancelled By User"
+                        "Cancelled By User",
 
                 }
 
+            );
+
+
+            navigate("/cart");
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "CANCEL PAYMENT ERROR =",
+                error
             );
 
             navigate("/cart");
 
         }
 
-        catch (err) {
+        finally {
 
-            console.log(err);
+            setLoading(false);
 
         }
 
     };
 
 
+    // =====================================================
+    // UI
+    // =====================================================
 
     return (
 
@@ -145,78 +595,81 @@ const Payment = () => {
             <div className="payment-card">
 
                 <h1>
-
                     Payment
-
                 </h1>
-
 
 
                 <div className="payment-info">
 
+
                     <p>
 
                         <strong>
-
                             Order ID :
-
                         </strong>
 
                         {order._id}
 
                     </p>
 
+
                     <p>
 
                         <strong>
-
                             Receipt :
-
                         </strong>
 
                         {payment.receiptNumber}
 
                     </p>
 
+
                     <p>
 
                         <strong>
-
                             Amount :
-
                         </strong>
 
-                        ₹ {payment.amount}
+                        ₹{" "}
+
+                        {
+                            order.totalAmount ||
+                            payment.amount
+                        }
 
                     </p>
+
 
                     <p>
 
                         <strong>
-
                             Payment Method :
-
                         </strong>
 
-                        {payment.paymentMethod}
+                        {
+                            payment.paymentMethod
+                        }
 
                     </p>
+
 
                     <p>
 
                         <strong>
-
                             Status :
-
                         </strong>
 
-                        {payment.paymentStatus}
+                        {
+                            payment.paymentStatus
+                        }
 
                     </p>
+
 
                 </div>
 
 
+                {/* PAY NOW */}
 
                 <button
 
@@ -224,13 +677,19 @@ const Payment = () => {
 
                     onClick={handlePayment}
 
+                    disabled={loading}
+
                 >
 
-                    Pay Now
+                    {loading
+                        ? "Processing..."
+                        : "Pay Now"
+                    }
 
                 </button>
 
 
+                {/* CANCEL */}
 
                 <button
 
@@ -238,11 +697,14 @@ const Payment = () => {
 
                     onClick={cancelPayment}
 
+                    disabled={loading}
+
                 >
 
                     Cancel
 
                 </button>
+
 
             </div>
 

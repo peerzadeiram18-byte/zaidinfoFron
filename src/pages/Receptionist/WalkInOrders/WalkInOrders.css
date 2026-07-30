@@ -1,0 +1,317 @@
+.walkin-orders-page {
+    min-height: 100vh;
+    padding: 30px;
+    background: #f5f7fb;
+    box-sizing: border-box;
+}
+
+/* =====================================
+   HEADER
+===================================== */
+
+.walkin-orders-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.walkin-orders-header h1 {
+    margin: 0;
+    color: #111827;
+    font-size: 28px;
+}
+
+.walkin-orders-header p {
+    margin: 7px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.walkin-new-order-btn {
+    height: 44px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 8px;
+    background: #4f46e5;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.walkin-new-order-btn:hover {
+    background: #4338ca;
+}
+
+/* =====================================
+   STATS
+===================================== */
+
+.walkin-order-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.walkin-order-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+.walkin-stat-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #eef2ff;
+    font-size: 22px;
+}
+
+.walkin-order-stat-card p {
+    margin: 0 0 5px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.walkin-order-stat-card h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 21px;
+}
+
+/* =====================================
+   MAIN CARD
+===================================== */
+
+.walkin-orders-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* =====================================
+   TOOLBAR
+===================================== */
+
+.walkin-orders-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 22px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.walkin-orders-toolbar h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 19px;
+}
+
+.walkin-orders-toolbar p {
+    margin: 5px 0 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.walkin-orders-search input {
+    width: 300px;
+    height: 42px;
+    padding: 0 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.walkin-orders-search input:focus {
+    border-color: #4f46e5;
+}
+
+/* =====================================
+   TABLE
+===================================== */
+
+.walkin-orders-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.walkin-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.walkin-orders-table th {
+    padding: 14px 18px;
+    text-align: left;
+    background: #f9fafb;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.walkin-orders-table td {
+    padding: 16px 18px;
+    border-top: 1px solid #f0f0f0;
+    color: #374151;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.walkin-orders-table tbody tr:hover {
+    background: #fafafa;
+}
+
+/* =====================================
+   CUSTOMER
+===================================== */
+
+.walkin-customer-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.walkin-customer-cell strong {
+    color: #111827;
+}
+
+.walkin-customer-cell span {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* =====================================
+   PAYMENT
+===================================== */
+
+.walkin-payment-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 6px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* =====================================
+   STATUS
+===================================== */
+
+.walkin-status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.walkin-status.completed {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.walkin-status.pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+/* =====================================
+   VIEW BUTTON
+===================================== */
+
+.walkin-view-btn {
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    background: white;
+    color: #374151;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.walkin-view-btn:hover {
+    border-color: #4f46e5;
+    color: #4f46e5;
+}
+
+/* =====================================
+   EMPTY
+===================================== */
+
+.walkin-orders-empty {
+    padding: 70px 20px;
+    text-align: center;
+}
+
+.walkin-orders-empty > div {
+    font-size: 45px;
+}
+
+.walkin-orders-empty h3 {
+    margin: 15px 0 7px;
+    color: #374151;
+}
+
+.walkin-orders-empty p {
+    margin: 0;
+    color: #6b7280;
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width: 1000px) {
+
+    .walkin-order-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .walkin-orders-page {
+        padding: 18px;
+    }
+
+    .walkin-orders-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .walkin-order-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .walkin-orders-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .walkin-orders-search {
+        width: 100%;
+    }
+
+    .walkin-orders-search input {
+        width: 100%;
+    }
+
+}
