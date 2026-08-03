@@ -1,6 +1,6 @@
 import "./AdminDashboard.css";
 
-import Sidebar from "../../components/Admin/Sidebar/Sidebar";
+// import Sidebar from "../../components/Admin/Sidebar/Sidebar";
 import Topbar from "../../components/TopBar/Topbar";
 import DashboardCard from "../../components/Admin/DashboardCard/DashboardCard";
 import DashboardTable from "../../components/Admin/DashboardTable/DashboardTable";
@@ -17,7 +17,7 @@ function AdminDashboard() {
   return (
     <div className="admin-dashboard">
 
-      <Sidebar />
+      {/* <Sidebar /> */}
 
       <div className="admin-content">
 

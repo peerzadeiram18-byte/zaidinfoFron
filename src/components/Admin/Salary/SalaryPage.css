@@ -1,0 +1,293 @@
+.salary-page{
+
+    padding:25px;
+
+    background:#f4f7fb;
+
+    min-height:100vh;
+
+}
+
+/*==============================
+HEADER
+==============================*/
+
+.salary-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.salary-title{
+
+    font-size:30px;
+
+    font-weight:700;
+
+    color:#1f2937;
+
+}
+
+.salary-subtitle{
+
+    color:#6b7280;
+
+    margin-top:5px;
+
+}
+
+/*==============================
+BUTTONS
+==============================*/
+
+.header-buttons{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.refresh-btn{
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    padding:10px 20px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}
+
+.refresh-btn:hover{
+
+    background:#1d4ed8;
+
+}
+
+.export-btn{
+
+    background:#16a34a;
+
+    color:white;
+
+    border:none;
+
+    padding:10px 20px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}
+
+.export-btn:hover{
+
+    background:#15803d;
+
+}
+
+/*==============================
+SEARCH
+==============================*/
+
+.search-box{
+
+    margin-bottom:20px;
+
+}
+
+.search-input{
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    border:1px solid #ddd;
+
+    font-size:15px;
+
+}
+
+/*==============================
+TABLE
+==============================*/
+
+.salary-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:white;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+
+}
+
+.salary-table th{
+
+    background:#111827;
+
+    color:white;
+
+    padding:15px;
+
+    text-align:left;
+
+}
+
+.salary-table td{
+
+    padding:14px;
+
+    border-bottom:1px solid #eee;
+
+}
+
+.salary-table tr:hover{
+
+    background:#f9fafb;
+
+}
+
+/*==============================
+BADGES
+==============================*/
+
+.salary-badge{
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+    font-weight:600;
+
+}
+
+.type-badge{
+
+    background:#dbeafe;
+
+    color:#1d4ed8;
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+}
+
+.active{
+
+    background:#22c55e;
+
+    color:white;
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+}
+
+.inactive{
+
+    background:#ef4444;
+
+    color:white;
+
+    padding:5px 12px;
+
+    border-radius:20px;
+
+}
+
+/*==============================
+PAY BUTTON
+==============================*/
+
+.manage-btn{
+
+    background:#7c3aed;
+
+    color:white;
+
+    border:none;
+
+    padding:10px 18px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}
+
+.manage-btn:hover{
+
+    background:#6d28d9;
+
+}
+
+/*==============================
+FOOTER
+==============================*/
+
+.salary-footer{
+
+    margin-top:25px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:10px;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.08);
+
+}
+
+.footer-box{
+
+    text-align:center;
+
+}
+
+.footer-title{
+
+    color:#6b7280;
+
+}
+
+.footer-value{
+
+    font-size:28px;
+
+    font-weight:700;
+
+}

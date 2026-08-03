@@ -1,230 +1,831 @@
-import "./Sidebar.css";
-import { useNavigate } from "react-router-dom";
+// import "./Sidebar.css";
+// import { useNavigate } from "react-router-dom";
 
+// function Sidebar() {
+
+//     const navigate = useNavigate();
+
+//     const logout = () => {
+
+//         localStorage.removeItem("token");
+//         navigate("/login");
+
+//     };
+
+//     return (
+
+//         <div className="sidebar">
+
+//             <h2>ZAID ERP</h2>
+
+//             <ul>
+
+//                 {/* Dashboard */}
+
+//                 <li onClick={() => navigate("/admin-dashboard")}>
+//                     Dashboard
+//                 </li>
+
+//                 {/* Customer */}
+
+//                 <li onClick={() => navigate("/customers")}>
+//                     Customer List
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-customer")}>
+//                     Add Customer
+//                 </li>
+
+//                 {/* Categories */}
+
+//                 <li onClick={() => navigate("/categories")}>
+//                     Category List
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-category")}>
+//                     Add Category
+//                 </li>
+
+//                 {/* Brands */}
+
+//                 <li onClick={() => navigate("/brands")}>
+//                     Brand List
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-brand")}>
+//                     Add Brand
+//                 </li>
+
+//                 {/* Products */}
+
+//                 <li onClick={() => navigate("/admin/products")}>
+//                     Product List
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-product")}>
+//                     Add Product
+//                 </li>
+
+//                 {/* Rentals */}
+
+//                 <li onClick={() => navigate("/rentals")}>
+//                     Rental List
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-rental")}>
+//                     Add Rental
+//                 </li>
+
+//                 {/* Repairs */}
+
+//                 <li onClick={() => navigate("/repairs")}>
+//                     Repair Jobs
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-repair")}>
+//                     Add Repair
+//                 </li>
+
+//                 {/* Orders */}
+
+//                 <li onClick={() => navigate("/admin/orders")}>
+//                     Order List
+//                 </li>
+
+//                 <li onClick={() => navigate("/pending-orders")}>
+//                     Pending Orders
+//                 </li>
+
+//                 <li onClick={() => navigate("/completed-orders")}>
+//                     Completed Orders
+//                 </li>
+
+//                 {/* Employees */}
+
+//                 <li onClick={() => navigate("/employees")}>
+//                     Employee List
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-employee")}>
+//                     Add Employee
+//                 </li>
+
+//                 {/* Inventory */}
+
+//                 <li onClick={() => navigate("/inventory")}>
+//                     Inventory
+//                 </li>
+
+//                 <li onClick={() => navigate("/stock-history")}>
+//                     Stock History
+//                 </li>
+
+//                 {/* Suppliers */}
+
+//                 <li onClick={() => navigate("/suppliers")}>
+//                     Supplier List
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-supplier")}>
+//                     Add Supplier
+//                 </li>
+
+//                 {/* Purchase */}
+
+//                 <li onClick={() => navigate("/purchase-orders")}>
+//                     Purchase Orders
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-purchase-order")}>
+//                     Add Purchase Order
+//                 </li>
+
+//                 {/* Sales */}
+
+//                 <li onClick={() => navigate("/sales")}>
+//                     Sales
+//                 </li>
+
+//                 <li onClick={() => navigate("/invoices")}>
+//                     Invoices
+//                 </li>
+
+//                 {/* Coupons */}
+
+//                 <li onClick={() => navigate("/coupons")}>
+//                     Coupons
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-coupon")}>
+//                     Add Coupon
+//                 </li>
+
+//                 {/* Reviews */}
+
+//                 <li onClick={() => navigate("/reviews")}>
+//                     Reviews
+//                 </li>
+
+//                 {/* Blogs */}
+
+//                 <li onClick={() => navigate("/blogs")}>
+//                     Blog List
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-blog")}>
+//                     Add Blog
+//                 </li>
+
+//                 {/* Banner */}
+
+//                 <li onClick={() => navigate("/banners")}>
+//                     Banner List
+//                 </li>
+
+//                 <li onClick={() => navigate("/add-banner")}>
+//                     Add Banner
+//                 </li>
+
+//                 {/* Testimonials */}
+
+//                 <li onClick={() => navigate("/testimonials")}>
+//                     Testimonials
+//                 </li>
+
+//                 {/* FAQ */}
+
+//                 <li onClick={() => navigate("/faqs")}>
+//                     FAQs
+//                 </li>
+
+//                 {/* Notifications */}
+
+//                 <li onClick={() => navigate("/notifications")}>
+//                     Notifications
+//                 </li>
+
+//                 {/* Reports */}
+
+//                 <li onClick={() => navigate("/reports")}>
+//                     Reports
+//                 </li>
+
+//                 {/* Settings */}
+
+//                 <li onClick={() => navigate("/settings")}>
+//                     Settings
+//                 </li>
+
+//                 {/* Logout */}
+
+//                 <li onClick={logout}>
+//                     Logout
+//                 </li>
+
+//             </ul>
+
+//         </div>
+
+//     );
+
+// }
+
+// export default Sidebar;
+
+import "./Sidebar.css";
+import { 
+    useNavigate, 
+    useLocation, 
+    Link 
+} from "react-router-dom";
 function Sidebar() {
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+
+    // =========================================
+    // LOGOUT
+    // =========================================
 
     const logout = () => {
 
         localStorage.removeItem("token");
+
         navigate("/login");
 
     };
 
+
+    // =========================================
+    // NAVIGATION
+    // =========================================
+
+    const goTo = (path) => {
+
+        navigate(path);
+
+    };
+
+
+    // =========================================
+    // ACTIVE MENU
+    // =========================================
+
+    const isActive = (path) => {
+
+        return location.pathname === path;
+
+    };
+
+
     return (
 
-        <div className="sidebar">
+        <aside className="sidebar">
 
-            <h2>ZAID ERP</h2>
+            {/* =================================
+                LOGO
+            ================================= */}
 
-            <ul>
+            <div className="sidebar-logo">
 
-                {/* Dashboard */}
+                <h2>
+                    ZAID ERP
+                </h2>
 
-                <li onClick={() => navigate("/admin-dashboard")}>
+            </div>
+
+
+            {/* =================================
+                MENU
+            ================================= */}
+
+            <ul className="sidebar-menu">
+
+
+                {/* =================================
+                    DASHBOARD
+                ================================= */}
+
+                <li
+                    className={
+                        isActive("/admin-dashboard")
+                            ? "active"
+                            : ""
+                    }
+                    onClick={() =>
+                        goTo("/admin-dashboard")
+                    }
+                >
                     Dashboard
                 </li>
 
-                {/* Customer */}
 
-                <li onClick={() => navigate("/customers")}>
+                {/* =================================
+                    CUSTOMER
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    CUSTOMER
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/customers")
+                    }
+                >
                     Customer List
                 </li>
 
-                <li onClick={() => navigate("/add-customer")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-customer")
+                    }
+                >
                     Add Customer
                 </li>
 
-                {/* Categories */}
 
-                <li onClick={() => navigate("/categories")}>
+                {/* =================================
+                    CATEGORIES
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    CATEGORIES
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/categories")
+                    }
+                >
                     Category List
                 </li>
 
-                <li onClick={() => navigate("/add-category")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-category")
+                    }
+                >
                     Add Category
                 </li>
 
-                {/* Brands */}
 
-                <li onClick={() => navigate("/brands")}>
+                {/* =================================
+                    BRANDS
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    BRANDS
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/brands")
+                    }
+                >
                     Brand List
                 </li>
 
-                <li onClick={() => navigate("/add-brand")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-brand")
+                    }
+                >
                     Add Brand
                 </li>
 
-                {/* Products */}
 
-                <li onClick={() => navigate("/admin/products")}>
+                {/* =================================
+                    PRODUCTS
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    PRODUCTS
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/admin/products")
+                    }
+                >
                     Product List
                 </li>
 
-                <li onClick={() => navigate("/add-product")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-product")
+                    }
+                >
                     Add Product
                 </li>
 
-                {/* Rentals */}
 
-                <li onClick={() => navigate("/rentals")}>
+                {/* =================================
+                    RENTALS
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    RENTALS
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/rentals")
+                    }
+                >
                     Rental List
                 </li>
 
-                <li onClick={() => navigate("/add-rental")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-rental")
+                    }
+                >
                     Add Rental
                 </li>
 
-                {/* Repairs */}
 
-                <li onClick={() => navigate("/repairs")}>
+                {/* =================================
+                    REPAIRS
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    REPAIRS
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/repairs")
+                    }
+                >
                     Repair Jobs
                 </li>
 
-                <li onClick={() => navigate("/add-repair")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-repair")
+                    }
+                >
                     Add Repair
                 </li>
 
-                {/* Orders */}
 
-                <li onClick={() => navigate("/admin/orders")}>
+<li
+    onClick={() =>
+        goTo("/receptionist/walk-in-order/new")
+    }
+>
+    Walk-In POS
+</li>
+                {/* =================================
+                    ORDERS
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    ORDERS
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/admin/orders")
+                    }
+                >
                     Order List
                 </li>
 
-                <li onClick={() => navigate("/pending-orders")}>
+                <li
+                    onClick={() =>
+                        goTo("/pending-orders")
+                    }
+                >
                     Pending Orders
                 </li>
 
-                <li onClick={() => navigate("/completed-orders")}>
+                <li
+                    onClick={() =>
+                        goTo("/completed-orders")
+                    }
+                >
                     Completed Orders
                 </li>
 
-                {/* Employees */}
 
-                <li onClick={() => navigate("/employees")}>
+                {/* =================================
+                    EMPLOYEES
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    EMPLOYEES
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/employees")
+                    }
+                >
                     Employee List
                 </li>
 
-                <li onClick={() => navigate("/add-employee")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-employee")
+                    }
+                >
                     Add Employee
                 </li>
 
-                {/* Inventory */}
 
-                <li onClick={() => navigate("/inventory")}>
-                    Inventory
+                {/* =================================
+                    INVENTORY
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    INVENTORY
                 </li>
 
-                <li onClick={() => navigate("/stock-history")}>
+                {/* <li
+                    onClick={() =>
+                        goTo("/inventory")
+                    }
+                >
+                    Inventory
+                </li> */}
+
+                <li
+                    onClick={() =>
+                        goTo("/stock-history")
+                    }
+                >
                     Stock History
                 </li>
 
-                {/* Suppliers */}
 
-                <li onClick={() => navigate("/suppliers")}>
+                {/* =================================
+                    SUPPLIERS
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    SUPPLIERS
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/suppliers")
+                    }
+                >
                     Supplier List
                 </li>
 
-                <li onClick={() => navigate("/add-supplier")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-supplier")
+                    }
+                >
                     Add Supplier
                 </li>
 
-                {/* Purchase */}
 
-                <li onClick={() => navigate("/purchase-orders")}>
+                {/* =================================
+                    PURCHASE
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    PURCHASE
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/purchase-orders")
+                    }
+                >
                     Purchase Orders
                 </li>
 
-                <li onClick={() => navigate("/add-purchase-order")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-purchase-order")
+                    }
+                >
                     Add Purchase Order
                 </li>
 
-                {/* Sales */}
 
-                <li onClick={() => navigate("/sales")}>
+                {/* =================================
+                    SALES
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    SALES
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/sales")
+                    }
+                >
                     Sales
                 </li>
 
-                <li onClick={() => navigate("/invoices")}>
+                <li
+                    onClick={() =>
+                        goTo("/invoices")
+                    }
+                >
                     Invoices
                 </li>
 
-                {/* Coupons */}
 
-                <li onClick={() => navigate("/coupons")}>
+                {/* =================================
+                    COUPONS
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    COUPONS
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/coupons")
+                    }
+                >
                     Coupons
                 </li>
 
-                <li onClick={() => navigate("/add-coupon")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-coupon")
+                    }
+                >
                     Add Coupon
                 </li>
 
-                {/* Reviews */}
 
-                <li onClick={() => navigate("/reviews")}>
+                {/* =================================
+                    REVIEWS
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    REVIEWS
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/reviews")
+                    }
+                >
                     Reviews
                 </li>
 
-                {/* Blogs */}
 
-                <li onClick={() => navigate("/blogs")}>
+                {/* =================================
+                    BLOGS
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    BLOGS
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/blogs")
+                    }
+                >
                     Blog List
                 </li>
 
-                <li onClick={() => navigate("/add-blog")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-blog")
+                    }
+                >
                     Add Blog
                 </li>
 
-                {/* Banner */}
 
-                <li onClick={() => navigate("/banners")}>
+                {/* =================================
+                    BANNER
+                ================================= */}
+
+                <li className="sidebar-heading">
+                    BANNER
+                </li>
+
+                <li
+                    onClick={() =>
+                        goTo("/banners")
+                    }
+                >
                     Banner List
                 </li>
 
-                <li onClick={() => navigate("/add-banner")}>
+                <li
+                    onClick={() =>
+                        goTo("/add-banner")
+                    }
+                >
                     Add Banner
                 </li>
 
-                {/* Testimonials */}
 
-                <li onClick={() => navigate("/testimonials")}>
+                {/* =================================
+                    TESTIMONIALS
+                ================================= */}
+
+                <li
+                    onClick={() =>
+                        goTo("/testimonials")
+                    }
+                >
                     Testimonials
                 </li>
 
-                {/* FAQ */}
 
-                <li onClick={() => navigate("/faqs")}>
+                {/* =================================
+                    FAQ
+                ================================= */}
+
+                <li
+                    onClick={() =>
+                        goTo("/faqs")
+                    }
+                >
                     FAQs
                 </li>
 
-                {/* Notifications */}
 
-                <li onClick={() => navigate("/notifications")}>
+                {/* =================================
+                    NOTIFICATIONS
+                ================================= */}
+
+                <li
+                    onClick={() =>
+                        goTo("/notifications")
+                    }
+                >
                     Notifications
                 </li>
 
-                {/* Reports */}
 
-                <li onClick={() => navigate("/reports")}>
+                {/* =================================
+                    REPORTS
+                ================================= */}
+
+                <li
+                    onClick={() =>
+                        goTo("/reports")
+                    }
+                >
                     Reports
                 </li>
+ {/* =================================
+    SALARY
+================================= */}
 
-                {/* Settings */}
+<li className="sidebar-heading">
+    SALARY
+</li>
 
-                <li onClick={() => navigate("/settings")}>
+<li
+    className={
+        isActive("/salary")
+            ? "active"
+            : ""
+    }
+    onClick={() =>
+        goTo("/salary")
+    }
+>
+    Salary Management
+</li>
+
+                {/* =================================
+                    SETTINGS
+                ================================= */}
+
+                <li
+                    onClick={() =>
+                        goTo("/settings")
+                    }
+                >
                     Settings
                 </li>
 
-                {/* Logout */}
 
-                <li onClick={logout}>
+                {/* =================================
+                    LOGOUT
+                ================================= */}
+
+                <li
+                    className="logout-menu"
+                    onClick={logout}
+                >
                     Logout
                 </li>
 
             </ul>
 
-        </div>
+        </aside>
 
     );
 

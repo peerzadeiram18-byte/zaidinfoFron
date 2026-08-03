@@ -1,0 +1,176 @@
+.invoice-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    overflow:auto;
+    padding:20px;
+}
+
+.invoice-container{
+    width:900px;
+    max-width:100%;
+    background:#fff;
+    border-radius:10px;
+    padding:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+
+.invoice-header{
+    text-align:center;
+}
+
+.invoice-header h1{
+    margin:0;
+    font-size:32px;
+    color:#0f172a;
+}
+
+.invoice-header h2{
+    margin-top:15px;
+    color:#2563eb;
+}
+
+.invoice-header p{
+    margin:4px 0;
+}
+
+.invoice-top{
+    display:flex;
+    justify-content:space-between;
+    margin:20px 0;
+}
+
+.customer-box{
+    margin:20px 0;
+}
+
+.customer-box h3{
+    margin-bottom:10px;
+}
+
+.customer-box p{
+    margin:6px 0;
+}
+
+.invoice-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+.invoice-table th{
+    background:#2563eb;
+    color:#fff;
+    padding:12px;
+    border:1px solid #ddd;
+}
+
+.invoice-table td{
+    padding:10px;
+    border:1px solid #ddd;
+}
+
+.invoice-table tbody tr:nth-child(even){
+    background:#f8fafc;
+}
+
+.invoice-total{
+    width:350px;
+    margin-left:auto;
+    margin-top:25px;
+}
+
+.total-row{
+    display:flex;
+    justify-content:space-between;
+    padding:8px 0;
+}
+
+.grand-total{
+    display:flex;
+    justify-content:space-between;
+    font-size:22px;
+    margin-top:10px;
+    color:#dc2626;
+}
+
+.payment-box{
+    margin-top:25px;
+}
+
+.payment-box p{
+    margin:8px 0;
+}
+
+.invoice-footer{
+    text-align:center;
+    margin-top:40px;
+}
+
+.signature{
+    margin-top:35px;
+}
+
+.invoice-buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    margin-top:35px;
+}
+
+.print-btn{
+    background:#16a34a;
+    color:#fff;
+    border:none;
+    padding:12px 28px;
+    cursor:pointer;
+    border-radius:6px;
+    font-size:16px;
+}
+
+.print-btn:hover{
+    background:#15803d;
+}
+
+.close-btn{
+    background:#dc2626;
+    color:#fff;
+    border:none;
+    padding:12px 28px;
+    cursor:pointer;
+    border-radius:6px;
+    font-size:16px;
+}
+
+.close-btn:hover{
+    background:#b91c1c;
+}
+
+@media print{
+
+    body{
+        background:#fff;
+    }
+
+    .invoice-overlay{
+        position:static;
+        background:#fff;
+        padding:0;
+    }
+
+    .invoice-container{
+        width:100%;
+        box-shadow:none;
+        border-radius:0;
+        padding:0;
+    }
+
+    .invoice-buttons{
+        display:none;
+    }
+
+}

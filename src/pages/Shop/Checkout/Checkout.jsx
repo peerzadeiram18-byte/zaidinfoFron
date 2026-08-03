@@ -3,17 +3,13 @@ import React, {
     useState
 } from "react";
 
-
 import axios from "axios";
-
 
 import {
     useNavigate
 } from "react-router-dom";
 
-
 import "./Checkout.css";
-
 
 import {
     createPayment
@@ -63,7 +59,6 @@ const Checkout = () => {
     const gst = 18;
 
 
-
     // =================================
     // LOAD DATA
     // =================================
@@ -75,7 +70,6 @@ const Checkout = () => {
         getAddresses();
 
     }, []);
-
 
 
     // =================================
@@ -95,7 +89,6 @@ const Checkout = () => {
                     `${API}/api/cart`,
 
                     {
-
                         headers: {
 
                             Authorization:
@@ -149,7 +142,6 @@ const Checkout = () => {
     };
 
 
-
     // =================================
     // GET ADDRESSES
     // =================================
@@ -164,7 +156,6 @@ const Checkout = () => {
                     `${API}/api/addresses`,
 
                     {
-
                         headers: {
 
                             Authorization:
@@ -209,7 +200,6 @@ const Checkout = () => {
     };
 
 
-
     // =================================
     // SUBTOTAL
     // =================================
@@ -243,7 +233,6 @@ const Checkout = () => {
         );
 
 
-
     // =================================
     // GST
     // =================================
@@ -258,7 +247,6 @@ const Checkout = () => {
         );
 
 
-
     // =================================
     // GRAND TOTAL
     // =================================
@@ -267,7 +255,6 @@ const Checkout = () => {
         subtotal +
         shippingCharge +
         gstAmount;
-
 
 
     // =================================
@@ -283,9 +270,9 @@ const Checkout = () => {
         }
 
 
-        // -------------------------------
+        // =================================
         // ADDRESS CHECK
-        // -------------------------------
+        // =================================
 
         if (!selectedAddress) {
 
@@ -301,7 +288,7 @@ const Checkout = () => {
         const address =
             addresses.find(
 
-                item =>
+                (item) =>
                     item._id ===
                     selectedAddress
 
@@ -319,9 +306,9 @@ const Checkout = () => {
         }
 
 
-        // -------------------------------
+        // =================================
         // CART CHECK
-        // -------------------------------
+        // =================================
 
         if (!cart.length) {
 
@@ -386,9 +373,8 @@ const Checkout = () => {
         };
 
 
-
         // =================================
-        // VALIDATION
+        // SHIPPING ADDRESS VALIDATION
         // =================================
 
         if (!shippingAddress.fullName) {
@@ -457,7 +443,6 @@ const Checkout = () => {
         }
 
 
-
         // =================================
         // ORDER ITEMS
         // =================================
@@ -465,171 +450,172 @@ const Checkout = () => {
         const orderItems =
             cart.map(
 
-                item => ({
+                (item) => {
 
-                    product:
-                        item.product?._id,
-
-
-                    title:
-                        item.product?.name ||
-                        "",
-
-
-                    quantity:
+                    const sellingPrice =
                         Number(
-                            item.quantity || 1
-                        ),
+
+                            item.product?.pricing?.sellingPrice ??
+                            0
+
+                        );
 
 
-                    price:
+                    const originalPrice =
                         Number(
-                            item.product?.pricing?.sellingPrice || 0
-                        ),
+
+                            item.product?.pricing?.originalPrice ??
+                            item.originalPrice ??
+                            sellingPrice
+
+                        );
 
 
-                    imageUrl:
-                        item.product?.images?.[0]?.url ||
-                        ""
+                    const quantity =
+                        Number(
+                            item.quantity ?? 1
+                        );
 
-                })
+
+                    const discountAmount =
+                        Number(
+
+                            item.discountAmount ??
+                            Math.max(
+
+                                originalPrice -
+                                sellingPrice,
+
+                                0
+
+                            )
+
+                        );
+
+
+                    return {
+
+                        product:
+                            item.product?._id ||
+                            item.product ||
+                            "",
+
+
+                        title:
+                            item.product?.name ||
+                            item.title ||
+                            "",
+
+
+                        quantity:
+                            quantity,
+
+
+                        originalPrice:
+                            originalPrice,
+
+
+                        discountAmount:
+                            discountAmount,
+
+
+                        price:
+                            sellingPrice,
+
+
+                        offer:
+                            item.offer ||
+                            null,
+
+
+                        imageUrl:
+                            item.product?.images?.[0]?.url ||
+                            item.imageUrl ||
+                            ""
+
+                    };
+
+                }
 
             );
 
 
-
         // =================================
-        // CHECK PRODUCT IDS
+        // CHECK PRODUCT DATA
         // =================================
 
-        const invalidProduct =
+        const invalidOrderItem =
             orderItems.some(
 
-                item =>
-                    !item.product
+                (item) =>
+
+                    !item.product ||
+
+                    !item.title ||
+
+                    !Number.isFinite(
+                        item.quantity
+                    ) ||
+
+                    item.quantity < 1 ||
+
+                    !Number.isFinite(
+                        item.originalPrice
+                    ) ||
+
+                    !Number.isFinite(
+                        item.price
+                    )
 
             );
 
-
-        if (invalidProduct) {
-
-            alert(
-                "Product information is missing"
-            );
-
-            return;
-
-        }
-
-
-
-        // =================================
-        // ORDER DATA
-        // =================================
-
-        // const orderData = {
-
-        //     orderItems,
-
-        //     shippingAddress,
-
-        //     // Same total as checkout UI
-        //     totalAmount:
-        //         Number(grandTotal)
-
-        // };
-
-        // =================================
-        // ORDER DATA
-        // =================================
-        // IMPORTANT:
-        // Backend Joi validation requires:
-        // originalPrice, price, quantity, product, title
-        // and shippingAddress must be the COMPLETE address object.
-
-        const orderData = {
-            orderItems: cart.map((item) => {
-                const sellingPrice = Number(
-                    item.product?.pricing?.sellingPrice ?? 0
-                );
-
-                const originalPrice = Number(
-                    item.product?.pricing?.originalPrice ??
-                    item.originalPrice ??
-                    sellingPrice
-                );
-
-                const quantity = Number(item.quantity ?? 1);
-
-                const discountAmount = Number(
-                    item.discountAmount ??
-                    Math.max(originalPrice - sellingPrice, 0)
-                );
-
-                return {
-                    product:
-                        item.product?._id ||
-                        item.product ||
-                        "",
-
-                    title:
-                        item.product?.name ||
-                        item.title ||
-                        "",
-
-                    quantity,
-
-                    originalPrice,
-
-                    discountAmount,
-
-                    price: sellingPrice,
-
-                    offer:
-                        item.offer ||
-                        null,
-
-                    imageUrl:
-                        item.product?.images?.[0]?.url ||
-                        item.imageUrl ||
-                        "",
-                };
-            }),
-
-            shippingAddress,
-
-            totalAmount:
-                Number(grandTotal),
-
-            orderSource:
-                "ONLINE",
-        };
-
-        // Extra frontend safety check before API call
-        const invalidOrderItem = orderData.orderItems.some(
-            (item) =>
-                !item.product ||
-                !item.title ||
-                !Number.isFinite(item.quantity) ||
-                item.quantity < 1 ||
-                !Number.isFinite(item.originalPrice) ||
-                !Number.isFinite(item.price)
-        );
 
         if (invalidOrderItem) {
+
             alert(
                 "Some product information is missing. Please refresh the cart and try again."
             );
+
             return;
+
         }
+
+
+        // =================================
+        // ORDER DATA
+        // =================================
+
+        const orderData = {
+
+            orderItems:
+                orderItems,
+
+
+            shippingAddress:
+                shippingAddress,
+
+
+            totalAmount:
+                Number(
+                    grandTotal
+                ),
+
+
+            orderSource:
+                "ONLINE"
+
+        };
+
 
         console.log(
             "FINAL ORDER DATA:",
             orderData
         );
 
-        
 
+        // =================================
+        // API PROCESS
+        // =================================
 
         try {
 
@@ -637,7 +623,7 @@ const Checkout = () => {
 
 
             // =================================
-            // CREATE ORDER
+            // 1. CREATE ORDER
             // =================================
 
             const orderRes =
@@ -648,7 +634,6 @@ const Checkout = () => {
                     orderData,
 
                     {
-
                         headers: {
 
                             Authorization:
@@ -683,30 +668,63 @@ const Checkout = () => {
             }
 
 
+            console.log(
+                "ORDER CREATED:",
+                order
+            );
+
 
             // =================================
-            // CREATE PAYMENT
+            // 2. CREATE DATABASE PAYMENT
             // =================================
+            //
+            // IMPORTANT:
+            //
+            // Backend allows:
+            //
+            // UPI
+            // CARD
+            // NET_BANKING
+            // CASH
+            //
+            // Razorpay ke liye abhi UPI use kar rahe hain.
+            //
+            // COD MAT BHEJNA.
+            //
+            // =================================
+
+            const paymentData = {
+
+                paymentFor:
+                    "ORDER",
+
+
+                referenceId:
+                    order._id,
+
+
+                amount:
+                    Number(
+                        order.totalAmount
+                    ),
+
+
+                paymentMethod:
+                    "UPI"
+
+            };
+
+
+            console.log(
+                "PAYMENT DATA:",
+                paymentData
+            );
+
 
             const paymentRes =
-                await createPayment({
-
-                    paymentFor:
-                        "ORDER",
-
-
-                    referenceId:
-                        order._id,
-
-
-                    amount:
-                        order.totalAmount,
-
-
-                    paymentMethod:
-                        "COD"
-
-                });
+                await createPayment(
+                    paymentData
+                );
 
 
             console.log(
@@ -715,15 +733,44 @@ const Checkout = () => {
             );
 
 
-
             // =================================
-            // SUCCESS
+            // PAYMENT RESPONSE VALIDATION
             // =================================
 
-            alert(
-                "Order placed successfully!"
+            if (
+
+                !paymentRes ||
+
+                !paymentRes.success ||
+
+                !paymentRes.payment
+
+            ) {
+
+                throw new Error(
+
+                    paymentRes?.message ||
+
+                    "Payment creation failed"
+
+                );
+
+            }
+
+
+            const createdPayment =
+                paymentRes.payment;
+
+
+            console.log(
+                "PAYMENT CREATED:",
+                createdPayment
             );
 
+
+            // =================================
+            // 3. GO TO PAYMENT PAGE
+            // =================================
 
             navigate(
 
@@ -733,10 +780,12 @@ const Checkout = () => {
 
                     state: {
 
-                        order,
+                        order:
+                            order,
+
 
                         payment:
-                            paymentRes?.payment
+                            createdPayment
 
                     }
 
@@ -746,7 +795,13 @@ const Checkout = () => {
 
         }
 
+
         catch (err) {
+
+            console.error(
+                "================================="
+            );
+
 
             console.error(
                 "ORDER / PAYMENT ERROR:",
@@ -754,30 +809,56 @@ const Checkout = () => {
             );
 
 
-            console.log(
+            console.error(
                 "BACKEND ERROR:",
-                JSON.stringify(
-                    err.response?.data,
-                    null,
-                    2
-                )
+                err.response?.data
             );
 
-            console.log(
+
+            console.error(
                 "VALIDATION ERRORS:",
                 err.response?.data?.errors
             );
 
 
+            const backendData =
+                err.response?.data;
+
+
+            let message =
+                backendData?.message ||
+                err.message ||
+                "Order failed";
+
+
+            // =================================
+            // JOI VALIDATION ERRORS
+            // =================================
+
+            if (
+
+                Array.isArray(
+                    backendData?.errors
+                ) &&
+
+                backendData.errors.length > 0
+
+            ) {
+
+                message =
+                    backendData.errors.join(
+                        "\n"
+                    );
+
+            }
+
+
             alert(
-
-                err.response?.data?.message ||
-
-                "Order failed"
-
+                message
             );
 
         }
+
 
         finally {
 
@@ -786,7 +867,6 @@ const Checkout = () => {
         }
 
     };
-
 
 
     // =================================
@@ -812,7 +892,6 @@ const Checkout = () => {
         );
 
     }
-
 
 
     // =================================
@@ -845,7 +924,7 @@ const Checkout = () => {
 
                     addresses.map(
 
-                        address => (
+                        (address) => (
 
                             <div
                                 className="address-card"
@@ -944,7 +1023,6 @@ const Checkout = () => {
             </div>
 
 
-
             {/* =================================
                 RIGHT
             ================================= */}
@@ -991,13 +1069,19 @@ const Checkout = () => {
 
                             const price =
                                 Number(
-                                    item.product?.pricing?.sellingPrice || 0
+
+                                    item.product?.pricing?.sellingPrice ||
+                                    0
+
                                 );
 
 
                             const quantity =
                                 Number(
-                                    item.quantity || 0
+
+                                    item.quantity ||
+                                    0
+
                                 );
 
 
@@ -1064,7 +1148,6 @@ const Checkout = () => {
                 )}
 
 
-
                 {cart.length > 0 && (
 
                     <>
@@ -1072,7 +1155,9 @@ const Checkout = () => {
                         <hr />
 
 
-                        {/* Subtotal */}
+                        {/* =================================
+                            SUBTOTAL
+                        ================================= */}
 
                         <div className="summary-row">
 
@@ -1087,7 +1172,9 @@ const Checkout = () => {
                         </div>
 
 
-                        {/* Shipping */}
+                        {/* =================================
+                            SHIPPING
+                        ================================= */}
 
                         <div className="summary-row">
 
@@ -1102,7 +1189,9 @@ const Checkout = () => {
                         </div>
 
 
-                        {/* GST */}
+                        {/* =================================
+                            GST
+                        ================================= */}
 
                         <div className="summary-row">
 
@@ -1120,12 +1209,20 @@ const Checkout = () => {
                         <hr />
 
 
+                        {/* =================================
+                            GRAND TOTAL
+                        ================================= */}
+
                         <h2>
 
                             Total : ₹ {grandTotal}
 
                         </h2>
 
+
+                        {/* =================================
+                            PLACE ORDER
+                        ================================= */}
 
                         <button
                             type="button"
