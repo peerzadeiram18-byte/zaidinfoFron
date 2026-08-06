@@ -154,6 +154,10 @@ import Cart from "../../../Shop/Cart/Cart";
 import MyAddress from "../../../Profile/MyAddress/MyAddress";
 import MyOrders from "../../../Shop/MyOrders/MyOrders";
 
+
+const API = import.meta.env.VITE_API_URL;
+const SERVER_URL = API.replace("/api", "");
+
 const CustomerDashboard = () => {
 const location = useLocation();
 
@@ -180,8 +184,10 @@ const [user, setUser] = useState({
     try {
       if (!token) return;
 
-      const res = await axios.get(
-        "http://localhost:5000/api/users/profile",
+    //   const res = await axios.get(
+    //     "http://localhost:5000/api/users/profile",
+    const res = await axios.get(
+  `${API}/users/profile`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -209,7 +215,8 @@ const [user, setUser] = useState({
     if (user.profileImage) {
       return user.profileImage.startsWith("http")
         ? user.profileImage
-        : `http://localhost:5000${user.profileImage}`;
+        // : `http://localhost:5000${user.profileImage}`;
+        : `${SERVER_URL}${user.profileImage}`;
     }
     // Fallback UI Avatar if no image found in DB
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(

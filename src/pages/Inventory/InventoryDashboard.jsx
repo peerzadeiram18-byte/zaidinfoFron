@@ -866,54 +866,82 @@ function InventoryDashboard() {
     // IMAGE URL
     // ==========================================
 
+    // const getImageUrl = (image) => {
+
+
+    //     if (!image) {
+
+    //         return "";
+
+    //     }
+
+
+    //     if (
+    //         typeof image === "string"
+    //     ) {
+
+    //         if (
+    //             image.startsWith("http")
+    //         ) {
+
+    //             return image;
+
+    //         }
+
+
+    //         return `http://localhost:5000${image}`;
+
+    //     }
+
+
+    //     if (image.url) {
+
+    //         if (
+    //             image.url.startsWith("http")
+    //         ) {
+
+    //             return image.url;
+
+    //         }
+
+
+    //         return `http://localhost:5000${image.url}`;
+
+    //     }
+
+
+    //     return "";
+
+    // };
+
     const getImageUrl = (image) => {
 
-
-        if (!image) {
-
-            return "";
-
-        }
-
-
-        if (
-            typeof image === "string"
-        ) {
-
-            if (
-                image.startsWith("http")
-            ) {
-
-                return image;
-
-            }
-
-
-            return `http://localhost:5000${image}`;
-
-        }
-
-
-        if (image.url) {
-
-            if (
-                image.url.startsWith("http")
-            ) {
-
-                return image.url;
-
-            }
-
-
-            return `http://localhost:5000${image.url}`;
-
-        }
-
-
+    if (!image) {
         return "";
+    }
 
-    };
+    const BASE_URL = import.meta.env.VITE_API_URL.replace("/api", "");
 
+    if (typeof image === "string") {
+
+        if (image.startsWith("http")) {
+            return image;
+        }
+
+        return `${BASE_URL}${image}`;
+    }
+
+    if (image.url) {
+
+        if (image.url.startsWith("http")) {
+            return image.url;
+        }
+
+        return `${BASE_URL}${image.url}`;
+    }
+
+    return "";
+};
 
     // ==========================================
     // STATUS

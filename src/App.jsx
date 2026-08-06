@@ -550,6 +550,13 @@ import SalaryPage from "./components/Admin/Salary/SalaryPage";
 // APP
 // =====================================================
 
+import About from "./pages/About.jsx";
+import Blog from "./pages/Blog";
+import Careers from "./pages/Careers";
+import Contact from "./pages/Contact.jsx"
+import FAQ from "./pages/FAQ";
+
+
 function App() {
 
     return (
@@ -560,6 +567,17 @@ function App() {
             {/* =================================================
                 PUBLIC
             ================================================= */}
+
+
+        <Route path="/about-us" element={<About />} />
+
+<Route path="/blog" element={<Blog />} />
+
+<Route path="/careers" element={<Careers />} />
+
+        <Route path="/contact" element={<Contact />} />
+
+<Route path="/faq" element={<FAQ />} />
 
             <Route
                 path="/"

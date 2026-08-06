@@ -1,0 +1,208 @@
+/* ==========================================================================
+   MyOrders.css - Clean, Minimalist Order History
+   ========================================================================== */
+
+.orders-container {
+  width: 100%;
+}
+
+.orders-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f2f5;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.orders-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #2d3139;
+  margin: 0 0 4px 0;
+}
+
+.orders-subtitle {
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: #717784;
+  margin: 0;
+}
+
+/* Filter Pills */
+.order-filters {
+  display: flex;
+  gap: 8px;
+  background-color: #f4f5f8;
+  padding: 4px;
+  border-radius: 20px;
+}
+
+.filter-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: #717784;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn.active {
+  background-color: #ffffff;
+  color: #ff6b00;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Order Item Cards */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background-color: #ffffff;
+  border: 1px solid #edf2f7;
+  border-radius: 14px;
+  transition: all 0.25s ease;
+}
+
+.order-card:hover {
+  border-color: #ffeada;
+  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.06);
+}
+
+.order-main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.order-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background-color: #fff8f3;
+  color: #ff6b00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.order-id-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.order-id-group h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #2d3139;
+}
+
+.order-meta {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: #717784;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.status-badge.success {
+  background-color: #e6f7ed;
+  color: #0e9f6e;
+}
+
+.status-badge.warning {
+  background-color: #fff8f3;
+  color: #ff6b00;
+}
+
+.status-badge.info {
+  background-color: #ebf5ff;
+  color: #1a56db;
+}
+
+/* Side Info & Action */
+.order-side {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.order-total {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.order-total span {
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: #a0a6b1;
+}
+
+.order-total strong {
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #2d3139;
+}
+
+.btn-details {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #fbfbfd;
+  border: 1px solid #e2e8f0;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: #4a505e;
+  font-size: 0.82rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-details:hover {
+  background-color: #ff6b00;
+  border-color: #ff6b00;
+  color: #ffffff;
+}
+
+@media (max-width: 640px) {
+  .order-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .order-side {
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid #f0f2f5;
+    padding-top: 12px;
+  }
+}

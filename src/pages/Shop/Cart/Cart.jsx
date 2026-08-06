@@ -1298,7 +1298,8 @@ import {
 
 } from "../../../services/cartService";
 
-
+const API_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = API_URL.replace("/api", "");
 
 const Cart = () => {
 
@@ -1627,7 +1628,7 @@ const Cart = () => {
             );
 
 
-            toast.error(
+            toast.success(
 
                 error.response?.data?.message ||
 
@@ -1842,7 +1843,7 @@ const Cart = () => {
 
                                         <div className="cart-product">
 
-                                            <img
+                                            {/* <img
                                                 src={
                                                     product?.images?.length
                                                         ? (
@@ -1862,7 +1863,20 @@ const Cart = () => {
                                                         "/no-image.png";
 
                                                 }}
-                                            />
+                                            /> */}
+
+                                            <img
+  src={
+    product?.images?.length
+      ? (
+          product.images[0]?.url?.startsWith("http")
+            ? product.images[0].url
+            : `${BASE_URL}${product.images[0].url}`
+        )
+      : "/no-image.png"
+  }
+  alt={product?.name || "Product"}
+/>
 
 
                                             <div>

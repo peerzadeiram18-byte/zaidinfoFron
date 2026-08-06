@@ -1,0 +1,329 @@
+/* Container Reset Isolation */
+.contact-page-container {
+  width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333333;
+  box-sizing: border-box;
+}
+
+.contact-page-container * {
+  box-sizing: border-box;
+}
+
+/* =========================================
+   1. HERO BANNER SECTION
+   ========================================= */
+.contact-hero-banner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 4.6;
+  min-height: 280px;
+  max-height: 440px;
+  background-color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.contact-hero-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  opacity: 1;
+  z-index: 1;
+}
+
+/* Centered Title & Subtitle Container */
+.contact-hero-center-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 750px;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contact-hero-center-content h1 {
+  color: #ffffff;
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.5px;
+}
+
+.contact-hero-subtitle {
+  color: #ffffff;
+  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+  margin: 0;
+  line-height: 1.4;
+  opacity: 0.95;
+}
+
+/* Breadcrumb Wrapper (Centered Relative to Text Block) */
+.contact-breadcrumb-wrapper {
+  margin-bottom: 8px;
+}
+
+.contact-breadcrumb-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #ffffff;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.contact-breadcrumb-list a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.contact-breadcrumb-list a:hover {
+  text-decoration: underline;
+}
+
+.contact-breadcrumb-separator {
+  color: #ffffff;
+}
+
+/* =========================================
+   2. MAIN SECTION LAYOUT
+   ========================================= */
+.contact-main-section {
+  padding: 60px 0;
+  background-color: #ffffff;
+}
+
+.contact-content-grid {
+  max-width: 1170px;
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 50px;
+}
+
+/* Left Column Details */
+.contact-info-column {
+  flex: 1;
+  max-width: 480px;
+}
+
+.contact-subtitle-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.contact-accent-line {
+  display: inline-block;
+  width: 35px;
+  height: 2px;
+  background-color: #0088cc;
+}
+
+.contact-subtitle {
+  color: #0088cc;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.contact-title {
+  color: #1a202c;
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+}
+
+.contact-description {
+  color: #4a5568;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.contact-details-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contact-detail-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.contact-icon-box {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.contact-icon-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.contact-detail-text h3 {
+  color: #0f3d75;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.contact-detail-text p {
+  color: #333333;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.contact-detail-text a {
+  color: #333333;
+  text-decoration: none;
+}
+
+.contact-detail-text a:hover {
+  color: #0088cc;
+}
+
+/* Right Column Form */
+.contact-form-column {
+  flex: 1.1;
+  width: 100%;
+}
+
+.contact-form-wrapper {
+  background: #fbfbfd;
+  border: 1px solid #f0f0f4;
+  padding: 35px;
+  border-radius: 8px;
+}
+
+.contact-form-heading {
+  color: #0f3d75;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+}
+
+.contact-form-subheading {
+  color: #666666;
+  font-size: 0.95rem;
+  margin: 0 0 25px 0;
+}
+
+.contact-custom-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.contact-input-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.contact-input-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-input-label {
+  font-size: 0.85rem;
+  color: #555555;
+  margin-bottom: 6px;
+}
+
+.contact-text-input,
+.contact-select-input,
+.contact-textarea-input {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: #333333;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.contact-text-input:focus,
+.contact-select-input:focus,
+.contact-textarea-input:focus {
+  border-color: #0088cc;
+}
+
+.contact-textarea-input {
+  resize: vertical;
+}
+
+.contact-action-btn {
+  background-color: #0088cc;
+  color: #ffffff;
+  border: none;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 30px;
+  cursor: pointer;
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.contact-action-btn:hover {
+  background-color: #006699;
+}
+
+.contact-btn-arrow {
+  font-size: 1.1rem;
+}
+
+/* =========================================
+   3. RESPONSIVE BREAKPOINTS
+   ========================================= */
+@media (max-width: 900px) {
+  .contact-hero-banner {
+    aspect-ratio: auto;
+    height: 320px;
+  }
+
+  .contact-content-grid {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .contact-info-column {
+    max-width: 100%;
+  }
+
+  .contact-input-group {
+    grid-template-columns: 1fr;
+  }
+}

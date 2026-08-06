@@ -1279,9 +1279,7 @@ import {
 } from "../../../services/paymentService";
 
 
-const API =
-    "http://localhost:5000";
-
+const API = import.meta.env.VITE_API_URL;
 
 const Checkout = () => {
 
@@ -1347,11 +1345,7 @@ const Checkout = () => {
 
 
             const res =
-                await axios.get(
-
-                    `${API}/api/cart`,
-
-                    {
+               await axios.get(`${API}/cart`, {
                         headers: {
 
                             Authorization:
@@ -1414,11 +1408,7 @@ const Checkout = () => {
         try {
 
             const res =
-                await axios.get(
-
-                    `${API}/api/addresses`,
-
-                    {
+              await axios.get(`${API}/addresses`, {
                         headers: {
 
                             Authorization:
@@ -1889,27 +1879,16 @@ const Checkout = () => {
             // 1. CREATE ORDER
             // =================================
 
-            const orderRes =
-                await axios.post(
-
-                    `${API}/api/orders`,
-
-                    orderData,
-
-                    {
-                        headers: {
-
-                            Authorization:
-                                `Bearer ${token}`,
-
-                            "Content-Type":
-                                "application/json"
-
-                        }
-
-                    }
-
-                );
+        const orderRes = await axios.post(
+    `${API}/orders`,
+    orderData,
+    {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    }
+);
 
 
             console.log(

@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/wishlist";
+// const API = "http://localhost:5000/api/wishlist";
+
+const API = `${import.meta.env.VITE_API_URL}/wishlist`;
 
 const getToken = () => localStorage.getItem("token");
 

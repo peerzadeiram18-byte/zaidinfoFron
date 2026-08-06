@@ -7,6 +7,7 @@ import {
     searchProducts
 } from "../../../../services/productService";
 import { toast } from "react-toastify";
+const API = import.meta.env.VITE_API_URL;
 
 const ProductList = () => {
 
@@ -213,8 +214,7 @@ const ProductList = () => {
         }
 
         // Backend local image
-        return `http://localhost:5000${imageUrl}`;
-
+return `${API.replace("/api", "")}${imageUrl}`;
     };
 
     // ============================================

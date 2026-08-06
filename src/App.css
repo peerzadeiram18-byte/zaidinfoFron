@@ -182,7 +182,7 @@
     border-right-color: var(--border);
   }
 } */
-@import "tailwindcss";
+/* @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -233,4 +233,4 @@ h4,
 h5,
 h6 {
   color: var(--text-h);
-}
+} */

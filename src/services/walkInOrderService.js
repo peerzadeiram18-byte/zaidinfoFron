@@ -90,9 +90,13 @@
 
 import axios from "axios";
 
-const API = "http://localhost:5000/api/orders";
+// const API = "http://localhost:5000/api/orders";
 
-const PRODUCT_API = "http://localhost:5000/api/products";
+// const PRODUCT_API = "http://localhost:5000/api/products";
+
+const API = import.meta.env.VITE_API_URL;
+
+// const PRODUCT_API = `${import.meta.env.VITE_API_URL}/products`;
 
 
 // =====================================

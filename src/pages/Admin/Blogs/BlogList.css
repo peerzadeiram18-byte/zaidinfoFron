@@ -1,0 +1,134 @@
+/* Color Palette Variables (Light Green Theme) */
+:root {
+  --bg-sage: #f2fbf5;
+  --card-bg: #ffffff;
+  --primary-green: #22c55e;
+  --primary-hover: #16a34a;
+  --light-mint: #e8f7ed;
+  --border-green: #c2ebd0;
+  --text-dark: #14532d;
+  --text-body: #374151;
+  --text-muted: #6b7280;
+}
+
+/* Container */
+.blog-list-container {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1.5rem;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-green);
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--light-mint);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.card-header h2 {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.card-header p {
+  margin: 0.25rem 0 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.add-btn {
+  background-color: var(--primary-green);
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.add-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Table Wrapper & Table */
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--border-green);
+  border-radius: 8px;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.custom-table th {
+  background-color: var(--light-mint);
+  color: var(--text-dark);
+  font-weight: 600;
+  padding: 0.85rem 1rem;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border-green);
+}
+
+.custom-table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--light-mint);
+  font-size: 0.9rem;
+  color: var(--text-body);
+  vertical-align: middle;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #f8fdf9;
+}
+
+.font-bold {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* Status Badges */
+.status-pill {
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.status-pill.active {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-pill.draft {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

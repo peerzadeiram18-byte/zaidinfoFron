@@ -349,9 +349,13 @@ function MyProfile() {
 
         try {
 
-            const res = await axios.get(
+            const res = 
+            // await axios.get(
 
-                "http://localhost:5000/api/users/profile",
+                // "http://localhost:5000/api/users/profile",
+
+                await axios.get(
+    `${API}/users/profile`,
 
                 {
 
@@ -403,10 +407,14 @@ function MyProfile() {
 
         try {
 
-            const res = await axios.put(
+            const res =
+            
+            // await axios.put(
 
-                "http://localhost:5000/api/users/profile",
+            //     "http://localhost:5000/api/users/profile",
 
+            await axios.put(
+    `${API}/users/profile`,
                 profile,
 
                 {

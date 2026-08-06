@@ -1,4 +1,4 @@
-*{
+/* *{
     margin:0;
     padding:0;
     box-sizing:border-box;
@@ -129,5 +129,176 @@ font-size:14px;
 cursor:pointer;
 
 width:130px;
+
+} */
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Poppins",sans-serif;
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.employee-list-page{
+    width:100%;
+    background:#fff;
+    padding:24px;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    overflow-x:auto;
+}
+
+.employee-list-page h2{
+    font-size:28px;
+    color:#1f2937;
+    margin-bottom:20px;
+    font-weight:700;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.employee-table{
+    width:100%;
+    min-width:1100px;
+    border-collapse:collapse;
+}
+
+.employee-table thead{
+    background:#22c55e;
+}
+
+.employee-table th{
+    color:#fff;
+    padding:14px 12px;
+    text-align:left;
+    font-size:14px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.employee-table td{
+    padding:12px;
+    font-size:14px;
+    color:#374151;
+    border-bottom:1px solid #e5e7eb;
+    white-space:nowrap;
+}
+
+.employee-table tbody tr{
+    transition:.25s;
+}
+
+.employee-table tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+.employee-table tbody tr:hover{
+    background:#ecfdf5;
+}
+
+/* =========================
+   STATUS SELECT
+========================= */
+
+.employee-table select{
+    width:130px;
+    padding:8px 10px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    outline:none;
+    cursor:pointer;
+    font-size:13px;
+    background:#fff;
+}
+
+.employee-table select:focus{
+    border-color:#22c55e;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-edit,
+.btn-salary{
+
+    border:none;
+    cursor:pointer;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+
+    padding:8px 16px;
+    border-radius:8px;
+
+    transition:.25s;
+}
+
+.btn-edit{
+    background:#3b82f6;
+}
+
+.btn-edit:hover{
+    background:#2563eb;
+}
+
+.btn-salary{
+    background:#22c55e;
+}
+
+.btn-salary:hover{
+    background:#16a34a;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.employee-list-page::-webkit-scrollbar{
+    height:8px;
+}
+
+.employee-list-page::-webkit-scrollbar-thumb{
+    background:#22c55e;
+    border-radius:20px;
+}
+
+.employee-list-page::-webkit-scrollbar-track{
+    background:#f1f5f9;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:992px){
+
+    .employee-list-page{
+        padding:18px;
+    }
+
+    .employee-list-page h2{
+        font-size:24px;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .employee-list-page{
+        padding:15px;
+    }
+
+    .employee-table{
+        min-width:1000px;
+    }
 
 }

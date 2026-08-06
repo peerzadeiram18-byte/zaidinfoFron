@@ -1,6 +1,18 @@
+// /** @type {import('tailwindcss').Config} */
+// export default {
+//   darkMode: 'class', // 👈 ADD THIS LINE HERE
+//   content: [
+//     "./index.html",
+//     "./src/**/*.{js,ts,jsx,tsx}",
+//   ],
+//   theme: {
+//     extend: {},
+//   },
+//   plugins: [],
+// }
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class', // 👈 ADD THIS LINE HERE
+  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -9,4 +21,4 @@ export default {
     extend: {},
   },
   plugins: [],
-}
+};

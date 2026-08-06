@@ -1,8 +1,10 @@
 import axios from "axios";
 
-const API =
-    "http://localhost:5000/api/inventory";
+// const API =
+//     "http://localhost:5000/api/inventory";
 
+const API =
+    `${import.meta.env.VITE_API_URL}/inventory`;
 
 // ======================================================
 // AUTH CONFIG
@@ -120,12 +122,20 @@ export const returnStock = async (data) => {
 
 export const getStockHistory = async (productId) => {
 
+    // return await axios.get(
+
+    //     `http://localhost:5000/api/stock-transactions/product/${productId}`,
+
+    //     getConfig()
+
+    // );
+
     return await axios.get(
 
-        `http://localhost:5000/api/stock-transactions/product/${productId}`,
+    `${import.meta.env.VITE_API_URL}/stock-transactions/product/${productId}`,
 
-        getConfig()
+    getConfig()
 
-    );
+);
 
 };

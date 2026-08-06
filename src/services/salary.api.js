@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/salary";
+// const API = "http://localhost:5000/api/salary";
+
+const API = `${import.meta.env.VITE_API_URL}/salary`;
+
 
 const authHeader = () => ({
     headers: {

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "./SelectAddress.css";
 import { toast } from "react-toastify";
 
+const API = import.meta.env.VITE_API_URL;
+
 const SelectAddress = () => {
 
     const navigate = useNavigate();
@@ -24,14 +26,14 @@ const SelectAddress = () => {
 
         try {
 
-            const res = await axios.get(
-                "http://localhost:5000/api/addresses",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
+         const res = await axios.get(
+    `${API}/addresses`,
+    {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+);
 
             setAddresses(res.data.data);
 

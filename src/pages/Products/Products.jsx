@@ -14,6 +14,11 @@ FaStar,
 FaSearch
 
 } from "react-icons/fa";
+
+const API_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = API_URL.replace("/api", "");
+
+
 const Products = () => {
 
     const [search,setSearch] = useState("");
@@ -236,10 +241,10 @@ All Brands
         product.images?.length > 0 ?
 
         (
-            <img
-                src={`http://localhost:5000${product.images[0].url}`}
-                alt={product.name}
-            />
+          <img
+  src={`${BASE_URL}${product.images[0].url}`}
+  alt={product.name}
+/>
         )
 
         :
@@ -286,15 +291,11 @@ All Brands
 
                                                     (
 
-                                                        <img
-
-                                                            src={`http://localhost:5000${product.brand.logo}`}
-
-                                                            alt={product.brand.name}
-
-                                                            className="brand-logo"
-
-                                                        />
+                                                      <img
+  src={`${BASE_URL}${product.brand.logo}`}
+  alt={product.brand.name}
+  className="brand-logo"
+/>
 
                                                     )
 

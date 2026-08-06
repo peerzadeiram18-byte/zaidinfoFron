@@ -8,6 +8,9 @@ import {
 } from "../../services/inventoryService";
 import { toast } from "react-toastify";
 
+const API_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = API_URL.replace("/api", "");
+
 
 function StockHistory() {
 
@@ -709,12 +712,7 @@ function StockHistory() {
 
                                                         :
 
-                                                        `http://localhost:5000${
-                                                            selectedInventory
-                                                                .product
-                                                                .images[0]
-                                                                .url
-                                                        }`
+                                                      `${BASE_URL}${selectedInventory.product.images[0].url}`
                                                 }
 
                                                 alt={

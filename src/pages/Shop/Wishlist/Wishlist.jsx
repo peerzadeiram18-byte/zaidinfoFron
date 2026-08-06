@@ -294,6 +294,8 @@ import {
 
 import { addToCart } from "../../../services/cartService";
 
+const API = import.meta.env.VITE_API_URL;
+
 const Wishlist = () => {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -376,21 +378,20 @@ const Wishlist = () => {
               {/* Product Image Wrapper */}
               <div className="card-image-box">
                 <img
-                  src={
-                    item.product.imageUrl
-                      ? `http://localhost:5000${item.product.imageUrl}`
-                      : "/no-image.png"
-                  }
+src={
+  item.product.images?.length
+    ? `${API.replace("/api", "")}${item.product.images[0].url}`
+    : "/no-image.png"
+}
                   alt={item.product.title}
                 />
               </div>
 
               {/* Product Info */}
               <div className="card-details">
-                <h3>{item.product.title}</h3>
+<h3>{item.product.name}</h3>
                 <div className="price-tag">
-                  ₹ {item.product.discountedPrice}
-                </div>
+₹ {item.product.pricing?.sellingPrice}                </div>
               </div>
 
               {/* Card Footer Actions */}

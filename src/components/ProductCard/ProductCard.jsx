@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+const SERVER_URL = import.meta.env.VITE_API_URL.replace("/api", "");
+
 const ProductCard = ({ product, index, theme, onAddToCart, onAddToWishlist }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
@@ -110,16 +112,24 @@ const ProductCard = ({ product, index, theme, onAddToCart, onAddToWishlist }) =>
             className="relative w-full h-36 my-auto flex items-center justify-center p-2 cursor-pointer z-10"
           >
             <img
-              src={
-                product.images?.length
-                  ? `http://localhost:5000${product.images[0].url}`
-                  : product.image
-                    ? `http://localhost:5000${product.image}`
-                    : "/no-image.png"
-              }
-              alt={product.name}
-              className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
-            />
+              // src={
+              //   product.images?.length
+              //     ? `http://localhost:5000${product.images[0].url}`
+              //     : product.image
+              //       ? `http://localhost:5000${product.image}`
+              //       : "/no-image.png"
+              // }
+            
+  src={
+    product.images?.length
+      ? `${SERVER_URL}${product.images[0].url}`
+      : product.image
+      ? `${SERVER_URL}${product.image}`
+      : "/no-image.png"
+  }
+  alt={product.name}
+  className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+/>
           </Link>
 
           {/* Add to Cart Button */}

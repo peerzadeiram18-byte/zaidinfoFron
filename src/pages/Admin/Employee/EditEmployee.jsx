@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+const API = import.meta.env.VITE_API_URL;
+
 function EditEmployee() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -31,9 +33,15 @@ function EditEmployee() {
 
   const fetchEmployeeDetails = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/users/employee/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      // const res = await axios.get(`http://localhost:5000/api/users/employee/${id}`, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+      const res = await axios.get(
+  `${API}/users/employee/${id}`,
+  {
+    headers: { Authorization: `Bearer ${token}` },
+  }
+);
       const emp = res.data.data;
       setFormData({
         firstName: emp.firstName || "",
@@ -76,10 +84,18 @@ function EditEmployee() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/users/employee/${id}`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      toast.error("Employee updated successfully!");
+      // await axios.put(`http://localhost:5000/api/users/employee/${id}`, formData, {
+      //   headers: { Authorization: `Bearer ${token}` },
+      // });
+
+      await axios.put(
+  `${API}/users/employee/${id}`,
+  formData,
+  {
+    headers: { Authorization: `Bearer ${token}` },
+  }
+);
+     toast.success("Employee updated successfully!");
       navigate("/admin/employees");
     } catch (err) {
       console.error(err);
