@@ -1,97 +1,440 @@
-.customer-dashboard{
 
-    display:flex;
+/* ==========================================================================
+   CustomerDashboard.css - Clean, Minimal Green & White Theme
+   ========================================================================== */
 
-    gap:20px;
+/* --- Root Color Variables --- */
+:root {
+  --primary-green: #52b788;
+  --primary-green-hover: #40916c;
+  --primary-green-dark: #2d6a4f;
+  --primary-green-light: #f2f9f5;
+  --primary-green-glow: rgba(82, 183, 136, 0.15);
+  
+  --bg-main: #f7faf8;
+  --bg-card: #ffffff;
+  
+  --text-primary: #2b3a30;
+  --text-secondary: #65776c;
+  --text-muted: #9bb0a3;
+  
+  --border-color: #e8f0eb;
+  --border-accent: #d2e8dc;
+  
+  --shadow-subtle: 0 4px 20px rgba(82, 183, 136, 0.04);
+  --shadow-hover: 0 8px 30px rgba(82, 183, 136, 0.08);
 
-    padding:30px;
-
-    background:#f5f5f5;
-
-    min-height:100vh;
-
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  
+  --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dashboard-sidebar{
-
-    width:260px;
-
-    background:white;
-
-    border-radius:10px;
-
-    box-shadow:0 0 10px rgba(0,0,0,.1);
-
-    padding:20px;
-
+/* --- Global Layout --- */
+.customer-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
 }
 
-.customer-box{
+/* ==========================================================================
+   1. LEFT SIDEBAR (Original Flow Preserved)
+   ========================================================================== */
 
-    text-align:center;
-
-    margin-bottom:30px;
-
+.dashboard-sidebar {
+  width: 270px;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  z-index: 10;
 }
 
-.customer-box img{
-
-    width:90px;
-
-    height:90px;
-
-    border-radius:50%;
-
-    margin-bottom:10px;
-
+.dashboard-sidebar .logo {
+  text-align: center;
+  margin-bottom: 28px;
 }
 
-.customer-box h3{
-
-    margin:0;
-
+.dashboard-sidebar .logo h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-green-dark);
+  letter-spacing: -0.5px;
+  margin: 0;
 }
 
-.dashboard-sidebar button{
-
-    width:100%;
-
-    padding:12px;
-
-    margin-bottom:12px;
-
-    border:none;
-
-    background:#eee;
-
-    cursor:pointer;
-
-    border-radius:6px;
-
-    font-size:15px;
-
-    transition:.3s;
-
+.customer-box {
+  background: var(--primary-green-light);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-md);
+  padding: 20px 15px;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-.dashboard-sidebar button:hover{
-
-    background:#007bff;
-
-    color:white;
-
+.customer-image {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--bg-card);
+  box-shadow: 0 4px 12px rgba(82, 183, 136, 0.1);
+  margin-bottom: 10px;
 }
 
-.dashboard-content{
-
-    flex:1;
-
-    background:white;
-
-    border-radius:10px;
-
-    padding:25px;
-
-    box-shadow:0 0 10px rgba(0,0,0,.1);
-
+.customer-box h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: var(--text-primary);
 }
+
+.customer-box p {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--primary-green-dark);
+  background-color: #ffffff;
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin: 0;
+  border: 1px solid var(--border-accent);
+}
+
+.sidebar-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  margin: 0 0 12px 10px;
+}
+
+.dashboard-sidebar button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 4px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.dashboard-sidebar button svg {
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.dashboard-sidebar button:hover {
+  background-color: var(--primary-green-light);
+  color: var(--primary-green-dark);
+}
+
+.dashboard-sidebar button.active {
+  background-color: var(--primary-green);
+  color: #ffffff;
+  font-weight: 500;
+  box-shadow: 0 4px 14px var(--primary-green-glow);
+}
+
+.dashboard-sidebar button.active svg {
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   2. REDESIGNED RIGHT SECTION (Light, Neat & Clean)
+   ========================================================================== */
+
+.dashboard-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Header Area */
+.dashboard-header {
+  height: 76px;
+  background-color: rgb(255, 255, 255);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  sticky: top;
+}
+
+/* Light Breadcrumb */
+.breadcrumb {
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.2px;
+}
+
+.breadcrumb span {
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+/* Right Header Options */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Minimalist Search Box */
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: #f2f6f3;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  padding: 8px 18px;
+  width: 210px;
+  transition: var(--transition);
+}
+
+.search-box:focus-within {
+  background-color: #ffffff;
+  border-color: var(--border-accent);
+  box-shadow: 0 0 0 4px var(--primary-green-glow);
+  width: 250px;
+}
+
+.search-box svg {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-right: 10px;
+}
+
+.search-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  width: 100%;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+/* Header Action Buttons */
+.header-icon {
+  width: 50px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  padding: 5px;
+}
+
+.header-icon:hover {
+  background-color: var(--primary-green-light);
+  color: var(--primary-green-dark);
+  border-color: var(--border-accent);
+}
+
+/* User Profile Badge */
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border-color);
+}
+
+.header-user img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.header-user h4 {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.header-user small {
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   3. RIGHT BODY & CONTENT CARDS
+   ========================================================================== */
+
+.dashboard-body {
+  padding: 40px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Minimal Light Welcome Banner */
+.welcome-card {
+  background-color: var(--primary-green-light);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-card h2 {
+  font-size: 1.45rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 6px 0;
+  letter-spacing: -0.3px;
+}
+
+.welcome-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 580px;
+}
+
+/* Main Content Wrapper (Contains pages like Profile, Orders, etc.) */
+.dashboard-content-card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
+  min-height: 420px;
+  transition: var(--transition);
+}
+
+.dashboard-content-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* Coming Soon Fallback View */
+.coming-soon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.coming-soon-card h2 {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 10px 0;
+}
+
+.coming-soon-card p {
+  color: var(--primary-green-dark);
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  background-color: var(--primary-green-light);
+  border: 1px solid var(--border-accent);
+  padding: 6px 20px;
+  border-radius: 30px;
+  margin: 0;
+}
+
+/* ==========================================================================
+   4. RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .customer-dashboard {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 20px;
+  }
+
+  .dashboard-header {
+    padding: 0 20px;
+  }
+
+  .dashboard-body {
+    padding: 24px 20px;
+  }
+
+  .search-box {
+    width: 150px;
+  }
+
+  .search-box:focus-within {
+    width: 180px;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-header {
+    flex-direction: column;
+    height: auto;
+    padding: 16px 20px;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-box {
+    flex: 1;
+  }
+
+  .welcome-card {
+    padding: 20px 24px;
+  }
+
+  .welcome-card h2 {
+    font-size: 1.25rem;
+  }
+}
+

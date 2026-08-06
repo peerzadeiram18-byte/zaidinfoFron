@@ -17,6 +17,7 @@ import {
     getCategories
 
 } from "../../../../services/categoryService";
+import { toast } from "react-toastify";
 
 import {
 
@@ -363,7 +364,7 @@ const handleSubmit = async (e) => {
 
         await updateProduct(id, data);
 
-        alert("Product Updated Successfully");
+       toast.success("Product Updated Successfully");
 
         navigate("/admin/products");
 
@@ -373,7 +374,7 @@ const handleSubmit = async (e) => {
 
         console.log(err);
 
-        alert("Failed to Update Product");
+        toast.error("Failed to Update Product");
 
     }
 

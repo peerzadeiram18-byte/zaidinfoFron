@@ -1,0 +1,80 @@
+
+/* Import Poppins Font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* Main Section Container */
+.our-mission-section {
+  width: 100%;
+  max-width: 1528px;
+  min-height: 428px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  /* Background Image Setup */
+  background-image: url("https://static-media.laptopoutlet.co.uk/wysiwyg/upgrade_2/page/2025/about-us/BG_Desktop.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: #032130;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  
+  /* Centering Layout */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Inner Centered Box */
+.our-mission-container {
+  max-width: 832px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Subtitle ("Our") Specs */
+.our-mission-subtitle {
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  color: #ffffff;
+  margin-bottom: 0px;
+}
+
+/* Main Title ("Mission") Specs */
+.our-mission-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 60px;
+  font-weight: 400;
+  line-height: 60px;
+  color: #ffffff;
+  margin-top: 0px;
+  margin-bottom: 1.5rem;
+}
+
+/* Paragraph Specs */
+.our-mission-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.our-mission-content p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #ffffff;
+  margin: 0;
+}
+
+.our-mission-content strong {
+  font-weight: 600;
+  color: #ffffff;
+}

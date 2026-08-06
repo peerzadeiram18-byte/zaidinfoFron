@@ -167,6 +167,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/authService";
 import "./Login.css";
+import { toast } from "react-toastify";
+
 
 function Login() {
 
@@ -207,8 +209,7 @@ function Login() {
         JSON.stringify(user)
       );
 
-      alert("Login Successful");
-
+toast.success("Login Successfully");
       if (user.role === "ADMIN") {
 
         navigate("/admin-dashboard");
@@ -247,7 +248,7 @@ function Login() {
 
       else {
 
-        alert("Invalid User Role");
+        toast.error("Invalid User Role");
 
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -260,7 +261,7 @@ function Login() {
 
     catch (error) {
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
         "Login Failed"
       );

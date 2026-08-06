@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;600;700&display=swap');
+
+:root {
+  --bg-white: #ffffff;
+  --txt-black: #000000;
+  --txt-white: #ffffff;
+  --bg-blue: #007bff;
+  --ff-BaiJamjuree-Bold: 'Bai Jamjuree', sans-serif;
+  --ff-BaiJamjuree-SemiBold: 'Bai Jamjuree', sans-serif;
+  --ff-BaiJamjuree-Regular: 'Bai Jamjuree', sans-serif;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*:before, *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+section {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+div {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.3;
+  padding: 0px;
+  margin: 0px;
+  color: #000000;
+}
+
+h2, h3 {
+  font-weight: normal;
+  padding: 0px;
+  margin: 0px;
+  line-height: 1.4;
+}
+
+ul, li {
+  list-style: none;
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+img {
+  border: 0;
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+  width: 100%;
+  transition: all 0.5s ease;
+}
+
+.row2 {
+  width: 100%;
+  max-width: 1250px;
+  margin: auto;
+  padding: 0px;
+}
+
+/* Key Differentiators Section */
+.key-sec {
+  float: left;
+  width: 100%;
+  background: var(--bg-white);
+  padding: 70px 0;
+}
+
+.key-sec h2 {
+  font-family: var(--ff-BaiJamjuree-SemiBold);
+  color: var(--txt-black);
+  font-size: 50px;
+  line-height: 1.2;
+  text-align: center;
+  margin-bottom: 35px;
+  font-weight: 600;
+}
+
+.key-main {
+  float: left;
+  width: 100%;
+}
+
+.key-lst {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.key-lst li {
+  flex: 0 0 auto;
+  margin: 0px -15px; /* Reduced overlap so adjacent circles don't cover text */
+}
+
+.key-div {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  background: var(--bg-white);
+  border-radius: 100%;
+  display: flex;
+  transition: all 0.5s ease;
+  flex-wrap: wrap;
+}
+
+.key-content {
+  width: 100%;
+  padding: 0rem 3.5rem; /* Safe inner margin forcing clean multi-line wrapping */
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.key-content img {
+  width: 80px;
+  float: none;
+  display: inline-block;
+}
+
+.key-content h3 {
+  color: var(--txt-black);
+  font-size: 24px;
+  line-height: 29px;
+  font-family: var(--ff-BaiJamjuree-Bold);
+  font-weight: 700;
+  padding: 20px 0 10px;
+}
+
+.key-content p {
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+  line-height: 28px;
+  font-family: var(--ff-BaiJamjuree-Regular);
+  font-weight: 400;
+}
+
+/* Color & Layering Palette */
+.key-1 {
+  background: #FFCD6D;
+  z-index: 1;
+}
+
+.key-2 {
+  background: #CFFCED;
+  z-index: 2;
+}
+
+.key-3 {
+  background: #E4FF74;
+  z-index: 3;
+}
+
+/* Responsive Media Queries */
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+  .row2 {
+    width: 1000px;
+  }
+  .key-sec {
+    padding: 65px 0;
+  }
+  .key-sec h2 {
+    font-size: 42px;
+  }
+  .key-div {
+    width: 350px;
+    height: 350px;
+  }
+  .key-content {
+    padding: 0rem 2.5rem;
+  }
+  .key-content p {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .row2 {
+    width: 100%;
+    padding: 0px 15px;
+  }
+  .key-sec {
+    padding: 55px 0;
+  }
+  .key-sec h2 {
+    font-size: 34px;
+  }
+  .key-lst {
+    flex-wrap: wrap;
+    row-gap: 15px;
+  }
+  .key-lst li {
+    flex: 0 1 100%;
+    margin: 0;
+  }
+  .key-div {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    padding: 20px 0;
+  }
+  .key-content {
+    padding: 0 1.5rem;
+  }
+  .key-content p {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+
+@media screen and (max-width: 639px) {
+  .key-sec {
+    padding: 50px 0;
+  }
+  .key-sec h2 {
+    font-size: 30px;
+  }
+}

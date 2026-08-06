@@ -6,6 +6,7 @@ import {
     deleteProduct,
     searchProducts
 } from "../../../../services/productService";
+import { toast } from "react-toastify";
 
 const ProductList = () => {
 
@@ -148,7 +149,7 @@ const ProductList = () => {
 
             await deleteProduct(id);
 
-            alert("Product Deleted Successfully");
+         toast.success("Product Deleted Successfully");
 
             // Reload product list
             await loadProducts();
@@ -157,7 +158,7 @@ const ProductList = () => {
 
             console.error("DELETE PRODUCT ERROR:", error);
 
-            alert(
+            toast.error(
                 error.response?.data?.message ||
                 "Delete Failed"
             );

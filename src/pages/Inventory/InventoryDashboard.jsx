@@ -469,6 +469,7 @@ import {
     addStock,
     removeStock
 } from "../../services/inventoryService";
+import { toast } from "react-toastify";
 
 
 function InventoryDashboard() {
@@ -584,7 +585,7 @@ function InventoryDashboard() {
         });
 
 
-        alert("Stock Added Successfully");
+       toast.success("Stock Added Successfully");
 
 
         setShowModal(false);
@@ -598,7 +599,7 @@ function InventoryDashboard() {
 
         console.log(err);
 
-        alert(
+        toast.error(
             err.response?.data?.message ||
             "Failed to add stock"
         );
@@ -642,7 +643,7 @@ function InventoryDashboard() {
             quantity <= 0
         ) {
 
-            alert(
+            toast.error(
                 "Enter valid quantity"
             );
 
@@ -663,7 +664,7 @@ function InventoryDashboard() {
             });
 
 
-            alert(
+           toast.success(
                 "Stock Removed Successfully"
             );
 
@@ -680,7 +681,7 @@ function InventoryDashboard() {
             );
 
 
-            alert(
+            toast.error(
 
                 error.response?.data?.message ||
 

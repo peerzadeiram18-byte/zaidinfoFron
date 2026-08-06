@@ -1,279 +1,414 @@
+// import React, { useEffect, useState } from "react";
+
+// import "./Wishlist.css";
+
+// import { Link } from "react-router-dom";
+
+// import {
+
+//     getWishlist,
+
+//     removeFromWishlist
+
+// } from "../../../services/wishlistService";
+
+// import {
+
+//     addToCart
+
+// } from "../../../services/cartService";
+
+// const Wishlist = () => {
+
+//     const [wishlist, setWishlist] = useState([]);
+
+//     const [loading, setLoading] = useState(true);
+
+//     useEffect(() => {
+
+//         loadWishlist();
+
+//     }, []);
+
+//     const loadWishlist = async () => {
+
+//         try {
+
+//             setLoading(true);
+
+//             const res = await getWishlist();
+
+//             console.log(res.data);
+
+//             setWishlist(
+
+//                 res.data.wishlist.products || []
+
+//             );
+
+//         }
+
+//         catch (error) {
+
+//             console.log(error);
+
+//         }
+
+//         finally {
+
+//             setLoading(false);
+
+//         }
+
+//     };
+
+//     const handleRemove = async (productId) => {
+
+//         try {
+
+//             await removeFromWishlist(productId);
+
+//             loadWishlist();
+
+//         }
+
+//         catch (error) {
+
+//             console.log(error);
+
+//             alert(error.response?.data?.message);
+
+//         }
+
+//     };
+
+//     const handleAddToCart = async (productId) => {
+
+//         try {
+
+//             await addToCart({
+
+//                 product: productId,
+
+//                 quantity: 1
+
+//             });
+
+//             alert("Added To Cart");
+
+//         }
+
+//         catch (error) {
+
+//             console.log(error);
+
+//             alert(error.response?.data?.message);
+
+//         }
+
+//     };
+
+//     if (loading) {
+
+//         return (
+
+//             <div className="loading">
+
+//                 Loading Wishlist...
+
+//             </div>
+
+//         );
+
+//     }
+
+//     return (
+
+//         <div className="wishlist-page">
+
+//             <div className="wishlist-header">
+
+//                 <h2>
+
+//                     My Wishlist
+
+//                 </h2>
+
+//             </div>
+
+//             {
+
+//                 wishlist.length === 0 ?
+
+//                 (
+
+//                     <div className="empty-wishlist">
+
+//                         <h3>
+
+//                             Wishlist Is Empty
+
+//                         </h3>
+
+//                         <Link
+
+//                             to="/shop"
+
+//                             className="shop-btn"
+
+//                         >
+
+//                             Continue Shopping
+
+//                         </Link>
+
+//                     </div>
+
+//                 )
+
+//                 :
+
+//                 (
+
+//                     <div className="wishlist-grid">
+
+//                         {
+
+//                             wishlist.map((item) => (
+
+//                                 <div
+
+//                                     className="wishlist-card"
+
+//                                     key={item.product._id}
+
+//                                 >
+
+//                                     <img
+
+//                                         src={
+
+//                                             item.product.imageUrl
+
+//                                                 ?
+
+//                                                 `http://localhost:5000${item.product.imageUrl}`
+
+//                                                 :
+
+//                                                 "/no-image.png"
+
+//                                         }
+
+//                                         alt={item.product.title}
+
+//                                     />
+
+//                                     <h3>
+
+//                                         {item.product.title}
+
+//                                     </h3>
+
+//                                     <p>
+
+//                                         ₹ {item.product.discountedPrice}
+
+//                                     </p>
+
+//                                     <div className="wishlist-buttons">
+
+//                                         <button
+
+//                                             onClick={() =>
+
+//                                                 handleAddToCart(
+
+//                                                     item.product._id
+
+//                                                 )
+
+//                                             }
+
+//                                         >
+
+//                                             Add To Cart
+
+//                                         </button>
+
+//                                         <button
+
+//                                             className="remove-btn"
+
+//                                             onClick={() =>
+
+//                                                 handleRemove(
+
+//                                                     item.product._id
+
+//                                                 )
+
+//                                             }
+
+//                                         >
+
+//                                             Remove
+
+//                                         </button>
+
+//                                     </div>
+
+//                                 </div>
+
+//                             ))
+
+//                         }
+
+//                     </div>
+
+//                 )
+
+//             }
+
+//         </div>
+
+//     );
+
+// };
+
+// export default Wishlist;
+
+
+
+
 import React, { useEffect, useState } from "react";
-
-import "./Wishlist.css";
-
 import { Link } from "react-router-dom";
+import { FaTrashAlt, FaShoppingCart } from "react-icons/fa";
+import "./Wishlist.css";
+import { toast } from "react-toastify";
 
 import {
-
-    getWishlist,
-
-    removeFromWishlist
-
+  getWishlist,
+  removeFromWishlist
 } from "../../../services/wishlistService";
 
-import {
-
-    addToCart
-
-} from "../../../services/cartService";
+import { addToCart } from "../../../services/cartService";
 
 const Wishlist = () => {
+  const [wishlist, setWishlist] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const [wishlist, setWishlist] = useState([]);
+  useEffect(() => {
+    loadWishlist();
+  }, []);
 
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-
-        loadWishlist();
-
-    }, []);
-
-    const loadWishlist = async () => {
-
-        try {
-
-            setLoading(true);
-
-            const res = await getWishlist();
-
-            console.log(res.data);
-
-            setWishlist(
-
-                res.data.wishlist.products || []
-
-            );
-
-        }
-
-        catch (error) {
-
-            console.log(error);
-
-        }
-
-        finally {
-
-            setLoading(false);
-
-        }
-
-    };
-
-    const handleRemove = async (productId) => {
-
-        try {
-
-            await removeFromWishlist(productId);
-
-            loadWishlist();
-
-        }
-
-        catch (error) {
-
-            console.log(error);
-
-            alert(error.response?.data?.message);
-
-        }
-
-    };
-
-    const handleAddToCart = async (productId) => {
-
-        try {
-
-            await addToCart({
-
-                product: productId,
-
-                quantity: 1
-
-            });
-
-            alert("Added To Cart");
-
-        }
-
-        catch (error) {
-
-            console.log(error);
-
-            alert(error.response?.data?.message);
-
-        }
-
-    };
-
-    if (loading) {
-
-        return (
-
-            <div className="loading">
-
-                Loading Wishlist...
-
-            </div>
-
-        );
-
+  const loadWishlist = async () => {
+    try {
+      setLoading(true);
+      const res = await getWishlist();
+      setWishlist(res.data.wishlist.products || []);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-
-    return (
-
-        <div className="wishlist-page">
-
-            <div className="wishlist-header">
-
-                <h2>
-
-                    My Wishlist
-
-                </h2>
-
-            </div>
-
-            {
-
-                wishlist.length === 0 ?
-
-                (
-
-                    <div className="empty-wishlist">
-
-                        <h3>
-
-                            Wishlist Is Empty
-
-                        </h3>
-
-                        <Link
-
-                            to="/shop"
-
-                            className="shop-btn"
-
-                        >
-
-                            Continue Shopping
-
-                        </Link>
-
-                    </div>
-
-                )
-
-                :
-
-                (
-
-                    <div className="wishlist-grid">
-
-                        {
-
-                            wishlist.map((item) => (
-
-                                <div
-
-                                    className="wishlist-card"
-
-                                    key={item.product._id}
-
-                                >
-
-                                    <img
-
-                                        src={
-
-                                            item.product.imageUrl
-
-                                                ?
-
-                                                `http://localhost:5000${item.product.imageUrl}`
-
-                                                :
-
-                                                "/no-image.png"
-
-                                        }
-
-                                        alt={item.product.title}
-
-                                    />
-
-                                    <h3>
-
-                                        {item.product.title}
-
-                                    </h3>
-
-                                    <p>
-
-                                        ₹ {item.product.discountedPrice}
-
-                                    </p>
-
-                                    <div className="wishlist-buttons">
-
-                                        <button
-
-                                            onClick={() =>
-
-                                                handleAddToCart(
-
-                                                    item.product._id
-
-                                                )
-
-                                            }
-
-                                        >
-
-                                            Add To Cart
-
-                                        </button>
-
-                                        <button
-
-                                            className="remove-btn"
-
-                                            onClick={() =>
-
-                                                handleRemove(
-
-                                                    item.product._id
-
-                                                )
-
-                                            }
-
-                                        >
-
-                                            Remove
-
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                            ))
-
-                        }
-
-                    </div>
-
-                )
-
-            }
-
+  };
+
+  const handleRemove = async (productId) => {
+    try {
+      await removeFromWishlist(productId);
+      loadWishlist();
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message);
+    }
+  };
+
+  const handleAddToCart = async (productId) => {
+    try {
+      await addToCart({
+        product: productId,
+        quantity: 1
+      });
+      toast.success("Added To Cart");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message);
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">Loading Wishlist...</div>;
+  }
+
+  return (
+    <div className="wishlist-page">
+      <div className="wishlist-header">
+        <div>
+          <h2>My Wishlist</h2>
+          <span className="wishlist-count">
+            {wishlist.length} {wishlist.length === 1 ? "Item" : "Items"} Saved
+          </span>
         </div>
+      </div>
 
-    );
+      {wishlist.length === 0 ? (
+        <div className="empty-wishlist">
+          <h3>Wishlist Is Empty</h3>
+          <p>Explore our store and save your favorite items for later.</p>
+          <Link to="/shop" className="shop-btn">
+            Continue Shopping
+          </Link>
+        </div>
+      ) : (
+        <div className="wishlist-grid">
+          {wishlist.map((item) => (
+            <div className="wishlist-card" key={item.product._id}>
+              {/* Quick Remove Floating Button */}
+              <button
+                className="quick-remove-btn"
+                title="Remove item"
+                onClick={() => handleRemove(item.product._id)}
+              >
+                <FaTrashAlt />
+              </button>
 
+              {/* Product Image Wrapper */}
+              <div className="card-image-box">
+                <img
+                  src={
+                    item.product.imageUrl
+                      ? `http://localhost:5000${item.product.imageUrl}`
+                      : "/no-image.png"
+                  }
+                  alt={item.product.title}
+                />
+              </div>
+
+              {/* Product Info */}
+              <div className="card-details">
+                <h3>{item.product.title}</h3>
+                <div className="price-tag">
+                  ₹ {item.product.discountedPrice}
+                </div>
+              </div>
+
+              {/* Card Footer Actions */}
+              <div className="wishlist-buttons">
+                <button
+                  className="add-cart-btn"
+                  onClick={() => handleAddToCart(item.product._id)}
+                >
+                  <FaShoppingCart /> Add To Cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Wishlist;
+

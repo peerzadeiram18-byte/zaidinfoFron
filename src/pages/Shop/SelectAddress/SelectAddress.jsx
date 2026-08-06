@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./SelectAddress.css";
+import { toast } from "react-toastify";
 
 const SelectAddress = () => {
 
@@ -46,7 +47,7 @@ const SelectAddress = () => {
 
         if (!selectedAddress) {
 
-            alert("Please Select Address");
+            toast.error("Please Select Address");
 
             return;
 

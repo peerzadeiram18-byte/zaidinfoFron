@@ -9,6 +9,7 @@ import {
     exportSalaryExcel
 
 } from "../../../services/salary.api";
+import { toast } from "react-toastify";
 
 import SalaryModal from "./SalaryModal.jsx";
 const SalaryPage = () => {
@@ -40,7 +41,7 @@ const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
 
             console.log(err);
 
-            alert("Unable to load salary data");
+            toast.error("Unable to load salary data");
 
         }
 

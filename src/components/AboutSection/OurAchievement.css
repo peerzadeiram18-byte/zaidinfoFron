@@ -1,0 +1,100 @@
+/* --- ACHIEVEMENTS CONTAINER & HEADER --- */
+.achievements-section {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto 3rem auto;
+  padding: 0 1.25rem;
+}
+
+.achievements-header {
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.achievements-header img {
+  display: block;
+  margin: 0 auto 10px auto;
+  width: 90px;
+  height: 90px;
+}
+
+.achievements-header h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #333333;
+  margin: 0;
+}
+
+/* --- GRID LAYOUT --- */
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* --- CARD STYLING --- */
+.achievement-card {
+  background-color: #EFEFEF;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 220px;
+  box-sizing: border-box;
+}
+
+.achievement-number {
+  font-family: 'Poppins', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #0089d1;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.achievement-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #333333;
+  margin: 0 0 10px 0;
+  display: block;
+}
+
+.achievement-desc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #555555;
+  margin: 0;
+}
+
+/* --- RESPONSIVE BREAKPOINTS --- */
+/* Mobile landscape & small tablets */
+@media (min-width: 576px) {
+  .achievements-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablets / Laptops */
+@media (min-width: 992px) {
+  .achievements-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Large Screens (5 Columns Layout) */
+@media (min-width: 1200px) {
+  .achievements-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+  }
+}

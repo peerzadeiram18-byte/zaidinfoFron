@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function EditEmployee() {
   const { id } = useParams();
@@ -50,7 +51,7 @@ function EditEmployee() {
       });
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch employee details");
+      toast.error("Failed to fetch employee details");
     } finally {
       setLoading(false);
     }
@@ -78,11 +79,11 @@ function EditEmployee() {
       await axios.put(`http://localhost:5000/api/users/employee/${id}`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Employee updated successfully!");
+      toast.error("Employee updated successfully!");
       navigate("/admin/employees");
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.message || "Failed to update employee");
+      toast.error(err.response?.data?.message || "Failed to update employee");
     }
   };
 

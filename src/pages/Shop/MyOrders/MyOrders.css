@@ -1,67 +1,190 @@
-.myorders-container{
 
-    width:90%;
-
-    margin:auto;
-
-    padding:40px 0;
-
+/* --- Container & Headers --- */
+.myorders-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.myorders-container h1{
-
-    margin-bottom:30px;
-
+.myorders-title {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.3px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.order-card{
-
-    border:1px solid #ddd;
-
-    border-radius:8px;
-
-    padding:20px;
-
-    margin-bottom:20px;
-
-    display:grid;
-
-    grid-template-columns:
-
-    repeat(5,1fr);
-
-    gap:20px;
-
-    background:white;
-
+/* --- Loading & Empty States --- */
+.myorders-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #16a34a;
+  background-color: #f0fdf4;
+  border: 1px solid #dcfce7;
+  border-radius: 14px;
 }
 
-.order-card strong{
-
-    color:#444;
-
+.no-orders {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background-color: #ffffff;
+  border: 1px dashed #d1d5db;
+  border-radius: 14px;
+  text-align: center;
 }
 
-.order-card p{
-
-    margin-top:8px;
-
+.no-orders h3 {
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: #6b7280;
+  margin: 0;
 }
 
-.view-btn{
+/* --- Order Card Layout --- */
+.order-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
 
-    margin-top:20px;
+.order-card:hover {
+  border-color: #bbf7d0;
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.08);
+  transform: translateY(-2px);
+}
 
-    padding:10px 20px;
+/* --- Order Rows --- */
+.order-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #e5e7eb;
+}
 
-    background:#0d6efd;
+.order-row:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
 
-    color:white;
+.order-row span {
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: #6b7280;
+}
 
-    border:none;
+.order-row p {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: #111827;
+}
 
-    border-radius:5px;
+/* Highlight specific row elements */
+.order-row:nth-child(1) p {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #4b5563;
+  background-color: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
 
-    cursor:pointer;
+.order-row:nth-child(2) p {
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.95rem;
+}
 
+/* --- Dynamic Status Styling --- */
+/* Order Status Pill */
+.order-row:nth-child(3) p {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #dcfce7;
+  text-transform: capitalize;
+}
+
+/* Payment Status Pill */
+.order-row:nth-child(4) p {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  background-color: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  text-transform: capitalize;
+}
+
+/* --- Action Button --- */
+.view-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 11px 18px;
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #dcfce7;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.view-btn:hover {
+  background-color: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+}
+
+/* --- Responsive Adjustments --- */
+@media (min-width: 768px) {
+  .order-card {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    gap: 16px 24px;
+  }
+
+  .order-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .view-btn {
+    grid-column: span 3;
+    width: max-content;
+    align-self: flex-end;
+    justify-self: flex-end;
+    margin-top: 0;
+    padding: 8px 20px;
+  }
 }

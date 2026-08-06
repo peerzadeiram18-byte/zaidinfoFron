@@ -921,6 +921,7 @@ import {
     useLocation,
     useNavigate
 } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import {
     createPayment,
@@ -1412,7 +1413,7 @@ const Payment = () => {
                             // SUCCESS
                             // ==================================
 
-                            alert(
+                           toast.success(
                                 "Payment successful!"
                             );
 
@@ -1467,7 +1468,7 @@ const Payment = () => {
 
                             }
 
-                            alert(
+                            toast.error(
                                 message
                             );
 
@@ -1668,7 +1669,7 @@ const Payment = () => {
 
             }
 
-            alert(
+            toast.error(
                 message
             );
 

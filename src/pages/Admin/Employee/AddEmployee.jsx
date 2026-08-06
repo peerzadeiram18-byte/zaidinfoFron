@@ -228,9 +228,10 @@
 
 
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createEmployee } from "../../../services/authService";
 import "./AddEmployee.css";
+import { toast } from "react-toastify";
 
 function AddEmployee() {
 
@@ -305,21 +306,30 @@ function AddEmployee() {
 
         // Only system users need login credentials
 
-        if (employee.hasSystemAccess) {
+        // if (employee.hasSystemAccess) {
 
-            payload.email = employee.email;
+        //     payload.email = employee.email;
 
-            payload.password = employee.password;
+        //     payload.password = employee.password;
 
-            payload.role = employee.role;
+        //     payload.role = employee.role;
 
-        }
+        // }
+
+payload.email = employee.email;
+
+if (employee.hasSystemAccess) {
+
+    payload.password = employee.password;
+    payload.role = employee.role;
+
+}
 
         try {
 
             const res = await createEmployee(payload);
 
-            alert(res.data.message);
+            toast.error(res.data.message);
 
             setEmployee({
 
@@ -352,7 +362,7 @@ function AddEmployee() {
 
             console.log(error.response);
 
-            alert(
+            toast.error(
 
                 error.response?.data?.message ||
 
@@ -363,6 +373,20 @@ function AddEmployee() {
         }
 
     };
+
+    useEffect(() => {
+    if (employee.hasSystemAccess) {
+        setEmployee((prev) => ({
+            ...prev,
+            department: "FRONT_DESK",
+        }));
+    } else {
+        setEmployee((prev) => ({
+            ...prev,
+            department: "OTHER",
+        }));
+    }
+}, [employee.hasSystemAccess]);
 
     return (
 
@@ -446,11 +470,11 @@ function AddEmployee() {
 
                     />
 
-                    {
+                    {/* {
 
                         employee.hasSystemAccess &&
 
-                        <>
+                        <> */}
 
                             <input
 
@@ -467,6 +491,11 @@ function AddEmployee() {
                                 required
 
                             />
+                              {
+
+                        employee.hasSystemAccess &&
+
+                        <>
 
                             <input
 
@@ -503,14 +532,15 @@ function AddEmployee() {
                                 <option value="INVENTORY">Inventory</option>
 
                                 <option value="ACCOUNTANT">Accountant</option>
-
+                                 
+                                 <option value="OTHER">Other</option>
                             </select>
 
                         </>
 
                     }
 
-                    <select
+                    {/* <select
 
                         name="department"
 
@@ -530,7 +560,26 @@ function AddEmployee() {
 
                         <option value="ACCOUNTS">Accounts</option>
 
-                    </select>
+                    </select> */}
+
+
+   <select
+    name="department"
+    value={employee.department}
+    onChange={handleChange}
+>
+    {employee.hasSystemAccess ? (
+        <>
+            <option value="ADMINISTRATION">Administration</option>
+            <option value="FRONT_DESK">Front Desk</option>
+            <option value="REPAIR">Repair</option>
+            <option value="INVENTORY">Inventory</option>
+            <option value="ACCOUNTS">Accounts</option>
+        </>
+    ) : (
+        <option value="OTHER">Other</option>
+    )}
+</select>
 
                     <input
 

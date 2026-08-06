@@ -807,6 +807,7 @@ import {
     createWalkInOrder
 } from "../../../../services/walkInOrderService";
 import WalkInInvoice from "../WalkInInvoice/WalkInInvoice";
+import { toast } from "react-toastify";
 
 
 function NewWalkInOrder() {
@@ -1011,7 +1012,7 @@ function NewWalkInOrder() {
 
     if (cart.length === 0) {
 
-        alert("Please add at least one product");
+        toast.error("Please add at least one product");
         return;
 
     }
@@ -1019,7 +1020,7 @@ function NewWalkInOrder() {
 
     if (!customer.fullName || !customer.phone) {
 
-        alert("Customer Name and Phone are required");
+        toast.error("Customer Name and Phone are required");
         return;
 
     }
@@ -1093,7 +1094,7 @@ function NewWalkInOrder() {
 
 
 
-        alert(
+       toast.success(
             "Walk-In Order Created Successfully"
         );
 
@@ -1132,7 +1133,7 @@ function NewWalkInOrder() {
         console.log(err);
 
 
-        alert(
+        toast.error(
 
             err.response?.data?.message ||
 

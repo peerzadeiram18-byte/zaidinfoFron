@@ -7,6 +7,8 @@ import {
 } from "../../../services/salary.api";
 
 import "./SalaryModal.css";
+import { toast } from "react-toastify";
+
 
 const SalaryModal = ({ employeeId, onClose }) => {
 
@@ -150,7 +152,7 @@ const SalaryModal = ({ employeeId, onClose }) => {
 
     );
 
-    alert("Salary Updated Successfully");
+    toast.success("Salary Updated Successfully");
 
     fetchSalary();
 
@@ -158,7 +160,7 @@ const SalaryModal = ({ employeeId, onClose }) => {
 
   } catch (err) {
 
-    alert(
+    toast.error(
 
       err.response?.data?.message ||
 
@@ -184,7 +186,7 @@ const handleSalaryPayment = async (e) => {
 
     );
 
-    alert("Salary Paid Successfully");
+    toast.success("Salary Paid Successfully");
 
     fetchSalary();
 
@@ -192,7 +194,7 @@ const handleSalaryPayment = async (e) => {
 
   } catch (err) {
 
-    alert(
+    toast.error(
 
       err.response?.data?.message ||
 
@@ -446,6 +448,8 @@ Payment History
 
 <th>Status</th>
 
+<th>Comment</th>
+
 </tr>
 
 </thead>
@@ -527,6 +531,12 @@ item.status==="PAID"
 </span>
 
 </td>
+
+ <td>
+    {item.remark?.trim()
+      ? item.remark
+      : "-"}
+  </td>
 
 </tr>
 
@@ -689,7 +699,7 @@ status:e.target.value
 
 <div className="form-group">
 
-<label>Remark</label>
+<label>comment</label>
 
 <textarea
 

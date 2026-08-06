@@ -7,6 +7,7 @@ import { createProduct } from "../../../../services/productService";
 import { getCategories } from "../../../../services/categoryService";
 
 import { getBrands } from "../../../../services/brandService";
+import { toast } from "react-toastify";
 
 
 const AddProduct = () => {
@@ -215,7 +216,7 @@ const AddProduct = () => {
 
         if (!formData.name.trim()) {
 
-            alert("Please enter product name");
+            toast.error("Please enter product name");
 
             return;
 
@@ -224,7 +225,7 @@ const AddProduct = () => {
 
         if (!formData.category) {
 
-            alert("Please select category");
+            toast.error("Please select category");
 
             return;
 
@@ -233,7 +234,7 @@ const AddProduct = () => {
 
         if (!formData.brand) {
 
-            alert("Please select brand");
+            toast.error("Please select brand");
 
             return;
 
@@ -340,7 +341,7 @@ const AddProduct = () => {
             );
 
 
-            alert(
+           toast.success(
                 "Product Added Successfully"
             );
 
@@ -400,7 +401,7 @@ const AddProduct = () => {
             );
 
 
-            alert(
+            toast.error(
                 error.response?.data?.message ||
                 "Failed to add product"
             );

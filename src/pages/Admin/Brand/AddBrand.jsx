@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createBrand } from "../../../services/brandService";
 import { getCategories } from "../../../services/categoryService";
 import "./AddBrand.css";
+import { toast } from "react-toastify";
 
 function AddBrand() {
 
@@ -88,7 +89,7 @@ function AddBrand() {
 
       const res = await createBrand(formData);
 
-      alert(res.data.message);
+      toast.error(res.data.message);
 
       setBrand({
         name: "",
@@ -106,7 +107,7 @@ function AddBrand() {
 
       console.log(error);
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
         "Unable To Create Brand"
       );

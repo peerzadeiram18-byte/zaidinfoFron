@@ -573,6 +573,7 @@ import {
     updatePaymentStatus
 
 } from "../../../../services/orderService";
+import { toast } from "react-toastify";
 
 const ViewOrder = () => {
 
@@ -644,7 +645,7 @@ const ViewOrder = () => {
 
             );
 
-            alert("Order Status Updated");
+            toast.success("Order Status Updated");
 
             fetchOrder();
 
@@ -654,7 +655,7 @@ const ViewOrder = () => {
 
             console.log(error);
 
-            alert("Failed");
+            toast.error("Failed");
 
         }
 
@@ -675,7 +676,7 @@ const ViewOrder = () => {
 
             );
 
-            alert("Payment Status Updated");
+           toast.success("Payment Status Updated");
 
             fetchOrder();
 
@@ -685,7 +686,7 @@ const ViewOrder = () => {
 
             console.log(error);
 
-            alert("Failed");
+            toast.error("Failed");
 
         }
 

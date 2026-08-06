@@ -471,13 +471,13 @@ function Sidebar() {
                 </li>
 
 
-<li
+{/* <li
     onClick={() =>
         goTo("/receptionist/walk-in-order/new")
     }
 >
     Walk-In POS
-</li>
+</li> */}
                 {/* =================================
                     ORDERS
                 ================================= */}

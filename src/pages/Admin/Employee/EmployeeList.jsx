@@ -343,6 +343,7 @@ import { useNavigate } from "react-router-dom";
 import "./EmployeeList.css";
 import { updateEmployeeStatus } from "../../../services/authService";
 import SalaryModal from "../../../components/Admin/Salary/SalaryModal";
+import { toast } from "react-toastify";
 
 function EmployeeList() {
   const navigate = useNavigate();
@@ -373,7 +374,7 @@ function EmployeeList() {
       setEmployees(res.data.data || []);
     } catch (error) {
       console.log(error);
-      alert("Unable to fetch employees");
+      toast.error("Unable to fetch employees");
     } finally {
       setLoading(false);
     }
@@ -385,7 +386,7 @@ function EmployeeList() {
       fetchEmployees();
     } catch (error) {
       console.log(error);
-      alert("Unable To Update Status");
+      toast.error("Unable To Update Status");
     }
   };
 

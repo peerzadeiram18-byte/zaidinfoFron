@@ -6,6 +6,7 @@ import {
     getInventory,
     getStockHistory
 } from "../../services/inventoryService";
+import { toast } from "react-toastify";
 
 
 function StockHistory() {

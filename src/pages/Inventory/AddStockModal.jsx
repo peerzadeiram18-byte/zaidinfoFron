@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import "./AddStockModal.css";
+import { toast } from "react-toastify";
 
 const AddStockModal = ({
   product,
@@ -32,7 +33,7 @@ quantity:Number(quantity)
 
 });
 
-alert("Stock Added");
+toast.success("Stock Added");
 
 loadInventory();
 

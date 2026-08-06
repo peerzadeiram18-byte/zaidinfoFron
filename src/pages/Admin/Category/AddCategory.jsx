@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createCategory } from "../../../services/categoryService";
 import "./AddCategory.css";
+import { toast } from "react-toastify";
 
 function AddCategory() {
 
@@ -56,7 +57,7 @@ function AddCategory() {
 
       const res = await createCategory(formData);
 
-      alert(res.data.message);
+      toast.error(res.data.message);
 
       setCategory({
         name: "",
@@ -72,7 +73,7 @@ function AddCategory() {
 
       console.log(error);
 
-      alert(
+      toast.error(
         error.response?.data?.message ||
         "Unable To Create Category"
       );

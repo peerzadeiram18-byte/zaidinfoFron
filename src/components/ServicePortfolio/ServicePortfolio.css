@@ -1,0 +1,305 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-white: #ffffff;
+  --txt-black: #000000;
+  --txt-black1: #222222;
+  --txt-white: #ffffff;
+  --bg-blue: #007bff;
+  --txt-blue: #146DB4;
+  --ff-BaiJamjuree-Bold: 'Bai Jamjuree', sans-serif;
+  --ff-BaiJamjuree-SemiBold: 'Bai Jamjuree', sans-serif;
+  --ff-BaiJamjuree-Medium: 'Bai Jamjuree', sans-serif;
+  --ff-BaiJamjuree-Regular: 'Bai Jamjuree', sans-serif;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*:before, *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+section {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+div {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.3;
+  padding: 0px;
+  margin: 0px;
+  color: #000000;
+}
+
+h2, h3, h4 {
+  font-weight: normal;
+  padding: 0px;
+  margin: 0px;
+  line-height: 1.4;
+}
+
+ul, li {
+  list-style: none;
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+img {
+  border: 0;
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+  width: 100%;
+  transition: all 0.5s ease;
+}
+
+.row2 {
+  width: 100%;
+  max-width: 1250px;
+  margin: auto;
+  padding: 0px;
+}
+
+/* Portfolio Section Layout */
+.portfolio-sec {
+  float: left;
+  width: 100%;
+  background: #F6F6F9;
+  padding: 85px 0;
+}
+
+.portfolio-pad {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 7%;
+  row-gap: 40px;
+}
+
+.portfolio-lft {
+  float: left;
+  width: 45%;
+}
+
+.portfolio-lft h4 {
+  display: inline-block;
+  background: #FAD92C;
+  border-radius: 20px;
+  padding: 0 15px;
+  color: var(--txt-black);
+  font-size: 12px;
+  line-height: 28px;
+  font-family: var(--ff-BaiJamjuree-Medium);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.portfolio-lft h2 {
+  color: var(--txt-black);
+  font-size: 40px;
+  line-height: 1.2;
+  font-family: var(--ff-BaiJamjuree-SemiBold);
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.portfolio-lft p {
+  color: var(--txt-black);
+  font-size: 20px;
+  line-height: 1.5;
+  font-family: var(--ff-BaiJamjuree-Regular);
+  margin-bottom: 25px;
+}
+
+.portfolio-lft img {
+  max-width: 100%;
+  width: auto;
+  border-radius: 8px;
+}
+
+.portfolio-rht {
+  float: right;
+  width: 48%;
+}
+
+/* Accordion Container & Items */
+.acc-pad {
+  float: left;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.acc-li {
+  float: left;
+  width: 100%;
+  padding: 20px 30px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.acc-li:last-child {
+  border-bottom: none;
+}
+
+.acc-head {
+  width: 100%;
+  min-height: 45px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 20px;
+  cursor: pointer;
+}
+
+.acc-head img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  transition: filter 0.35s ease;
+}
+
+.acc-head h3 {
+  flex: 0 1 calc(100% - 65px);
+  color: var(--txt-black1);
+  font-size: 22px;
+  line-height: 1.3;
+  font-family: var(--ff-BaiJamjuree-SemiBold);
+  position: relative;
+  padding-right: 35px;
+  transition: all 0.35s ease;
+  font-weight: 600;
+}
+
+.acc-head h3 span {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+.acc-cont {
+  float: left;
+  width: 100%;
+  padding: 10px 40px 10px 65px;
+}
+
+.acc-cont ul {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 10px;
+}
+
+.acc-cont ul li {
+  flex: 0 1 100%;
+  padding-left: 25px;
+  background: url(https://www.laptopstoreindia.in/wp-content/themes/laptopstore/assets-new/images/list-arw.svg) no-repeat 0 6px;
+  color: var(--txt-white);
+  font-size: 18px;
+  line-height: 1.4;
+  font-family: var(--ff-BaiJamjuree-Regular);
+}
+
+/* Hover States */
+.acc-head:hover img {
+  filter: brightness(0) saturate(100%) invert(30%) sepia(78%) saturate(1190%) hue-rotate(181deg) brightness(94%) contrast(91%);
+}
+
+.acc-head:hover h3 {
+  color: var(--txt-blue);
+}
+
+/* Active Accordion Item Styles */
+.acc-li.active {
+  background: #146DB4;
+  border-color: #146DB4;
+}
+
+.acc-li.active .acc-head img,
+.acc-li.active .acc-head:hover img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+}
+
+.acc-li.active .acc-head h3,
+.acc-li.active .acc-head:hover h3 {
+  color: var(--txt-white);
+}
+
+/* Responsive Styles */
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+  .row2 {
+    width: 1000px;
+  }
+  .portfolio-sec {
+    padding: 65px 0;
+  }
+  .acc-li {
+    padding: 20px 25px;
+  }
+  .acc-head {
+    column-gap: 15px;
+  }
+  .acc-head h3 {
+    font-size: 21px;
+  }
+  .acc-cont {
+    padding: 10px 30px 10px 15px;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .row2 {
+    width: 100%;
+    padding: 0px 15px;
+  }
+  .portfolio-sec {
+    padding: 55px 0;
+  }
+  .portfolio-lft h2 {
+    font-size: 34px;
+  }
+  .portfolio-lft, .portfolio-rht {
+    width: 100%;
+  }
+  .acc-li {
+    padding: 20px 25px;
+  }
+  .acc-head {
+    column-gap: 15px;
+  }
+  .acc-head h3 {
+    font-size: 21px;
+  }
+  .acc-cont {
+    padding: 10px 30px 10px 15px;
+  }
+}
+
+@media screen and (max-width: 639px) {
+  .portfolio-sec {
+    padding: 50px 0;
+  }
+  .portfolio-lft h2 {
+    font-size: 30px;
+  }
+}

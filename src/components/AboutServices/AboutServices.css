@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;700&display=swap');
+
+/* --- RESET & BASE STYLES --- */
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+div {
+  margin: 0;
+  padding: 0;
+}
+
+:focus {
+  outline: none;
+}
+
+::selection {
+  color: #ffffff;
+  background-color: #1a73e8;
+}
+
+/* --- SECTION & CONTAINER LAYOUT --- */
+.abt-ser-sec {
+  background-color: #1a73e8;
+  color: #ffffff;
+  padding: 60px 0 0 0;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.row2 {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.abt-ser-pad {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  position: relative;
+}
+
+/* --- LEFT LIST SECTION --- */
+.abt-ser-lft {
+  flex: 1;
+  max-width: 650px;
+  padding-bottom: 50px;
+}
+
+.abt-ser-lft ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* List Items using the exact working background image */
+.abt-ser-lft li {
+  flex: 0 1 100%;
+  padding-left: 35px;
+  margin-bottom: 20px;
+  background: url("https://www.laptopstoreindia.in/wp-content/themes/laptopstore/assets-new/images/list-arw.svg") no-repeat 0 6px;
+  color: #ffffff;
+  font-family: 'Bai Jamjuree', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 26px;
+}
+
+/* Bold titles (Laptop Sales, New Laptops, etc.) */
+.abt-ser-lft li strong {
+  font-family: 'Bai Jamjuree', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 26px;
+  color: #ffffff;
+}
+
+/* --- RIGHT CONTAINER & CURVED ARROW --- */
+.abt-ser-rht {
+  flex: 0 0 auto;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+.curve-arrow {
+  position: absolute;
+  bottom: 45px;
+  left: -5%;
+  z-index: 1;
+}
+
+.curve-arrow img {
+  border: 0;
+  border-style: none;
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+  width: 100px;
+  display: block;
+}
+
+/* --- MAIN IMAGE STYLING --- */
+.abt-ser-img {
+  float: left;
+  width: 100%;
+  margin-top: 30px;
+  position: relative;
+  z-index: 2;
+}
+
+.abt-ser-img img {
+  border: 0;
+  border-style: none;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  vertical-align: middle;
+  transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  display: block;
+}
+
+/* --- MEDIA QUERIES --- */
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+  .abt-ser-img img {
+    max-width: 100%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .abt-ser-img img {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .abt-ser-pad {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .abt-ser-lft {
+    max-width: 100%;
+    padding-bottom: 20px;
+  }
+
+  .abt-ser-img {
+    margin-top: 0px;
+  }
+
+  .abt-ser-img img {
+    max-width: 100%;
+  }
+
+  .curve-arrow {
+    display: none;
+  }
+}
+
+@media print {
+  .abt-ser-img img {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+  }
+}
