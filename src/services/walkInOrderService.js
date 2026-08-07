@@ -1,25 +1,131 @@
+// // import axios from "axios";
+
+// // const API = "http://localhost:5000/api/orders";
+
+
+// // // =====================================
+// // // GET CONFIG WITH TOKEN
+// // // =====================================
+
+// // const getConfig = () => ({
+// //     headers: {
+// //         Authorization:
+// //             `Bearer ${localStorage.getItem("token")}`
+// //     }
+// // });
+
+
+// // // =====================================
+// // // CREATE WALK-IN ORDER
+// // // =====================================
+
+// // export const createWalkInOrder = async (data) => {
+
+// //     const payload = {
+
+// //         ...data,
+
+// //         orderSource: "WALK_IN"
+
+// //     };
+
+
+// //     const res = await axios.post(
+
+// //         API,
+
+// //         payload,
+
+// //         getConfig()
+
+// //     );
+
+
+// //     return res.data;
+
+// // };
+
+
+// // // =====================================
+// // // GET ALL PRODUCTS
+// // // =====================================
+
+// // export const getProducts = async () => {
+
+
+// //     const res = await axios.get(
+
+// //         "http://localhost:5000/api/products",
+
+// //         getConfig()
+
+// //     );
+
+
+// //     return res.data.data || [];
+
+// // };
+
+
+// // // =====================================
+// // // SEARCH PRODUCT
+// // // =====================================
+
+// // export const searchProducts = async (keyword) => {
+
+
+// //     const res = await axios.get(
+
+// //         `http://localhost:5000/api/products/search?keyword=${keyword}`,
+
+// //         getConfig()
+
+// //     );
+
+
+// //     return res.data.data || [];
+
+// // };
+
+
 // import axios from "axios";
 
-// const API = "http://localhost:5000/api/orders";
+// // const API = "http://localhost:5000/api/orders";
+
+// // const PRODUCT_API = "http://localhost:5000/api/products";
+
+// const API = import.meta.env.VITE_API_URL;
+
+// // const PRODUCT_API = `${import.meta.env.VITE_API_URL}/products`;
 
 
 // // =====================================
-// // GET CONFIG WITH TOKEN
+// // AUTH CONFIG
 // // =====================================
 
-// const getConfig = () => ({
-//     headers: {
-//         Authorization:
-//             `Bearer ${localStorage.getItem("token")}`
-//     }
-// });
+// const getConfig = () => {
+
+//     const token = localStorage.getItem("token");
+
+//     return {
+
+//         headers: {
+
+//             Authorization: `Bearer ${token}`
+
+//         }
+
+//     };
+
+// };
 
 
 // // =====================================
-// // CREATE WALK-IN ORDER
+// // CREATE WALK IN ORDER
 // // =====================================
 
 // export const createWalkInOrder = async (data) => {
+
 
 //     const payload = {
 
@@ -46,8 +152,9 @@
 // };
 
 
+
 // // =====================================
-// // GET ALL PRODUCTS
+// // GET PRODUCTS
 // // =====================================
 
 // export const getProducts = async () => {
@@ -55,7 +162,7 @@
 
 //     const res = await axios.get(
 
-//         "http://localhost:5000/api/products",
+//         PRODUCT_API,
 
 //         getConfig()
 
@@ -67,16 +174,17 @@
 // };
 
 
+
 // // =====================================
-// // SEARCH PRODUCT
+// // SEARCH PRODUCTS
 // // =====================================
 
-// export const searchProducts = async (keyword) => {
+// export const searchProducts = async(keyword)=>{
 
 
 //     const res = await axios.get(
 
-//         `http://localhost:5000/api/products/search?keyword=${keyword}`,
+//         `${PRODUCT_API}/search?keyword=${keyword}`,
 
 //         getConfig()
 
@@ -88,16 +196,19 @@
 // };
 
 
+
+
+
 import axios from "axios";
 
-// const API = "http://localhost:5000/api/orders";
+// =====================================
+// API
+// =====================================
 
-// const PRODUCT_API = "http://localhost:5000/api/products";
+const API = `${import.meta.env.VITE_API_URL}/orders`;
 
-const API = import.meta.env.VITE_API_URL;
-
-// const PRODUCT_API = `${import.meta.env.VITE_API_URL}/products`;
-
+const PRODUCT_API =
+    `${import.meta.env.VITE_API_URL}/products`;
 
 // =====================================
 // AUTH CONFIG
@@ -105,52 +216,73 @@ const API = import.meta.env.VITE_API_URL;
 
 const getConfig = () => {
 
-    const token = localStorage.getItem("token");
+    const token =
+        localStorage.getItem("token");
 
     return {
-
         headers: {
-
-            Authorization: `Bearer ${token}`
-
-        }
-
+            Authorization:
+                `Bearer ${token}`,
+        },
     };
-
 };
 
+// =====================================
+// CREATE WALK-IN ORDER
+// =====================================
 
-// =====================================
-// CREATE WALK IN ORDER
-// =====================================
+// export const createWalkInOrder = async (data) => {
+
+//     // const payload = {
+//     //     ...data,
+//     //     orderSource: "WALK_IN",
+//     // };
+
+// const payload = {
+//     customerName: data.customerName,
+//     customerPhone: data.customerPhone,
+//     paymentMethod: data.paymentMethod,
+
+//     products: data.products.map((item) => ({
+//         product: item._id,
+//         quantity: item.quantity,
+//     })),
+
+//     discount: 0,
+//     notes: "",
+// };
+
+//     const res = await axios.post(
+//         API,
+//         payload,
+//         getConfig()
+//     );
+
+//     return res.data;
+// };
 
 export const createWalkInOrder = async (data) => {
 
-
     const payload = {
+        orderItems: data.orderItems,
 
-        ...data,
+        shippingAddress: data.shippingAddress,
 
-        orderSource: "WALK_IN"
+        totalAmount: data.totalAmount,
 
+        paymentMethod: data.paymentMethod,
+
+        orderSource: "WALK_IN",
     };
 
-
     const res = await axios.post(
-
         API,
-
         payload,
-
         getConfig()
-
     );
 
-
     return res.data;
-
 };
-
 
 
 // =====================================
@@ -159,38 +291,53 @@ export const createWalkInOrder = async (data) => {
 
 export const getProducts = async () => {
 
-
     const res = await axios.get(
-
         PRODUCT_API,
-
         getConfig()
-
     );
 
+    console.log(
+        "WALK-IN PRODUCT RESPONSE:",
+        res.data
+    );
 
-    return res.data.data || [];
+    if (Array.isArray(res.data)) {
+        return res.data;
+    }
 
+    if (Array.isArray(res.data.data)) {
+        return res.data.data;
+    }
+
+    if (Array.isArray(res.data.products)) {
+        return res.data.products;
+    }
+
+    return [];
 };
-
-
 
 // =====================================
 // SEARCH PRODUCTS
 // =====================================
 
-export const searchProducts = async(keyword)=>{
-
+export const searchProducts = async (keyword) => {
 
     const res = await axios.get(
-
-        `${PRODUCT_API}/search?keyword=${keyword}`,
-
+        `${PRODUCT_API}/search?keyword=${encodeURIComponent(keyword)}`,
         getConfig()
-
     );
 
+    if (Array.isArray(res.data)) {
+        return res.data;
+    }
 
-    return res.data.data || [];
+    if (Array.isArray(res.data.data)) {
+        return res.data.data;
+    }
 
+    if (Array.isArray(res.data.products)) {
+        return res.data.products;
+    }
+
+    return [];
 };

@@ -834,6 +834,7 @@
 // export default Sidebar;
 
 
+
 import "./Sidebar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -875,11 +876,11 @@ function Sidebar() {
           icon: <MdPeople />,
           path: "/customers",
         },
-        {
-          name: "Add Customer",
-          icon: <MdPeople />,
-          path: "/add-customer",
-        },
+        // {
+        //   name: "Add Customer",
+        //   icon: <MdPeople />,
+        //   path: "/add-customer",
+        // },
       ],
     },
 
@@ -891,10 +892,20 @@ function Sidebar() {
           icon: <MdCategory />,
           path: "/categories",
         },
+         {
+          name: "Add Categories",
+          icon: <MdCategory />,
+          path: "/add-category",
+        },
         {
           name: "Brands",
           icon: <MdCategory />,
           path: "/brands",
+        },
+        {
+          name: "Add Brands",
+          icon: <MdCategory />,
+          path: "/add-brand",
         },
         {
           name: "Products",
@@ -918,9 +929,19 @@ function Sidebar() {
           path: "/repairs",
         },
         {
+          name:"Add Repairs",
+          icon:<MdBuild />,
+          path:"/add-repair"
+        },
+        {
           name: "Rentals",
           icon: <MdBuild />,
           path: "/rentals",
+        },
+         {
+          name: "Add Rentals",
+          icon: <MdBuild />,
+          path: "/add-rental",
         },
         // {
         //   name: "Walk-In POS",
@@ -938,6 +959,11 @@ function Sidebar() {
           icon: <MdWork />,
           path: "/employees",
         },
+           {
+      name: "Add Employee",
+      icon: <MdPeople />,
+      path: "/add-employee",
+    },
         {
           name: "Salary",
           icon: <MdPayments />,

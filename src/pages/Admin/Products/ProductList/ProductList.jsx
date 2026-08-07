@@ -223,11 +223,11 @@ return `${API.replace("/api", "")}${imageUrl}`;
 
     return (
 
-        <div className="product-list">
+        <div className="product-list1">
 
             {/* ================= HEADER ================= */}
 
-            <div className="page-header">
+            <div className="page-header1">
 
                 <div>
 
@@ -244,7 +244,7 @@ return `${API.replace("/api", "")}${imageUrl}`;
                     placeholder="Search Product..."
                     value={search}
                     onChange={handleSearch}
-                    className="search-box"
+                    className="search-box1"
                 />
 
             </div>
@@ -254,7 +254,7 @@ return `${API.replace("/api", "")}${imageUrl}`;
 
             {loading ? (
 
-                <div className="loading">
+                <div className="loading1">
 
                     Loading Products...
 
@@ -266,9 +266,9 @@ return `${API.replace("/api", "")}${imageUrl}`;
 
                     {/* ================= TABLE ================= */}
 
-                    <div className="table-container">
+                    <div className="table-container1">
 
-                        <table className="product-table">
+                        <table className="product-table1">
 
                             <thead>
 
@@ -344,7 +344,7 @@ return `${API.replace("/api", "")}${imageUrl}`;
                                                                     product.name ||
                                                                     "Product"
                                                                 }
-                                                                className="table-image"
+                                                                className="table-image1"
                                                                 onError={(e) => {
                                                                     e.target.style.display =
                                                                         "none";
@@ -353,7 +353,7 @@ return `${API.replace("/api", "")}${imageUrl}`;
 
                                                         ) : (
 
-                                                            <div className="no-image">
+                                                            <div className="no-image1">
                                                                 No Image
                                                             </div>
 
@@ -503,7 +503,7 @@ return `${API.replace("/api", "")}${imageUrl}`;
 
                                                         <button
                                                             type="button"
-                                                            className="delete-btn"
+                                                            className="delete-btn1"
                                                             onClick={() =>
                                                                 handleDelete(
                                                                     product._id
@@ -531,7 +531,7 @@ return `${API.replace("/api", "")}${imageUrl}`;
 
                                         <td
                                             colSpan="13"
-                                            className="no-products"
+                                            className="no-products1"
                                         >
 
                                             No Products Found
@@ -553,7 +553,7 @@ return `${API.replace("/api", "")}${imageUrl}`;
 
                     {totalPages > 1 && (
 
-                        <div className="pagination">
+                        <div className="pagination1">
 
                             <button
                                 type="button"
