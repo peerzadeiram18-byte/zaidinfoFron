@@ -5,7 +5,7 @@
   margin: 0;
   padding: 0;
 }
-
+/* 
 body, html {
   height: 100%;
   width: 100%;
@@ -13,6 +13,19 @@ body, html {
   background-color: #ffffff;
   color: #1e293b;
   overflow: hidden;
+} */
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #ffffff;
+    color: #1e293b;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /* Strict Fullscreen Grid */

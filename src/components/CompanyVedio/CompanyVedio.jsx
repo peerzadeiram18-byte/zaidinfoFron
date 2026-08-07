@@ -1,5 +1,3 @@
-// CompanyVedio.jsx
-
 import React, { useEffect, useRef } from "react";
 import { Check } from "lucide-react";
 import zaidinfotechVideo from "../../assets/vedio/zaidinfotech.mp4";
@@ -114,15 +112,18 @@ const CompanyVideo = () => {
           {/* Right Side */}
           <div className="h-full">
             <div className="rounded-3xl overflow-hidden shadow-2xl h-full border border-transparent dark:border-slate-800">
-              <video
-                ref={videoRef}
-                src={zaidinfotechVideo}
-                controls
-                muted
-                playsInline
-                loop
-                className="w-full h-[450px] lg:h-[500px] object-cover"
-              >
+             <video
+  ref={videoRef}
+  src={zaidinfotechVideo}
+  autoPlay
+  muted
+  playsInline
+  loop
+  disablePictureInPicture
+  controls={false}
+  controlsList="nodownload nofullscreen noremoteplayback"
+  className="w-full h-[450px] lg:h-[500px] object-cover pointer-events-none"
+>
                 Your browser does not support the video tag.
               </video>
             </div>

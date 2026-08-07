@@ -45,7 +45,6 @@
 // }
 
 // export default Hero;
-
 import React, { useState } from "react";
 import {
   Award,
@@ -65,8 +64,11 @@ import {
 } from "lucide-react";
 
 import bgImage from "../../assets/images/blank1.jpg";
-
+import { useNavigate } from "react-router-dom";
 export default function Hero() {
+
+  const navigate = useNavigate();
+
   const [invoiceId, setInvoiceId] = useState("");
   const [trackingResult, setTrackingResult] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -138,10 +140,13 @@ export default function Hero() {
 
               {/* Action Buttons */}
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <button className="flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 text-xs font-bold text-black transition-all hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20 active:scale-[0.98]">
-                  Shop Laptops
-                  <ArrowRight size={15} />
-                </button>
+              <button
+  onClick={() => navigate("/shop")}
+  className="flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 text-xs font-bold text-black transition-all hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20 active:scale-[0.98]"
+>
+  Shop Laptops
+  <ArrowRight size={15} />
+</button>
 
                 <button className="flex h-10 items-center justify-center rounded-xl border border-white/25 bg-black/20 px-5 text-xs font-semibold text-white backdrop-blur-md transition-all hover:bg-white/10 active:scale-[0.98]">
                   Rent Now

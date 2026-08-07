@@ -1553,7 +1553,9 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
 // Shared Layout Components
-import Topbar from "../../components/Topbar/Topbar";
+// import Topbar from "../../components/Topbar/Topbar";
+
+import Topbar from "../../components/TopBar/TopBar";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 
