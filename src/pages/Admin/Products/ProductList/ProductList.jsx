@@ -193,29 +193,51 @@ const ProductList = () => {
     // IMAGE URL
     // ============================================
 
-    const getImageUrl = (product) => {
+//     const getImageUrl = (product) => {
 
-        if (!product?.images?.length) {
-            return null;
-        }
+//         if (!product?.images?.length) {
+//             return null;
+//         }
 
-        const imageUrl = product.images[0]?.url;
+//         const imageUrl = product.images[0]?.url;
 
-        if (!imageUrl) {
-            return null;
-        }
+//         if (!imageUrl) {
+//             return null;
+//         }
 
-        // If backend already returns complete URL
-        if (
-            imageUrl.startsWith("http://") ||
-            imageUrl.startsWith("https://")
-        ) {
-            return imageUrl;
-        }
+//         // If backend already returns complete URL
+//         if (
+//             imageUrl.startsWith("http://") ||
+//             imageUrl.startsWith("https://")
+//         ) {
+//             return imageUrl;
+//         }
 
-        // Backend local image
-return `${API.replace("/api", "")}${imageUrl}`;
-    };
+//         // Backend local image
+// return `${API.replace("/api", "")}${imageUrl}`;
+//     };
+
+// const API = import.meta.env.VITE_API_URL;
+
+const getImageUrl = (product) => {
+
+    const imageUrl = product?.images?.[0]?.url;
+
+    if (!imageUrl) {
+        return null;
+    }
+
+    if (
+        imageUrl.startsWith("http://") ||
+        imageUrl.startsWith("https://")
+    ) {
+        return imageUrl;
+    }
+
+    const serverUrl = API.replace(/\/api\/?$/, "");
+
+    return `${serverUrl}${imageUrl}`;
+};
 
     // ============================================
     // UI

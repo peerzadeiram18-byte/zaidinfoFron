@@ -1,0 +1,1061 @@
+
+/* =====================================================
+   TRACK ORDER PAGE
+===================================================== */
+
+.track-order-page {
+    min-height: 100vh;
+    padding: 40px 6%;
+    background: #f7f8fc;
+    color: #1f2937;
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.track-order-header {
+    max-width: 1100px;
+    margin: 0 auto 25px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+.track-order-header h1 {
+    margin: 0;
+
+    font-size: 34px;
+    font-weight: 800;
+
+    color: #111827;
+}
+
+
+.track-order-header p {
+    margin: 7px 0 0;
+
+    color: #6b7280;
+    font-size: 15px;
+}
+
+
+.track-back-button {
+    width: fit-content;
+
+    border: none;
+    background: transparent;
+
+    color: #374151;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    padding: 8px 0;
+}
+
+
+.track-back-button:hover {
+    color: #111827;
+}
+
+
+/* =====================================================
+   ORDER SUMMARY
+===================================================== */
+
+.track-summary-card {
+    max-width: 1100px;
+    margin: 0 auto 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+
+    padding: 22px;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 20px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+}
+
+
+.track-summary-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.summary-label {
+    font-size: 12px;
+    font-weight: 700;
+
+    color: #9ca3af;
+
+    text-transform: uppercase;
+}
+
+
+.summary-value {
+    font-size: 15px;
+
+    color: #111827;
+
+    word-break: break-word;
+}
+
+
+.summary-payment {
+    font-size: 13px;
+    font-weight: 800;
+}
+
+
+.payment-paid {
+    color: #059669;
+}
+
+
+.payment-pending {
+    color: #d97706;
+}
+
+
+.payment-failed {
+    color: #dc2626;
+}
+
+
+.payment-refunded {
+    color: #7c3aed;
+}
+
+
+/* =====================================================
+   CURRENT STATUS
+===================================================== */
+
+.current-status-card {
+    max-width: 1100px;
+    margin: 0 auto 20px;
+
+    padding: 25px;
+
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+}
+
+
+.current-status-label {
+    display: block;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    color: #9ca3af;
+
+    margin-bottom: 7px;
+}
+
+
+.current-status-left h2 {
+    margin: 0;
+
+    font-size: 25px;
+    font-weight: 800;
+
+    color: #111827;
+}
+
+
+.current-status-left p {
+    margin: 7px 0 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+.current-status-badge {
+    padding: 10px 18px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    white-space: nowrap;
+}
+
+
+.current-status-badge.active {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+
+.current-status-badge.delivered {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+
+.current-status-badge.cancelled {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* =====================================================
+   TRACKING CARD
+===================================================== */
+
+.tracking-card {
+    max-width: 1100px;
+    margin: 0 auto 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    padding: 28px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+}
+
+
+.tracking-card-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 35px;
+}
+
+
+.tracking-card-header h2 {
+    margin: 0;
+
+    font-size: 23px;
+    font-weight: 800;
+
+    color: #111827;
+}
+
+
+.tracking-card-header p {
+    margin: 5px 0 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+.last-updated {
+    color: #9ca3af;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   TIMELINE
+===================================================== */
+
+.tracking-timeline {
+    position: relative;
+}
+
+
+.tracking-step {
+    position: relative;
+
+    min-height: 95px;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 20px;
+}
+
+
+.timeline-icon {
+    position: relative;
+
+    z-index: 3;
+
+    width: 48px;
+    height: 48px;
+
+    min-width: 48px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f3f4f6;
+
+    color: #9ca3af;
+
+    font-size: 20px;
+
+    border: 3px solid #e5e7eb;
+
+    box-sizing: border-box;
+}
+
+
+.tracking-step.completed .timeline-icon {
+    background: #ecfdf5;
+
+    border-color: #10b981;
+
+    color: #059669;
+
+    font-weight: 800;
+}
+
+
+.tracking-step.active .timeline-icon {
+    background: #eff6ff;
+
+    border-color: #2563eb;
+
+    color: #2563eb;
+
+    box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.08);
+}
+
+
+.tracking-step.pending .timeline-icon {
+    background: #f9fafb;
+
+    border-color: #e5e7eb;
+
+    color: #9ca3af;
+}
+
+
+.timeline-content {
+    padding-top: 3px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.timeline-content h3 {
+    margin: 0;
+
+    font-size: 17px;
+
+    font-weight: 750;
+
+    color: #111827;
+}
+
+
+.timeline-content p {
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+
+.timeline-current,
+.timeline-completed,
+.timeline-pending {
+    width: fit-content;
+
+    margin-top: 3px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    padding: 4px 9px;
+
+    border-radius: 999px;
+}
+
+
+.timeline-current {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+
+.timeline-completed {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+
+.timeline-pending {
+    background: #f3f4f6;
+    color: #9ca3af;
+}
+
+
+/* =====================================================
+   CONNECTING LINE
+===================================================== */
+
+.timeline-line {
+    position: absolute;
+
+    z-index: 1;
+
+    left: 22px;
+
+    top: -48px;
+
+    width: 3px;
+
+    height: 95px;
+
+    background: #e5e7eb;
+
+    transform: translateX(-50%);
+}
+
+
+.timeline-line.line-completed {
+    background: #10b981;
+}
+
+
+/* =====================================================
+   DELIVERY INFORMATION
+===================================================== */
+
+.delivery-information {
+    max-width: 1100px;
+
+    margin: 0 auto 20px;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 16px;
+}
+
+
+.delivery-info-card {
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+}
+
+
+.delivery-info-icon {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 12px;
+
+    background: #f3f4f6;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+
+.delivery-info-card div:last-child {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.delivery-info-card span {
+    font-size: 10px;
+
+    font-weight: 800;
+
+    color: #9ca3af;
+
+    letter-spacing: 0.6px;
+}
+
+
+.delivery-info-card strong {
+    font-size: 14px;
+
+    color: #111827;
+}
+
+
+/* =====================================================
+   ADDRESS
+===================================================== */
+
+.tracking-address-card,
+.tracking-products-card {
+    max-width: 1100px;
+
+    margin: 0 auto 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
+}
+
+
+.tracking-section-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+
+.tracking-section-title span {
+    font-size: 20px;
+}
+
+
+.tracking-section-title h2 {
+    margin: 0;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    color: #111827;
+}
+
+
+.tracking-address {
+    padding: 18px;
+
+    background: #f9fafb;
+
+    border-radius: 12px;
+}
+
+
+.tracking-address h3 {
+    margin: 0 0 7px;
+
+    font-size: 16px;
+
+    color: #111827;
+}
+
+
+.tracking-address p {
+    margin: 5px 0;
+
+    font-size: 14px;
+
+    color: #6b7280;
+}
+
+
+/* =====================================================
+   PRODUCTS
+===================================================== */
+
+.tracking-products {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.tracking-product {
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 14px;
+
+    border: 1px solid #f0f0f0;
+
+    border-radius: 13px;
+
+    background: #fafafa;
+}
+
+
+.tracking-product-image {
+    width: 75px;
+    height: 75px;
+
+    min-width: 75px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+}
+
+
+.tracking-product-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.tracking-product-info {
+    flex: 1;
+}
+
+
+.tracking-product-info h3 {
+    margin: 0 0 6px;
+
+    font-size: 15px;
+
+    color: #111827;
+}
+
+
+.tracking-product-info p {
+    margin: 0;
+
+    font-size: 13px;
+
+    color: #6b7280;
+}
+
+
+.tracking-product-price {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 4px;
+}
+
+
+.tracking-product-price span {
+    font-weight: 800;
+
+    color: #111827;
+}
+
+
+.tracking-product-price small {
+    color: #9ca3af;
+}
+
+
+/* =====================================================
+   CANCELLED
+===================================================== */
+
+.cancelled-card {
+    max-width: 1100px;
+
+    margin: 0 auto 20px;
+
+    padding: 22px;
+
+    border-radius: 16px;
+
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+
+.cancelled-icon {
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 900;
+}
+
+
+.cancelled-card h3 {
+    margin: 0 0 5px;
+
+    color: #991b1b;
+}
+
+
+.cancelled-card p {
+    margin: 0;
+
+    color: #b91c1c;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   REFRESH
+===================================================== */
+
+.tracking-refresh {
+    max-width: 1100px;
+
+    margin: 25px auto 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+
+.tracking-refresh p {
+    margin: 0;
+
+    color: #9ca3af;
+
+    font-size: 12px;
+}
+
+
+.tracking-refresh button {
+    border: 1px solid #d1d5db;
+
+    background: #ffffff;
+
+    color: #374151;
+
+    padding: 9px 15px;
+
+    border-radius: 9px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.tracking-refresh button:hover {
+    background: #f3f4f6;
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.track-loading {
+    min-height: 70vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.track-loading h2 {
+    margin: 15px 0 5px;
+
+    color: #111827;
+}
+
+
+.track-loading p {
+    margin: 0;
+
+    color: #6b7280;
+}
+
+
+.track-spinner {
+    width: 42px;
+    height: 42px;
+
+    border: 4px solid #e5e7eb;
+
+    border-top-color: #2563eb;
+
+    border-radius: 50%;
+
+    animation: trackSpin 0.8s linear infinite;
+}
+
+
+@keyframes trackSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.track-error-card {
+    max-width: 500px;
+
+    margin: 100px auto;
+
+    padding: 35px;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border-radius: 18px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+
+.track-error-icon {
+    width: 55px;
+    height: 55px;
+
+    margin: 0 auto 15px;
+
+    border-radius: 50%;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+
+    font-weight: 900;
+}
+
+
+.track-error-card h2 {
+    margin: 0 0 8px;
+
+    color: #111827;
+}
+
+
+.track-error-card p {
+    color: #6b7280;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 850px) {
+
+    .track-order-page {
+        padding: 25px 4%;
+    }
+
+
+    .track-summary-card {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+
+    .delivery-information {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .track-order-header h1 {
+        font-size: 27px;
+    }
+
+
+    .track-summary-card {
+        grid-template-columns: 1fr;
+
+        gap: 15px;
+    }
+
+
+    .current-status-card {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .tracking-card {
+        padding: 20px 15px;
+    }
+
+
+    .tracking-card-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .tracking-step {
+        gap: 12px;
+    }
+
+
+    .timeline-icon {
+        width: 42px;
+        height: 42px;
+
+        min-width: 42px;
+    }
+
+
+    .timeline-line {
+        left: 20px;
+    }
+
+
+    .timeline-content h3 {
+        font-size: 15px;
+    }
+
+
+    .timeline-content p {
+        font-size: 12px;
+    }
+
+
+    .tracking-product {
+        align-items: flex-start;
+    }
+
+
+    .tracking-product-image {
+        width: 60px;
+        height: 60px;
+
+        min-width: 60px;
+    }
+
+
+    .tracking-product-price {
+        display: none;
+    }
+
+
+    .tracking-refresh {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+}
+

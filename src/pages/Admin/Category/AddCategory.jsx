@@ -143,6 +143,7 @@
 import { useState } from "react";
 import { createCategory } from "../../../services/categoryService";
 import "./AddCategory.css";
+import { toast } from "react-toastify";
 
 function AddCategory() {
   const [category, setCategory] = useState({

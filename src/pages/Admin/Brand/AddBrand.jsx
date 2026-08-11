@@ -224,6 +224,7 @@ import { useEffect, useState } from "react";
 import { createBrand } from "../../../services/brandService";
 import { getCategories } from "../../../services/categoryService";
 import "./AddBrand.css";
+import { toast } from "react-toastify";
 
 function AddBrand() {
   const [categories, setCategories] = useState([]);

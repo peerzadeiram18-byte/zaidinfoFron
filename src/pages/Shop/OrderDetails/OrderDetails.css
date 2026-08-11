@@ -59,3 +59,21 @@
     border-radius:8px;
 
 }
+
+.track-order-button {
+    margin-top: 20px;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.track-order-button:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}

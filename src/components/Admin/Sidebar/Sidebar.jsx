@@ -850,6 +850,7 @@ import {
   MdArticle,
   MdSettings,
   MdLogout,
+  MdReceipt,
 } from "react-icons/md";
 
 function Sidebar() {
@@ -980,6 +981,11 @@ function Sidebar() {
           icon: <MdShoppingCart />,
           path: "/admin/orders",
         },
+            {
+      name: "Invoices",
+      icon: <MdReceipt />,
+      path: "/admin/invoices",
+    },
         {
           name: "Suppliers",
           icon: <MdStore />,

@@ -2323,8 +2323,17 @@
 // export default NewWalkInOrder;
 
 
+
+
+
+
+
 import { useEffect, useState } from "react";
+import {
+  useNavigate,
+} from "react-router-dom";
 import "./NewWalkInOrder.css";
+import { toast } from "react-toastify";
 
 import {
   getProducts,
@@ -2333,7 +2342,14 @@ import {
 
 import WalkInInvoice from "../WalkInInvoice/WalkInInvoice";
 
+import {
+  createInvoice,
+} from "../../../../services/invoiceService";
+
 function NewWalkInOrder() {
+
+    const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -2920,141 +2936,590 @@ const increaseQty = (id) => {
   // CREATE WALK-IN ORDER
   // ============================================
 
-  const placeOrder = async () => {
+//   const placeOrder = async () => {
+//     if (cart.length === 0) {
+//       alert("Please add at least one product");
+//       return;
+//     }
+
+//     if (
+//       !customer.fullName ||
+//       !customer.phone
+//     ) {
+//       alert(
+//         "Customer Name and Phone are required"
+//       );
+//       return;
+//     }
+
+//     // Check cart quantity against stock
+//     for (const item of cart) {
+//     //   if (item.quantity > item.stock) 
+//         if (item.quantity > item.availableStock)
+//         {
+//         alert(
+//           `${item.title}: only ${item.stock} available`
+//         );
+//         return;
+//       }
+//     }
+
+//     const orderData = {
+//       orderItems: cart.map((item) => ({
+//         product: item.product,
+
+//         title: item.title,
+
+//         quantity: Number(item.quantity),
+
+//         originalPrice: Number(
+//           item.originalPrice
+//         ),
+
+//         price: Number(item.price),
+
+//         discountAmount: Number(
+//           item.discountAmount || 0
+//         ),
+
+//         imageUrl: item.imageUrl || "",
+//       })),
+
+//       shippingAddress: {
+//         fullName: customer.fullName,
+
+//         phone: customer.phone,
+
+//         addressLine:
+//           customer.addressLine ||
+//           "Walk In Customer",
+
+//         city: customer.city,
+
+//         state: customer.state,
+
+//         pincode: customer.pincode,
+
+//         country: "India",
+
+//         landmark:
+//           customer.landmark || "",
+//       },
+
+//       totalAmount: Number(total),
+
+//       paymentMethod,
+
+//       orderSource: "WALK_IN",
+//     };
+
+//     try {
+//       setPlacingOrder(true);
+
+//       console.log(
+//         "WALK-IN ORDER DATA:",
+//         orderData
+//       );
+
+
+//   //     const res =
+//   // await createWalkInOrder(
+//   //   orderData
+//   // );
+
+//   const res =
+//   await createWalkInOrder(
+//     orderData
+//   );
+
+// console.log(
+//   "WALK-IN ORDER RESPONSE:",
+//   res
+// );
+
+
+// // ============================================
+// // GET CREATED ORDER
+// // ============================================
+
+// const createdOrder =
+//   res?.order ||
+//   res?.data?.order ||
+//   res?.data;
+
+
+// if (!createdOrder?._id) {
+
+//   console.error(
+//     "Created order not found:",
+//     res
+//   );
+
+//   throw new Error(
+//     "Order created but Order ID was not returned."
+//   );
+// }
+
+
+// console.log(
+//   "CREATED WALK-IN ORDER:",
+//   createdOrder
+// );
+
+
+// // ============================================
+// // CREATE INVOICE
+// // ============================================
+
+// let createdInvoice = null;
+
+// try {
+
+//   console.log(
+//     "Creating invoice for order:",
+//     createdOrder._id
+//   );
+
+//   const invoiceResponse =
+//     await createInvoice(
+//       createdOrder._id
+//     );
+
+//   console.log(
+//     "INVOICE RESPONSE:",
+//     invoiceResponse
+//   );
+
+//   createdInvoice =
+//     invoiceResponse?.data ||
+//     invoiceResponse?.invoice ||
+//     invoiceResponse;
+
+// } catch (invoiceError) {
+
+//   console.error(
+//     "INVOICE CREATION ERROR:",
+//     invoiceError
+//   );
+
+//   alert(
+//     invoiceError?.response?.data?.message ||
+//     invoiceError?.message ||
+//     "Order created successfully, but invoice could not be created."
+//   );
+
+//   // IMPORTANT:
+//   // Order already created.
+//   // We do NOT break the order flow.
+// }
+
+
+// // ============================================
+// // SHOW INVOICE
+// // ============================================
+
+// if (createdInvoice) {
+
+//   setInvoiceData(
+//     createdInvoice
+//   );
+
+// } else {
+
+//   // fallback:
+//   // show order if invoice API failed
+//   setInvoiceData(
+//     createdOrder
+//   );
+// }
+
+
+// alert(
+//   "Walk-In Order Created Successfully"
+// );
+
+// console.log(
+//   "WALK-IN ORDER RESPONSE:",
+//   res
+// );
+
+
+// // ========================================
+// // GET CREATED ORDER
+// // ========================================
+
+// const createdOrder =
+//   res?.order ||
+//   res?.data?.order ||
+//   res?.data;
+
+
+// console.log(
+//   "CREATED WALK-IN ORDER:",
+//   createdOrder
+// );
+
+
+// // ========================================
+// // CHECK ORDER ID
+// // ========================================
+
+// const createdOrderId =
+//   createdOrder?._id ||
+//   createdOrder?.id;
+
+
+// if (!createdOrderId) {
+
+//   console.error(
+//     "Order created but Order ID not found:",
+//     createdOrder
+//   );
+
+//   alert(
+//     "Order created, but invoice could not be opened."
+//   );
+
+//   return;
+
+// }
+
+
+// // ========================================
+// // KEEP EXISTING INVOICE WORKING
+// // ========================================
+
+// setInvoiceData(
+//   createdOrder
+// );
+
+
+// // ========================================
+// // SUCCESS
+// // ========================================
+
+// alert(
+//   "Walk-In Order Created Successfully"
+// );
+//       // const res =
+//       //   await createWalkInOrder(
+//       //     orderData
+//       //   );
+
+//       // console.log(
+//       //   "WALK-IN ORDER RESPONSE:",
+//       //   res
+//       // );
+
+//       // const createdOrder =
+//       //   res?.order ||
+//       //   res?.data?.order ||
+//       //   res?.data;
+
+//       // setInvoiceData(createdOrder);
+
+//       // alert(
+//       //   "Walk-In Order Created Successfully"
+//       // );
+
+//       // setCart([]);
+
+//       setCustomer({
+//         fullName: "",
+//         phone: "",
+//         addressLine: "",
+//         city: "",
+//         state: "",
+//         pincode: "",
+//         country: "India",
+//         landmark: "",
+//       });
+
+//       // Refresh inventory/product stock
+//       await loadProducts();
+//     } catch (err) {
+//       console.error(
+//         "CREATE WALK-IN ORDER ERROR:",
+//         err
+//       );
+
+//       alert(
+//         err.response?.data?.message ||
+//           "Unable to create order"
+//       );
+//     } finally {
+//       setPlacingOrder(false);
+//     }
+//   };
+
+
+// ============================================
+// CREATE WALK-IN ORDER + INVOICE
+// ============================================
+
+const placeOrder = async () => {
+    // ============================================
+    // VALIDATE CART
+    // ============================================
+
     if (cart.length === 0) {
-      alert("Please add at least one product");
-      return;
-    }
-
-    if (
-      !customer.fullName ||
-      !customer.phone
-    ) {
-      alert(
-        "Customer Name and Phone are required"
-      );
-      return;
-    }
-
-    // Check cart quantity against stock
-    for (const item of cart) {
-    //   if (item.quantity > item.stock) 
-        if (item.quantity > item.availableStock)
-        {
-        alert(
-          `${item.title}: only ${item.stock} available`
-        );
+        toast.error("Please add at least one product");
         return;
-      }
     }
+
+    // ============================================
+    // VALIDATE CUSTOMER
+    // ============================================
+
+    if (!customer.fullName || !customer.phone) {
+        toast.error("Customer Name and Phone are required");
+        return;
+    }
+
+    // ============================================
+    // CHECK STOCK
+    // ============================================
+
+    for (const item of cart) {
+        if (item.quantity > item.availableStock) {
+            toast.error(
+                `${item.title}: only ${item.availableStock} item(s) available`
+            );
+            return;
+        }
+    }
+
+    // ============================================
+    // PREPARE ORDER DATA
+    // ============================================
 
     const orderData = {
-      orderItems: cart.map((item) => ({
-        product: item.product,
+        orderItems: cart.map((item) => ({
+            product: item.product,
 
-        title: item.title,
+            title: item.title,
 
-        quantity: Number(item.quantity),
+            quantity: Number(item.quantity),
 
-        originalPrice: Number(
-          item.originalPrice
-        ),
+            originalPrice: Number(
+                item.originalPrice || item.price || 0
+            ),
 
-        price: Number(item.price),
+            price: Number(
+                item.price || 0
+            ),
 
-        discountAmount: Number(
-          item.discountAmount || 0
-        ),
+            discountAmount: Number(
+                item.discountAmount || 0
+            ),
 
-        imageUrl: item.imageUrl || "",
-      })),
+            imageUrl: item.imageUrl || "",
+        })),
 
-      shippingAddress: {
-        fullName: customer.fullName,
+        shippingAddress: {
+            fullName: customer.fullName,
 
-        phone: customer.phone,
+            phone: customer.phone,
 
-        addressLine:
-          customer.addressLine ||
-          "Walk In Customer",
+            addressLine:
+                customer.addressLine ||
+                "Walk In Customer",
 
-        city: customer.city,
+            city: customer.city || "",
 
-        state: customer.state,
+            state: customer.state || "",
 
-        pincode: customer.pincode,
+            pincode: customer.pincode || "",
 
-        country: "India",
+            country: customer.country || "India",
 
-        landmark:
-          customer.landmark || "",
-      },
+            landmark:
+                customer.landmark || "",
+        },
 
-      totalAmount: Number(total),
+        totalAmount: Number(total),
 
-      paymentMethod,
+        paymentMethod,
 
-      orderSource: "WALK_IN",
+        orderSource: "WALK_IN",
     };
 
+    // ============================================
+    // CREATE ORDER
+    // ============================================
+
     try {
-      setPlacingOrder(true);
+        setPlacingOrder(true);
 
-      console.log(
-        "WALK-IN ORDER DATA:",
-        orderData
-      );
-
-      const res =
-        await createWalkInOrder(
-          orderData
+        console.log(
+            "WALK-IN ORDER DATA:",
+            orderData
         );
 
-      console.log(
-        "WALK-IN ORDER RESPONSE:",
-        res
-      );
+        const res = await createWalkInOrder(
+            orderData
+        );
 
-      const createdOrder =
-        res?.order ||
-        res?.data?.order ||
-        res?.data;
+        console.log(
+            "WALK-IN ORDER RESPONSE:",
+            res
+        );
 
-      setInvoiceData(createdOrder);
+        // ========================================
+        // GET CREATED ORDER
+        // ========================================
 
-      alert(
-        "Walk-In Order Created Successfully"
-      );
+        const createdOrder =
+            res?.order ||
+            res?.data?.order ||
+            res?.data;
 
-      setCart([]);
+        console.log(
+            "CREATED WALK-IN ORDER:",
+            createdOrder
+        );
 
-      setCustomer({
-        fullName: "",
-        phone: "",
-        addressLine: "",
-        city: "",
-        state: "",
-        pincode: "",
-        country: "India",
-        landmark: "",
-      });
+        // ========================================
+        // CHECK ORDER ID
+        // ========================================
 
-      // Refresh inventory/product stock
-      await loadProducts();
+        const createdOrderId =
+            createdOrder?._id ||
+            createdOrder?.id;
+
+        if (!createdOrderId) {
+            console.error(
+                "Created order response does not contain order ID:",
+                res
+            );
+
+            throw new Error(
+                "Order created but Order ID was not returned."
+            );
+        }
+
+        // ========================================
+        // CREATE INVOICE
+        // ========================================
+
+        let createdInvoice = null;
+
+        try {
+            console.log(
+                "CREATING INVOICE FOR ORDER:",
+                createdOrderId
+            );
+
+            const invoiceResponse =
+                await createInvoice(
+                    createdOrderId
+                );
+
+            console.log(
+                "INVOICE RESPONSE:",
+                invoiceResponse
+            );
+
+            createdInvoice =
+                invoiceResponse?.data ||
+                invoiceResponse?.invoice ||
+                invoiceResponse;
+
+            console.log(
+                "CREATED INVOICE:",
+                createdInvoice
+            );
+
+        } catch (invoiceError) {
+            // ====================================
+            // IMPORTANT:
+            // ORDER ALREADY CREATED.
+            // DON'T BREAK WALK-IN FLOW.
+            // ====================================
+
+            console.error(
+                "INVOICE CREATION ERROR:",
+                invoiceError
+            );
+
+            toast.success(
+                invoiceError?.response?.data?.message ||
+                invoiceError?.message ||
+                "Order created successfully, but invoice could not be created."
+            );
+        }
+
+        // ========================================
+        // SHOW INVOICE
+        // ========================================
+
+        if (createdInvoice) {
+            setInvoiceData(
+                createdInvoice
+            );
+        } else {
+            // Fallback:
+            // existing WalkInInvoice can still
+            // display the created order.
+            setInvoiceData(
+                createdOrder
+            );
+        }
+
+        // ========================================
+        // SUCCESS
+        // ========================================
+
+        toast.success(
+            "Walk-In Order Created Successfully"
+        );
+
+        // ========================================
+        // CLEAR CART
+        // ========================================
+
+        setCart([]);
+
+        // ========================================
+        // CLEAR CUSTOMER
+        // ========================================
+
+        setCustomer({
+            fullName: "",
+            phone: "",
+            addressLine: "",
+            city: "",
+            state: "",
+            pincode: "",
+            country: "India",
+            landmark: "",
+        });
+
+        // ========================================
+        // REFRESH PRODUCTS / INVENTORY
+        // ========================================
+
+        await loadProducts();
+
     } catch (err) {
-      console.error(
-        "CREATE WALK-IN ORDER ERROR:",
-        err
-      );
 
-      alert(
-        err.response?.data?.message ||
-          "Unable to create order"
-      );
+        console.error(
+            "CREATE WALK-IN ORDER ERROR:",
+            err
+        );
+
+        toast.error(
+            err?.response?.data?.message ||
+            err?.message ||
+            "Unable to create order"
+        );
+
     } finally {
-      setPlacingOrder(false);
+
+        setPlacingOrder(false);
+
     }
-  };
+};
 
   // ============================================
   // JSX

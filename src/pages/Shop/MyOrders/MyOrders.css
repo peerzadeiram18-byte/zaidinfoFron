@@ -1,190 +1,522 @@
 
-/* --- Container & Headers --- */
+/* =========================================================
+   MY ORDERS PAGE
+   ========================================================= */
+
 .myorders-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    box-sizing: border-box;
 }
+
+
+/* =========================================================
+   PAGE TITLE
+   ========================================================= */
 
 .myorders-title {
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 8px 0;
-  letter-spacing: -0.3px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid #e5e7eb;
+    margin: 0 0 30px;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1f2937;
 }
 
-/* --- Loading & Empty States --- */
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
 .myorders-loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 250px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #16a34a;
-  background-color: #f0fdf4;
-  border: 1px solid #dcfce7;
-  border-radius: 14px;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+    font-weight: 600;
+    color: #374151;
 }
+
+
+/* =========================================================
+   NO ORDERS
+   ========================================================= */
 
 .no-orders {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  background-color: #ffffff;
-  border: 1px dashed #d1d5db;
-  border-radius: 14px;
-  text-align: center;
+    width: 100%;
+    min-height: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+
+    box-sizing: border-box;
+    text-align: center;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
 }
+
 
 .no-orders h3 {
-  font-size: 1.05rem;
-  font-weight: 400;
-  color: #6b7280;
-  margin: 0;
+    margin: 0 0 20px;
+
+    font-size: 22px;
+    font-weight: 600;
+
+    color: #374151;
 }
 
-/* --- Order Card Layout --- */
-.order-card {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+
+.no-orders button {
+    border: none;
+    outline: none;
+
+    padding: 12px 24px;
+
+    border-radius: 8px;
+
+    background: #111827;
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
+
+
+.no-orders button:hover {
+    background: #000000;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+/* =========================================================
+   ORDER CARD
+   ========================================================= */
+
+.order-card {
+    width: 100%;
+
+    margin-bottom: 22px;
+    padding: 24px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
 
 .order-card:hover {
-  border-color: #bbf7d0;
-  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.08);
-  transform: translateY(-2px);
+    transform: translateY(-3px);
+
+    border-color: #d1d5db;
+
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.09);
 }
 
-/* --- Order Rows --- */
+
+/* =========================================================
+   ORDER ROW
+   ========================================================= */
+
 .order-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 8px;
-  border-bottom: 1px dashed #e5e7eb;
+    display: grid;
+
+    grid-template-columns: 190px 1fr;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid #f1f5f9;
 }
+
 
 .order-row:last-of-type {
-  border-bottom: none;
-  padding-bottom: 0;
+    border-bottom: none;
 }
+
 
 .order-row span {
-  font-size: 0.82rem;
-  font-weight: 400;
-  color: #6b7280;
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #6b7280;
 }
+
 
 .order-row p {
-  margin: 0;
-  font-size: 0.88rem;
-  font-weight: 400;
-  color: #111827;
+    margin: 0;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    color: #111827;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
-/* Highlight specific row elements */
-.order-row:nth-child(1) p {
-  font-family: monospace;
-  font-size: 0.85rem;
-  color: #4b5563;
-  background-color: #f3f4f6;
-  padding: 2px 8px;
-  border-radius: 6px;
-}
 
-.order-row:nth-child(2) p {
-  font-weight: 600;
-  color: #111827;
-  font-size: 0.95rem;
-}
+/* =========================================================
+   ORDER STATUS
+   ========================================================= */
 
-/* --- Dynamic Status Styling --- */
-/* Order Status Pill */
+/*
+   Status text ko thoda highlight karta hai.
+   Existing JSX change karne ki zarurat nahi.
+*/
+
 .order-row:nth-child(3) p {
-  display: inline-block;
-  padding: 3px 12px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  background-color: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #dcfce7;
-  text-transform: capitalize;
+    display: inline-flex;
+    width: fit-content;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    font-size: 13px;
+    font-weight: 700;
 }
 
-/* Payment Status Pill */
+
+/* =========================================================
+   PAYMENT STATUS
+   ========================================================= */
+
 .order-row:nth-child(4) p {
-  display: inline-block;
-  padding: 3px 12px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  background-color: #ecfdf5;
-  color: #059669;
-  border: 1px solid #a7f3d0;
-  text-transform: capitalize;
+    display: inline-flex;
+    width: fit-content;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    background: #f0fdf4;
+    color: #15803d;
+
+    font-size: 13px;
+    font-weight: 700;
 }
 
-/* --- Action Button --- */
-.view-btn {
-  margin-top: 10px;
-  width: 100%;
-  padding: 11px 18px;
-  background-color: #f0fdf4;
-  color: #16a34a;
-  border: 1px solid #dcfce7;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: center;
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.order-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 22px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #f1f5f9;
 }
+
+
+/* =========================================================
+   VIEW DETAILS BUTTON
+   ========================================================= */
+
+.view-btn {
+    min-width: 140px;
+
+    padding: 11px 18px;
+
+    border: none;
+    outline: none;
+
+    border-radius: 8px;
+
+    background: #111827;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
 
 .view-btn:hover {
-  background-color: #16a34a;
-  color: #ffffff;
-  border-color: #16a34a;
-  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+    background: #000000;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 7px 18px rgba(0, 0, 0, 0.15);
 }
 
-/* --- Responsive Adjustments --- */
-@media (min-width: 768px) {
-  .order-card {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    align-items: center;
-    gap: 16px 24px;
-  }
 
-  .order-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
-  .view-btn {
-    grid-column: span 3;
-    width: max-content;
-    align-self: flex-end;
-    justify-self: flex-end;
-    margin-top: 0;
-    padding: 8px 20px;
-  }
+.view-btn:active {
+    transform: translateY(0);
 }
+
+
+/* =========================================================
+   TRACK ORDER BUTTON
+   ========================================================= */
+
+.track-order-btn {
+    min-width: 150px;
+
+    padding: 11px 18px;
+
+    border: 1px solid #2563eb;
+    outline: none;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #2563eb;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.track-order-btn:hover {
+    background: #2563eb;
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 7px 18px rgba(37, 99, 235, 0.20);
+}
+
+
+.track-order-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .myorders-container {
+        padding: 30px 18px 50px;
+    }
+
+
+    .myorders-title {
+        font-size: 28px;
+
+        margin-bottom: 24px;
+    }
+
+
+    .order-card {
+        padding: 20px;
+
+        border-radius: 14px;
+    }
+
+
+    .order-row {
+        grid-template-columns: 140px 1fr;
+
+        gap: 15px;
+
+        padding: 12px 0;
+    }
+
+
+    .order-row span {
+        font-size: 13px;
+    }
+
+
+    .order-row p {
+        font-size: 14px;
+    }
+
+
+    .order-actions {
+        flex-wrap: wrap;
+    }
+
+
+    .view-btn,
+    .track-order-btn {
+        flex: 1;
+
+        min-width: 150px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+
+    .myorders-container {
+        padding: 22px 12px 40px;
+    }
+
+
+    .myorders-title {
+        font-size: 24px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .order-card {
+        padding: 16px;
+
+        margin-bottom: 16px;
+
+        border-radius: 12px;
+    }
+
+
+    .order-row {
+        grid-template-columns: 1fr;
+
+        gap: 5px;
+
+        padding: 11px 0;
+    }
+
+
+    .order-row span {
+        font-size: 12px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.3px;
+    }
+
+
+    .order-row p {
+        font-size: 14px;
+    }
+
+
+    .order-actions {
+        flex-direction: column;
+
+        gap: 10px;
+
+        margin-top: 18px;
+
+        padding-top: 16px;
+    }
+
+
+    .view-btn,
+    .track-order-btn {
+        width: 100%;
+
+        min-width: 100%;
+
+        padding: 12px 16px;
+    }
+
+
+    .no-orders {
+        min-height: 260px;
+
+        padding: 30px 16px;
+    }
+
+
+    .no-orders h3 {
+        font-size: 19px;
+    }
+
+
+    .no-orders button {
+        width: 100%;
+
+        max-width: 250px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .myorders-container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    .myorders-title {
+        font-size: 22px;
+    }
+
+
+    .order-card {
+        padding: 14px;
+    }
+
+
+    .order-row p {
+        font-size: 13px;
+    }
+
+}
+

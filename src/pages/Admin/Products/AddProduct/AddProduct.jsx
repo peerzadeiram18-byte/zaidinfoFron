@@ -1,20 +1,18 @@
-import { useEffect, useState } from "react";
+
+import { useEffect, useRef, useState } from "react";
 
 import "./AddProduct.css";
 
 import { createProduct } from "../../../../services/productService";
-
 import { getCategories } from "../../../../services/categoryService";
-
 import { getBrands } from "../../../../services/brandService";
 import { toast } from "react-toastify";
 
-
 const AddProduct = () => {
 
-    // ==========================================
+    // =====================================================
     // STATES
-    // ==========================================
+    // =====================================================
 
     const [loading, setLoading] = useState(false);
 
@@ -23,6 +21,8 @@ const AddProduct = () => {
     const [brands, setBrands] = useState([]);
 
     const [previewImages, setPreviewImages] = useState([]);
+
+    const fileInputRef = useRef(null);
 
     const [formData, setFormData] = useState({
 
@@ -51,9 +51,9 @@ const AddProduct = () => {
     });
 
 
-    // ==========================================
+    // =====================================================
     // LOAD CATEGORIES + BRANDS
-    // ==========================================
+    // =====================================================
 
     useEffect(() => {
 
@@ -61,12 +61,22 @@ const AddProduct = () => {
 
         loadBrands();
 
+        return () => {
+
+            previewImages.forEach((url) => {
+
+                URL.revokeObjectURL(url);
+
+            });
+
+        };
+
     }, []);
 
 
-    // ==========================================
+    // =====================================================
     // LOAD CATEGORIES
-    // ==========================================
+    // =====================================================
 
     const loadCategories = async () => {
 
@@ -79,7 +89,6 @@ const AddProduct = () => {
                 res.data
             );
 
-
             const categoryData =
                 Array.isArray(res.data)
                     ? res.data
@@ -89,28 +98,29 @@ const AddProduct = () => {
                             ? res.data.categories
                             : [];
 
-
             setCategories(categoryData);
 
-        }
+        } catch (error) {
 
-        catch (error) {
-
-            console.log(
+            console.error(
                 "CATEGORY ERROR:",
                 error
             );
 
             setCategories([]);
 
+            toast.error(
+                "Failed to load categories"
+            );
+
         }
 
     };
 
 
-    // ==========================================
+    // =====================================================
     // LOAD BRANDS
-    // ==========================================
+    // =====================================================
 
     const loadBrands = async () => {
 
@@ -123,7 +133,6 @@ const AddProduct = () => {
                 res.data
             );
 
-
             const brandData =
                 Array.isArray(res.data)
                     ? res.data
@@ -133,28 +142,29 @@ const AddProduct = () => {
                             ? res.data.brands
                             : [];
 
-
             setBrands(brandData);
 
-        }
+        } catch (error) {
 
-        catch (error) {
-
-            console.log(
+            console.error(
                 "BRAND ERROR:",
                 error
             );
 
             setBrands([]);
 
+            toast.error(
+                "Failed to load brands"
+            );
+
         }
 
     };
 
 
-    // ==========================================
+    // =====================================================
     // HANDLE INPUT
-    // ==========================================
+    // =====================================================
 
     const handleChange = (e) => {
 
@@ -162,7 +172,6 @@ const AddProduct = () => {
             name,
             value
         } = e.target;
-
 
         setFormData((prev) => ({
 
@@ -175,15 +184,98 @@ const AddProduct = () => {
     };
 
 
-    // ==========================================
+    // =====================================================
     // IMAGE CHANGE
-    // ==========================================
+    // =====================================================
 
     const handleImageChange = (e) => {
 
-        const files =
-            Array.from(e.target.files || []);
+        const files = Array.from(
+            e.target.files || []
+        );
 
+        if (files.length === 0) {
+
+            setFormData((prev) => ({
+
+                ...prev,
+
+                images: []
+
+            }));
+
+            setPreviewImages([]);
+
+            return;
+
+        }
+
+
+        // Maximum 5 images
+
+        if (files.length > 5) {
+
+            toast.error(
+                "You can upload maximum 5 images"
+            );
+
+            e.target.value = "";
+
+            return;
+
+        }
+
+
+        // Check file type
+
+        const invalidFile = files.find(
+            (file) =>
+                !file.type.startsWith("image/")
+        );
+
+        if (invalidFile) {
+
+            toast.error(
+                "Only image files are allowed"
+            );
+
+            e.target.value = "";
+
+            return;
+
+        }
+
+
+        // Check file size
+
+        const oversizedFile = files.find(
+            (file) =>
+                file.size > 5 * 1024 * 1024
+        );
+
+        if (oversizedFile) {
+
+            toast.error(
+                "Each image must be less than 5MB"
+            );
+
+            e.target.value = "";
+
+            return;
+
+        }
+
+
+        // Revoke old previews
+
+        previewImages.forEach((url) => {
+
+            URL.revokeObjectURL(url);
+
+        });
+
+
+        // Save files
 
         setFormData((prev) => ({
 
@@ -194,29 +286,36 @@ const AddProduct = () => {
         }));
 
 
-        const preview =
-            files.map((file) =>
-                URL.createObjectURL(file)
-            );
+        // Create previews
 
+        const preview = files.map(
+            (file) =>
+                URL.createObjectURL(file)
+        );
 
         setPreviewImages(preview);
 
     };
 
 
-    // ==========================================
+    // =====================================================
     // SUBMIT
-    // ==========================================
+    // =====================================================
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
 
+        // =================================================
+        // VALIDATION
+        // =================================================
+
         if (!formData.name.trim()) {
 
-            toast.error("Please enter product name");
+            toast.error(
+                "Please enter product name"
+            );
 
             return;
 
@@ -225,7 +324,9 @@ const AddProduct = () => {
 
         if (!formData.category) {
 
-            toast.error("Please select category");
+            toast.error(
+                "Please select category"
+            );
 
             return;
 
@@ -234,7 +335,102 @@ const AddProduct = () => {
 
         if (!formData.brand) {
 
-            toast.error("Please select brand");
+            toast.error(
+                "Please select brand"
+            );
+
+            return;
+
+        }
+
+
+        if (!formData.sellingPrice) {
+
+            toast.error(
+                "Please enter selling price"
+            );
+
+            return;
+
+        }
+
+
+        if (!formData.mrp) {
+
+            toast.error(
+                "Please enter MRP"
+            );
+
+            return;
+
+        }
+
+
+        const purchasePrice =
+            Number(formData.purchasePrice || 0);
+
+        const sellingPrice =
+            Number(formData.sellingPrice || 0);
+
+        const mrp =
+            Number(formData.mrp || 0);
+
+        const discount =
+            Number(formData.discount || 0);
+
+        const gst =
+            Number(formData.gst || 0);
+
+
+        if (purchasePrice < 0) {
+
+            toast.error(
+                "Purchase price cannot be negative"
+            );
+
+            return;
+
+        }
+
+
+        if (sellingPrice < 0) {
+
+            toast.error(
+                "Selling price cannot be negative"
+            );
+
+            return;
+
+        }
+
+
+        if (mrp < 0) {
+
+            toast.error(
+                "MRP cannot be negative"
+            );
+
+            return;
+
+        }
+
+
+        if (discount < 0 || discount > 100) {
+
+            toast.error(
+                "Discount must be between 0 and 100"
+            );
+
+            return;
+
+        }
+
+
+        if (gst < 0 || gst > 100) {
+
+            toast.error(
+                "GST must be between 0 and 100"
+            );
 
             return;
 
@@ -246,76 +442,72 @@ const AddProduct = () => {
             setLoading(true);
 
 
-            // ==================================
-            // FORM DATA
-            // ==================================
+            // =================================================
+            // CREATE FORM DATA
+            // =================================================
 
             const data = new FormData();
 
 
+            // =================================================
+            // BASIC INFORMATION
+            // =================================================
+
             data.append(
                 "name",
-                formData.name
+                formData.name.trim()
             );
-
 
             data.append(
                 "category",
                 formData.category
             );
 
-
             data.append(
                 "brand",
                 formData.brand
             );
 
-
             data.append(
                 "shortDescription",
-                formData.shortDescription
+                formData.shortDescription.trim()
             );
-
 
             data.append(
                 "description",
-                formData.description
+                formData.description.trim()
             );
+
+
+            // =================================================
+            // PRICING
+            // Backend will JSON.parse this before Joi validation
+            // =================================================
+
+            const pricing = {
+
+                purchasePrice,
+
+                sellingPrice,
+
+                mrp,
+
+                discount,
+
+                gst
+
+            };
 
 
             data.append(
-                "purchasePrice",
-                formData.purchasePrice || 0
+                "pricing",
+                JSON.stringify(pricing)
             );
 
 
-            data.append(
-                "sellingPrice",
-                formData.sellingPrice || 0
-            );
-
-
-            data.append(
-                "mrp",
-                formData.mrp || 0
-            );
-
-
-            data.append(
-                "discount",
-                formData.discount || 0
-            );
-
-
-            data.append(
-                "gst",
-                formData.gst || 0
-            );
-
-
-            // ==================================
+            // =================================================
             // IMAGES
-            // ==================================
+            // =================================================
 
             formData.images.forEach((image) => {
 
@@ -327,28 +519,110 @@ const AddProduct = () => {
             });
 
 
-            // ==================================
+            // =================================================
+            // DEBUG
+            // =================================================
+
+            console.log(
+                "======================================"
+            );
+
+            console.log(
+                "CREATE PRODUCT"
+            );
+
+            console.log(
+                "======================================"
+            );
+
+            console.log(
+                "Product Name:",
+                formData.name
+            );
+
+            console.log(
+                "Category:",
+                formData.category
+            );
+
+            console.log(
+                "Brand:",
+                formData.brand
+            );
+
+            console.log(
+                "Pricing:",
+                pricing
+            );
+
+            console.log(
+                "Pricing JSON:",
+                JSON.stringify(pricing)
+            );
+
+            console.log(
+                "Images:",
+                formData.images
+            );
+
+            console.log(
+                "Image Count:",
+                formData.images.length
+            );
+
+
+            // =================================================
+            // DEBUG FORMDATA
+            // =================================================
+
+            for (const [key, value] of data.entries()) {
+
+                console.log(
+                    "FORM DATA:",
+                    key,
+                    value
+                );
+
+            }
+
+
+            // =================================================
             // API
-            // ==================================
+            // =================================================
 
             const response =
                 await createProduct(data);
 
 
             console.log(
-                "CREATE PRODUCT RESPONSE:",
+                "======================================"
+            );
+
+            console.log(
+                "CREATE PRODUCT SUCCESS"
+            );
+
+            console.log(
                 response.data
             );
 
+            console.log(
+                "======================================"
+            );
 
-           toast.success(
+
+            // =================================================
+            // SUCCESS
+            // =================================================
+
+            toast.success(
                 "Product Added Successfully"
             );
 
 
-            // ==================================
+            // =================================================
             // RESET FORM
-            // ==================================
+            // =================================================
 
             setFormData({
 
@@ -377,38 +651,93 @@ const AddProduct = () => {
             });
 
 
+            previewImages.forEach((url) => {
+
+                URL.revokeObjectURL(url);
+
+            });
+
             setPreviewImages([]);
 
-        }
 
-        catch (error) {
+            // =================================================
+            // RESET FILE INPUT
+            // =================================================
 
-            console.log(
-                "CREATE PRODUCT ERROR:",
+            if (fileInputRef.current) {
+
+                fileInputRef.current.value = "";
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                "======================================"
+            );
+
+            console.error(
+                "CREATE PRODUCT ERROR"
+            );
+
+            console.error(
+                "======================================"
+            );
+
+            console.error(
                 error
             );
 
-
-            console.log(
+            console.error(
                 "STATUS:",
                 error.response?.status
             );
 
-
-            console.log(
+            console.error(
                 "BACKEND RESPONSE:",
                 error.response?.data
             );
 
-
-            toast.error(
-                error.response?.data?.message ||
-                "Failed to add product"
+            console.error(
+                "BACKEND MESSAGE:",
+                error.response?.data?.message
             );
 
-        }
+            console.error(
+                "BACKEND ERRORS:",
+                error.response?.data?.errors
+            );
 
-        finally {
+
+            // =================================================
+            // ERROR MESSAGE
+            // =================================================
+
+            let backendMessage =
+                error.response?.data?.message ||
+                error.response?.data?.error ||
+                "Failed to add product";
+
+
+            if (
+                Array.isArray(
+                    error.response?.data?.errors
+                )
+                &&
+                error.response.data.errors.length > 0
+            ) {
+
+                backendMessage =
+                    error.response.data.errors.join(", ");
+
+            }
+
+
+            toast.error(
+                backendMessage
+            );
+
+        } finally {
 
             setLoading(false);
 
@@ -417,18 +746,15 @@ const AddProduct = () => {
     };
 
 
-    // ==========================================
+    // =====================================================
     // UI
-    // ==========================================
+    // =====================================================
 
     return (
 
         <div className="add-product">
 
-
-            {/* =================================
-                HEADER
-            ================================= */}
+            {/* HEADER */}
 
             <div className="page-header">
 
@@ -443,19 +769,14 @@ const AddProduct = () => {
             </div>
 
 
-            {/* =================================
-                FORM
-            ================================= */}
+            {/* FORM */}
 
             <form
                 className="product-form"
                 onSubmit={handleSubmit}
             >
 
-
-                {/* =================================
-                    BASIC INFORMATION
-                ================================= */}
+                {/* BASIC INFORMATION */}
 
                 <div className="form-section">
 
@@ -466,7 +787,6 @@ const AddProduct = () => {
 
                     <div className="form-grid">
 
-
                         {/* PRODUCT NAME */}
 
                         <div className="form-group">
@@ -475,25 +795,13 @@ const AddProduct = () => {
                                 Product Name
                             </label>
 
-
                             <input
-
                                 type="text"
-
                                 name="name"
-
-                                value={
-                                    formData.name
-                                }
-
-                                onChange={
-                                    handleChange
-                                }
-
+                                value={formData.name}
+                                onChange={handleChange}
                                 placeholder="Enter Product Name"
-
                                 required
-
                             />
 
                         </div>
@@ -507,55 +815,29 @@ const AddProduct = () => {
                                 Category
                             </label>
 
-
                             <select
-
                                 name="category"
-
-                                value={
-                                    formData.category
-                                }
-
-                                onChange={
-                                    handleChange
-                                }
-
+                                value={formData.category}
+                                onChange={handleChange}
                                 required
-
                             >
 
                                 <option value="">
                                     Select Category
                                 </option>
 
+                                {categories.map(
+                                    (category) => (
 
-                                {
+                                        <option
+                                            key={category._id}
+                                            value={category._id}
+                                        >
+                                            {category.name}
+                                        </option>
 
-                                    categories.map(
-                                        (category) => (
-
-                                            <option
-
-                                                key={
-                                                    category._id
-                                                }
-
-                                                value={
-                                                    category._id
-                                                }
-
-                                            >
-
-                                                {
-                                                    category.name
-                                                }
-
-                                            </option>
-
-                                        )
                                     )
-
-                                }
+                                )}
 
                             </select>
 
@@ -570,69 +852,40 @@ const AddProduct = () => {
                                 Brand
                             </label>
 
-
                             <select
-
                                 name="brand"
-
-                                value={
-                                    formData.brand
-                                }
-
-                                onChange={
-                                    handleChange
-                                }
-
+                                value={formData.brand}
+                                onChange={handleChange}
                                 required
-
                             >
 
                                 <option value="">
                                     Select Brand
                                 </option>
 
+                                {brands.map(
+                                    (brand) => (
 
-                                {
+                                        <option
+                                            key={brand._id}
+                                            value={brand._id}
+                                        >
+                                            {brand.name}
+                                        </option>
 
-                                    brands.map(
-                                        (brand) => (
-
-                                            <option
-
-                                                key={
-                                                    brand._id
-                                                }
-
-                                                value={
-                                                    brand._id
-                                                }
-
-                                            >
-
-                                                {
-                                                    brand.name
-                                                }
-
-                                            </option>
-
-                                        )
                                     )
-
-                                }
+                                )}
 
                             </select>
 
                         </div>
-
 
                     </div>
 
                 </div>
 
 
-                {/* =================================
-                    DESCRIPTION
-                ================================= */}
+                {/* DESCRIPTION */}
 
                 <div className="form-section">
 
@@ -647,23 +900,14 @@ const AddProduct = () => {
                             Short Description
                         </label>
 
-
                         <textarea
-
                             name="shortDescription"
-
                             value={
                                 formData.shortDescription
                             }
-
-                            onChange={
-                                handleChange
-                            }
-
+                            onChange={handleChange}
                             rows={3}
-
                             placeholder="Enter short description"
-
                         />
 
                     </div>
@@ -675,23 +919,14 @@ const AddProduct = () => {
                             Description
                         </label>
 
-
                         <textarea
-
                             name="description"
-
                             value={
                                 formData.description
                             }
-
-                            onChange={
-                                handleChange
-                            }
-
+                            onChange={handleChange}
                             rows={8}
-
                             placeholder="Enter product description"
-
                         />
 
                     </div>
@@ -699,9 +934,7 @@ const AddProduct = () => {
                 </div>
 
 
-                {/* =================================
-                    PRICING
-                ================================= */}
+                {/* PRICING */}
 
                 <div className="form-section">
 
@@ -712,7 +945,6 @@ const AddProduct = () => {
 
                     <div className="form-grid">
 
-
                         {/* PURCHASE PRICE */}
 
                         <div className="form-group">
@@ -721,23 +953,15 @@ const AddProduct = () => {
                                 Purchase Price
                             </label>
 
-
                             <input
-
                                 type="number"
-
                                 name="purchasePrice"
-
                                 value={
                                     formData.purchasePrice
                                 }
-
-                                onChange={
-                                    handleChange
-                                }
-
+                                onChange={handleChange}
                                 min="0"
-
+                                step="0.01"
                             />
 
                         </div>
@@ -751,23 +975,16 @@ const AddProduct = () => {
                                 Selling Price
                             </label>
 
-
                             <input
-
                                 type="number"
-
                                 name="sellingPrice"
-
                                 value={
                                     formData.sellingPrice
                                 }
-
-                                onChange={
-                                    handleChange
-                                }
-
+                                onChange={handleChange}
                                 min="0"
-
+                                step="0.01"
+                                required
                             />
 
                         </div>
@@ -781,23 +998,14 @@ const AddProduct = () => {
                                 MRP
                             </label>
 
-
                             <input
-
                                 type="number"
-
                                 name="mrp"
-
-                                value={
-                                    formData.mrp
-                                }
-
-                                onChange={
-                                    handleChange
-                                }
-
+                                value={formData.mrp}
+                                onChange={handleChange}
                                 min="0"
-
+                                step="0.01"
+                                required
                             />
 
                         </div>
@@ -811,23 +1019,16 @@ const AddProduct = () => {
                                 Discount (%)
                             </label>
 
-
                             <input
-
                                 type="number"
-
                                 name="discount"
-
                                 value={
                                     formData.discount
                                 }
-
-                                onChange={
-                                    handleChange
-                                }
-
+                                onChange={handleChange}
                                 min="0"
-
+                                max="100"
+                                step="0.01"
                             />
 
                         </div>
@@ -841,36 +1042,24 @@ const AddProduct = () => {
                                 GST (%)
                             </label>
 
-
                             <input
-
                                 type="number"
-
                                 name="gst"
-
-                                value={
-                                    formData.gst
-                                }
-
-                                onChange={
-                                    handleChange
-                                }
-
+                                value={formData.gst}
+                                onChange={handleChange}
                                 min="0"
-
+                                max="100"
+                                step="0.01"
                             />
 
                         </div>
-
 
                     </div>
 
                 </div>
 
 
-                {/* =================================
-                    PRODUCT IMAGES
-                ================================= */}
+                {/* PRODUCT IMAGES */}
 
                 <div className="form-section">
 
@@ -882,89 +1071,58 @@ const AddProduct = () => {
                     <div className="form-group">
 
                         <input
-
+                            ref={fileInputRef}
                             type="file"
-
                             multiple
-
                             accept="image/*"
-
-                            onChange={
-                                handleImageChange
-                            }
-
+                            onChange={handleImageChange}
                         />
 
                     </div>
 
 
-                    {
+                    {previewImages.length > 0 && (
 
-                        previewImages.length > 0 && (
+                        <div className="image-preview">
 
-                            <div className="image-preview">
+                            {previewImages.map(
+                                (image, index) => (
 
-                                {
+                                    <img
+                                        key={index}
+                                        src={image}
+                                        alt={`Preview ${index + 1}`}
+                                        className="preview-img"
+                                    />
 
-                                    previewImages.map(
-                                        (image, index) => (
+                                )
+                            )}
 
-                                            <img
+                        </div>
 
-                                                key={index}
-
-                                                src={image}
-
-                                                alt={`Preview ${index + 1}`}
-
-                                                className="preview-img"
-
-                                            />
-
-                                        )
-                                    )
-
-                                }
-
-                            </div>
-
-                        )
-
-                    }
+                    )}
 
                 </div>
 
 
-                {/* =================================
-                    SUBMIT
-                ================================= */}
+                {/* SUBMIT */}
 
                 <div className="submit-section">
 
                     <button
-
                         type="submit"
-
                         className="submit-btn"
-
                         disabled={loading}
-
                     >
 
-                        {
-
-                            loading
-
-                                ? "Saving Product..."
-
-                                : "Save Product"
-
+                        {loading
+                            ? "Saving Product..."
+                            : "Save Product"
                         }
 
                     </button>
 
                 </div>
-
 
             </form>
 
@@ -974,5 +1132,5 @@ const AddProduct = () => {
 
 };
 
-
 export default AddProduct;
+

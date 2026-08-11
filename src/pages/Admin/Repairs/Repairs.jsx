@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Repairs.css";
+import { toast } from "react-toastify";
 const API = import.meta.env.VITE_API_URL;
 const Repairs = () => {
   const [repairs, setRepairs] = useState([]);
@@ -91,7 +92,7 @@ const Repairs = () => {
     Authorization: `Bearer ${token}`,
   },
 });
-      alert("Repair job created successfully!");
+      toast.success("Repair job created successfully!");
       fetchRepairs();
     } catch (error) {
       console.error("Create repair API error, pushing to local state:", error);
@@ -106,7 +107,7 @@ const Repairs = () => {
         createdAt: new Date().toISOString(),
       };
       setRepairs((prev) => [newJob, ...prev]);
-      alert("Repair job added successfully!");
+      toast.success("Repair job added successfully!");
     } finally {
       setShowModal(false);
       setFormData({

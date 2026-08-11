@@ -512,7 +512,7 @@ import SelectAddress from "./pages/Shop/SelectAddress/SelectAddress";
 import OrderSuccess from "./pages/Shop/OrderSuccess/OrderSuccess";
 import MyOrders from "./pages/Shop/MyOrders/MyOrders";
 import OrderDetails from "./pages/Shop/OrderDetails/OrderDetails";
-
+import TrackOrder from "./pages/Shop/TrackOrder/TrackOrder";
 
 // ===============================
 // ADMIN ORDERS
@@ -537,7 +537,9 @@ import NewWalkInOrder from "./pages/Receptionist/WalkInOrders/NewWalkInOrder/New
 
 import WalkInOrders from "./pages/Receptionist/WalkInOrders/WalkInOrders.jsx";
 
-
+import WalkInInvoice from "./pages/Receptionist/WalkInOrders/WalkInInvoice/WalkInInvoice.jsx";
+import WalkInInvoicePage
+    from "./pages/invoice/WalkInInvoicePage";
 // ===============================
 // ADMIN LAYOUT
 // ===============================
@@ -555,6 +557,10 @@ import Blog from "./pages/Blog";
 import Careers from "./pages/Careers";
 import Contact from "./pages/Contact.jsx"
 import FAQ from "./pages/FAQ";
+
+import InvoicePage from "./pages/invoice/InvoicePage";
+import AdminInvoices
+    from "./pages/Admin/Invoices/AdminInvoices";
 
 
 function App() {
@@ -737,6 +743,7 @@ function App() {
                     element={<InventoryDashboard />}
                 /> */}
 
+
                 <Route
                     path="/stock-history"
                     element={<StockHistory />}
@@ -756,6 +763,14 @@ function App() {
                     path="/admin/orders/:id"
                     element={<ViewOrder />}
                 />
+
+                <Route
+    path="/admin/invoices"
+    element={
+        <AdminInvoices />
+    }
+/>
+
 
 
                 {/* =========================================
@@ -862,7 +877,7 @@ function App() {
                 />
 
                 <Route
-                    path="/invoices"
+                     path="/invoice/:id"
                     element={
                         <div>
                             Invoices Page
@@ -1066,6 +1081,11 @@ function App() {
                 element={<OrderDetails />}
             />
 
+            <Route
+    path="/order/:id/track"
+    element={<TrackOrder />}
+/>
+
 
             {/* =================================================
                 CUSTOMER PAYMENT
@@ -1097,6 +1117,12 @@ function App() {
             />
 
 
+            <Route
+  path="/receptionist/walk-in-invoice/:invoiceId"
+  element={<WalkInInvoice />}
+/>
+
+
             {/* =================================================
                 OTHER DASHBOARDS
             ================================================= */}
@@ -1116,6 +1142,18 @@ function App() {
                 element={<AccountantDashboard />}
             />
 
+
+<Route
+    path="/invoice/walkin/:orderId"
+    element={<WalkInInvoicePage />}
+/>
+
+{/* <Route
+    path="/admin/invoices"
+    element={
+        <AdminInvoices />
+    }
+/> */}
         </Routes>
 
     );

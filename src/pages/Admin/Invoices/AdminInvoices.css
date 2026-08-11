@@ -1,0 +1,318 @@
+/* =========================================
+   ADMIN INVOICES PAGE
+========================================= */
+
+.admin-invoices-page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px;
+    box-sizing: border-box;
+    background: #f5f7fb;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.admin-invoices-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.admin-invoices-header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.admin-invoices-header button {
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.admin-invoices-header button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+.admin-invoices-page > p {
+    text-align: center;
+    margin-top: 50px;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-invoices {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 50px 20px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================
+   INVOICE LIST
+========================================= */
+
+.invoice-list {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fill,
+        minmax(320px, 1fr)
+    );
+    gap: 20px;
+}
+
+
+/* =========================================
+   INVOICE CARD
+========================================= */
+
+.invoice-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.invoice-card:hover {
+    transform: translateY(-2px);
+    border-color: #bfdbfe;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   INVOICE CARD CONTENT
+========================================= */
+
+.invoice-card > div {
+    min-width: 0;
+    flex: 1;
+}
+
+.invoice-card h3 {
+    margin: 0 0 12px;
+    color: #111827;
+    font-size: 18px;
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.invoice-card p {
+    margin: 6px 0;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.invoice-card p:first-of-type {
+    color: #374151;
+}
+
+
+/* =========================================
+   VIEW INVOICE BUTTON
+========================================= */
+
+.invoice-card > button {
+    flex-shrink: 0;
+    border: none;
+    background: #16a34a;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.invoice-card > button:hover {
+    background: #15803d;
+    transform: translateY(-1px);
+}
+
+.invoice-card > button:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   INVOICE POPUP SUPPORT
+========================================= */
+
+/*
+   WalkInInvoice ka overlay invoice component
+   ke andar hai.
+
+   Admin page se open hone par ye screen ke
+   upar modal ki tarah appear karega.
+*/
+
+.invoice-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 25px;
+    box-sizing: border-box;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    overflow-y: auto;
+}
+
+
+/* =========================================
+   INVOICE POPUP CONTAINER
+========================================= */
+
+.invoice-container {
+    width: 100%;
+    max-width: 900px;
+    max-height: 92vh;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.3);
+
+    animation: invoicePopup 0.2s ease-out;
+}
+
+
+/* =========================================
+   POPUP ANIMATION
+========================================= */
+
+@keyframes invoicePopup {
+    from {
+        opacity: 0;
+        transform: scale(0.96) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .admin-invoices-page {
+        padding: 20px;
+    }
+
+    .admin-invoices-header h1 {
+        font-size: 24px;
+    }
+
+    .invoice-list {
+        grid-template-columns: 1fr;
+    }
+
+    .invoice-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .invoice-card > button {
+        width: 100%;
+    }
+
+    .invoice-container {
+        padding: 20px;
+        max-height: 95vh;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+    .admin-invoices-page {
+        padding: 15px;
+    }
+
+    .admin-invoices-header {
+        gap: 12px;
+    }
+
+    .admin-invoices-header h1 {
+        font-size: 21px;
+    }
+
+    .admin-invoices-header button {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .invoice-card {
+        padding: 16px;
+    }
+
+    .invoice-card h3 {
+        font-size: 16px;
+    }
+
+    .invoice-card p {
+        font-size: 13px;
+    }
+
+}

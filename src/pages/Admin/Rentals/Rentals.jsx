@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Rentals.css";
+import { toast } from "react-toastify";
+
+
 const API = import.meta.env.VITE_API_URL;
 const Rentals = () => {
   const [rentals, setRentals] = useState([]);
@@ -83,7 +86,7 @@ const Rentals = () => {
     Authorization: `Bearer ${token}`,
   },
 });
-      alert("Rental contract created successfully!");
+      toast.success("Rental contract created successfully!");
       fetchRentals();
     } catch (error) {
       console.error("Create rental API error, saving locally:", error);
@@ -103,7 +106,7 @@ const Rentals = () => {
       };
 
       setRentals((prev) => [newRental, ...prev]);
-      alert("Rental agreement logged successfully!");
+      toast.success("Rental agreement logged successfully!");
     } finally {
       setShowModal(false);
       setFormData({

@@ -137,6 +137,7 @@ import {
   FaArrowRight 
 } from "react-icons/fa";
 import "./Register.css";
+import { toast } from "react-toastify";
 import { BiDesktop } from "react-icons/bi";
 
 function Register() {
@@ -170,10 +171,10 @@ function Register() {
       };
 
       const res = await registerUser(data);
-      alert(res.data?.message || "Registered Successfully");
+      toast.success(res.data?.message || "Registered Successfully");
       navigate("/login");
     } catch (error) {
-      alert(
+      toast.error(
         error.response?.data?.message || "Registration Failed"
       );
     } finally {

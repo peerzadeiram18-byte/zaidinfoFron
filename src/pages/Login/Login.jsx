@@ -349,6 +349,7 @@ import {
   FaUserShield,
   FaArrowRight,
 } from "react-icons/fa";
+import { toast } from "react-toastify";
 import "./Login.css";
 
 function Login({ isOpen = true, onClose }) {
@@ -383,7 +384,7 @@ function Login({ isOpen = true, onClose }) {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      alert("Login Successful");
+      toast.success("Login Successful");
 
       if (onClose) onClose();
 
@@ -399,13 +400,13 @@ function Login({ isOpen = true, onClose }) {
       if (roleRoutes[user.role]) {
         navigate(roleRoutes[user.role]);
       } else {
-        alert("Invalid User Role");
+        toast.error("Invalid User Role");
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         navigate("/login");
       }
     } catch (error) {
-      alert(error.response?.data?.message || "Login Failed");
+      toast.error(error.response?.data?.message || "Login Failed");
     } finally {
       setLoading(false);
     }
