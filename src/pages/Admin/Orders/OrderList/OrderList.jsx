@@ -68,7 +68,7 @@ const OrderList = () => {
 
                     <tr>
 
-                        <th>Order ID</th>
+                        {/* <th>Order ID</th> */}
 
                         <th>Customer</th>
 
@@ -114,11 +114,11 @@ const OrderList = () => {
 
                                     <tr key={order._id}>
 
-                                        <td>
+                                        {/* <td>
 
                                             {order._id}
 
-                                        </td>
+                                        </td> */}
 
                                         <td>
 

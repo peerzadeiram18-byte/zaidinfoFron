@@ -1,96 +1,3 @@
-// import "./Header.css";
-// import { Link } from "react-router-dom";
-// import {
-//   FaSearch,
-//   FaHeart,
-//   FaShoppingCart,
-//   FaUser,
-// } from "react-icons/fa";
-
-// function Header() {
-//   return (
-//     <header className="header">
-
-//       {/* Logo */}
-//       <div className="logo">
-//         <Link to="/">
-//           <h2>
-//             ZAID <span>INFOTECH</span>
-//           </h2>
-//         </Link>
-//       </div>
-
-//       {/* Navigation */}
-//    <nav className="navbar">
-//   <ul>
-
-//     <li>
-//       <Link to="/">Home</Link>
-//     </li>
-
-//     <li>
-//       <Link to="/shop">Shop</Link>
-//     </li>
-
-//     <li>
-//       <Link to="/products">Products</Link>
-//     </li>
-
-//     <li>
-//       <Link to="/rental">Rental</Link>
-//     </li>
-
-//     <li>
-//       <Link to="/services">Repair Service</Link>
-//     </li>
-
-//     <li>
-//       <Link to="/categories">Categories</Link>
-//     </li>
-
-//     <li>
-//       <Link to="/offers">Offers</Link>
-//     </li>
-
-//     <li>
-//       <Link to="/about">About Us</Link>
-//     </li>
-
-//     <li>
-//       <Link to="/contact">Contact</Link>
-//     </li>
-
-//   </ul>
-// </nav>
-
-//       {/* Icons */}
-//      <div className="header-icons">
-
-//   <button className="icon-btn">
-//     <FaSearch />
-//   </button>
-
-//   <Link to="/wishlist" className="icon-btn">
-//     <FaHeart />
-//   </Link>
-
-//   <Link to="/cart" className="icon-btn">
-//     <FaShoppingCart />
-//   </Link>
-
-//   <Link to="/login" className="login-btn">
-//     <FaUser />
-//     <span>Login / Register</span>
-//   </Link>
-
-// </div>
-
-//     </header>
-//   );
-// }
-
-// export default Header;
-
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -113,7 +20,7 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "Shop", href: "/shop" },
   { name: "Rental", href: "/rental" },
-  { name: "Repair Services", href: "/repair-services" },
+  { name: "Repair Services", href: "/repair" },
   { name: "About Us", href: "/about-us" },
   { name: "Contact", href: "/contact" },
 ];
@@ -188,30 +95,23 @@ const Header = () => {
   };
 
   return (
- <header
-className={`sticky top-0 z-50 w-full border-b border-gray-200 dark:border-slate-800 bg-white/95 dark:bg-[#111827]/95 backdrop-blur-xl transition-all duration-300 ${
-isScrolled
-? "shadow-xl"
-: ""
-}`}
->
-      {/* <div className="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12"> */}
-       
-       <div className="max-w-7xl mx-auto px-5 lg:px-8">
-        {/* <div
+    <header
+      className={`sticky top-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 transition-all duration-300 ${
+        isScrolled
+          ? "shadow-[0_6px_25px_rgba(0,0,0,.08)]"
+          : "shadow-sm"
+      }`}
+    >
+      <div className="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div
           className={`flex items-center justify-between gap-4 transition-all duration-300 ${
             isScrolled ? "h-[90px]" : "h-[120px]"
-          }`} */}
-
-        <div  className={`flex items-center justify-between transition-all duration-300 ${
-    isScrolled ? "h-20" : "h-24"
-}`}
+          }`}
         >
           {/* Prominent Logo Container */}
           <Link
             to="/"
-            // className="flex items-center flex-shrink-0 py-2 max-w-[280px] sm:max-w-[340px]"
-          className="flex items-center flex-shrink-0"
+            className="flex items-center flex-shrink-0 py-2 max-w-[280px] sm:max-w-[340px]"
           >
             <motion.img
               whileHover={{ scale: 1.03 }}
@@ -219,34 +119,24 @@ isScrolled
               src={logoImg}
               alt="ZAID INFOTECH"
               draggable="false"
-              // className={`w-auto object-contain transition-all duration-300 ${
-              //   isScrolled 
-              //     ? "h-16 sm:h-20" 
-              //     : "h-20 sm:h-24 lg:h-28"
-              // }`}
-
               className={`w-auto object-contain transition-all duration-300 ${
-isScrolled
-? "h-14"
-: "h-16 lg:h-20"
-}`}
+                isScrolled 
+                  ? "h-16 sm:h-20" 
+                  : "h-20 sm:h-24 lg:h-28"
+              }`}
             />
           </Link>
 
           {/* Centered Desktop Navigation */}
-          <nav 
-          // className="hidden xl:flex flex-1 justify-center items-center gap-8 xl:gap-10 2xl:gap-14 px-4"
-         className="hidden lg:flex flex-1 justify-center items-center gap-10"
-         >
+          <nav className="hidden xl:flex flex-1 justify-center items-center gap-8 xl:gap-10 2xl:gap-14 px-4">
             {navLinks.map((link) => (
               <NavLink
                 key={link.name}
                 to={link.href}
                 className={({ isActive }) => `
                   relative
-                 text-[15px]
-font-medium
-tracking-wide
+                  text-[16px]
+                  font-semibold
                   whitespace-nowrap
                   transition-all
                   duration-300
@@ -254,8 +144,7 @@ tracking-wide
                   after:absolute
                   after:left-0
                   after:-bottom-2
-                  after:h-[3px]
-after:rounded-full
+                  after:h-[2px]
                   after:bg-green-600
                   dark:after:bg-green-400
                   after:transition-all
@@ -281,10 +170,7 @@ after:rounded-full
               whileHover="hover"
               whileTap="tap"
               onClick={toggleTheme}
-              // className="hidden lg:flex h-11 w-11 
-              
-              className="hidden lg:flex h-10 w-10
-              items-center justify-center rounded-full text-gray-700 dark:text-slate-200 transition-all hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
+              className="hidden lg:flex h-11 w-11 items-center justify-center rounded-full text-gray-700 dark:text-slate-200 transition-all hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
               aria-label="Toggle theme"
             >
               {theme === "dark" ? (
@@ -314,9 +200,7 @@ after:rounded-full
               className="hidden lg:flex relative h-11 w-11 items-center justify-center rounded-full text-gray-700 dark:text-slate-200 transition-all hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
             >
               <Heart size={22} strokeWidth={2} />
-              <span className="absolute -top-1 -right-1 flex h-4
-w-4
-text-[9px] items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white">
                 {wishlistCount}
               </span>
             </motion.button>
@@ -330,9 +214,7 @@ text-[9px] items-center justify-center rounded-full bg-green-600 text-[10px] fon
               className="hidden lg:flex relative h-11 w-11 items-center justify-center rounded-full text-gray-700 dark:text-slate-200 transition-all hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
             >
               <ShoppingCart size={22} strokeWidth={2} />
-              <span className="absolute -top-1 -right-1 flex h-4
-w-4
-text-[9px] items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white">
                 {cartCount}
               </span>
             </motion.button>
@@ -349,14 +231,14 @@ text-[9px] items-center justify-center rounded-full bg-green-600 text-[10px] fon
                 lg:flex
                 items-center
                 gap-2
-               rounded-full
+                rounded-2xl
                 border
                 border-red-200
                 dark:border-red-900/40
                 bg-red-50/50
                 dark:bg-red-950/20
                 px-5
-                h-10
+                py-2.5
                 text-[15px]
                 font-semibold
                 text-red-600
@@ -382,8 +264,8 @@ text-[9px] items-center justify-center rounded-full bg-green-600 text-[10px] fon
                 gap-2.5
                 rounded-2xl
                 bg-green-600
-                px-5
-h-10
+                px-6
+                py-2.5
                 text-[15px]
                 font-semibold
                 text-white
@@ -520,7 +402,7 @@ h-10
                   whileHover="hover"
                   whileTap="tap"
                   onClick={handleLogout}
-                  className="mt-6 flex w-full items-center justify-center gap-3 rounded-full border border-red-200 dark:border-red-900/40 bg-red-50/50 dark:bg-red-950/20 px-5 py-3.5 text-base font-semibold text-red-600 dark:text-red-400 shadow-sm transition-all hover:bg-red-100/70 dark:hover:bg-red-900/40"
+                  className="mt-6 flex w-full items-center justify-center gap-3 rounded-2xl border border-red-200 dark:border-red-900/40 bg-red-50/50 dark:bg-red-950/20 px-5 py-3.5 text-base font-semibold text-red-600 dark:text-red-400 shadow-sm transition-all hover:bg-red-100/70 dark:hover:bg-red-900/40"
                 >
                   <LogOut size={20} strokeWidth={2} />
                   Logout

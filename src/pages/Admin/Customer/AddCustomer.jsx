@@ -191,6 +191,8 @@
 import React, { useState } from 'react';
 import './AddCustomer.css';
 import { toast } from "react-toastify";
+
+
 const AddCustomer = () => {
   const [formData, setFormData] = useState({
     name: '',

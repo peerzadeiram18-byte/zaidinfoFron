@@ -1,0 +1,64 @@
+
+.employee-shift-page {
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.employee-shift-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(46, 125, 50, 0.12);
+  border: 1px solid rgba(165, 214, 167, 0.4);
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.employee-shift-card h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  color: #1e3a1e;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* Shift Table Styling */
+.shift-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.shift-table th,
+.shift-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e8f5e9;
+  font-size: 0.93rem;
+  color: #1e3a1e;
+}
+
+.shift-table th {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 700;
+}
+
+.shift-table tr:hover {
+  background-color: #f4fbf7;
+}
+
+.shift-table strong {
+  color: #1e3a1e;
+}
+
+@media (max-width: 768px) {
+  .employee-shift-card {
+    padding: 20px 15px;
+    overflow-x: auto;
+  }
+}

@@ -1,0 +1,202 @@
+:root {
+  --bg-main: #f4f9f5;
+  --card-bg: #ffffff;
+  --primary-green: #2e7d32;
+  --primary-green-hover: #1b5e20;
+  --light-green-bg: #e8f5e9;
+  --accent-green: #4caf50;
+  --border-color: #c8e6c9;
+  --text-dark: #1e3a1e;
+  --text-muted: #557255;
+  --danger-red: #d32f2f;
+  --danger-hover: #b71c1c;
+  --shadow: 0 4px 12px rgba(46, 125, 50, 0.08);
+}
+
+.attendance-container {
+  padding: 30px;
+  background-color: var(--bg-main);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-dark);
+}
+
+.attendance-title {
+  color: var(--primary-green);
+  margin-bottom: 24px;
+  font-size: 26px;
+  font-weight: 700;
+  border-bottom: 3px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.attendance-forms-wrapper {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.attendance-card {
+  flex: 1;
+  min-width: 320px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.attendance-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(46, 125, 50, 0.12);
+}
+
+.attendance-card h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--primary-green);
+  font-size: 18px;
+}
+
+.attendance-card p {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 6px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fafdfa;
+  color: var(--text-dark);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: var(--accent-green);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
+}
+
+.btn-primary-green {
+  width: 100%;
+  padding: 11px;
+  background-color: var(--primary-green);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary-green:hover {
+  background-color: var(--primary-green-hover);
+}
+
+.btn-accent-green {
+  width: 100%;
+  padding: 11px;
+  background-color: var(--accent-green);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-accent-green:hover {
+  background-color: var(--primary-green);
+}
+
+.btn-danger {
+  padding: 6px 12px;
+  background-color: var(--danger-red);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: var(--danger-hover);
+}
+
+.table-wrapper {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.attendance-table th {
+  background-color: var(--light-green-bg);
+  color: var(--primary-green);
+  padding: 14px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.attendance-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid #eef7f0;
+  color: var(--text-dark);
+}
+
+.attendance-table tbody tr:hover {
+  background-color: #f7fcf8;
+}
+
+.attendance-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.badge-mode {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: var(--light-green-bg);
+  color: var(--primary-green);
+}
+
+.no-data {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 20px;
+}
