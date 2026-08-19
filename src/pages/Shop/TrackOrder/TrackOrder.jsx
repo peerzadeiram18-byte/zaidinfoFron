@@ -36,6 +36,13 @@ const TRACKING_STEPS = [
         description: "Your order has been handed over for delivery.",
         icon: "🚚",
     },
+      {
+        key: "OUT_FOR_DELIVERY",
+        title: "Out for Delivery",
+        description:
+            "Your order is on the way to you.",
+        icon: "🏍️",
+    },
     {
         key: "DELIVERED",
         title: "Delivered",
@@ -54,7 +61,9 @@ const STATUS_INDEX = {
     CONFIRMED: 1,
     PROCESSING: 2,
     SHIPPED: 3,
-    DELIVERED: 4,
+    OUT_FOR_DELIVERY: 4,
+    DELIVERED: 5,
+  
 };
 
 

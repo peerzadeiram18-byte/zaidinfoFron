@@ -64,10 +64,10 @@ export default function Repair() {
   return (
     <div className="repair-page-wrapper">
       {/* 1. TOPBAR AT THE VERY TOP */}
-      <Topbar />
+      {/* <Topbar /> */}
 
       {/* 2. HEADER DIRECTLY BELOW TOPBAR */}
-      <Header />
+      {/* <Header /> */}
 
       {/* 3. MAIN REPAIR PAGE CONTENT */}
       <div className="repair-page">

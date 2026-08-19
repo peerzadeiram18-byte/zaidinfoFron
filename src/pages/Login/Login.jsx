@@ -389,7 +389,7 @@ function Login({ isOpen = true, onClose }) {
       if (onClose) onClose();
 
       const roleRoutes = {
-        ADMIN: "/admin-dashboard",
+        ADMIN: "/dashboard",
         CUSTOMER: "/customer-dashboard",
         RECEPTIONIST: "/receptionist-dashboard",
         TECHNICIAN: "/technician-dashboard",

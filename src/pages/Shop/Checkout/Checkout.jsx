@@ -1267,8 +1267,13 @@ import React, {
 
 import axios from "axios";
 
+// import {
+//     useNavigate
+// } from "react-router-dom";
+
 import {
-    useNavigate
+    useNavigate,
+    useLocation
 } from "react-router-dom";
 
 import "./Checkout.css";
@@ -1286,10 +1291,24 @@ const Checkout = () => {
     const navigate =
         useNavigate();
 
+        const location =
+    useLocation();
+
 
     const token =
         localStorage.getItem("token");
 
+
+        const coupon =
+    location.state?.coupon || null;
+
+const couponCode =
+    location.state?.couponCode || "";
+
+const couponDiscount =
+    Number(
+        location.state?.couponDiscount || 0
+    );
 
     // =================================
     // STATES
@@ -1490,25 +1509,35 @@ const Checkout = () => {
     // GST
     // =================================
 
-    const gstAmount =
-        Math.round(
 
-            subtotal *
-            gst /
-            100
+    const discountedSubtotal =
+    Math.max(
+        subtotal - couponDiscount,
+        0
+    );
 
-        );
+  const gstAmount =
+    Math.round(
+        discountedSubtotal *
+        gst /
+        100
+    );
 
 
     // =================================
     // GRAND TOTAL
     // =================================
 
-    const grandTotal =
-        subtotal +
-        shippingCharge +
-        gstAmount;
+const grandTotal =
+    subtotal -
+    couponDiscount +
+    shippingCharge +
+    gstAmount;
 
+// grandTotal =
+//     discountedSubtotal +
+//     shippingCharge +
+//     gstAmount;
 
     // =================================
     // PLACE ORDER
@@ -1838,27 +1867,17 @@ const Checkout = () => {
         // ORDER DATA
         // =================================
 
-        const orderData = {
+      const orderData = {
 
-            orderItems:
-                orderItems,
+    orderItems: orderItems,
 
+    shippingAddress: shippingAddress,
 
-            shippingAddress:
-                shippingAddress,
+    totalAmount: Number(grandTotal),
 
+    orderSource: "ONLINE"
 
-            totalAmount:
-                Number(
-                    grandTotal
-                ),
-
-
-            orderSource:
-                "ONLINE"
-
-        };
-
+};
 
         console.log(
             "FINAL ORDER DATA:",
@@ -2412,6 +2431,22 @@ const Checkout = () => {
                             </span>
 
                         </div>
+
+                        {couponDiscount > 0 && (
+
+    <div className="summary-row">
+
+        <span>
+            Coupon Discount
+        </span>
+
+        <span>
+            - ₹ {couponDiscount}
+        </span>
+
+    </div>
+
+)}
 
 
                         {/* =================================

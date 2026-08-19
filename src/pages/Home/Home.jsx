@@ -92,8 +92,8 @@ import Brands from "../../components/Brands/Brands";
 function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950">
-      <TopBar />
-      <Header />
+      {/* <TopBar /> */}
+      {/* <Header /> */}
 
       <main>
         <Hero />

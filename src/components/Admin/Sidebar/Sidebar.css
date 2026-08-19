@@ -7,11 +7,12 @@
 
 .sidebar {
   position: fixed;
-  top: 0;
+
+  top: 150px;
   left: 0;
 
   width: 290px;
-  height: 100vh;
+  height: calc(100vh - 150px);
 
   display: flex;
   flex-direction: column;
@@ -28,7 +29,6 @@
 
   z-index: 999;
 }
-
 /* =======================
    PROFILE
 ======================= */
@@ -255,4 +255,401 @@
     font-size: 24px;
   }
 
+}
+
+/* =========================================
+   SIDEBAR NOTIFICATIONS
+========================================= */
+
+.sidebar-notification-area {
+  position: relative;
+  margin: 0 12px 10px;
+}
+
+.sidebar-notification-button {
+  width: 100%;
+  min-height: 46px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+
+  padding: 10px 12px;
+
+  cursor: pointer;
+
+  color: inherit;
+
+  transition: all 0.2s ease;
+}
+
+.sidebar-notification-button:hover {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.sidebar-notification-button.active {
+  background: rgba(34, 197, 94, 0.12);
+  color: #16a34a;
+}
+
+.sidebar-notification-icon {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  min-width: 28px;
+
+  font-size: 23px;
+}
+
+.sidebar-notification-badge {
+  position: absolute;
+
+  top: -7px;
+  right: -8px;
+
+  min-width: 18px;
+  height: 18px;
+
+  padding: 0 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  background: #dc2626;
+  color: white;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  border: 2px solid white;
+
+  line-height: 1;
+}
+
+
+/* =========================================
+   NOTIFICATION DROPDOWN
+========================================= */
+
+.sidebar-notification-dropdown {
+  position: absolute;
+
+  top: 52px;
+  left: 0;
+
+  width: 350px;
+
+  max-width: calc(100vw - 30px);
+
+  background: white;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.15);
+
+  z-index: 9999;
+
+  overflow: hidden;
+}
+
+
+/* HEADER */
+
+.sidebar-notification-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 16px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar-notification-header strong {
+  display: block;
+
+  font-size: 14px;
+
+  color: #111827;
+}
+
+.sidebar-notification-header small {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 11px;
+
+  color: #6b7280;
+}
+
+.sidebar-mark-read {
+  border: none;
+
+  background: transparent;
+
+  color: #16a34a;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* LIST */
+
+.sidebar-notification-list {
+  max-height: 380px;
+
+  overflow-y: auto;
+}
+
+
+/* ITEM */
+
+.sidebar-notification-item {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  padding: 12px 14px;
+
+  border: none;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  background: white;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.sidebar-notification-item:hover {
+  background: #f8fafc;
+}
+
+.sidebar-notification-item.unread {
+  background: #f0fdf4;
+}
+
+
+/* SMALL BELL */
+
+.sidebar-small-bell {
+  width: 32px;
+  min-width: 32px;
+
+  height: 32px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #dcfce7;
+
+  color: #16a34a;
+
+  font-size: 17px;
+}
+
+
+/* CONTENT */
+
+.sidebar-notification-content {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.sidebar-notification-content strong {
+  display: block;
+
+  color: #111827;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.sidebar-notification-content span {
+  display: -webkit-box;
+
+  margin-top: 3px;
+
+  color: #6b7280;
+
+  font-size: 11px;
+
+  line-height: 1.4;
+
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+.sidebar-notification-content small {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #9ca3af;
+
+  font-size: 9px;
+}
+
+
+/* UNREAD DOT */
+
+.sidebar-unread-dot {
+  width: 7px;
+  height: 7px;
+
+  min-width: 7px;
+
+  margin-top: 5px;
+
+  border-radius: 50%;
+
+  background: #16a34a;
+}
+
+
+/* EMPTY */
+
+.sidebar-notification-empty {
+  min-height: 130px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  color: #9ca3af;
+
+  font-size: 12px;
+}
+
+.sidebar-notification-empty svg {
+  font-size: 28px;
+
+  color: #cbd5e1;
+}
+
+
+/* VIEW ALL */
+
+.sidebar-view-all {
+  width: 100%;
+
+  border: none;
+
+  border-top: 1px solid #e5e7eb;
+
+  background: #f8fafc;
+
+  padding: 11px;
+
+  color: #16a34a;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.sidebar-view-all:hover {
+  background: #f0fdf4;
+}
+
+
+/* =========================================
+   DARK MODE
+========================================= */
+
+.dark .sidebar-notification-dropdown {
+  background: #0f172a;
+
+  border-color: #334155;
+}
+
+.dark .sidebar-notification-header {
+  border-color: #334155;
+}
+
+.dark .sidebar-notification-header strong {
+  color: white;
+}
+
+.dark .sidebar-notification-header small {
+  color: #94a3b8;
+}
+
+.dark .sidebar-notification-item {
+  background: #0f172a;
+
+  border-color: #1e293b;
+}
+
+.dark .sidebar-notification-item:hover {
+  background: #1e293b;
+}
+
+.dark .sidebar-notification-item.unread {
+  background: rgba(20, 83, 45, 0.25);
+}
+
+.dark .sidebar-notification-content strong {
+  color: white;
+}
+
+.dark .sidebar-notification-content span {
+  color: #94a3b8;
+}
+
+.dark .sidebar-view-all {
+  background: #1e293b;
+
+  border-color: #334155;
 }

@@ -144,8 +144,8 @@ function Rental() {
 
   return (
     <div>
-      <TopBar />
-      <Header />
+      {/* <TopBar />
+      <Header /> */}
 
       {/* Hero Carousel Section */}
       <section id="hero">

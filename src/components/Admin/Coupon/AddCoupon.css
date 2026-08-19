@@ -1,0 +1,85 @@
+/* =========================================
+   ADD COUPON PAGE
+========================================= */
+
+.add-coupon-page {
+  padding: 24px;
+}
+
+.add-coupon-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.add-coupon-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.add-coupon-title {
+  margin-bottom: 24px;
+}
+
+.add-coupon-form {
+  display: grid;
+  gap: 18px;
+}
+
+.add-coupon-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.add-coupon-group label {
+  font-weight: 600;
+}
+
+.add-coupon-group input,
+.add-coupon-group select,
+.add-coupon-group textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.add-coupon-group input:focus,
+.add-coupon-group select:focus,
+.add-coupon-group textarea:focus {
+  border-color: #22c55e;
+}
+
+.add-coupon-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.add-coupon-button {
+  border: none;
+  background: #22c55e;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.add-coupon-button:hover {
+  background: #16a34a;
+}
+
+@media (max-width: 768px) {
+  .add-coupon-row {
+    grid-template-columns: 1fr;
+  }
+
+  .add-coupon-page {
+    padding: 15px;
+  }
+}

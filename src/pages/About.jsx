@@ -15,8 +15,8 @@ const About = () => {
   return (
     <div className="about-page-wrapper">
       {/* Header / Navigation */}
-      <TopBar />
-      <Header />
+      {/* <TopBar />
+      <Header /> */}
 
       {/* Main Page Content */}
       <main className="about-main-content">

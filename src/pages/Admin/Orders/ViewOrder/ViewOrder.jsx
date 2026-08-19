@@ -999,6 +999,10 @@ const ViewOrder = () => {
 
                         </option>
 
+                        <option value="OUT_FOR_DELIVERY">
+    OUT FOR DELIVERY
+</option>
+
                         <option value="DELIVERED">
 
                             DELIVERED

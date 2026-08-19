@@ -1274,11 +1274,18 @@ const Payment = () => {
             // 2. PAYMENT AMOUNT
             // ==========================================
 
-            const amount = Number(
-                order.totalAmount ??
-                payment?.amount ??
-                0
-            );
+            // const amount = Number(
+            //     order.totalAmount ??
+            //     payment?.amount ??
+            //     0
+            // );
+
+const amount = Number(
+    order.finalAmount ??
+    payment?.amount ??
+    order.totalAmount ??
+    0
+);
 
             if (
                 !Number.isFinite(amount) ||
@@ -1333,21 +1340,36 @@ const Payment = () => {
             // 5. CREATE DATABASE PAYMENT
             // ==========================================
 
+            // const paymentData = {
+
+            //     paymentFor:
+            //         "ORDER",
+
+            //     referenceId:
+            //         order._id,
+
+            //     amount:
+            //         amount,
+
+            //     paymentMethod:
+            //         "UPI"
+
+            // };
+
             const paymentData = {
 
-                paymentFor:
-                    "ORDER",
+    paymentFor: "ORDER",
 
-                referenceId:
-                    order._id,
+    referenceId: order._id,
 
-                amount:
-                    amount,
+    amount: Number(
+        order.finalAmount ??
+        order.totalAmount
+    ),
 
-                paymentMethod:
-                    "UPI"
+    paymentMethod: "UPI"
 
-            };
+};
 
             console.log(
                 "DATABASE PAYMENT DATA:",

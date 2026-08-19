@@ -27,8 +27,8 @@ function Contact() {
   return (
     <div className="contact-page-container">
       {/* --- TOP HEADER NAVIGATION --- */}
-      <TopBar />
-      <Header />
+      {/* <TopBar />
+      <Header /> */}
 
       {/* --- HERO BANNER SECTION --- */}
       <section className="contact-hero-banner">

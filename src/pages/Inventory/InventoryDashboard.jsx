@@ -459,6 +459,8 @@
 // export default InventoryDashboard;
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+
 
 import "./InventoryDashboard.css";
 
@@ -469,12 +471,19 @@ import {
     addStock,
     removeStock
 } from "../../services/inventoryService";
+import {
+    getMyNotifications
+} from "../../services/notificationService";
 import { toast } from "react-toastify";
 
 
 function InventoryDashboard() {
 
 
+const [searchParams] = useSearchParams();
+
+const notificationProductId =
+    searchParams.get("product");
     // ==========================================
     // STATES
     // ==========================================
@@ -498,6 +507,9 @@ function InventoryDashboard() {
         useState("ALL");
 
 
+       const [inventoryUnreadCount, setInventoryUnreadCount] =
+    useState(0); 
+
     // ==========================================
     // LOAD INVENTORY
     // ==========================================
@@ -507,6 +519,25 @@ function InventoryDashboard() {
         loadInventory();
 
     }, []);
+
+    useEffect(() => {
+
+    loadInventoryNotifications();
+
+    const interval =
+        setInterval(() => {
+
+            loadInventoryNotifications();
+
+        }, 15000);
+
+    return () => {
+
+        clearInterval(interval);
+
+    };
+
+}, []);
 
 
     const loadInventory = async () => {
@@ -553,6 +584,50 @@ function InventoryDashboard() {
 
 
     // ==========================================
+// LOAD INVENTORY NOTIFICATION COUNT
+// ==========================================
+
+const loadInventoryNotifications = async () => {
+
+    try {
+
+        const res =
+            await getMyNotifications();
+
+        const notifications =
+            Array.isArray(res?.notifications)
+                ? res.notifications
+                : [];
+
+        const inventoryNotifications =
+            notifications.filter(
+                (notification) =>
+                    notification.type === "STOCK_LOW" ||
+                    notification.type === "STOCK_OUT"
+            );
+
+        const unread =
+            inventoryNotifications.filter(
+                (notification) =>
+                    !notification.isRead
+            ).length;
+
+        setInventoryUnreadCount(unread);
+
+    }
+    catch (error) {
+
+        console.error(
+            "INVENTORY NOTIFICATION ERROR:",
+            error
+        );
+
+    }
+
+};
+
+
+    // ==========================================
     // OPEN ADD STOCK
     // ==========================================
 
@@ -592,6 +667,8 @@ function InventoryDashboard() {
 
 
         await loadInventory();
+
+        await loadInventoryNotifications();
 
     }
 
@@ -670,6 +747,7 @@ function InventoryDashboard() {
 
 
             await loadInventory();
+            await loadInventoryNotifications();
 
         }
 
@@ -783,6 +861,9 @@ function InventoryDashboard() {
             const product =
                 item.product;
 
+const matchNotificationProduct =
+    !notificationProductId ||
+    String(product?._id) === String(notificationProductId);
 
             if (!product) {
 
@@ -854,10 +935,11 @@ function InventoryDashboard() {
                 statusFilter;
 
 
-            return (
-                matchSearch &&
-                matchStatus
-            );
+          return (
+    matchSearch &&
+    matchStatus &&
+    matchNotificationProduct
+);
 
         });
 
@@ -1000,6 +1082,19 @@ function InventoryDashboard() {
                 </div>
 
             </div>
+            <div className="inventory-notification-badge">
+
+    🔔
+
+    {inventoryUnreadCount > 0 && (
+
+        <span>
+            {inventoryUnreadCount}
+        </span>
+
+    )}
+
+</div>
 
 
             {/* ==================================

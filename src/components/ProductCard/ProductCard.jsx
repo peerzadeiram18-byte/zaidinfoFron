@@ -12,11 +12,62 @@ const ProductCard = ({ product, index, theme, onAddToCart, onAddToWishlist }) =>
   const mrp =
     product.pricing?.mrp ?? product.mrp ?? product.originalPrice ?? 0;
 
-  let discount = product.pricing?.discount ?? product.discount ?? 0;
+// ==========================================
+// OFFER PRICE
+// ==========================================
 
-  if (!discount && mrp > sellingPrice && sellingPrice > 0) {
-    discount = Math.round(((mrp - sellingPrice) / mrp) * 100);
+const offer = product.offer || null;
+
+let finalPrice = sellingPrice;
+let offerDiscount = 0;
+
+if (offer) {
+  if (offer.discountType === "PERCENTAGE") {
+    offerDiscount =
+      (sellingPrice * Number(offer.discountValue)) / 100;
+
+    finalPrice = sellingPrice - offerDiscount;
   }
+
+  if (offer.discountType === "FIXED") {
+    offerDiscount = Number(offer.discountValue);
+
+    finalPrice = sellingPrice - offerDiscount;
+  }
+
+  // Safety: price negative nahi hona chahiye
+  finalPrice = Math.max(0, finalPrice);
+}
+
+  // let discount = product.pricing?.discount ?? product.discount ?? 0;
+
+  // if (!discount && mrp > sellingPrice && sellingPrice > 0) {
+  //   discount = Math.round(((mrp - sellingPrice) / mrp) * 100);
+  // }
+
+let discount = product.pricing?.discount ?? product.discount ?? 0;
+
+if (!discount && mrp > sellingPrice && sellingPrice > 0) {
+  discount = Math.round(
+    ((mrp - sellingPrice) / mrp) * 100
+  );
+}
+
+// Offer discount percentage
+let offerPercentage = 0;
+
+if (offer) {
+  if (offer.discountType === "PERCENTAGE") {
+    offerPercentage = Number(offer.discountValue);
+  } else if (
+    offer.discountType === "FIXED" &&
+    sellingPrice > 0
+  ) {
+    offerPercentage = Math.round(
+      (Number(offer.discountValue) / sellingPrice) * 100
+    );
+  }
+}
 
   // Badges calculation logic
   const isBestSeller =
@@ -74,6 +125,12 @@ const ProductCard = ({ product, index, theme, onAddToCart, onAddToWishlist }) =>
                   SAVE {discount}%
                 </span>
               )}
+
+              {offer && offerPercentage > 0 && (
+  <span className="bg-red-600 text-white text-[10px] font-extrabold tracking-wider px-3 py-1 rounded-full shadow-sm">
+    OFFER {offerPercentage}% OFF
+  </span>
+)}
 
               {isNew && (
                 <span className="bg-[#2563eb]/90 text-white text-[10px] font-extrabold tracking-wider px-3 py-1 rounded-full shadow-sm">
@@ -174,7 +231,7 @@ const ProductCard = ({ product, index, theme, onAddToCart, onAddToWishlist }) =>
               }`}
           </p>
 
-          <div className="flex items-baseline gap-2 pt-1">
+          {/* <div className="flex items-baseline gap-2 pt-1">
             <span className="text-base font-extrabold text-gray-900 dark:text-white">
               ₹{sellingPrice.toLocaleString("en-IN")}
             </span>
@@ -183,7 +240,38 @@ const ProductCard = ({ product, index, theme, onAddToCart, onAddToWishlist }) =>
                 ₹{mrp.toLocaleString("en-IN")}
               </span>
             )}
-          </div>
+          </div> */}
+
+
+          <div className="flex items-baseline gap-2 pt-1 flex-wrap">
+
+  {/* FINAL OFFER PRICE */}
+  <span className="text-base font-extrabold text-gray-900 dark:text-white">
+    ₹{finalPrice.toLocaleString("en-IN")}
+  </span>
+
+  {/* OLD SELLING PRICE */}
+  {offer && finalPrice < sellingPrice && (
+    <span className="text-xs text-gray-400 dark:text-slate-500 font-medium line-through">
+      ₹{sellingPrice.toLocaleString("en-IN")}
+    </span>
+  )}
+
+  {/* MRP */}
+  {!offer && Number(mrp) > Number(sellingPrice) && (
+    <span className="text-xs text-gray-400 dark:text-slate-500 font-medium line-through">
+      ₹{mrp.toLocaleString("en-IN")}
+    </span>
+  )}
+
+</div>
+
+
+{offer && (
+  <p className="text-xs font-semibold text-red-600 dark:text-red-400">
+    🔥 {offer.title}
+  </p>
+)}
         </div>
       </div>
     </motion.div>
