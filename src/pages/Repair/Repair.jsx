@@ -4,8 +4,8 @@ import './Repair.css';
 import repairImage from "../../assets/images/hero-repair.jpg";
 
 // Component Imports
-import Topbar from '../../components/Topbar/Topbar';
-import Header from '../../components/Header/Header';
+// import Topbar from '../../components/TopBar/TopBar';
+// import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 
 export default function Repair() {
