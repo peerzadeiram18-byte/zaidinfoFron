@@ -558,7 +558,7 @@ const SalaryModal = ({
                   Total Paid
                 </h4>
 
-                <h2 className="green">
+                <h2 className="greeen">
 
                   ₹
                   {Number(

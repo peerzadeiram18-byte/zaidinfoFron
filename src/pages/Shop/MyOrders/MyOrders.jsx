@@ -191,7 +191,7 @@ import React, {
     useEffect,
     useState
 } from "react";
-
+import ReviewModal from "../../../components/Reviews/ReviewModal";
 import {
     useNavigate
 } from "react-router-dom";
@@ -213,6 +213,13 @@ const MyOrders = () => {
     const [loading, setLoading] = useState(true);
 
 
+    const [reviewProduct, setReviewProduct] =
+  useState(null);
+
+const [reviewOrder, setReviewOrder] =
+  useState(null);
+  
+  
     // ==================================================
     // FETCH ORDERS
     // ==================================================
@@ -489,6 +496,69 @@ const MyOrders = () => {
                                     </button>
 
 
+    {/* REVIEW PRODUCT */}
+
+  {/* ==============================
+    DELIVERED ORDER - PRODUCTS
+================================ */}
+
+{order.orderStatus === "DELIVERED" &&
+    order.orderItems?.length > 0 && (
+
+        <div className="order-products-review">
+
+            <h4>Products</h4>
+
+            {order.orderItems.map((item, index) => (
+
+                <div
+                    className="review-product-row"
+                    key={item.product?._id || index}
+                >
+
+                    <div className="review-product-info">
+
+                        <span className="review-product-name">
+
+                            {item.product?.name ||
+                                item.productName ||
+                                "Product"}
+
+                        </span>
+
+                        <span className="review-product-quantity">
+
+                            Qty: {item.quantity}
+
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        className="review-btn"
+                        onClick={() => {
+
+                            setReviewProduct(
+                                item.product
+                            );
+
+                            setReviewOrder(order);
+
+                        }}
+                    >
+                        ⭐ Review Product
+                    </button>
+
+                </div>
+
+            ))}
+
+        </div>
+
+)}
+
                                 </div>
 
 
@@ -498,6 +568,39 @@ const MyOrders = () => {
 
                     )
             }
+
+  {/* ============================
+                REVIEW MODAL
+            ============================ */}
+
+            {reviewProduct && reviewOrder && (
+
+                <ReviewModal
+
+                    product={reviewProduct}
+
+                    order={reviewOrder}
+
+                    onClose={() => {
+
+                        setReviewProduct(null);
+
+                        setReviewOrder(null);
+
+                    }}
+
+                    onSuccess={() => {
+
+                        setReviewProduct(null);
+
+                        setReviewOrder(null);
+
+                    }}
+
+                />
+
+            )}
+
 
 
         </div>

@@ -1,0 +1,470 @@
+/* =====================================================
+   HOME OFFERS SECTION
+===================================================== */
+
+.home-offers-section {
+
+    width: 100%;
+
+    background: #ffffff;
+
+    padding: 80px 20px;
+
+    box-sizing: border-box;
+
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.home-offers-container {
+
+    width: 100%;
+
+    max-width: 1250px;
+
+    margin: 0 auto;
+
+}
+
+
+/* =====================================================
+   HEADING
+===================================================== */
+
+.home-offers-heading {
+
+    text-align: center;
+
+    margin-bottom: 45px;
+
+}
+
+
+.home-offers-label {
+
+    display: inline-block;
+
+    color: #10b981;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 10px;
+
+}
+
+
+.home-offers-heading h2 {
+
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 38px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+}
+
+
+.home-offers-heading p {
+
+    margin: 12px 0 0;
+
+    color: #6b7280;
+
+    font-size: 16px;
+
+    line-height: 1.6;
+
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.home-offers-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 24px;
+
+}
+
+
+/* =====================================================
+   OFFER CARD
+===================================================== */
+
+.home-offer-card {
+
+    position: relative;
+
+    min-height: 180px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 28px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 30px rgba(
+            15,
+            23,
+            42,
+            0.07
+        );
+
+    overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+
+}
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+.home-offer-card:hover {
+
+    transform: translateY(-6px);
+
+    border-color: #10b981;
+
+    box-shadow:
+        0 16px 40px rgba(
+            15,
+            23,
+            42,
+            0.12
+        );
+
+}
+
+
+/* =====================================================
+   GREEN TOP LINE
+===================================================== */
+
+.home-offer-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 4px;
+
+    background: #10b981;
+
+}
+
+
+/* =====================================================
+   ICON
+===================================================== */
+
+.home-offer-icon {
+
+    width: 62px;
+
+    min-width: 62px;
+
+    height: 62px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #ecfdf5;
+
+    border-radius: 16px;
+
+    font-size: 30px;
+
+}
+
+
+/* =====================================================
+   OFFER INFO
+===================================================== */
+
+.home-offer-info {
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
+
+.offer-small-title {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #10b981;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+}
+
+
+.home-offer-info h3 {
+
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    word-break: break-word;
+
+}
+
+
+.home-offer-info p {
+
+    margin: 8px 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+}
+
+
+.home-offer-info p strong {
+
+    color: #10b981;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+}
+
+
+/* =====================================================
+   DATE
+===================================================== */
+
+.home-offer-date {
+
+    display: inline-block;
+
+    margin-top: 5px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+}
+
+
+/* =====================================================
+   OFFER BADGE
+===================================================== */
+
+.home-offer-badge {
+
+    position: absolute;
+
+    top: 18px;
+
+    right: 18px;
+
+    padding: 5px 9px;
+
+    border-radius: 6px;
+
+    background: #ecfdf5;
+
+    color: #059669;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .home-offers-grid {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
+
+    .home-offers-heading h2 {
+
+        font-size: 32px;
+
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 650px) {
+
+    .home-offers-section {
+
+        padding: 55px 16px;
+
+    }
+
+
+    .home-offers-heading {
+
+        margin-bottom: 30px;
+
+    }
+
+
+    .home-offers-heading h2 {
+
+        font-size: 28px;
+
+    }
+
+
+    .home-offers-heading p {
+
+        font-size: 14px;
+
+    }
+
+
+    .home-offers-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 16px;
+
+    }
+
+
+    .home-offer-card {
+
+        min-height: 150px;
+
+        padding: 22px;
+
+    }
+
+
+    .home-offer-icon {
+
+        width: 54px;
+
+        min-width: 54px;
+
+        height: 54px;
+
+        font-size: 25px;
+
+    }
+
+
+    .home-offer-info h3 {
+
+        font-size: 18px;
+
+    }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .home-offer-card {
+
+        gap: 14px;
+
+        padding: 20px;
+
+    }
+
+
+    .home-offer-icon {
+
+        width: 48px;
+
+        min-width: 48px;
+
+        height: 48px;
+
+        font-size: 22px;
+
+    }
+
+
+    .home-offer-info h3 {
+
+        font-size: 16px;
+
+    }
+
+}

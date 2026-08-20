@@ -1,85 +1,16 @@
-// // import "./Home.css";
-
-// // import TopBar from "../../components/TopBar/TopBar";
-// // import Header from "../../components/Header/Header";
-// // import Hero from "../../components/Hero/Hero";
-// // import Footer from "../../components/Footer/Footer";
-
-// // function Home() {
-// //   return (
-// //     <>
-// //       <TopBar />
-// //       <Header />
-
-// //       <Hero />
-
-// //       <Footer />
-// //     </>
-// //   );
-// // }
-
-// // export default Home;
-
-// import React from "react";
-
-// // Import layout components
-// import TopBar from "../../components/TopBar/TopBar"
-// import Header from "../../components/Header/Header";
-// import Footer from "../../components/Footer/Footer";
-
-// // Import section components
-// import Hero from "../../components/Hero/Hero";
-// import FeaturedProducts from "../../components/FeaturedProducts/FeaturedProducts";
-// import Features from "../../components/Features/Features";
-// import Brands from "../../components/Brands/Brands";
-// import LaptopCategories from "../../components/LaptopCategories/LaptopCategories";
-// import Testimonials from "../../components/Testimonials/Testmonials";
-// // import ShopByPurpose from "../../components/Shopbypurpose/Shopbypurpose";
-// import ShopByPurpose from "../../components/ShopByPurpose/ShopByPurpose";
-// import ServicesSection from "../../components/ServeciesSection/ServiceSection";
-// import WhyChooseUs from "../../components/WhyChooseUs/WhyChooseUs";
-// import FeaturedLaptops from "../../components/FeaturedLaptops/FeaturedLaptops";
-// import ReviewsSection from "../../components/ReviewsSection/ReviewsSection";
-// import CompanyVideo from "../../components/CompanyVedio/CompanyVedio";
-
-// function Home() {
-//   return (
-//     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors duration-300">
-//       <TopBar />
-//       <Header />
-
-//       <main>
-//         <Hero />
-//         <ShopByPurpose />
-//         <ServicesSection />
-//         <WhyChooseUs />
-//         <FeaturedLaptops />
-//         <CompanyVideo />
-//         <ReviewsSection />
-//         <Brands />
-
-
-
-
-//       </main>
-
-//       <Footer />
-//     </div>
-//   );
-// }
-
-// export default Home;
-
-
 import React from "react";
 
-// Layout
-import TopBar from "../../components/TopBar/TopBar";
-import Header from "../../components/Header/Header";
+// =====================================================
+// LAYOUT
+// =====================================================
+
 import Footer from "../../components/Footer/Footer";
 import WhatsAppWidget from "../../components/WhatsAppWidget/WhatsAppWidget";
 
-// Sections
+// =====================================================
+// SECTIONS
+// =====================================================
+
 import Hero from "../../components/Hero/Hero";
 import ShopByPurpose from "../../components/ShopByPurpose/ShopByPurpose";
 import ServicesSection from "../../components/ServeciesSection/ServiceSection";
@@ -89,28 +20,109 @@ import CompanyVideo from "../../components/CompanyVedio/CompanyVedio";
 import ReviewsSection from "../../components/ReviewsSection/ReviewsSection";
 import Brands from "../../components/Brands/Brands";
 
+// =====================================================
+// OFFERS
+// =====================================================
+
+import HomeOffers from "../../components/HomeOffers/HomeOffers";
+
+
 function Home() {
-  return (
-    <div className="min-h-screen bg-white dark:bg-slate-950">
-      {/* <TopBar /> */}
-      {/* <Header /> */}
 
-      <main>
-        <Hero />
-        <ShopByPurpose />
-        <ServicesSection />
-        <WhyChooseUs />
-        <FeaturedLaptops />
-        <CompanyVideo />
-        <ReviewsSection />
-        <Brands />
-      </main>
+    return (
 
-      <WhatsAppWidget />
+        <div className="min-h-screen bg-white dark:bg-slate-950">
 
-      <Footer />
-    </div>
-  );
+            <main>
+
+                {/* ================================
+                    HERO
+                ================================= */}
+
+                <Hero />
+
+
+                {/* ================================
+                    ACTIVE OFFERS
+
+                    PUBLIC OFFER SECTION
+
+                    Login ho ya na ho,
+                    active offer show hoga.
+                ================================= */}
+
+                <HomeOffers />
+
+
+                {/* ================================
+                    SHOP BY PURPOSE
+                ================================= */}
+
+                <ShopByPurpose />
+
+
+                {/* ================================
+                    SERVICES
+                ================================= */}
+
+                <ServicesSection />
+
+
+                {/* ================================
+                    WHY CHOOSE US
+                ================================= */}
+
+                <WhyChooseUs />
+
+
+                {/* ================================
+                    FEATURED PRODUCTS
+                ================================= */}
+
+                <FeaturedLaptops />
+
+
+                {/* ================================
+                    COMPANY VIDEO
+                ================================= */}
+
+                <CompanyVideo />
+
+
+                {/* ================================
+                    REVIEWS
+                ================================= */}
+
+                <ReviewsSection />
+
+
+                {/* ================================
+                    BRANDS
+                ================================= */}
+
+                <Brands />
+
+            </main>
+
+
+            {/* ================================
+                WHATSAPP
+            ================================= */}
+
+            <WhatsAppWidget />
+
+
+            {/* ================================
+                FOOTER
+            ================================= */}
+
+            <Footer />
+
+        </div>
+
+    );
+
 }
+
 
 export default Home;

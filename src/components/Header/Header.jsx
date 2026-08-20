@@ -11,7 +11,7 @@ import {
   Sun,
   Moon,
   Bell,
-  LayoutDashboard
+  CircleUserRound
 } from "lucide-react";
 // import { Link, NavLink, useNavigate } from "react-router-dom";
 
@@ -1221,7 +1221,7 @@ onClick={() => navigate(getDashboardPath())}
     title="Dashboard"
   >
 
-    <LayoutDashboard
+    <CircleUserRound
       size={22}
       strokeWidth={2}
     />
@@ -1231,38 +1231,40 @@ onClick={() => navigate(getDashboardPath())}
 )}
 
             {/* --- CONDITIONAL DESKTOP AUTH BUTTON --- */}
-            {isLoggedIn ? (
-              <motion.button
-                variants={logoutButtonVariants}
-                whileHover="hover"
-                whileTap="tap"
-                onClick={handleLogout}
-                className="
-                hidden
-                lg:flex
-                items-center
-                gap-2
-                rounded-2xl
-                border
-                border-red-200
-                dark:border-red-900/40
-                bg-red-50/50
-                dark:bg-red-950/20
-                px-5
-                py-2.5
-                text-[15px]
-                font-semibold
-                text-red-600
-                dark:text-red-400
-                transition-all
-                hover:bg-red-100/70
-                dark:hover:bg-red-900/40
-                "
-              >
-                <LogOut size={18} strokeWidth={2} />
-                Logout
-              </motion.button>
-            ) : (
+{isLoggedIn ? (
+  <motion.button
+    variants={logoutButtonVariants}
+    whileHover="hover"
+    whileTap="tap"
+    onClick={handleLogout}
+    className="
+      hidden
+      lg:flex
+      h-11
+      w-11
+      items-center
+      justify-center
+      rounded-full
+      border
+      border-red-200
+      dark:border-red-900/40
+      bg-red-50/50
+      dark:bg-red-950/20
+      text-red-600
+      dark:text-red-400
+      transition-all
+      hover:bg-red-100
+      dark:hover:bg-red-900/40
+    "
+    aria-label="Logout"
+    title="Logout"
+  >
+    <LogOut
+      size={22}
+      strokeWidth={2}
+    />
+  </motion.button>
+) : (
               <motion.button
                 variants={loginButtonVariants}
                 whileHover="hover"

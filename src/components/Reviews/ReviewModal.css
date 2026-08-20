@@ -1,0 +1,236 @@
+.review-modal-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  z-index: 9999;
+
+  padding: 20px;
+
+}
+
+
+.review-modal {
+
+  width: 100%;
+
+  max-width: 550px;
+
+  background: white;
+
+  border-radius: 14px;
+
+  padding: 25px;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.2);
+
+}
+
+
+.review-modal-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+
+}
+
+
+.review-modal-header h2 {
+
+  margin: 0;
+
+  font-size: 24px;
+
+}
+
+
+.review-close-btn {
+
+  border: none;
+
+  background: transparent;
+
+  font-size: 30px;
+
+  cursor: pointer;
+
+}
+
+
+.review-product {
+
+  display: flex;
+
+  gap: 15px;
+
+  padding: 15px;
+
+  background: #f7f7f7;
+
+  border-radius: 10px;
+
+  margin-bottom: 20px;
+
+}
+
+
+.review-product img {
+
+  width: 70px;
+
+  height: 70px;
+
+  object-fit: contain;
+
+  border-radius: 8px;
+
+  background: white;
+
+}
+
+
+.review-product h3 {
+
+  margin: 0 0 5px;
+
+}
+
+
+.review-product p {
+
+  margin: 0;
+
+  color: #666;
+
+}
+
+
+.rating-section label,
+.comment-section label {
+
+  display: block;
+
+  font-weight: 600;
+
+  margin-bottom: 8px;
+
+}
+
+
+.stars {
+
+  display: flex;
+
+  gap: 5px;
+
+}
+
+
+.star {
+
+  border: none;
+
+  background: transparent;
+
+  font-size: 35px;
+
+  cursor: pointer;
+
+  color: #ccc;
+
+}
+
+
+.star.active {
+
+  color: #f5b301;
+
+}
+
+
+.comment-section {
+
+  margin-top: 20px;
+
+}
+
+
+.comment-section textarea {
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 12px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 8px;
+
+  resize: vertical;
+
+  font-size: 14px;
+
+}
+
+
+.comment-section small {
+
+  display: block;
+
+  text-align: right;
+
+  color: #777;
+
+  margin-top: 4px;
+
+}
+
+
+.submit-review-btn {
+
+  width: 100%;
+
+  margin-top: 20px;
+
+  padding: 13px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #198754;
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+}
+
+
+.submit-review-btn:disabled {
+
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+}

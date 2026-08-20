@@ -462,6 +462,7 @@ import {
   MdReceipt,
   MdLocalOffer,
   MdNotifications,
+  MdRateReview,
 } from "react-icons/md";
 
 import {
@@ -644,7 +645,7 @@ function Sidebar() {
         {
           name: "Dashboard",
           icon: <MdDashboard />,
-          path: "/dashboard",
+          path: "/admin-dashboard",
         },
 
         // =====================================
@@ -657,6 +658,12 @@ function Sidebar() {
           path: "/notifications",
           notification: true,
         },
+        {
+          name: "Reviews",
+          icon: <MdRateReview />,
+          path: "/admin/reviews"
+        }
+
 
       ],
     },
@@ -1165,10 +1172,10 @@ function Sidebar() {
 
           <div className="profile-image-wrapper">
 
-            <img
+            {/* <img
               src="https://ui-avatars.com/api/?name=Admin&background=22c55e&color=fff"
               alt="Admin"
-            />
+            /> */}
 
             <span
               className="profile-online-dot"

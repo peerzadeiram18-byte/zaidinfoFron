@@ -52,7 +52,9 @@
 
 .sidebar-profile h3 {
   margin-top: 15px;
-  font-size: 22px;
+  font-size: 25px;
+    font-weight: 700;
+
   color: #222;
 }
 
@@ -117,6 +119,8 @@
   border-radius: 14px;
 
   color: #3d4451;
+    font-size: 14px;
+  font-weight: 600;
 
   cursor: pointer;
 

@@ -826,7 +826,8 @@ import CouponList from "./components/Admin/Coupon/CouponList";
 // ===============================
 
 import AdminNotifications from "./components/Admin/Notifications/AdminNotifications";
-
+import AdminReviews
+  from "./components/Admin/Reviews/AdminReviews.jsx";
 // =====================================================
 // APP
 // =====================================================
@@ -964,6 +965,10 @@ function App() {
                     <Route
                         path="/dashboard"
                         element={<Dashboard />}
+                    />
+                    <Route
+                        path="/admin/reviews"
+                        element={<AdminReviews />}
                     />
 
                     {/* =========================================
@@ -1429,6 +1434,14 @@ function App() {
                     path="/shop/product/:id"
                     element={<ProductDetails />}
                 />
+                {/* Compatibility route
+    Existing product links may use /product/:id
+*/}
+<Route
+    path="/product/:id"
+    element={<ProductDetails />}
+/>
+
 
                 <Route
                     path="/cart"

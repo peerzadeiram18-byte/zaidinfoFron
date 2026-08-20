@@ -6,6 +6,15 @@ import { Link, useParams } from "react-router-dom";
 
 import { getProduct } from "../../../services/productService";
 
+import ProductReviews from "../../../components/Reviews/ProductReviews";
+
+import {
+  getProductReviews,
+  getProductRatingSummary
+} from "../../../services/reviewService";
+
+
+
 const ProductDetails = () => {
 
     const { id } = useParams();
@@ -30,20 +39,35 @@ const loadProduct = async () => {
 
         setLoading(true);
 
-        const res = await getProduct(id);
+//         const res = await getProduct(id);
 
-         setProduct(res.data.product);
+//          setProduct(res.data.product);
 
          
-        if(res.data.images?.length){
+//         // if(res.data.images?.length){
 
-            setSelectedImage(
+//         //     setSelectedImage(
 
-                res.data.images[0]
+//         //         res.data.images[0]
 
-            );
+//         //     );
 
-        }
+//         // }
+
+//         if (res.data.product?.images?.length) {
+//     setSelectedImage(res.data.product.images[0]);
+// }
+
+
+const res = await getProduct(id);
+
+const productData = res.data.data;
+
+setProduct(productData);
+
+if (productData?.images?.length) {
+    setSelectedImage(productData.images[0]?.url || "");
+}
 
     }
 
@@ -148,33 +172,49 @@ className="main-image"
 
 {
 
-product.images?.map(
+// product.images?.map(
 
-(image,index)=>(
+// (image,index)=>(
 
-<img
+// <img
 
-key={index}
+// key={index}
 
-src={image}
+// src={image}
 
-alt=""
+// alt=""
 
-className={`thumbnail ${
-    selectedImage === image ? "active" : ""
-}`}
+// className={`thumbnail ${
+//     selectedImage === image ? "active" : ""
+// }`}
 
-onClick={()=>
+// onClick={()=>
 
-setSelectedImage(image)
+// setSelectedImage(image)
 
-}
+// }
 
-/>
+// />
 
-)
+// )
 
-)
+// )
+
+product.images?.map((image, index) => (
+    <img
+        key={index}
+        src={image.url}
+        alt={image.alt || product.name}
+        className={`thumbnail ${
+            selectedImage === image.url ? "active" : ""
+        }`}
+        onClick={() =>
+            setSelectedImage(image.url)
+        }
+    />
+))
+
+
 
 }
 
@@ -463,6 +503,19 @@ Category :
 </div>  {/* right-side */}
 
 </div>  {/* details-container */}
+
+
+{/* =====================================
+    PRODUCT REVIEWS
+===================================== */}
+
+<div className="product-reviews-section">
+
+    <ProductReviews
+        productId={product._id}
+    />
+
+</div>
 
 </div> 
 
