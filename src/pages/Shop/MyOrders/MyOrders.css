@@ -1,71 +1,70 @@
-
-/* =========================================================
+/* =====================================================
    MY ORDERS PAGE
-   ========================================================= */
+===================================================== */
 
 .myorders-container {
     width: 100%;
     max-width: 1200px;
+
     margin: 0 auto;
     padding: 40px 24px 60px;
+
     box-sizing: border-box;
 }
 
-
-/* =========================================================
+/* =====================================================
    PAGE TITLE
-   ========================================================= */
+===================================================== */
 
 .myorders-title {
     margin: 0 0 30px;
+
     font-size: 32px;
     font-weight: 700;
-    line-height: 1.2;
-    color: #1f2937;
+
+    color: #111827;
+
+    letter-spacing: -0.5px;
 }
 
-
-/* =========================================================
+/* =====================================================
    LOADING
-   ========================================================= */
+===================================================== */
 
 .myorders-loading {
     min-height: 60vh;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 600;
-    color: #374151;
+
+    color: #64748b;
 }
 
-
-/* =========================================================
+/* =====================================================
    NO ORDERS
-   ========================================================= */
+===================================================== */
 
 .no-orders {
     width: 100%;
-    min-height: 300px;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    padding: 60px 30px;
 
-    padding: 40px 20px;
-
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-
-    box-sizing: border-box;
     text-align: center;
 
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-}
+    background: #ffffff;
 
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    box-sizing: border-box;
+
+    box-shadow:
+        0 4px 18px rgba(15, 23, 42, 0.05);
+}
 
 .no-orders h3 {
     margin: 0 0 20px;
@@ -76,19 +75,17 @@
     color: #374151;
 }
 
-
 .no-orders button {
     border: none;
-    outline: none;
 
-    padding: 12px 24px;
+    padding: 12px 22px;
 
     border-radius: 8px;
 
-    background: #111827;
+    background: #2563eb;
     color: #ffffff;
 
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
 
     cursor: pointer;
@@ -99,251 +96,320 @@
         box-shadow 0.2s ease;
 }
 
-
 .no-orders button:hover {
-    background: #000000;
+    background: #1d4ed8;
 
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow:
+        0 5px 14px rgba(37, 99, 235, 0.25);
 }
 
-
-/* =========================================================
+/* =====================================================
    ORDER CARD
-   ========================================================= */
+===================================================== */
 
 .order-card {
     width: 100%;
 
-    margin-bottom: 22px;
+    margin-bottom: 24px;
     padding: 24px;
-
-    box-sizing: border-box;
 
     background: #ffffff;
 
     border: 1px solid #e5e7eb;
-    border-radius: 16px;
+    border-radius: 14px;
 
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+    box-sizing: border-box;
+
+    box-shadow:
+        0 4px 18px rgba(15, 23, 42, 0.05);
 
     transition:
-        transform 0.2s ease,
         box-shadow 0.2s ease,
-        border-color 0.2s ease;
+        transform 0.2s ease;
 }
-
 
 .order-card:hover {
-    transform: translateY(-3px);
-
-    border-color: #d1d5db;
-
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.09);
+    box-shadow:
+        0 8px 28px rgba(15, 23, 42, 0.08);
 }
 
-
-/* =========================================================
+/* =====================================================
    ORDER ROW
-   ========================================================= */
+===================================================== */
 
 .order-row {
     display: grid;
 
-    grid-template-columns: 190px 1fr;
+    grid-template-columns: 180px 1fr;
 
     align-items: center;
 
-    gap: 20px;
-
-    padding: 13px 0;
+    min-height: 42px;
 
     border-bottom: 1px solid #f1f5f9;
 }
-
 
 .order-row:last-of-type {
     border-bottom: none;
 }
 
-
 .order-row span {
     font-size: 14px;
     font-weight: 600;
 
-    color: #6b7280;
+    color: #64748b;
 }
-
 
 .order-row p {
     margin: 0;
 
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
 
     color: #111827;
 
-    overflow-wrap: anywhere;
     word-break: break-word;
 }
 
+/* =====================================================
+   ORDER ID
+===================================================== */
 
-/* =========================================================
-   ORDER STATUS
-   ========================================================= */
-
-/*
-   Status text ko thoda highlight karta hai.
-   Existing JSX change karne ki zarurat nahi.
-*/
-
-.order-row:nth-child(3) p {
-    display: inline-flex;
-    width: fit-content;
-
-    padding: 6px 12px;
-
-    border-radius: 999px;
-
-    background: #eff6ff;
-    color: #2563eb;
+.order-row:first-child p {
+    font-family: monospace;
 
     font-size: 13px;
-    font-weight: 700;
+
+    color: #475569;
 }
 
-
-/* =========================================================
-   PAYMENT STATUS
-   ========================================================= */
-
-.order-row:nth-child(4) p {
-    display: inline-flex;
-    width: fit-content;
-
-    padding: 6px 12px;
-
-    border-radius: 999px;
-
-    background: #f0fdf4;
-    color: #15803d;
-
-    font-size: 13px;
-    font-weight: 700;
-}
-
-
-/* =========================================================
+/* =====================================================
    ACTIONS
-   ========================================================= */
+===================================================== */
 
 .order-actions {
     display: flex;
 
     align-items: center;
+    flex-wrap: wrap;
 
-    gap: 12px;
+    gap: 10px;
 
     margin-top: 22px;
-
-    padding-top: 20px;
-
-    border-top: 1px solid #f1f5f9;
 }
 
+/* =====================================================
+   COMMON ACTION BUTTON
+===================================================== */
 
-/* =========================================================
-   VIEW DETAILS BUTTON
-   ========================================================= */
+.view-btn,
+.track-order-btn,
+.review-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 40px;
+
+    padding: 9px 16px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* =====================================================
+   VIEW DETAILS
+===================================================== */
 
 .view-btn {
-    min-width: 140px;
+    border: 1px solid #2563eb;
 
-    padding: 11px 18px;
+    background: #2563eb;
 
-    border: none;
-    outline: none;
-
-    border-radius: 8px;
-
-    background: #111827;
     color: #ffffff;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
 }
-
 
 .view-btn:hover {
-    background: #000000;
+    background: #1d4ed8;
 
-    transform: translateY(-2px);
+    border-color: #1d4ed8;
 
-    box-shadow: 0 7px 18px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(37, 99, 235, 0.22);
 }
 
-
-.view-btn:active {
-    transform: translateY(0);
-}
-
-
-/* =========================================================
-   TRACK ORDER BUTTON
-   ========================================================= */
+/* =====================================================
+   TRACK ORDER
+===================================================== */
 
 .track-order-btn {
-    min-width: 150px;
+    border: 1px solid #16a34a;
 
-    padding: 11px 18px;
+    background: #f0fdf4;
 
-    border: 1px solid #2563eb;
-    outline: none;
+    color: #15803d;
+}
 
-    border-radius: 8px;
+.track-order-btn:hover {
+    background: #16a34a;
 
-    background: #ffffff;
-    color: #2563eb;
+    color: #ffffff;
 
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 12px rgba(22, 163, 74, 0.2);
+}
+
+/* =====================================================
+   REVIEW PRODUCTS SECTION
+===================================================== */
+
+.order-products-review {
+    width: 100%;
+
+    margin-top: 24px;
+    padding-top: 22px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.order-products-review h4 {
+    margin: 0 0 14px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+/* =====================================================
+   REVIEW PRODUCT ROW
+===================================================== */
+
+.review-product-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 14px 16px;
+
+    margin-bottom: 10px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+
+    box-sizing: border-box;
+}
+
+.review-product-row:last-child {
+    margin-bottom: 0;
+}
+
+/* =====================================================
+   PRODUCT INFO
+===================================================== */
+
+.review-product-info {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.review-product-name {
     font-size: 14px;
     font-weight: 600;
 
-    cursor: pointer;
+    color: #1e293b;
 
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    word-break: break-word;
 }
 
+.review-product-quantity {
+    font-size: 12px;
+    font-weight: 500;
 
-.track-order-btn:hover {
-    background: #2563eb;
+    color: #64748b;
+}
+
+/* =====================================================
+   REVIEW BUTTON
+===================================================== */
+
+.review-btn {
+    flex-shrink: 0;
+
+    border: 1px solid #f59e0b;
+
+    background: #fff7ed;
+
+    color: #d97706;
+}
+
+.review-btn:hover {
+    background: #f59e0b;
+
+    border-color: #f59e0b;
+
     color: #ffffff;
 
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 
-    box-shadow: 0 7px 18px rgba(37, 99, 235, 0.20);
+    box-shadow:
+        0 5px 14px rgba(245, 158, 11, 0.25);
 }
 
-
+.review-btn:active,
+.view-btn:active,
 .track-order-btn:active {
     transform: translateY(0);
+
+    box-shadow: none;
 }
 
+/* =====================================================
+   BUTTON FOCUS
+===================================================== */
 
-/* =========================================================
+.view-btn:focus-visible,
+.track-order-btn:focus-visible,
+.review-btn:focus-visible,
+.no-orders button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.2);
+
+    outline-offset: 2px;
+}
+
+/* =====================================================
    TABLET
-   ========================================================= */
+===================================================== */
 
 @media (max-width: 768px) {
 
@@ -351,172 +417,197 @@
         padding: 30px 18px 50px;
     }
 
-
     .myorders-title {
-        font-size: 28px;
-
         margin-bottom: 24px;
-    }
 
+        font-size: 28px;
+    }
 
     .order-card {
         padding: 20px;
-
-        border-radius: 14px;
     }
-
 
     .order-row {
-        grid-template-columns: 140px 1fr;
-
-        gap: 15px;
-
-        padding: 12px 0;
+        grid-template-columns: 145px 1fr;
     }
-
-
-    .order-row span {
-        font-size: 13px;
-    }
-
-
-    .order-row p {
-        font-size: 14px;
-    }
-
 
     .order-actions {
-        flex-wrap: wrap;
+        gap: 9px;
     }
 
-
-    .view-btn,
-    .track-order-btn {
-        flex: 1;
-
-        min-width: 150px;
+    .review-product-row {
+        align-items: flex-start;
     }
 
 }
 
-
-/* =========================================================
+/* =====================================================
    MOBILE
-   ========================================================= */
+===================================================== */
 
-@media (max-width: 520px) {
+@media (max-width: 600px) {
 
     .myorders-container {
-        padding: 22px 12px 40px;
+        padding: 24px 14px 40px;
     }
-
 
     .myorders-title {
-        font-size: 24px;
-
         margin-bottom: 20px;
+
+        font-size: 24px;
     }
 
+    /* -----------------------------------------------
+       ORDER CARD
+    ----------------------------------------------- */
 
     .order-card {
         padding: 16px;
 
-        margin-bottom: 16px;
-
         border-radius: 12px;
     }
 
+    /* -----------------------------------------------
+       ORDER ROW
+    ----------------------------------------------- */
 
     .order-row {
-        grid-template-columns: 1fr;
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: flex-start;
 
         gap: 5px;
 
         padding: 11px 0;
-    }
 
+        min-height: auto;
+    }
 
     .order-row span {
         font-size: 12px;
-
-        text-transform: uppercase;
-
-        letter-spacing: 0.3px;
     }
 
-
     .order-row p {
+        width: 100%;
+
         font-size: 14px;
     }
 
-
-    .order-actions {
-        flex-direction: column;
-
-        gap: 10px;
-
-        margin-top: 18px;
-
-        padding-top: 16px;
+    .order-row:first-child p {
+        font-size: 12px;
     }
 
+    /* -----------------------------------------------
+       ACTIONS
+    ----------------------------------------------- */
+
+    .order-actions {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        width: 100%;
+
+        margin-top: 18px;
+    }
 
     .view-btn,
     .track-order-btn {
         width: 100%;
-
-        min-width: 100%;
-
-        padding: 12px 16px;
     }
 
+    /* -----------------------------------------------
+       REVIEW SECTION
+    ----------------------------------------------- */
+
+    .order-products-review {
+        margin-top: 20px;
+        padding-top: 18px;
+    }
+
+    .order-products-review h4 {
+        font-size: 15px;
+    }
+
+    /* -----------------------------------------------
+       PRODUCT ROW
+    ----------------------------------------------- */
+
+    .review-product-row {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 12px;
+
+        padding: 13px;
+    }
+
+    .review-product-info {
+        width: 100%;
+    }
+
+    .review-product-name {
+        font-size: 14px;
+    }
+
+    .review-btn {
+        width: 100%;
+    }
+
+    /* -----------------------------------------------
+       EMPTY STATE
+    ----------------------------------------------- */
 
     .no-orders {
-        min-height: 260px;
-
-        padding: 30px 16px;
+        padding: 45px 20px;
     }
-
 
     .no-orders h3 {
         font-size: 19px;
     }
 
-
     .no-orders button {
         width: 100%;
-
-        max-width: 250px;
     }
-
 }
 
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
 
-/* =========================================================
-   VERY SMALL DEVICES
-   ========================================================= */
-
-@media (max-width: 360px) {
+@media (max-width: 400px) {
 
     .myorders-container {
         padding-left: 10px;
         padding-right: 10px;
     }
 
-
     .myorders-title {
         font-size: 22px;
     }
-
 
     .order-card {
         padding: 14px;
     }
 
-
     .order-row p {
         font-size: 13px;
     }
 
-}
+    .review-product-row {
+        padding: 12px;
+    }
 
+    .review-btn {
+        font-size: 12px;
+
+        padding: 10px 12px;
+    }
+}
