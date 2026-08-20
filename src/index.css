@@ -31,15 +31,18 @@ html.dark {
 }
 
 /* ================================
-   HTML / BODY / ROOT
+   HTML
 ================================ */
 
 html {
   width: 100%;
   min-height: 100%;
   overflow-x: hidden;
-  overflow-y: auto;
 }
+
+/* ================================
+   BODY
+================================ */
 
 body {
   width: 100%;
@@ -49,7 +52,6 @@ body {
   padding: 0;
 
   overflow-x: hidden;
-  overflow-y: auto;
 
   font-family: Arial, Helvetica, sans-serif;
 
@@ -60,6 +62,10 @@ body {
     background-color 0.3s ease,
     color 0.3s ease;
 }
+
+/* ================================
+   ROOT
+================================ */
 
 #root {
   width: 100%;

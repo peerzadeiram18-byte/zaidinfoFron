@@ -4,6 +4,50 @@ import { toast } from "react-toastify";
 import { createReview } from "./../../services/reviewService";
 
 import "./ReviewModal.css";
+const API_URL = import.meta.env.VITE_API_URL;
+
+const BASE_URL = API_URL?.replace(
+    /\/api\/?$/,
+    ""
+);
+
+const getImageUrl = (image) => {
+
+    if (!image) {
+        return "/placeholder-product.png";
+    }
+
+    if (
+        typeof image === "string" &&
+        (
+            image.startsWith("http://") ||
+            image.startsWith("https://")
+        )
+    ) {
+        return image;
+    }
+
+    const imagePath =
+        typeof image === "string"
+            ? image
+            : (
+                image?.url ||
+                image?.path ||
+                image?.image ||
+                ""
+            );
+
+    if (!imagePath) {
+        return "/placeholder-product.png";
+    }
+
+    return `${BASE_URL}${
+        imagePath.startsWith("/")
+            ? imagePath
+            : `/${imagePath}`
+    }`;
+};
+
 
 
 const ReviewModal = ({
@@ -356,7 +400,7 @@ const ReviewModal = ({
                 ================================= */}
 
                 <div className="review-product">
-
+{/* 
                     <img
                         src={
                             product?.images?.[0] ||
@@ -366,7 +410,14 @@ const ReviewModal = ({
                             product?.name ||
                             "Product"
                         }
-                    />
+                    /> */}
+                    <img
+    src={getImageUrl(product?.images?.[0])}
+    alt={
+        product?.name ||
+        "Product"
+    }
+/>
 
 
                     <div>

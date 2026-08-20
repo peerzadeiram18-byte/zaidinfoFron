@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import './Rental.css';
 
@@ -8,6 +5,8 @@ import './Rental.css';
 import TopBar from '../components/TopBar/TopBar.jsx';
 import Header from '../components/Header/Header.jsx';
 import Footer from '../components/Footer/Footer.jsx';
+import RentalProcess from '../components/RentalProcess/RentalProcess.jsx';
+import RentalSupport from '../components/RentalSupport/RentalSupport.jsx';
 
 function Rental() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -257,6 +256,11 @@ function Rental() {
           </div>
         </div>
       </div> */}
+
+      <RentalProcess/>
+      <RentalSupport/>
+
+
 
       {/* Heading */}
       <h1

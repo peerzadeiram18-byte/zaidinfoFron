@@ -1,84 +1,130 @@
 import axios from "axios";
 
-// const API = "http://localhost:5000/api/wishlist";
+// =====================================================
+// API
+// =====================================================
 
-const API = `${import.meta.env.VITE_API_URL}/wishlist`;
+const API_URL =
+  import.meta.env.VITE_API_URL;
 
-const getToken = () => localStorage.getItem("token");
+// =====================================================
+// ENV VALIDATION
+// =====================================================
 
-// ============================
+if (!API_URL) {
+  console.error(
+    "VITE_API_URL is not configured in .env"
+  );
+}
+
+// =====================================================
+// WISHLIST API
+// =====================================================
+
+const API =
+  `${API_URL?.replace(/\/$/, "")}/wishlist`;
+
+// =====================================================
+// TOKEN
+// =====================================================
+
+const getToken = () => {
+  return localStorage.getItem("token");
+};
+
+// =====================================================
+// AUTH HEADERS
+// =====================================================
+
+const getHeaders = () => {
+
+  const token =
+    getToken();
+
+  return {
+    headers: {
+      Authorization:
+        `Bearer ${token}`,
+    },
+  };
+};
+
+// =====================================================
 // GET WISHLIST
-// ============================
+// =====================================================
 
 export const getWishlist = async () => {
 
-    return await axios.get(API, {
-
-        headers: {
-
-            Authorization: `Bearer ${getToken()}`
-
-        }
-
-    });
+  return await axios.get(
+    API,
+    getHeaders()
+  );
 
 };
 
-// ============================
+// =====================================================
 // ADD TO WISHLIST
-// ============================
+// =====================================================
 
-export const addToWishlist = async (productId) => {
+export const addToWishlist = async (
+  productId
+) => {
 
-
-
-    console.log("wishlistService Product =", productId);
-    console.log("Type =", typeof productId);
-
-    return await axios.post(
-
-        `${API}/add`,
-
-        {
-
-            productId: productId
-
-        },
-
-        {
-
-            headers: {
-
-                Authorization: `Bearer ${getToken()}`
-
-            }
-
-        }
-
+  if (!productId) {
+    throw new Error(
+      "Product ID is required"
     );
+  }
+
+  console.log(
+    "===================================="
+  );
+
+  console.log(
+    "ADDING PRODUCT TO WISHLIST"
+  );
+
+  console.log(
+    "Product ID:",
+    productId
+  );
+
+  console.log(
+    "Wishlist API:",
+    `${API}/add`
+  );
+
+  console.log(
+    "===================================="
+  );
+
+  return await axios.post(
+    `${API}/add`,
+    {
+      productId: productId,
+    },
+    getHeaders()
+  );
 
 };
 
-// ============================
+// =====================================================
 // REMOVE FROM WISHLIST
-// ============================
+// =====================================================
 
-export const removeFromWishlist = async (productId) => {
+export const removeFromWishlist = async (
+  productId
+) => {
 
-    return await axios.delete(
-
-        `${API}/remove/${productId}`,
-
-        {
-
-            headers: {
-
-                Authorization: `Bearer ${getToken()}`
-
-            }
-
-        }
-
+  if (!productId) {
+    throw new Error(
+      "Product ID is required"
     );
+  }
+
+  return await axios.delete(
+    `${API}/remove/${productId}`,
+    getHeaders()
+  );
 
 };

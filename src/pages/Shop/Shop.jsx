@@ -2937,39 +2937,149 @@ const Shop = () => {
   // WISHLIST
   // ===================================================
 
-  const handleWishlist =
-    async (product) => {
-      const token =
-        localStorage.getItem(
-          "token"
-        );
+  // const handleWishlist =
+  //   async (product) => {
+  //     const token =
+  //       localStorage.getItem(
+  //         "token"
+  //       );
 
-      if (!token) {
-        toast.error(
-          "Please Login First"
-        );
+  //     if (!token) {
+  //       toast.error(
+  //         "Please Login First"
+  //       );
 
-        navigate("/login");
+  //       navigate("/login");
 
-        return;
-      }
+  //       return;
+  //     }
 
-      try {
-        await addToWishlist(
-          product._id
-        );
+  //     try {
+  //       await addToWishlist(
+  //         product._id
+  //       );
 
-        toast.success(
-          "Added To Wishlist"
-        );
-      } catch (error) {
-        toast.error(
-          error?.response?.data
-            ?.message ||
-            "Failed to update wishlist"
-        );
-      }
-    };
+  //       toast.success(
+  //         "Added To Wishlist"
+  //       );
+  //     } catch (error) {
+  //       toast.error(
+  //         error?.response?.data
+  //           ?.message ||
+  //           "Failed to update wishlist"
+  //       );
+  //     }
+  //   };
+
+
+const handleWishlist = async (product) => {
+
+  const token =
+    localStorage.getItem("token");
+
+  // ===============================================
+  // LOGIN CHECK
+  // ===============================================
+
+  if (!token) {
+
+    toast.error(
+      "Please Login First"
+    );
+
+    navigate("/login");
+
+    return;
+  }
+
+  // ===============================================
+  // PRODUCT ID
+  // ===============================================
+
+  const productId =
+    product?._id ||
+    product?.id;
+
+  if (!productId) {
+
+    console.error(
+      "Wishlist Product ID Missing:",
+      product
+    );
+
+    toast.error(
+      "Product ID not found"
+    );
+
+    return;
+  }
+
+  try {
+
+    console.log(
+      "Adding Wishlist Product:",
+      productId
+    );
+
+    // =============================================
+    // ADD WISHLIST
+    // =============================================
+
+    const response =
+      await addToWishlist(
+        productId
+      );
+
+    console.log(
+      "ADD WISHLIST RESPONSE:",
+      response?.data
+    );
+
+    // =============================================
+    // SUCCESS
+    // =============================================
+
+    toast.success(
+      "Added To Wishlist"
+    );
+
+  } catch (error) {
+
+    console.error(
+      "ADD WISHLIST ERROR:",
+      error
+    );
+
+    console.error(
+      "ADD WISHLIST ERROR RESPONSE:",
+      error?.response?.data
+    );
+
+    const message =
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      "Failed to update wishlist";
+
+    // ---------------------------------------------
+    // If already exists
+    // ---------------------------------------------
+
+    if (
+      String(message)
+        .toLowerCase()
+        .includes("already")
+    ) {
+
+      toast.info(
+        "Product is already in Wishlist"
+      );
+
+      return;
+    }
+
+    toast.error(message);
+  }
+};
 
   // ===================================================
   // RENDER

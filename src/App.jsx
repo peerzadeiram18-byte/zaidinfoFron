@@ -644,6 +644,7 @@ import { Routes, Route } from "react-router-dom";
 
 import TopBar from "./components/TopBar/TopBar";
 import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
 
 // ===============================
 // PUBLIC
@@ -831,10 +832,9 @@ import AdminReviews
 // =====================================================
 // APP
 // =====================================================
-
 function App() {
     return (
-        <>
+        <div className="app-shell">
             {/* =================================================
                 GLOBAL WEBSITE HEADER
 
@@ -866,7 +866,10 @@ function App() {
 </div>
 
 {/* Header + TopBar ke liye space */}
-<div className="h-[150px] w-full"></div>
+<div className="h-[150px] w-full flex-shrink-0"></div>
+
+<main className="app-main">
+
             {/* =================================================
                 ALL ROUTES
             ================================================= */}
@@ -1592,8 +1595,11 @@ function App() {
                     element={<Rental />}
                 />
 
-            </Routes>
-        </>
+                        </Routes>
+            </main>
+
+            {/* <Footer /> */}
+        </div>
     );
 }
 

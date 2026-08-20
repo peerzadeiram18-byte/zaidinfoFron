@@ -11,7 +11,8 @@ import {
   Sun,
   Moon,
   Bell,
-  CircleUserRound
+  CircleUserRound,
+  LayoutDashboard
 } from "lucide-react";
 // import { Link, NavLink, useNavigate } from "react-router-dom";
 
@@ -25,6 +26,8 @@ import {
 import { useTheme } from "../../context/ThemeContext";
 
 import logoImg from "../../assets/images/zaidinfotechlogo.png";
+import logoDark from "../../assets/images/zaidinfotechlogo-white.png";
+
 // import {
 //   Bell,
 //   LayoutDashboard
@@ -333,14 +336,30 @@ useEffect(() => {
 }, [location.pathname]);
 
   
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("user");
-    setIsLoggedIn(false);
-    setMobileMenuOpen(false);
-    navigate("/login");
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("isLoggedIn");
+  //   localStorage.removeItem("user");
+  //   setIsLoggedIn(false);
+  //   setMobileMenuOpen(false);
+  //   navigate("/login");
+  // };
+
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("user");
+
+  setIsLoggedIn(false);
+  setNotifications([]);
+  setUnreadCount(0);
+  setWishlistCount(0);
+  setCartCount(0);
+  setNotificationOpen(false);
+  setMobileMenuOpen(false);
+
+  navigate("/login");
+};
 
   const iconVariants = {
     hover: { scale: 1.12 },
@@ -612,18 +631,18 @@ const loadHeaderCounts = async () => {
             to="/"
             className="flex items-center flex-shrink-0 py-2 max-w-[280px] sm:max-w-[340px]"
           >
-            <motion.img
-              whileHover={{ scale: 1.03 }}
-              transition={{ duration: 0.25 }}
-              src={logoImg}
-              alt="ZAID INFOTECH"
-              draggable="false"
-              className={`w-auto object-contain transition-all duration-300 ${
-                isScrolled 
-                  ? "h-16 sm:h-20" 
-                  : "h-20 sm:h-24 lg:h-28"
-              }`}
-            />
+  <motion.img
+  whileHover={{ scale: 1.03 }}
+  transition={{ duration: 0.25 }}
+  src={theme === "dark" ? logoDark : logoImg}
+  alt="ZAID INFOTECH"
+  draggable="false"
+  className={`w-auto object-contain transition-all duration-300 ${
+    isScrolled
+      ? "h-16 sm:h-20"
+      : "h-20 sm:h-24 lg:h-28"
+  }`}
+/>
           </Link>
 
           {/* Centered Desktop Navigation */}

@@ -1,489 +1,577 @@
-// // import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  Link,
+} from "react-router-dom";
+
+import {
+  FaTrashAlt,
+  FaShoppingCart,
+} from "react-icons/fa";
+
+import {
+  toast,
+} from "react-toastify";
 
-// // import "./Wishlist.css";
-
-// // import { Link } from "react-router-dom";
-
-// // import {
-
-// //     getWishlist,
-
-// //     removeFromWishlist
-
-// // } from "../../../services/wishlistService";
-
-// // import {
-
-// //     addToCart
-
-// // } from "../../../services/cartService";
-
-// // const Wishlist = () => {
-
-// //     const [wishlist, setWishlist] = useState([]);
-
-// //     const [loading, setLoading] = useState(true);
-
-// //     useEffect(() => {
-
-// //         loadWishlist();
-
-// //     }, []);
-
-// //     const loadWishlist = async () => {
-
-// //         try {
-
-// //             setLoading(true);
-
-// //             const res = await getWishlist();
-
-// //             console.log(res.data);
-
-// //             setWishlist(
-
-// //                 res.data.wishlist.products || []
-
-// //             );
-
-// //         }
-
-// //         catch (error) {
-
-// //             console.log(error);
-
-// //         }
-
-// //         finally {
-
-// //             setLoading(false);
-
-// //         }
-
-// //     };
-
-// //     const handleRemove = async (productId) => {
-
-// //         try {
-
-// //             await removeFromWishlist(productId);
-
-// //             loadWishlist();
-
-// //         }
-
-// //         catch (error) {
-
-// //             console.log(error);
-
-// //             alert(error.response?.data?.message);
-
-// //         }
-
-// //     };
-
-// //     const handleAddToCart = async (productId) => {
-
-// //         try {
-
-// //             await addToCart({
-
-// //                 product: productId,
-
-// //                 quantity: 1
-
-// //             });
-
-// //             alert("Added To Cart");
-
-// //         }
-
-// //         catch (error) {
-
-// //             console.log(error);
-
-// //             alert(error.response?.data?.message);
-
-// //         }
-
-// //     };
-
-// //     if (loading) {
-
-// //         return (
-
-// //             <div className="loading">
-
-// //                 Loading Wishlist...
-
-// //             </div>
-
-// //         );
-
-// //     }
-
-// //     return (
-
-// //         <div className="wishlist-page">
-
-// //             <div className="wishlist-header">
-
-// //                 <h2>
-
-// //                     My Wishlist
-
-// //                 </h2>
-
-// //             </div>
-
-// //             {
-
-// //                 wishlist.length === 0 ?
-
-// //                 (
-
-// //                     <div className="empty-wishlist">
-
-// //                         <h3>
-
-// //                             Wishlist Is Empty
-
-// //                         </h3>
-
-// //                         <Link
-
-// //                             to="/shop"
-
-// //                             className="shop-btn"
-
-// //                         >
-
-// //                             Continue Shopping
-
-// //                         </Link>
-
-// //                     </div>
-
-// //                 )
-
-// //                 :
-
-// //                 (
-
-// //                     <div className="wishlist-grid">
-
-// //                         {
-
-// //                             wishlist.map((item) => (
-
-// //                                 <div
-
-// //                                     className="wishlist-card"
-
-// //                                     key={item.product._id}
-
-// //                                 >
-
-// //                                     <img
-
-// //                                         src={
-
-// //                                             item.product.imageUrl
-
-// //                                                 ?
-
-// //                                                 `http://localhost:5000${item.product.imageUrl}`
-
-// //                                                 :
-
-// //                                                 "/no-image.png"
-
-// //                                         }
-
-// //                                         alt={item.product.title}
-
-// //                                     />
-
-// //                                     <h3>
-
-// //                                         {item.product.title}
-
-// //                                     </h3>
-
-// //                                     <p>
-
-// //                                         ₹ {item.product.discountedPrice}
-
-// //                                     </p>
-
-// //                                     <div className="wishlist-buttons">
-
-// //                                         <button
-
-// //                                             onClick={() =>
-
-// //                                                 handleAddToCart(
-
-// //                                                     item.product._id
-
-// //                                                 )
-
-// //                                             }
-
-// //                                         >
-
-// //                                             Add To Cart
-
-// //                                         </button>
-
-// //                                         <button
-
-// //                                             className="remove-btn"
-
-// //                                             onClick={() =>
-
-// //                                                 handleRemove(
-
-// //                                                     item.product._id
-
-// //                                                 )
-
-// //                                             }
-
-// //                                         >
-
-// //                                             Remove
-
-// //                                         </button>
-
-// //                                     </div>
-
-// //                                 </div>
-
-// //                             ))
-
-// //                         }
-
-// //                     </div>
-
-// //                 )
-
-// //             }
-
-// //         </div>
-
-// //     );
-
-// // };
-
-// // export default Wishlist;
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import { Link } from "react-router-dom";
-// import { FaTrashAlt, FaShoppingCart } from "react-icons/fa";
-// import "./Wishlist.css";
-// import { toast } from "react-toastify";
-
-// import {
-//   getWishlist,
-//   removeFromWishlist
-// } from "../../../services/wishlistService";
-
-// import { addToCart } from "../../../services/cartService";
-
-// const API = import.meta.env.VITE_API_URL;
-
-// const Wishlist = () => {
-//   const [wishlist, setWishlist] = useState([]);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     loadWishlist();
-//   }, []);
-
-//   const loadWishlist = async () => {
-//     try {
-//       setLoading(true);
-//       const res = await getWishlist();
-//       setWishlist(res.data.wishlist.products || []);
-//     } catch (error) {
-//       console.log(error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleRemove = async (productId) => {
-//     try {
-//       await removeFromWishlist(productId);
-//       loadWishlist();
-//     } catch (error) {
-//       console.log(error);
-//       toast.error(error.response?.data?.message);
-//     }
-//   };
-
-//   const handleAddToCart = async (productId) => {
-//     try {
-//       await addToCart({
-//         product: productId,
-//         quantity: 1
-//       });
-//       toast.success("Added To Cart");
-//     } catch (error) {
-//       console.log(error);
-//       toast.error(error.response?.data?.message);
-//     }
-//   };
-
-//   if (loading) {
-//     return <div className="loading">Loading Wishlist...</div>;
-//   }
-
-//   return (
-//     <div className="wishlist-page">
-//       <div className="wishlist-header">
-//         <div>
-//           <h2>My Wishlist</h2>
-//           <span className="wishlist-count">
-//             {wishlist.length} {wishlist.length === 1 ? "Item" : "Items"} Saved
-//           </span>
-//         </div>
-//       </div>
-
-//       {wishlist.length === 0 ? (
-//         <div className="empty-wishlist">
-//           <h3>Wishlist Is Empty</h3>
-//           <p>Explore our store and save your favorite items for later.</p>
-//           <Link to="/shop" className="shop-btn">
-//             Continue Shopping
-//           </Link>
-//         </div>
-//       ) : (
-//         <div className="wishlist-grid">
-//           {wishlist.map((item) => (
-//             <div className="wishlist-card" key={item.product._id}>
-//               {/* Quick Remove Floating Button */}
-//               <button
-//                 className="quick-remove-btn"
-//                 title="Remove item"
-//                 onClick={() => handleRemove(item.product._id)}
-//               >
-//                 <FaTrashAlt />
-//               </button>
-
-//               {/* Product Image Wrapper */}
-//               <div className="card-image-box">
-//                 <img
-// src={
-//   item.product.images?.length
-//     ? `${API.replace("/api", "")}${item.product.images[0].url}`
-//     : "/no-image.png"
-// }
-//                   alt={item.product.title}
-//                 />
-//               </div>
-
-//               {/* Product Info */}
-//               <div className="card-details">
-// <h3>{item.product.name}</h3>
-//                 <div className="price-tag">
-// ₹ {item.product.pricing?.sellingPrice}                </div>
-//               </div>
-
-//               {/* Card Footer Actions */}
-//               <div className="wishlist-buttons">
-//                 <button
-//                   className="add-cart-btn"
-//                   onClick={() => handleAddToCart(item.product._id)}
-//                 >
-//                   <FaShoppingCart /> Add To Cart
-//                 </button>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Wishlist;
-
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { FaTrashAlt, FaShoppingCart } from "react-icons/fa";
 import "./Wishlist.css";
-import { toast } from "react-toastify";
+
+// =====================================================
+// SERVICES
+// =====================================================
 
 import {
   getWishlist,
   removeFromWishlist,
 } from "../../../services/wishlistService";
 
-import { addToCart } from "../../../services/cartService";
+import {
+  addToCart,
+} from "../../../services/cartService";
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+import {
+  getProduct,
+} from "../../../services/productService";
 
-const BASE_URL = API.replace(/\/api\/?$/, "");
+// =====================================================
+// API
+// =====================================================
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+const BASE_URL =
+  API_URL.replace(/\/api\/?$/, "");
+
+// =====================================================
+// GET ID
+// =====================================================
+
+const getProductId = (product) => {
+  if (!product) {
+    return null;
+  }
+
+  // String ID
+  if (typeof product === "string") {
+    return product;
+  }
+
+  // Object ID
+  return (
+    product?._id ||
+    product?.id ||
+    product?.productId ||
+    null
+  );
+};
+
+// =====================================================
+// GET WISHLIST PRODUCT
+// =====================================================
+
+const getWishlistProductValue = (item) => {
+  if (!item) {
+    return null;
+  }
+
+  // -----------------------------------------------
+  // item.product
+  // -----------------------------------------------
+
+  if (item.product) {
+    return item.product;
+  }
+
+  // -----------------------------------------------
+  // item.productId
+  // -----------------------------------------------
+
+  if (item.productId) {
+    return item.productId;
+  }
+
+  // -----------------------------------------------
+  // Direct product object
+  // -----------------------------------------------
+
+  if (
+    item._id ||
+    item.id
+  ) {
+    return item;
+  }
+
+  return null;
+};
+
+// =====================================================
+// IMAGE URL
+// =====================================================
+
+const getImageUrl = (product) => {
+  if (!product) {
+    return "/no-image.png";
+  }
+
+  const images =
+    product?.images;
+
+  if (
+    !Array.isArray(images) ||
+    images.length === 0
+  ) {
+    return "/no-image.png";
+  }
+
+  const image =
+    images[0];
+
+  // -----------------------------------------------
+  // Object image
+  // -----------------------------------------------
+
+  if (
+    image &&
+    typeof image === "object"
+  ) {
+    const url =
+      image?.url ||
+      image?.path ||
+      image?.src;
+
+    if (!url) {
+      return "/no-image.png";
+    }
+
+    if (
+      String(url).startsWith("http")
+    ) {
+      return url;
+    }
+
+    return `${BASE_URL}${
+      String(url).startsWith("/")
+        ? ""
+        : "/"
+    }${url}`;
+  }
+
+  // -----------------------------------------------
+  // String image
+  // -----------------------------------------------
+
+  if (
+    typeof image === "string"
+  ) {
+    if (
+      image.startsWith("http")
+    ) {
+      return image;
+    }
+
+    return `${BASE_URL}${
+      image.startsWith("/")
+        ? ""
+        : "/"
+    }${image}`;
+  }
+
+  return "/no-image.png";
+};
+
+// =====================================================
+// PRICE
+// =====================================================
+
+const getProductPrice = (product) => {
+  if (!product) {
+    return 0;
+  }
+
+  const price =
+    product?.finalPrice ??
+    product?.pricing?.sellingPrice ??
+    product?.pricing?.price ??
+    product?.sellingPrice ??
+    product?.price ??
+    0;
+
+  const numberPrice =
+    Number(price);
+
+  return Number.isFinite(
+    numberPrice
+  )
+    ? numberPrice
+    : 0;
+};
+
+// =====================================================
+// PRODUCT NAME
+// =====================================================
+
+const getProductName = (product) => {
+  return (
+    product?.name ||
+    product?.title ||
+    product?.productName ||
+    "Product"
+  );
+};
+
+// =====================================================
+// WISHLIST
+// =====================================================
 
 const Wishlist = () => {
-  const [wishlist, setWishlist] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  // ===================================================
+  // STATE
+  // ===================================================
+
+  const [
+    wishlist,
+    setWishlist,
+  ] = useState([]);
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
+
+  // ===================================================
+  // LOAD WISHLIST
+  // ===================================================
 
   useEffect(() => {
     loadWishlist();
   }, []);
 
+  // ===================================================
+  // LOAD WISHLIST
+  // ===================================================
+
   const loadWishlist = async () => {
+
     try {
+
       setLoading(true);
 
-      const res = await getWishlist();
+      const res =
+        await getWishlist();
 
-      console.log("========== WISHLIST RESPONSE ==========");
-      console.log(res.data);
+      console.log(
+        "========================================"
+      );
+
+      console.log(
+        "WISHLIST FULL RESPONSE:",
+        res?.data
+      );
+
       console.log(
         "WISHLIST PRODUCTS:",
-        res.data?.wishlist?.products
+        res?.data?.wishlist?.products
       );
-      console.log("========================================");
 
-      const products =
-        res.data?.wishlist?.products || [];
+      console.log(
+        "========================================"
+      );
 
-      setWishlist(products);
+      // =================================================
+      // GET RAW WISHLIST ITEMS
+      // =================================================
+
+      let wishlistItems = [];
+
+      if (
+        Array.isArray(
+          res?.data?.wishlist?.products
+        )
+      ) {
+
+        wishlistItems =
+          res.data.wishlist.products;
+
+      } else if (
+        Array.isArray(
+          res?.data?.products
+        )
+      ) {
+
+        wishlistItems =
+          res.data.products;
+
+      } else if (
+        Array.isArray(
+          res?.data?.data
+        )
+      ) {
+
+        wishlistItems =
+          res.data.data;
+
+      } else if (
+        Array.isArray(
+          res?.data
+        )
+      ) {
+
+        wishlistItems =
+          res.data;
+
+      }
+
+      console.log(
+        "RAW WISHLIST ITEMS:",
+        wishlistItems
+      );
+
+      // =================================================
+      // LOAD COMPLETE PRODUCT DETAILS
+      // =================================================
+
+      const normalizedProducts =
+        await Promise.all(
+
+          wishlistItems.map(
+            async (item) => {
+
+              try {
+
+                const rawProduct =
+                  getWishlistProductValue(
+                    item
+                  );
+
+                // ---------------------------------------
+                // Product ID
+                // ---------------------------------------
+
+                const productId =
+                  getProductId(
+                    rawProduct
+                  );
+
+                if (!productId) {
+
+                  console.warn(
+                    "Wishlist product ID missing:",
+                    item
+                  );
+
+                  return null;
+                }
+
+                // ---------------------------------------
+                // Already populated product
+                // ---------------------------------------
+
+                if (
+                  typeof rawProduct ===
+                    "object" &&
+                  (
+                    rawProduct?.name ||
+                    rawProduct?.title ||
+                    rawProduct?.images ||
+                    rawProduct?.pricing
+                  )
+                ) {
+
+                  console.log(
+                    "POPULATED PRODUCT:",
+                    rawProduct
+                  );
+
+                  return {
+                    wishlistItem: item,
+                    product:
+                      rawProduct,
+                    productId,
+                  };
+                }
+
+                // ---------------------------------------
+                // Product only ID
+                //
+                // Fetch complete product
+                // ---------------------------------------
+
+                console.log(
+                  "FETCHING PRODUCT DETAILS:",
+                  productId
+                );
+
+                const productResponse =
+                  await getProduct(
+                    productId
+                  );
+
+                console.log(
+                  "PRODUCT DETAILS RESPONSE:",
+                  productResponse?.data
+                );
+
+                // ---------------------------------------
+                // Handle different response formats
+                // ---------------------------------------
+
+                const productData =
+                  productResponse?.data;
+
+                const product =
+                  productData?.product ||
+                  productData?.data ||
+                  productData;
+
+                if (!product) {
+
+                  console.warn(
+                    "Product details not found:",
+                    productId
+                  );
+
+                  return null;
+                }
+
+                return {
+                  wishlistItem: item,
+                  product,
+                  productId,
+                };
+
+              } catch (productError) {
+
+                console.error(
+                  "FAILED TO LOAD WISHLIST PRODUCT:",
+                  productError
+                );
+
+                console.error(
+                  "PRODUCT ID:",
+                  getProductId(
+                    getWishlistProductValue(
+                      item
+                    )
+                  )
+                );
+
+                return null;
+              }
+            }
+          )
+        );
+
+      // =================================================
+      // REMOVE INVALID ITEMS
+      // =================================================
+
+      const validProducts =
+        normalizedProducts.filter(
+          Boolean
+        );
+
+      console.log(
+        "FINAL WISHLIST PRODUCTS:",
+        validProducts
+      );
+
+      // =================================================
+      // SET STATE
+      // =================================================
+
+      setWishlist(
+        validProducts
+      );
 
     } catch (error) {
+
       console.error(
         "WISHLIST ERROR:",
         error
+      );
+
+      console.error(
+        "WISHLIST ERROR RESPONSE:",
+        error?.response?.data
       );
 
       toast.error(
         error?.response?.data?.message ||
         "Failed to load wishlist"
       );
+
+      setWishlist([]);
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
-  const handleRemove = async (productId) => {
-    if (!productId) return;
+  // ===================================================
+  // REMOVE FROM WISHLIST
+  // ===================================================
+
+  const handleRemove = async (
+    productId
+  ) => {
+
+    if (!productId) {
+
+      toast.error(
+        "Product ID not found"
+      );
+
+      return;
+    }
 
     try {
-      await removeFromWishlist(productId);
 
-      toast.success("Removed from Wishlist");
+      console.log(
+        "REMOVING WISHLIST PRODUCT:",
+        productId
+      );
 
-      await loadWishlist();
+      await removeFromWishlist(
+        productId
+      );
+
+      toast.success(
+        "Removed from Wishlist"
+      );
+
+      // -----------------------------------------------
+      // Immediately update UI
+      // -----------------------------------------------
+
+      setWishlist(
+        (previous) =>
+          previous.filter(
+            (item) =>
+              String(
+                item.productId
+              ) !==
+              String(
+                productId
+              )
+          )
+      );
 
     } catch (error) {
-      console.error(error);
+
+      console.error(
+        "REMOVE WISHLIST ERROR:",
+        error
+      );
+
+      console.error(
+        "REMOVE RESPONSE:",
+        error?.response?.data
+      );
 
       toast.error(
         error?.response?.data?.message ||
@@ -492,22 +580,46 @@ const Wishlist = () => {
     }
   };
 
-  const handleAddToCart = async (productId) => {
+  // ===================================================
+  // ADD TO CART
+  // ===================================================
+
+  const handleAddToCart = async (
+    productId
+  ) => {
+
     if (!productId) {
-      toast.error("Product is unavailable");
+
+      toast.error(
+        "Product is unavailable"
+      );
+
       return;
     }
 
     try {
+
+      console.log(
+        "ADDING WISHLIST PRODUCT TO CART:",
+        productId
+      );
+
       await addToCart({
-        product: productId,
+        product:
+          productId,
         quantity: 1,
       });
 
-      toast.success("Added To Cart");
+      toast.success(
+        "Added To Cart"
+      );
 
     } catch (error) {
-      console.error(error);
+
+      console.error(
+        "ADD TO CART ERROR:",
+        error
+      );
 
       toast.error(
         error?.response?.data?.message ||
@@ -516,42 +628,66 @@ const Wishlist = () => {
     }
   };
 
+  // ===================================================
+  // LOADING
+  // ===================================================
+
   if (loading) {
+
     return (
-      <div className="loading">
-        Loading Wishlist...
+      <div className="wishlist-page">
+
+        <div className="loading">
+
+          Loading Wishlist...
+
+        </div>
+
       </div>
     );
   }
 
+  // ===================================================
+  // RENDER
+  // ===================================================
+
   return (
+
     <div className="wishlist-page">
 
-      {/* HEADER */}
+      {/* =============================================
+          HEADER
+      ============================================= */}
 
       <div className="wishlist-header">
+
         <div>
-          <h2>My Wishlist</h2>
+
+          <h2>
+            My Wishlist
+          </h2>
 
           <span className="wishlist-count">
-            {wishlist.filter(
-              (item) => item?.product
-            ).length}{" "}
-            {wishlist.filter(
-              (item) => item?.product
-            ).length === 1
+
+            {wishlist.length}{" "}
+
+            {wishlist.length === 1
               ? "Item"
               : "Items"}{" "}
+
             Saved
+
           </span>
+
         </div>
+
       </div>
 
-      {/* EMPTY */}
+      {/* =============================================
+          EMPTY
+      ============================================= */}
 
-      {wishlist.filter(
-        (item) => item?.product
-      ).length === 0 ? (
+      {wishlist.length === 0 ? (
 
         <div className="empty-wishlist">
 
@@ -577,56 +713,41 @@ const Wishlist = () => {
 
         <div className="wishlist-grid">
 
-          {wishlist
-            .filter(
-              (item) => item?.product
-            )
-            .map((item) => {
+          {wishlist.map(
+            ({
+              product,
+              productId,
+            }) => {
 
-              const product =
-                item.product;
-
-              const productId =
-                product?._id;
-
-              /*
-               * IMAGE
-               */
-
-              let imageUrl =
-                "/no-image.png";
-
-              if (
-                product?.images?.length > 0 &&
-                product.images[0]?.url
-              ) {
-                const imagePath =
-                  product.images[0].url;
-
-                imageUrl =
-                  imagePath.startsWith("http")
-                    ? imagePath
-                    : `${BASE_URL}${imagePath}`;
-              }
-
-              /*
-               * PRICE
-               */
-
-              const price =
-                product?.pricing?.sellingPrice ??
-                product?.sellingPrice ??
-                product?.price ??
-                0;
-
-              /*
-               * NAME
-               */
+              // ---------------------------------------
+              // PRODUCT DATA
+              // ---------------------------------------
 
               const productName =
-                product?.name ||
-                product?.title ||
-                "Product";
+                getProductName(
+                  product
+                );
+
+              const price =
+                getProductPrice(
+                  product
+                );
+
+              const imageUrl =
+                getImageUrl(
+                  product
+                );
+
+              console.log(
+                "RENDER WISHLIST PRODUCT:",
+                {
+                  productId,
+                  productName,
+                  price,
+                  imageUrl,
+                  product,
+                }
+              );
 
               return (
 
@@ -635,55 +756,99 @@ const Wishlist = () => {
                   key={productId}
                 >
 
-                  {/* REMOVE */}
+                  {/* =================================
+                      REMOVE
+                  ================================= */}
 
                   <button
+                    type="button"
                     className="quick-remove-btn"
                     title="Remove item"
                     onClick={() =>
-                      handleRemove(productId)
+                      handleRemove(
+                        productId
+                      )
                     }
                   >
+
                     <FaTrashAlt />
+
                   </button>
 
-                  {/* IMAGE */}
+                  {/* =================================
+                      IMAGE
+                  ================================= */}
 
-                  <div className="card-image-box">
+                  <Link
+                    to={`/product/${productId}`}
+                    className="card-image-box"
+                  >
 
                     <img
                       src={imageUrl}
                       alt={productName}
+                      loading="lazy"
                       onError={(e) => {
-                        e.currentTarget.src =
-                          "/no-image.png";
+
+                        console.warn(
+                          "IMAGE FAILED:",
+                          imageUrl
+                        );
+
+                        if (
+                          !e.currentTarget.dataset
+                            .fallback
+                        ) {
+
+                          e.currentTarget.dataset
+                            .fallback =
+                            "true";
+
+                          e.currentTarget.src =
+                            "/no-image.png";
+                        }
+
                       }}
                     />
 
-                  </div>
+                  </Link>
 
-                  {/* DETAILS */}
+                  {/* =================================
+                      DETAILS
+                  ================================= */}
 
                   <div className="card-details">
 
-                    <h3>
-                      {productName}
-                    </h3>
+                    <Link
+                      to={`/product/${productId}`}
+                    >
+
+                      <h3>
+                        {productName}
+                      </h3>
+
+                    </Link>
 
                     <div className="price-tag">
+
                       ₹{" "}
-                      {Number(price).toLocaleString(
+
+                      {price.toLocaleString(
                         "en-IN"
                       )}
+
                     </div>
 
                   </div>
 
-                  {/* CART */}
+                  {/* =================================
+                      CART
+                  ================================= */}
 
                   <div className="wishlist-buttons">
 
                     <button
+                      type="button"
                       className="add-cart-btn"
                       onClick={() =>
                         handleAddToCart(
@@ -691,9 +856,13 @@ const Wishlist = () => {
                         )
                       }
                     >
+
                       <FaShoppingCart />
 
-                      Add To Cart
+                      <span>
+                        Add To Cart
+                      </span>
+
                     </button>
 
                   </div>
@@ -701,15 +870,16 @@ const Wishlist = () => {
                 </div>
 
               );
-            })}
+            }
+          )}
 
         </div>
 
       )}
 
     </div>
+
   );
 };
 
 export default Wishlist;
-
