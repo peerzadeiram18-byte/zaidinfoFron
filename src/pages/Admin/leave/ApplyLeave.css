@@ -1,0 +1,181 @@
+.apply-leave-page {
+  min-height: 100%;
+  padding: 30px;
+  background: #f7f8fc;
+}
+
+.apply-leave-header {
+  margin-bottom: 25px;
+}
+
+.apply-leave-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.apply-leave-header p {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.apply-leave-card {
+  width: 100%;
+  max-width: 800px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+.apply-leave-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.apply-leave-form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.apply-leave-form-group label span {
+  color: #dc2626;
+  margin-left: 3px;
+}
+
+.apply-leave-form-group input,
+.apply-leave-form-group select,
+.apply-leave-form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 12px 13px;
+  font-size: 14px;
+  outline: none;
+  background: #ffffff;
+  color: #111827;
+  transition: 0.2s;
+}
+
+.apply-leave-form-group input:focus,
+.apply-leave-form-group select:focus,
+.apply-leave-form-group textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.apply-leave-form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.apply-leave-date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.apply-leave-days {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.apply-leave-days span {
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.apply-leave-days strong {
+  color: #1d4ed8;
+  font-size: 16px;
+}
+
+.apply-leave-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.apply-leave-submit-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 22px;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.apply-leave-submit-btn:hover {
+  background: #1d4ed8;
+}
+
+.apply-leave-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.apply-leave-loading {
+  padding: 50px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.apply-leave-empty {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.apply-leave-empty-icon {
+  font-size: 42px;
+  margin-bottom: 12px;
+}
+
+.apply-leave-empty h3 {
+  margin: 0 0 8px;
+  color: #1f2937;
+}
+
+.apply-leave-empty p {
+  margin: 0;
+  color: #6b7280;
+}
+
+@media (max-width: 700px) {
+  .apply-leave-page {
+    padding: 18px;
+  }
+
+  .apply-leave-card {
+    padding: 20px;
+  }
+
+  .apply-leave-date-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .apply-leave-actions {
+    justify-content: stretch;
+  }
+
+  .apply-leave-submit-btn {
+    width: 100%;
+  }
+}

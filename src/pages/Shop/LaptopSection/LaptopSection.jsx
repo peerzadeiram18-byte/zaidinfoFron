@@ -11,10 +11,14 @@ const LaptopSection = ({
   onAddToWishlist,
 }) => {
   return (
-    <section className="space-y-4">
+    // <section className="space-y-4">
+    //   {/* Section Title */}
+    //   <div className="pt-2 overflow-hidden py-1">
+    <section className="!my-0">
       {/* Section Title */}
-      <div className="pt-2 overflow-hidden py-1">
-        <motion.h2
+      <div className="overflow-hidden">   
+    
+    <motion.h2
           initial={{
             fontWeight: 300,
             scale: 0.92,

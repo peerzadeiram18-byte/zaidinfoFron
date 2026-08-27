@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import './Rental.css';
+import "react-toastify/dist/ReactToastify.css";
 
 // Component Imports
-import TopBar from '../components/TopBar/TopBar.jsx';
-import Header from '../components/Header/Header.jsx';
+// import TopBar from '../components/TopBar/TopBar.jsx';
+// import Header from '../components/Header/Header.jsx';
 import Footer from '../components/Footer/Footer.jsx';
 
 function Rental() {

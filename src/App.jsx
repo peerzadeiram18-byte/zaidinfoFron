@@ -644,7 +644,6 @@ import { Routes, Route } from "react-router-dom";
 
 import TopBar from "./components/TopBar/TopBar";
 import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
 
 // ===============================
 // PUBLIC
@@ -829,7 +828,30 @@ import CouponList from "./components/Admin/Coupon/CouponList";
 import AdminNotifications from "./components/Admin/Notifications/AdminNotifications";
 import AdminReviews
   from "./components/Admin/Reviews/AdminReviews.jsx";
-// =====================================================
+
+
+
+import ApplyLeave from "./pages/Admin/leave/ApplyLeave";
+
+import LeaveManagement from "./pages/Admin/leave/LeaveManagement";
+import LeavePolicies from "./pages/Admin/leave/LeavePolicies";
+import HolidaysManagement from "./pages/Admin/leave/HolidaysManagement";
+import LeaveRequests from "./pages/Admin/leave/LeaveRequests";
+import LeaveDetails from "./pages/Admin/leave/LeaveDetails";
+import EmployeeDashboard from "./pages/Admin/Employee/EmployeeDashboard";
+import MyLeaves from "./pages/Admin/leave/MyLeaves";
+
+
+import AddSubCategory
+  from "./pages/Admin/Category/SubCategory/AddSubCategory";
+
+import SubCategoryList
+  from "./pages/Admin/Category/SubCategory/SubCategoryList";
+
+import EditSubCategory
+  from "./pages/Admin/Category/SubCategory/EditSubCategory";
+
+  // =====================================================
 // APP
 // =====================================================
 function App() {
@@ -1005,6 +1027,24 @@ function App() {
                         path="/employees"
                         element={<EmployeeList />}
                     />
+                    <Route
+  path="/employee/leaves/apply"
+  element={<ApplyLeave />}
+/>
+<Route
+  path="/admin/leaves"
+  element={<LeaveManagement />}
+/>
+
+<Route
+  path="/admin/leaves/policies"
+  element={<LeavePolicies />}
+/>
+
+<Route
+  path="/admin/holidays"
+  element={<HolidaysManagement />}
+/>
 
                     {/* =========================================
                         ATTENDANCE
@@ -1028,6 +1068,21 @@ function App() {
                         path="/categories"
                         element={<CategoryList />}
                     />
+
+                    <Route
+    path="/add-subcategory"
+    element={<AddSubCategory />}
+/>
+
+<Route
+    path="/subcategories"
+    element={<SubCategoryList />}
+/>
+
+<Route
+    path="/edit-subcategory/:id"
+    element={<EditSubCategory />}
+/>
 
                     {/* =========================================
                         BRAND
@@ -1441,10 +1496,9 @@ function App() {
     Existing product links may use /product/:id
 */}
 <Route
-    path="/product/:id"
-    element={<ProductDetails />}
+    path="/employee/leave/:id"
+    element={<LeaveDetails />}
 />
-
 
                 <Route
                     path="/cart"
@@ -1540,6 +1594,18 @@ function App() {
                     path="/receptionist/walk-in-invoice/:invoiceId"
                     element={<WalkInInvoice />}
                 />
+                <Route
+                    path="/receptionist/leave/apply"
+                    element={<ApplyLeave />}
+                 />
+<Route
+    path="/receptionist/leaves"
+    element={<MyLeaves />}
+/>
+<Route
+    path="/receptionist/leaves/:id"
+    element={<LeaveDetails />}
+/>
 
                 {/* =================================================
                     TECHNICIAN
@@ -1585,6 +1651,18 @@ function App() {
                     path="/repair"
                     element={<Repair />}
                 />
+                                       <Route
+  path="leave/requests"
+  element={<LeaveRequests />}
+/>
+<Route
+  path="/employee/leave/:id"
+  element={<LeaveDetails />}
+/>
+<Route
+    path="/employee/dashboard"
+    element={<EmployeeDashboard />}
+/>
 
                 {/* =================================================
                     RENTAL
@@ -1596,6 +1674,7 @@ function App() {
                 />
 
                         </Routes>
+ 
             </main>
 
             {/* <Footer /> */}

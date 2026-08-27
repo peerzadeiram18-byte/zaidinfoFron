@@ -572,8 +572,12 @@ img {
 }
 
 /* Hero Section Custom Styles */
-section {
+/* section {
   padding: 60px 0;
+} */
+
+section {
+  padding: 10px 0;
 }
 
 #hero {

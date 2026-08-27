@@ -336,3 +336,47 @@ background:#084298;
     align-items: flex-start;
   }
 }
+
+/* =========================================
+   SELECT DROPDOWN
+========================================= */
+
+.category-form select {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #d9dce3;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #222;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.category-form select:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+
+/* =========================================
+   HELP TEXT
+========================================= */
+
+.form-help {
+    display: block;
+    margin-top: 7px;
+    font-size: 12px;
+    color: #777;
+}
+
+
+/* =========================================
+   DISABLED
+========================================= */
+
+.category-form button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}

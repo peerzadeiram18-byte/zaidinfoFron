@@ -17,7 +17,7 @@ const AddBlog = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Blog Post Published!");
+    toast.success("Blog Post Published!");
     navigate("/blogs");
   };
 

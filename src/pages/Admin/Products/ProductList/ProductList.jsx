@@ -1,4 +1,660 @@
+// import React, { useEffect, useState } from "react";
+// import "./ProductList.css";
+
+// import {
+//     getProducts,
+//     deleteProduct,
+//     searchProducts
+// } from "../../../../services/productService";
+// import { toast } from "react-toastify";
+// const API = import.meta.env.VITE_API_URL;
+
+// const ProductList = () => {
+
+//     const [products, setProducts] = useState([]);
+//     const [loading, setLoading] = useState(true);
+//     const [search, setSearch] = useState("");
+//     const [currentPage, setCurrentPage] = useState(1);
+
+//     const itemsPerPage = 10;
+
+//     // ============================================
+//     // LOAD ALL PRODUCTS
+//     // ============================================
+
+//     const loadProducts = async () => {
+
+//         try {
+
+//             setLoading(true);
+
+//             const res = await getProducts();
+
+//             console.log("PRODUCT LIST API RESPONSE:", res.data);
+
+//             // Backend response:
+//             // {
+//             //   success: true,
+//             //   message: "...",
+//             //   data: [...]
+//             // }
+
+//             const productData = Array.isArray(res.data?.data)
+//                 ? res.data.data
+//                 : Array.isArray(res.data)
+//                     ? res.data
+//                     : [];
+
+//             console.log("PRODUCTS SET TO STATE:", productData);
+
+//             setProducts(productData);
+
+//             setCurrentPage(1);
+
+//         } catch (error) {
+
+//             console.error("GET PRODUCTS ERROR:", error);
+
+//             setProducts([]);
+
+//         } finally {
+
+//             setLoading(false);
+
+//         }
+
+//     };
+
+//     // ============================================
+//     // FIRST LOAD
+//     // ============================================
+
+//     useEffect(() => {
+
+//         loadProducts();
+
+//     }, []);
+
+//     // ============================================
+//     // SEARCH PRODUCTS
+//     // ============================================
+
+//     const handleSearch = async (e) => {
+
+//         const keyword = e.target.value;
+
+//         setSearch(keyword);
+
+//         // If search box empty
+//         if (!keyword.trim()) {
+
+//             loadProducts();
+
+//             return;
+
+//         }
+
+//         try {
+
+//             setLoading(true);
+
+//             const res = await searchProducts(keyword);
+
+//             console.log("SEARCH API RESPONSE:", res.data);
+
+//             const searchData = Array.isArray(res.data?.data)
+//                 ? res.data.data
+//                 : Array.isArray(res.data)
+//                     ? res.data
+//                     : [];
+
+//             console.log("SEARCH PRODUCTS:", searchData);
+
+//             setProducts(searchData);
+
+//             setCurrentPage(1);
+
+//         } catch (error) {
+
+//             console.error("SEARCH ERROR:", error);
+
+//             setProducts([]);
+
+//         } finally {
+
+//             setLoading(false);
+
+//         }
+
+//     };
+
+//     // ============================================
+//     // DELETE PRODUCT
+//     // ============================================
+
+//     const handleDelete = async (id) => {
+
+//         const confirmDelete = window.confirm(
+//             "Are you sure you want to delete this product?"
+//         );
+
+//         if (!confirmDelete) {
+//             return;
+//         }
+
+//         try {
+
+//             setLoading(true);
+
+//             console.log("Deleting Product ID:", id);
+
+//             await deleteProduct(id);
+
+//          toast.success("Product Deleted Successfully");
+
+//             // Reload product list
+//             await loadProducts();
+
+//         } catch (error) {
+
+//             console.error("DELETE PRODUCT ERROR:", error);
+
+//             toast.error(
+//                 error.response?.data?.message ||
+//                 "Delete Failed"
+//             );
+
+//         } finally {
+
+//             setLoading(false);
+
+//         }
+
+//     };
+
+//     // ============================================
+//     // PAGINATION
+//     // ============================================
+
+//     const lastIndex = currentPage * itemsPerPage;
+
+//     const firstIndex = lastIndex - itemsPerPage;
+
+//     const currentProducts = products.slice(
+//         firstIndex,
+//         lastIndex
+//     );
+
+//     const totalPages = Math.ceil(
+//         products.length / itemsPerPage
+//     );
+
+//     // ============================================
+//     // IMAGE URL
+//     // ============================================
+
+// //     const getImageUrl = (product) => {
+
+// //         if (!product?.images?.length) {
+// //             return null;
+// //         }
+
+// //         const imageUrl = product.images[0]?.url;
+
+// //         if (!imageUrl) {
+// //             return null;
+// //         }
+
+// //         // If backend already returns complete URL
+// //         if (
+// //             imageUrl.startsWith("http://") ||
+// //             imageUrl.startsWith("https://")
+// //         ) {
+// //             return imageUrl;
+// //         }
+
+// //         // Backend local image
+// // return `${API.replace("/api", "")}${imageUrl}`;
+// //     };
+
+// // const API = import.meta.env.VITE_API_URL;
+
+// const getImageUrl = (product) => {
+
+//     const imageUrl = product?.images?.[0]?.url;
+
+//     if (!imageUrl) {
+//         return null;
+//     }
+
+//     if (
+//         imageUrl.startsWith("http://") ||
+//         imageUrl.startsWith("https://")
+//     ) {
+//         return imageUrl;
+//     }
+
+//     const serverUrl = API.replace(/\/api\/?$/, "");
+
+//     return `${serverUrl}${imageUrl}`;
+// };
+
+//     // ============================================
+//     // UI
+//     // ============================================
+
+//     return (
+
+//         <div className="product-list1">
+
+//             {/* ================= HEADER ================= */}
+
+//             <div className="page-header1">
+
+//                 <div>
+
+//                     <h2>Product List</h2>
+
+//                     <p>
+//                         Manage all your products
+//                     </p>
+
+//                 </div>
+
+//                 <input
+//                     type="text"
+//                     placeholder="Search Product..."
+//                     value={search}
+//                     onChange={handleSearch}
+//                     className="search-box1"
+//                 />
+
+//             </div>
+
+
+//             {/* ================= LOADING ================= */}
+
+//             {loading ? (
+
+//                 <div className="loading1">
+
+//                     Loading Products...
+
+//                 </div>
+
+//             ) : (
+
+//                 <>
+
+//                     {/* ================= TABLE ================= */}
+
+//                     <div className="table-container1">
+
+//                         <table className="product-table1">
+
+//                             <thead>
+
+//                                 <tr>
+
+//                                     <th>#</th>
+
+//                                     <th>Image</th>
+
+//                                     <th>Product Name</th>
+
+//                                     <th>Category</th>
+
+//                                     <th>Brand</th>
+
+//                                     <th>Purchase Price</th>
+
+//                                     <th>Selling Price</th>
+
+//                                     <th>MRP</th>
+
+//                                     <th>Discount</th>
+
+//                                     <th>GST</th>
+
+//                                     <th>Stock</th>
+
+//                                     <th>Status</th>
+
+//                                     <th>Actions</th>
+
+//                                 </tr>
+
+//                             </thead>
+
+
+//                             <tbody>
+
+//                                 {currentProducts.length > 0 ? (
+
+//                                     currentProducts.map(
+//                                         (product, index) => {
+
+//                                             const imageUrl =
+//                                                 getImageUrl(product);
+
+//                                             return (
+
+//                                                 <tr
+//                                                     key={
+//                                                         product._id ||
+//                                                         product.id ||
+//                                                         index
+//                                                     }
+//                                                 >
+
+//                                                     {/* NUMBER */}
+
+//                                                     <td>
+//                                                         {firstIndex + index + 1}
+//                                                     </td>
+
+
+//                                                     {/* IMAGE */}
+
+//                                                     <td>
+
+//                                                         {imageUrl ? (
+
+//                                                             <img
+//                                                                 src={imageUrl}
+//                                                                 alt={
+//                                                                     product.name ||
+//                                                                     "Product"
+//                                                                 }
+//                                                                 className="table-image1"
+//                                                                 onError={(e) => {
+//                                                                     e.target.style.display =
+//                                                                         "none";
+//                                                                 }}
+//                                                             />
+
+//                                                         ) : (
+
+//                                                             <div className="no-image1">
+//                                                                 No Image
+//                                                             </div>
+
+//                                                         )}
+
+//                                                     </td>
+
+
+//                                                     {/* PRODUCT NAME */}
+
+//                                                     <td>
+
+//                                                         <strong>
+//                                                             {product.name ||
+//                                                                 "N/A"}
+//                                                         </strong>
+
+//                                                     </td>
+
+
+//                                                     {/* CATEGORY */}
+
+//                                                     <td>
+
+//                                                         {product.category?.name ||
+//                                                             "N/A"}
+
+//                                                     </td>
+
+
+//                                                     {/* BRAND */}
+
+//                                                     <td>
+
+//                                                         {product.brand?.name ||
+//                                                             "N/A"}
+
+//                                                     </td>
+
+
+//                                                     {/* PURCHASE PRICE */}
+
+//                                                     <td>
+
+//                                                         ₹{" "}
+//                                                         {
+//                                                             product.pricing
+//                                                                 ?.purchasePrice ??
+//                                                             0
+//                                                         }
+
+//                                                     </td>
+
+
+//                                                     {/* SELLING PRICE */}
+
+//                                                     <td>
+
+//                                                         ₹{" "}
+//                                                         {
+//                                                             product.pricing
+//                                                                 ?.sellingPrice ??
+//                                                             0
+//                                                         }
+
+//                                                     </td>
+
+
+//                                                     {/* MRP */}
+
+//                                                     <td>
+
+//                                                         ₹{" "}
+//                                                         {
+//                                                             product.pricing
+//                                                                 ?.mrp ??
+//                                                             0
+//                                                         }
+
+//                                                     </td>
+
+
+//                                                     {/* DISCOUNT */}
+
+//                                                     <td>
+
+//                                                         {
+//                                                             product.pricing
+//                                                                 ?.discount ??
+//                                                             0
+//                                                         }%
+
+//                                                     </td>
+
+
+//                                                     {/* GST */}
+
+//                                                     <td>
+
+//                                                         {
+//                                                             product.pricing
+//                                                                 ?.gst ??
+//                                                             0
+//                                                         }%
+
+//                                                     </td>
+
+
+//                                                     {/* STOCK */}
+
+//                                                     <td>
+
+//                                                         {
+//                                                             product.inventory
+//                                                                 ?.currentStock ??
+//                                                             0
+//                                                         }
+
+//                                                     </td>
+
+
+//                                                     {/* STATUS */}
+
+//                                                     <td>
+
+//                                                         {product.status ===
+//                                                         "ACTIVE" ? (
+
+//                                                             <span className="active-status">
+//                                                                 Active
+//                                                             </span>
+
+//                                                         ) : (
+
+//                                                             <span className="inactive-status">
+//                                                                 Inactive
+//                                                             </span>
+
+//                                                         )}
+
+//                                                     </td>
+
+
+//                                                     {/* ACTIONS */}
+
+//                                                     <td>
+
+//                                                         <button
+//                                                             type="button"
+//                                                             className="delete-btn1"
+//                                                             onClick={() =>
+//                                                                 handleDelete(
+//                                                                     product._id
+//                                                                 )
+//                                                             }
+//                                                         >
+
+//                                                             Delete
+
+//                                                         </button>
+
+//                                                     </td>
+
+//                                                 </tr>
+
+//                                             );
+
+//                                         }
+
+//                                     )
+
+//                                 ) : (
+
+//                                     <tr>
+
+//                                         <td
+//                                             colSpan="13"
+//                                             className="no-products1"
+//                                         >
+
+//                                             No Products Found
+
+//                                         </td>
+
+//                                     </tr>
+
+//                                 )}
+
+//                             </tbody>
+
+//                         </table>
+
+//                     </div>
+
+
+//                     {/* ================= PAGINATION ================= */}
+
+//                     {totalPages > 1 && (
+
+//                         <div className="pagination1">
+
+//                             <button
+//                                 type="button"
+//                                 disabled={currentPage === 1}
+//                                 onClick={() =>
+//                                     setCurrentPage(
+//                                         currentPage - 1
+//                                     )
+//                                 }
+//                             >
+
+//                                 Previous
+
+//                             </button>
+
+
+//                             {[...Array(totalPages)].map(
+//                                 (_, index) => (
+
+//                                     <button
+//                                         type="button"
+//                                         key={index}
+//                                         className={
+//                                             currentPage ===
+//                                             index + 1
+//                                                 ? "active-page"
+//                                                 : ""
+//                                         }
+//                                         onClick={() =>
+//                                             setCurrentPage(
+//                                                 index + 1
+//                                             )
+//                                         }
+//                                     >
+
+//                                         {index + 1}
+
+//                                     </button>
+
+//                                 )
+//                             )}
+
+
+//                             <button
+//                                 type="button"
+//                                 disabled={
+//                                     currentPage === totalPages
+//                                 }
+//                                 onClick={() =>
+//                                     setCurrentPage(
+//                                         currentPage + 1
+//                                     )
+//                                 }
+//                             >
+
+//                                 Next
+
+//                             </button>
+
+//                         </div>
+
+//                     )}
+
+//                 </>
+
+//             )}
+
+//         </div>
+
+//     );
+
+// };
+
+// export default ProductList;
+
+
+
 import React, { useEffect, useState } from "react";
+
 import "./ProductList.css";
 
 import {
@@ -6,21 +662,31 @@ import {
     deleteProduct,
     searchProducts
 } from "../../../../services/productService";
+
 import { toast } from "react-toastify";
+
 const API = import.meta.env.VITE_API_URL;
 
 const ProductList = () => {
 
+    // =====================================================
+    // STATES
+    // =====================================================
+
     const [products, setProducts] = useState([]);
+
     const [loading, setLoading] = useState(true);
+
     const [search, setSearch] = useState("");
+
     const [currentPage, setCurrentPage] = useState(1);
 
     const itemsPerPage = 10;
 
-    // ============================================
+
+    // =====================================================
     // LOAD ALL PRODUCTS
-    // ============================================
+    // =====================================================
 
     const loadProducts = async () => {
 
@@ -30,34 +696,62 @@ const ProductList = () => {
 
             const res = await getProducts();
 
-            console.log("PRODUCT LIST API RESPONSE:", res.data);
+            console.log(
+                "PRODUCT LIST API RESPONSE:",
+                res.data
+            );
+
 
             // Backend response:
+            //
             // {
-            //   success: true,
-            //   message: "...",
-            //   data: [...]
+            //     success: true,
+            //     message: "...",
+            //     data: [...]
             // }
 
-            const productData = Array.isArray(res.data?.data)
-                ? res.data.data
-                : Array.isArray(res.data)
-                    ? res.data
-                    : [];
+            const productData =
 
-            console.log("PRODUCTS SET TO STATE:", productData);
+                Array.isArray(res.data?.data)
+
+                    ? res.data.data
+
+                    : Array.isArray(res.data)
+
+                        ? res.data
+
+                        : [];
+
+
+            console.log(
+                "PRODUCTS SET TO STATE:",
+                productData
+            );
+
 
             setProducts(productData);
 
             setCurrentPage(1);
 
-        } catch (error) {
+        }
 
-            console.error("GET PRODUCTS ERROR:", error);
+        catch (error) {
+
+            console.error(
+                "GET PRODUCTS ERROR:",
+                error
+            );
 
             setProducts([]);
 
-        } finally {
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to load products"
+            );
+
+        }
+
+        finally {
 
             setLoading(false);
 
@@ -65,9 +759,10 @@ const ProductList = () => {
 
     };
 
-    // ============================================
+
+    // =====================================================
     // FIRST LOAD
-    // ============================================
+    // =====================================================
 
     useEffect(() => {
 
@@ -75,17 +770,24 @@ const ProductList = () => {
 
     }, []);
 
-    // ============================================
+
+    // =====================================================
     // SEARCH PRODUCTS
-    // ============================================
+    // =====================================================
 
     const handleSearch = async (e) => {
 
-        const keyword = e.target.value;
+        const keyword =
+            e.target.value;
+
 
         setSearch(keyword);
 
-        // If search box empty
+
+        // =================================================
+        // EMPTY SEARCH
+        // =================================================
+
         if (!keyword.trim()) {
 
             loadProducts();
@@ -94,33 +796,63 @@ const ProductList = () => {
 
         }
 
+
         try {
 
             setLoading(true);
 
-            const res = await searchProducts(keyword);
 
-            console.log("SEARCH API RESPONSE:", res.data);
+            const res =
+                await searchProducts(
+                    keyword
+                );
 
-            const searchData = Array.isArray(res.data?.data)
-                ? res.data.data
-                : Array.isArray(res.data)
-                    ? res.data
-                    : [];
 
-            console.log("SEARCH PRODUCTS:", searchData);
+            console.log(
+                "SEARCH API RESPONSE:",
+                res.data
+            );
+
+
+            const searchData =
+
+                Array.isArray(
+                    res.data?.data
+                )
+
+                    ? res.data.data
+
+                    : Array.isArray(res.data)
+
+                        ? res.data
+
+                        : [];
+
+
+            console.log(
+                "SEARCH PRODUCTS:",
+                searchData
+            );
+
 
             setProducts(searchData);
 
             setCurrentPage(1);
 
-        } catch (error) {
+        }
 
-            console.error("SEARCH ERROR:", error);
+        catch (error) {
+
+            console.error(
+                "SEARCH ERROR:",
+                error
+            );
 
             setProducts([]);
 
-        } finally {
+        }
+
+        finally {
 
             setLoading(false);
 
@@ -128,43 +860,70 @@ const ProductList = () => {
 
     };
 
-    // ============================================
+
+    // =====================================================
     // DELETE PRODUCT
-    // ============================================
+    // =====================================================
 
     const handleDelete = async (id) => {
 
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this product?"
-        );
+        const confirmDelete =
+            window.confirm(
+                "Are you sure you want to delete this product?"
+            );
+
 
         if (!confirmDelete) {
+
             return;
+
         }
+
 
         try {
 
             setLoading(true);
 
-            console.log("Deleting Product ID:", id);
+
+            console.log(
+                "Deleting Product ID:",
+                id
+            );
+
 
             await deleteProduct(id);
 
-         toast.success("Product Deleted Successfully");
 
-            // Reload product list
-            await loadProducts();
-
-        } catch (error) {
-
-            console.error("DELETE PRODUCT ERROR:", error);
-
-            toast.error(
-                error.response?.data?.message ||
-                "Delete Failed"
+            toast.success(
+                "Product Deleted Successfully"
             );
 
-        } finally {
+
+            // Reload product list
+
+            await loadProducts();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "DELETE PRODUCT ERROR:",
+                error
+            );
+
+
+            toast.error(
+
+                error.response?.data?.message ||
+
+                "Delete Failed"
+
+            );
+
+        }
+
+        finally {
 
             setLoading(false);
 
@@ -172,94 +931,215 @@ const ProductList = () => {
 
     };
 
-    // ============================================
+
+    // =====================================================
     // PAGINATION
-    // ============================================
+    // =====================================================
 
-    const lastIndex = currentPage * itemsPerPage;
+    const lastIndex =
+        currentPage *
+        itemsPerPage;
 
-    const firstIndex = lastIndex - itemsPerPage;
 
-    const currentProducts = products.slice(
-        firstIndex,
-        lastIndex
-    );
+    const firstIndex =
+        lastIndex -
+        itemsPerPage;
 
-    const totalPages = Math.ceil(
-        products.length / itemsPerPage
-    );
 
-    // ============================================
+    const currentProducts =
+        products.slice(
+            firstIndex,
+            lastIndex
+        );
+
+
+    const totalPages =
+        Math.ceil(
+            products.length /
+            itemsPerPage
+        );
+
+
+    // =====================================================
     // IMAGE URL
-    // ============================================
+    // =====================================================
 
-//     const getImageUrl = (product) => {
+    const getImageUrl = (product) => {
 
-//         if (!product?.images?.length) {
-//             return null;
-//         }
+        const imageUrl =
+            product?.images?.[0]?.url;
 
-//         const imageUrl = product.images[0]?.url;
 
-//         if (!imageUrl) {
-//             return null;
-//         }
+        if (!imageUrl) {
 
-//         // If backend already returns complete URL
-//         if (
-//             imageUrl.startsWith("http://") ||
-//             imageUrl.startsWith("https://")
-//         ) {
-//             return imageUrl;
-//         }
+            return null;
 
-//         // Backend local image
-// return `${API.replace("/api", "")}${imageUrl}`;
-//     };
+        }
 
-// const API = import.meta.env.VITE_API_URL;
 
-const getImageUrl = (product) => {
+        if (
 
-    const imageUrl = product?.images?.[0]?.url;
+            imageUrl.startsWith("http://") ||
 
-    if (!imageUrl) {
-        return null;
-    }
+            imageUrl.startsWith("https://")
 
-    if (
-        imageUrl.startsWith("http://") ||
-        imageUrl.startsWith("https://")
-    ) {
-        return imageUrl;
-    }
+        ) {
 
-    const serverUrl = API.replace(/\/api\/?$/, "");
+            return imageUrl;
 
-    return `${serverUrl}${imageUrl}`;
-};
+        }
 
-    // ============================================
+
+        const serverUrl =
+            API.replace(
+                /\/api\/?$/,
+                ""
+            );
+
+
+        return `${serverUrl}${imageUrl}`;
+
+    };
+
+
+    // =====================================================
+    // PRODUCT TYPE
+    // =====================================================
+
+    const getProductType = (product) => {
+
+        return (
+            product?.productType ||
+            "NEW"
+        );
+
+    };
+
+
+    // =====================================================
+    // CATEGORY NAME
+    // =====================================================
+
+    const getCategoryName = (product) => {
+
+        if (
+            typeof product?.category ===
+            "object"
+        ) {
+
+            return (
+                product.category?.name ||
+                "N/A"
+            );
+
+        }
+
+
+        return (
+            product?.category ||
+            "N/A"
+        );
+
+    };
+
+
+    // =====================================================
+    // SUBCATEGORY NAME
+    // =====================================================
+
+    const getSubcategoryName = (product) => {
+
+        if (
+            typeof product?.subcategory ===
+            "object"
+        ) {
+
+            return (
+                product.subcategory?.name ||
+                "N/A"
+            );
+
+        }
+
+
+        return (
+            product?.subcategory ||
+            "N/A"
+        );
+
+    };
+
+
+    // =====================================================
+    // BRAND NAME
+    // =====================================================
+
+    const getBrandName = (product) => {
+
+        if (
+            typeof product?.brand ===
+            "object"
+        ) {
+
+            return (
+                product.brand?.name ||
+                "N/A"
+            );
+
+        }
+
+
+        return (
+            product?.brand ||
+            "N/A"
+        );
+
+    };
+
+
+    // =====================================================
+    // REFURBISHED DETAILS
+    // =====================================================
+
+    const getRefurbishedDetails = (
+        product
+    ) => {
+
+        return (
+            product?.refurbishedDetails ||
+            null
+        );
+
+    };
+
+
+    // =====================================================
     // UI
-    // ============================================
+    // =====================================================
 
     return (
 
         <div className="product-list1">
 
-            {/* ================= HEADER ================= */}
+
+            {/* =================================================
+                HEADER
+            ================================================= */}
 
             <div className="page-header1">
 
                 <div>
 
-                    <h2>Product List</h2>
+                    <h2>
+                        Product List
+                    </h2>
 
                     <p>
                         Manage all your products
                     </p>
 
                 </div>
+
 
                 <input
                     type="text"
@@ -272,7 +1152,9 @@ const getImageUrl = (product) => {
             </div>
 
 
-            {/* ================= LOADING ================= */}
+            {/* =================================================
+                LOADING
+            ================================================= */}
 
             {loading ? (
 
@@ -286,7 +1168,9 @@ const getImageUrl = (product) => {
 
                 <>
 
-                    {/* ================= TABLE ================= */}
+                    {/* =================================================
+                        TABLE
+                    ================================================= */}
 
                     <div className="table-container1">
 
@@ -296,31 +1180,69 @@ const getImageUrl = (product) => {
 
                                 <tr>
 
-                                    <th>#</th>
+                                    <th>
+                                        #
+                                    </th>
 
-                                    <th>Image</th>
+                                    <th>
+                                        Image
+                                    </th>
 
-                                    <th>Product Name</th>
+                                    <th>
+                                        Product Name
+                                    </th>
 
-                                    <th>Category</th>
+                                    <th>
+                                        Type
+                                    </th>
 
-                                    <th>Brand</th>
+                                    <th>
+                                        Category
+                                    </th>
 
-                                    <th>Purchase Price</th>
+                                    <th>
+                                        Subcategory
+                                    </th>
 
-                                    <th>Selling Price</th>
+                                    <th>
+                                        Brand
+                                    </th>
 
-                                    <th>MRP</th>
+                                    <th>
+                                        Refurbished Details
+                                    </th>
 
-                                    <th>Discount</th>
+                                    <th>
+                                        Purchase Price
+                                    </th>
 
-                                    <th>GST</th>
+                                    <th>
+                                        Selling Price
+                                    </th>
 
-                                    <th>Stock</th>
+                                    <th>
+                                        MRP
+                                    </th>
 
-                                    <th>Status</th>
+                                    <th>
+                                        Discount
+                                    </th>
 
-                                    <th>Actions</th>
+                                    <th>
+                                        GST
+                                    </th>
+
+                                    <th>
+                                        Stock
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Actions
+                                    </th>
 
                                 </tr>
 
@@ -332,10 +1254,29 @@ const getImageUrl = (product) => {
                                 {currentProducts.length > 0 ? (
 
                                     currentProducts.map(
-                                        (product, index) => {
+
+                                        (
+                                            product,
+                                            index
+                                        ) => {
 
                                             const imageUrl =
-                                                getImageUrl(product);
+                                                getImageUrl(
+                                                    product
+                                                );
+
+
+                                            const productType =
+                                                getProductType(
+                                                    product
+                                                );
+
+
+                                            const refurbishedDetails =
+                                                getRefurbishedDetails(
+                                                    product
+                                                );
+
 
                                             return (
 
@@ -347,36 +1288,53 @@ const getImageUrl = (product) => {
                                                     }
                                                 >
 
-                                                    {/* NUMBER */}
+
+                                                    {/* =================================================
+                                                        NUMBER
+                                                    ================================================= */}
 
                                                     <td>
-                                                        {firstIndex + index + 1}
+
+                                                        {
+                                                            firstIndex +
+                                                            index +
+                                                            1
+                                                        }
+
                                                     </td>
 
 
-                                                    {/* IMAGE */}
+                                                    {/* =================================================
+                                                        IMAGE
+                                                    ================================================= */}
 
                                                     <td>
 
                                                         {imageUrl ? (
 
                                                             <img
-                                                                src={imageUrl}
+                                                                src={
+                                                                    imageUrl
+                                                                }
                                                                 alt={
                                                                     product.name ||
                                                                     "Product"
                                                                 }
                                                                 className="table-image1"
                                                                 onError={(e) => {
+
                                                                     e.target.style.display =
                                                                         "none";
+
                                                                 }}
                                                             />
 
                                                         ) : (
 
                                                             <div className="no-image1">
+
                                                                 No Image
+
                                                             </div>
 
                                                         )}
@@ -384,43 +1342,198 @@ const getImageUrl = (product) => {
                                                     </td>
 
 
-                                                    {/* PRODUCT NAME */}
+                                                    {/* =================================================
+                                                        PRODUCT NAME
+                                                    ================================================= */}
 
                                                     <td>
 
                                                         <strong>
-                                                            {product.name ||
-                                                                "N/A"}
+
+                                                            {
+                                                                product.name ||
+                                                                "N/A"
+                                                            }
+
                                                         </strong>
 
                                                     </td>
 
 
-                                                    {/* CATEGORY */}
+                                                    {/* =================================================
+                                                        PRODUCT TYPE
+                                                    ================================================= */}
 
                                                     <td>
 
-                                                        {product.category?.name ||
-                                                            "N/A"}
+                                                        {productType ===
+                                                        "REFURBISHED" ? (
+
+                                                            <span className="refurbished-badge">
+
+                                                                Refurbished
+
+                                                            </span>
+
+                                                        ) : (
+
+                                                            <span className="new-product-badge">
+
+                                                                New
+
+                                                            </span>
+
+                                                        )}
 
                                                     </td>
 
 
-                                                    {/* BRAND */}
+                                                    {/* =================================================
+                                                        CATEGORY
+                                                    ================================================= */}
 
                                                     <td>
 
-                                                        {product.brand?.name ||
-                                                            "N/A"}
+                                                        {
+                                                            getCategoryName(
+                                                                product
+                                                            )
+                                                        }
 
                                                     </td>
 
 
-                                                    {/* PURCHASE PRICE */}
+                                                    {/* =================================================
+                                                        SUBCATEGORY
+                                                    ================================================= */}
+
+                                                    <td>
+
+                                                        {
+                                                            getSubcategoryName(
+                                                                product
+                                                            )
+                                                        }
+
+                                                    </td>
+
+
+                                                    {/* =================================================
+                                                        BRAND
+                                                    ================================================= */}
+
+                                                    <td>
+
+                                                        {
+                                                            getBrandName(
+                                                                product
+                                                            )
+                                                        }
+
+                                                    </td>
+
+
+                                                    {/* =================================================
+                                                        REFURBISHED DETAILS
+                                                    ================================================= */}
+
+                                                    <td>
+
+                                                        {productType ===
+                                                        "REFURBISHED" ? (
+
+                                                            refurbishedDetails ? (
+
+                                                                <div className="refurbished-details1">
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Grade:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            refurbishedDetails.grade ||
+                                                                            "N/A"
+                                                                        }
+
+                                                                    </div>
+
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Battery:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            refurbishedDetails.batteryHealth ??
+                                                                            0
+                                                                        }%
+
+                                                                    </div>
+
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Warranty:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            refurbishedDetails.warrantyMonths ??
+                                                                            0
+                                                                        }{" "}
+
+                                                                        months
+
+                                                                    </div>
+
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Testing:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            refurbishedDetails.testingStatus ||
+                                                                            "N/A"
+                                                                        }
+
+                                                                    </div>
+
+                                                                </div>
+
+                                                            ) : (
+
+                                                                <span>
+                                                                    No Details
+                                                                </span>
+
+                                                            )
+
+                                                        ) : (
+
+                                                            <span className="not-applicable1">
+
+                                                                N/A
+
+                                                            </span>
+
+                                                        )}
+
+                                                    </td>
+
+
+                                                    {/* =================================================
+                                                        PURCHASE PRICE
+                                                    ================================================= */}
 
                                                     <td>
 
                                                         ₹{" "}
+
                                                         {
                                                             product.pricing
                                                                 ?.purchasePrice ??
@@ -430,11 +1543,14 @@ const getImageUrl = (product) => {
                                                     </td>
 
 
-                                                    {/* SELLING PRICE */}
+                                                    {/* =================================================
+                                                        SELLING PRICE
+                                                    ================================================= */}
 
                                                     <td>
 
                                                         ₹{" "}
+
                                                         {
                                                             product.pricing
                                                                 ?.sellingPrice ??
@@ -444,11 +1560,14 @@ const getImageUrl = (product) => {
                                                     </td>
 
 
-                                                    {/* MRP */}
+                                                    {/* =================================================
+                                                        MRP
+                                                    ================================================= */}
 
                                                     <td>
 
                                                         ₹{" "}
+
                                                         {
                                                             product.pricing
                                                                 ?.mrp ??
@@ -458,7 +1577,9 @@ const getImageUrl = (product) => {
                                                     </td>
 
 
-                                                    {/* DISCOUNT */}
+                                                    {/* =================================================
+                                                        DISCOUNT
+                                                    ================================================= */}
 
                                                     <td>
 
@@ -471,7 +1592,9 @@ const getImageUrl = (product) => {
                                                     </td>
 
 
-                                                    {/* GST */}
+                                                    {/* =================================================
+                                                        GST
+                                                    ================================================= */}
 
                                                     <td>
 
@@ -484,7 +1607,9 @@ const getImageUrl = (product) => {
                                                     </td>
 
 
-                                                    {/* STOCK */}
+                                                    {/* =================================================
+                                                        STOCK
+                                                    ================================================= */}
 
                                                     <td>
 
@@ -497,7 +1622,9 @@ const getImageUrl = (product) => {
                                                     </td>
 
 
-                                                    {/* STATUS */}
+                                                    {/* =================================================
+                                                        STATUS
+                                                    ================================================= */}
 
                                                     <td>
 
@@ -505,13 +1632,17 @@ const getImageUrl = (product) => {
                                                         "ACTIVE" ? (
 
                                                             <span className="active-status">
+
                                                                 Active
+
                                                             </span>
 
                                                         ) : (
 
                                                             <span className="inactive-status">
+
                                                                 Inactive
+
                                                             </span>
 
                                                         )}
@@ -519,7 +1650,9 @@ const getImageUrl = (product) => {
                                                     </td>
 
 
-                                                    {/* ACTIONS */}
+                                                    {/* =================================================
+                                                        ACTIONS
+                                                    ================================================= */}
 
                                                     <td>
 
@@ -552,7 +1685,7 @@ const getImageUrl = (product) => {
                                     <tr>
 
                                         <td
-                                            colSpan="13"
+                                            colSpan="16"
                                             className="no-products1"
                                         >
 
@@ -571,15 +1704,20 @@ const getImageUrl = (product) => {
                     </div>
 
 
-                    {/* ================= PAGINATION ================= */}
+                    {/* =================================================
+                        PAGINATION
+                    ================================================= */}
 
                     {totalPages > 1 && (
 
                         <div className="pagination1">
 
+
                             <button
                                 type="button"
-                                disabled={currentPage === 1}
+                                disabled={
+                                    currentPage === 1
+                                }
                                 onClick={() =>
                                     setCurrentPage(
                                         currentPage - 1
@@ -593,16 +1731,21 @@ const getImageUrl = (product) => {
 
 
                             {[...Array(totalPages)].map(
+
                                 (_, index) => (
 
                                     <button
                                         type="button"
                                         key={index}
                                         className={
+
                                             currentPage ===
                                             index + 1
+
                                                 ? "active-page"
+
                                                 : ""
+
                                         }
                                         onClick={() =>
                                             setCurrentPage(
@@ -611,18 +1754,22 @@ const getImageUrl = (product) => {
                                         }
                                     >
 
-                                        {index + 1}
+                                        {
+                                            index + 1
+                                        }
 
                                     </button>
 
                                 )
+
                             )}
 
 
                             <button
                                 type="button"
                                 disabled={
-                                    currentPage === totalPages
+                                    currentPage ===
+                                    totalPages
                                 }
                                 onClick={() =>
                                     setCurrentPage(
@@ -648,5 +1795,6 @@ const getImageUrl = (product) => {
     );
 
 };
+
 
 export default ProductList;

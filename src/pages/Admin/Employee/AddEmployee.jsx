@@ -876,7 +876,7 @@ function AddEmployee() {
                                 onChange={handleChange}
                             >
                                 <option value="ADMIN">Admin</option>
-                                <option value="RECEPTIONIST">Receptionist</option>
+                                <option value="RECEPTIONIST">Sales </option>
                                 <option value="TECHNICIAN">Technician</option>
                                 <option value="INVENTORY">Inventory</option>
                                 <option value="ACCOUNTANT">Accountant</option>

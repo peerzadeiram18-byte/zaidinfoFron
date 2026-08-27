@@ -1,1861 +1,996 @@
-// // import React, {
-// //     useEffect,
-// //     useMemo,
-// //     useState
-// // } from "react";
-
-// // import "./Shop.css";
-
-// // import {
-// //     Link,
-// //     useNavigate
-// // } from "react-router-dom";
-
-// // import {
-// //     getShopProducts
-// // } from "../../services/productService";
-
-// // import {
-// //     addToCart
-// // } from "../../services/cartService";
-
-// // import {
-// //     addToWishlist
-// // } from "../../services/wishlistService";
-
-// // import {
-// //     getShopInventory
-// // } from "../../services/inventoryService";
-
-
-// // const Shop = () => {
-
-// //     const navigate = useNavigate();
-
-
-// //     // ==================================================
-// //     // STATES
-// //     // ==================================================
-
-// //     const [products, setProducts] =
-// //         useState([]);
-
-// //     const [inventory, setInventory] =
-// //         useState([]);
-
-// //     const [loading, setLoading] =
-// //         useState(true);
-
-// //     const [inventoryLoading, setInventoryLoading] =
-// //         useState(true);
-
-// //     const [search, setSearch] =
-// //         useState("");
-
-// //     const [category, setCategory] =
-// //         useState("");
-
-// //     const [brand, setBrand] =
-// //         useState("");
-
-// //     const [sort, setSort] =
-// //         useState("");
-
-// //     const [addingCartId, setAddingCartId] =
-// //         useState(null);
-
-// //     const [wishlistLoadingId, setWishlistLoadingId] =
-// //         useState(null);
-
-
-// //     // ==================================================
-// //     // LOAD SHOP DATA
-// //     // ==================================================
-
-// //     useEffect(() => {
-
-// //         loadShopData();
-
-// //     }, []);
-
-
-// //     const loadShopData = async () => {
-
-// //         try {
-
-// //             setLoading(true);
-// //             setInventoryLoading(true);
-
-
-// //             // ==========================================
-// //             // PRODUCTS
-// //             // ==========================================
-
-// //             const productResponse =
-// //                 await getShopProducts();
-
-
-// //             console.log(
-// //                 "SHOP PRODUCTS RESPONSE:",
-// //                 productResponse.data
-// //             );
-
-
-// //             const productData =
-// //                 Array.isArray(
-// //                     productResponse.data?.data
-// //                 )
-
-// //                     ? productResponse.data.data
-
-// //                     : [];
-
-
-// //             setProducts(
-// //                 productData
-// //             );
-
-
-// //             // ==========================================
-// //             // PUBLIC INVENTORY
-// //             // ==========================================
-
-// //             try {
-
-// //                 const inventoryResponse =
-// //                     await getShopInventory();
-
-
-// //                 console.log(
-// //                     "SHOP INVENTORY RESPONSE:",
-// //                     inventoryResponse.data
-// //                 );
-
-
-// //                 const inventoryData =
-// //                     Array.isArray(
-// //                         inventoryResponse.data?.data
-// //                     )
-
-// //                         ? inventoryResponse.data.data
-
-// //                         : [];
-
-
-// //                 setInventory(
-// //                     inventoryData
-// //                 );
-
-// //             }
-
-// //             catch (inventoryError) {
-
-// //                 console.error(
-// //                     "SHOP INVENTORY ERROR:",
-// //                     inventoryError
-// //                 );
-
-
-// //                 console.error(
-// //                     "INVENTORY BACKEND RESPONSE:",
-// //                     inventoryError.response?.data
-// //                 );
-
-
-// //                 setInventory([]);
-
-// //             }
-
-// //         }
-
-// //         catch (error) {
-
-// //             console.error(
-// //                 "SHOP DATA ERROR:",
-// //                 error
-// //             );
-
-
-// //             console.error(
-// //                 "BACKEND RESPONSE:",
-// //                 error.response?.data
-// //             );
-
-
-// //             setProducts([]);
-
-// //         }
-
-// //         finally {
-
-// //             setLoading(false);
-
-// //             setInventoryLoading(false);
-
-// //         }
-
-// //     };
-
-
-// //     // ==================================================
-// //     // INVENTORY MAP
-// //     // ==================================================
-
-// //     const inventoryMap =
-// //         useMemo(() => {
-
-// //             const map = {};
-
-
-// //             inventory.forEach(
-// //                 (item) => {
-
-// //                     const productId =
-// //                         item.product?._id ||
-// //                         item.product;
-
-
-// //                     if (!productId) {
-
-// //                         return;
-
-// //                     }
-
-
-// //                     const currentStock =
-// //                         Number(
-// //                             item.currentStock || 0
-// //                         );
-
-
-// //                     const reservedStock =
-// //                         Number(
-// //                             item.reservedStock || 0
-// //                         );
-
-
-// //                     const availableStock =
-// //                         item.availableStock !== undefined
-
-// //                             ?
-
-// //                             Number(
-// //                                 item.availableStock
-// //                             )
-
-// //                             :
-
-// //                             Math.max(
-// //                                 currentStock -
-// //                                 reservedStock,
-// //                                 0
-// //                             );
-
-
-// //                     map[
-// //                         productId.toString()
-// //                     ] = {
-
-// //                         ...item,
-
-// //                         currentStock,
-
-// //                         reservedStock,
-
-// //                         availableStock
-
-// //                     };
-
-// //                 }
-
-// //             );
-
-
-// //             return map;
-
-// //         }, [inventory]);
-
-
-// //     // ==================================================
-// //     // GET PRODUCT INVENTORY
-// //     // ==================================================
-
-// //     const getProductInventory =
-// //         (product) => {
-
-// //             if (!product?._id) {
-
-// //                 return {
-
-// //                     currentStock: 0,
-
-// //                     reservedStock: 0,
-
-// //                     availableStock: 0,
-
-// //                     status:
-// //                         "OUT_OF_STOCK"
-
-// //                 };
-
-// //             }
-
-
-// //             const item =
-// //                 inventoryMap[
-// //                     product._id.toString()
-// //                 ];
-
-
-// //             if (!item) {
-
-// //                 return {
-
-// //                     currentStock: 0,
-
-// //                     reservedStock: 0,
-
-// //                     availableStock: 0,
-
-// //                     status:
-// //                         "OUT_OF_STOCK"
-
-// //                 };
-
-// //             }
-
-
-// //             return item;
-
-// //         };
-
-
-// //     // ==================================================
-// //     // FILTER PRODUCTS
-// //     // ==================================================
-
-// //     const filteredProducts =
-// //         useMemo(() => {
-
-// //             let data = [
-// //                 ...products
-// //             ];
-
-
-// //             // SEARCH
-
-// //             if (
-// //                 search.trim()
-// //             ) {
-
-// //                 const searchText =
-// //                     search
-// //                         .trim()
-// //                         .toLowerCase();
-
-
-// //                 data =
-// //                     data.filter(
-// //                         (product) => {
-
-// //                             const name =
-// //                                 (
-// //                                     product.name ||
-// //                                     ""
-// //                                 ).toLowerCase();
-
-
-// //                             const sku =
-// //                                 (
-// //                                     product.sku ||
-// //                                     ""
-// //                                 ).toLowerCase();
-
-
-// //                             const categoryName =
-// //                                 (
-// //                                     product.category?.name ||
-// //                                     ""
-// //                                 ).toLowerCase();
-
-
-// //                             const brandName =
-// //                                 (
-// //                                     product.brand?.name ||
-// //                                     ""
-// //                                 ).toLowerCase();
-
-
-// //                             return (
-
-// //                                 name.includes(
-// //                                     searchText
-// //                                 )
-
-// //                                 ||
-
-// //                                 sku.includes(
-// //                                     searchText
-// //                                 )
-
-// //                                 ||
-
-// //                                 categoryName.includes(
-// //                                     searchText
-// //                                 )
-
-// //                                 ||
-
-// //                                 brandName.includes(
-// //                                     searchText
-// //                                 )
-
-// //                             );
-
-// //                         }
-
-// //                     );
-
-// //             }
-
-
-// //             // CATEGORY
-
-// //             if (category) {
-
-// //                 data =
-// //                     data.filter(
-
-// //                         product =>
-// //                             product.category?.name ===
-// //                             category
-
-// //                     );
-
-// //             }
-
-
-// //             // BRAND
-
-// //             if (brand) {
-
-// //                 data =
-// //                     data.filter(
-
-// //                         product =>
-// //                             product.brand?.name ===
-// //                             brand
-
-// //                     );
-
-// //             }
-
-
-// //             // PRICE LOW
-
-// //             if (
-// //                 sort === "low"
-// //             ) {
-
-// //                 data.sort(
-
-// //                     (a, b) =>
-
-// //                         Number(
-// //                             a.pricing?.sellingPrice || 0
-// //                         )
-
-// //                         -
-
-// //                         Number(
-// //                             b.pricing?.sellingPrice || 0
-// //                         )
-
-// //                 );
-
-// //             }
-
-
-// //             // PRICE HIGH
-
-// //             if (
-// //                 sort === "high"
-// //             ) {
-
-// //                 data.sort(
-
-// //                     (a, b) =>
-
-// //                         Number(
-// //                             b.pricing?.sellingPrice || 0
-// //                         )
-
-// //                         -
-
-// //                         Number(
-// //                             a.pricing?.sellingPrice || 0
-// //                         )
-
-// //                 );
-
-// //             }
-
-
-// //             return data;
-
-// //         }, [
-
-// //             products,
-// //             search,
-// //             category,
-// //             brand,
-// //             sort
-
-// //         ]);
-
-
-// //     // ==================================================
-// //     // ADD TO CART
-// //     // ==================================================
-
-// // const handleAddToCart = async (product) => {
-
-// //     // ==================================================
-// //     // CHECK LOGIN
-// //     // ==================================================
-
-// //     const token =
-// //         localStorage.getItem("token");
-
-
-// //     if (!token) {
-
-// //         alert(
-// //             "Please Login First"
-// //         );
-
-// //         navigate(
-// //             "/login"
-// //         );
-
-// //         return;
-
-// //     }
-
-
-// //     // ==================================================
-// //     // CHECK PRODUCT
-// //     // ==================================================
-
-// //     if (!product?._id) {
-
-// //         alert(
-// //             "Invalid product"
-// //         );
-
-// //         return;
-
-// //     }
-
-
-// //     // ==================================================
-// //     // CHECK PRICE
-// //     // ==================================================
-
-// //     const sellingPrice =
-// //         Number(
-// //             product.pricing?.sellingPrice || 0
-// //         );
-
-
-// //     if (
-// //         sellingPrice <= 0
-// //     ) {
-
-// //         alert(
-// //             "Product price is not available"
-// //         );
-
-// //         return;
-
-// //     }
-
-
-// //     // ==================================================
-// //     // CHECK INVENTORY
-// //     // ==================================================
-
-// //     const stock =
-// //         getProductInventory(
-// //             product
-// //         );
-
-
-// //     const availableStock =
-// //         Number(
-// //             stock.availableStock || 0
-// //         );
-
-
-// //     if (
-// //         availableStock <= 0
-// //     ) {
-
-// //         alert(
-// //             "Product is currently out of stock"
-// //         );
-
-// //         return;
-
-// //     }
-
-
-// //     // ==================================================
-// //     // ADD TO CART
-// //     // ==================================================
-
-// //     try {
-
-// //         setAddingCartId(
-// //             product._id
-// //         );
-
-
-// //         const cartData = {
-
-// //             product:
-// //                 product._id,
-
-// //             quantity:
-// //                 1
-
-// //         };
-
-
-// //         console.log(
-// //             "ADDING PRODUCT TO CART:",
-// //             product._id
-// //         );
-
-
-// //         console.log(
-// //             "CART REQUEST DATA:",
-// //             cartData
-// //         );
-
-
-// //         const response =
-// //             await addToCart(
-// //                 cartData
-// //             );
-
-
-// //         console.log(
-// //             "ADD TO CART RESPONSE:",
-// //             response.data
-// //         );
-
-
-// //         alert(
-// //             "Product Added To Cart Successfully"
-// //         );
-
-
-// //         // Go to cart
-
-// //         navigate(
-// //             "/cart"
-// //         );
-
-// //     }
-
-// //     catch (error) {
-
-// //         console.error(
-// //             "================================"
-// //         );
-
-
-// //         console.error(
-// //             "ADD TO CART ERROR"
-// //         );
-
-
-// //         console.error(
-// //             "STATUS:",
-// //             error.response?.status
-// //         );
-
-
-// //         console.error(
-// //             "BACKEND RESPONSE:",
-// //             error.response?.data
-// //         );
-
-
-// //         console.error(
-// //             "ERROR:",
-// //             error
-// //         );
-
-
-// //         console.error(
-// //             "================================"
-// //         );
-
-
-// //         alert(
-
-// //             error.response?.data?.message ||
-
-// //             "Failed to add product to cart"
-
-// //         );
-
-// //     }
-
-// //     finally {
-
-// //         setAddingCartId(
-// //             null
-// //         );
-
-// //     }
-
-// // };
-
-
-// //     // ==================================================
-// //     // WISHLIST
-// //     // ==================================================
-
-// //     const handleWishlist =
-// //         async (product) => {
-
-// //             const token =
-// //                 localStorage.getItem(
-// //                     "token"
-// //                 );
-
-
-// //             if (!token) {
-
-// //                 alert(
-// //                     "Please Login First"
-// //                 );
-
-// //                 navigate(
-// //                     "/login"
-// //                 );
-
-// //                 return;
-
-// //             }
-
-
-// //             try {
-
-// //                 setWishlistLoadingId(
-// //                     product._id
-// //                 );
-
-
-// //                 const response =
-// //                     await addToWishlist(
-// //                         product._id
-// //                     );
-
-
-// //                 console.log(
-// //                     "WISHLIST RESPONSE:",
-// //                     response.data
-// //                 );
-
-
-// //                 alert(
-// //                     "Added To Wishlist"
-// //                 );
-
-// //             }
-
-// //             catch (error) {
-
-// //                 console.error(
-// //                     "WISHLIST ERROR:",
-// //                     error
-// //                 );
-
-
-// //                 alert(
-
-// //                     error.response?.data?.message ||
-
-// //                     "Failed to add to wishlist"
-
-// //                 );
-
-// //             }
-
-// //             finally {
-
-// //                 setWishlistLoadingId(
-// //                     null
-// //                 );
-
-// //             }
-
-// //         };
-
-
-// //     // ==================================================
-// //     // IMAGE URL
-// //     // ==================================================
-
-// //     const getImageUrl =
-// //         (product) => {
-
-// //             const image =
-// //                 product?.images?.[0];
-
-
-// //             if (!image) {
-
-// //                 return "/no-image.png";
-
-// //             }
-
-
-// //             const imageUrl =
-// //                 typeof image === "string"
-
-// //                     ?
-
-// //                     image
-
-// //                     :
-
-// //                     image.url;
-
-
-// //             if (!imageUrl) {
-
-// //                 return "/no-image.png";
-
-// //             }
-
-
-// //             if (
-// //                 imageUrl.startsWith(
-// //                     "http"
-// //                 )
-// //             ) {
-
-// //                 return imageUrl;
-
-// //             }
-
-
-// //             return (
-// //                 `http://localhost:5000${imageUrl}`
-// //             );
-
-// //         };
-
-
-// //     // ==================================================
-// //     // CATEGORIES
-// //     // ==================================================
-
-// //     const categories =
-// //         useMemo(() => {
-
-// //             const values =
-// //                 products
-
-// //                     .map(
-// //                         product =>
-// //                             product.category?.name
-// //                     )
-
-// //                     .filter(Boolean);
-
-
-// //             return [
-// //                 ...new Set(values)
-// //             ];
-
-// //         }, [products]);
-
-
-// //     // ==================================================
-// //     // BRANDS
-// //     // ==================================================
-
-// //     const brands =
-// //         useMemo(() => {
-
-// //             const values =
-// //                 products
-
-// //                     .map(
-// //                         product =>
-// //                             product.brand?.name
-// //                     )
-
-// //                     .filter(Boolean);
-
-
-// //             return [
-// //                 ...new Set(values)
-// //             ];
-
-// //         }, [products]);
-
-
-// //     // ==================================================
-// //     // LOADING
-// //     // ==================================================
-
-// //     if (loading) {
-
-// //         return (
-
-// //             <div className="shop-page">
-
-// //                 <div className="loading">
-
-// //                     Loading Products...
-
-// //                 </div>
-
-// //             </div>
-
-// //         );
-
-// //     }
-
-
-// //     // ==================================================
-// //     // UI
-// //     // ==================================================
-
-// //     return (
-
-// //         <div className="shop-page">
-
-
-// //             <div className="shop-header">
-
-// //                 <div>
-
-// //                     <h2>
-// //                         Shop
-// //                     </h2>
-
-// //                     <p>
-// //                         Browse All Products
-// //                     </p>
-
-// //                 </div>
-
-
-// //                 <div className="product-count">
-
-// //                     Showing{" "}
-
-// //                     <strong>
-// //                         {filteredProducts.length}
-// //                     </strong>
-
-// //                     {" "}products
-
-// //                 </div>
-
-// //             </div>
-
-
-// //             {/* ==========================================
-// //                 FILTERS
-// //             ========================================== */}
-
-// //             <div className="shop-filters">
-
-
-// //                 <input
-
-// //                     type="text"
-
-// //                     placeholder="Search Product / SKU..."
-
-// //                     value={search}
-
-// //                     onChange={
-// //                         (e) =>
-// //                             setSearch(
-// //                                 e.target.value
-// //                             )
-// //                     }
-
-// //                 />
-
-
-// //                 <select
-
-// //                     value={category}
-
-// //                     onChange={
-// //                         (e) =>
-// //                             setCategory(
-// //                                 e.target.value
-// //                             )
-// //                     }
-
-// //                 >
-
-// //                     <option value="">
-
-// //                         All Categories
-
-// //                     </option>
-
-
-// //                     {
-// //                         categories.map(
-// //                             (name) => (
-
-// //                                 <option
-// //                                     key={name}
-// //                                     value={name}
-// //                                 >
-
-// //                                     {name}
-
-// //                                 </option>
-
-// //                             )
-// //                         )
-// //                     }
-
-// //                 </select>
-
-
-// //                 <select
-
-// //                     value={brand}
-
-// //                     onChange={
-// //                         (e) =>
-// //                             setBrand(
-// //                                 e.target.value
-// //                             )
-// //                     }
-
-// //                 >
-
-// //                     <option value="">
-
-// //                         All Brands
-
-// //                     </option>
-
-
-// //                     {
-// //                         brands.map(
-// //                             (name) => (
-
-// //                                 <option
-// //                                     key={name}
-// //                                     value={name}
-// //                                 >
-
-// //                                     {name}
-
-// //                                 </option>
-
-// //                             )
-// //                         )
-// //                     }
-
-// //                 </select>
-
-
-// //                 <select
-
-// //                     value={sort}
-
-// //                     onChange={
-// //                         (e) =>
-// //                             setSort(
-// //                                 e.target.value
-// //                             )
-// //                     }
-
-// //                 >
-
-// //                     <option value="">
-
-// //                         Sort By
-
-// //                     </option>
-
-// //                     <option value="low">
-
-// //                         Price Low to High
-
-// //                     </option>
-
-// //                     <option value="high">
-
-// //                         Price High to Low
-
-// //                     </option>
-
-// //                 </select>
-
-// //             </div>
-
-
-// //             {/* ==========================================
-// //                 INVENTORY LOADING
-// //             ========================================== */}
-
-// //             {
-// //                 inventoryLoading && (
-
-// //                     <div className="inventory-loading">
-
-// //                         Loading stock information...
-
-// //                     </div>
-
-// //                 )
-// //             }
-
-
-// //             {/* ==========================================
-// //                 PRODUCTS
-// //             ========================================== */}
-
-// //             {
-// //                 filteredProducts.length > 0
-
-// //                     ?
-
-// //                     (
-
-// //                         <div className="product-grid">
-
-// //                             {
-// //                                 filteredProducts.map(
-// //                                     (product) => {
-
-// //                                         const stock =
-// //                                             getProductInventory(
-// //                                                 product
-// //                                             );
-
-
-// //                                         const currentStock =
-// //                                             Number(
-// //                                                 stock.currentStock || 0
-// //                                             );
-
-
-// //                                         const reservedStock =
-// //                                             Number(
-// //                                                 stock.reservedStock || 0
-// //                                             );
-
-
-// //                                         const availableStock =
-// //                                             Number(
-// //                                                 stock.availableStock || 0
-// //                                             );
-
-
-// //                                         const inStock =
-// //                                             availableStock > 0;
-
-
-// //                                         const discount =
-// //                                             Number(
-// //                                                 product.pricing?.discount || 0
-// //                                             );
-
-
-// //                                         return (
-
-// //                                             <div
-// //                                                 className="product-card"
-// //                                                 key={product._id}
-// //                                             >
-
-
-// //                                                 {/* IMAGE */}
-
-// //                                                 <div className="product-image-box">
-
-// //                                                     <img
-
-// //                                                         src={
-// //                                                             getImageUrl(
-// //                                                                 product
-// //                                                             )
-// //                                                         }
-
-// //                                                         alt={
-// //                                                             product.name ||
-// //                                                             "Product"
-// //                                                         }
-
-// //                                                         className="product-image"
-
-// //                                                         onError={
-// //                                                             (e) => {
-
-// //                                                                 e.currentTarget.src =
-// //                                                                     "/no-image.png";
-
-// //                                                             }
-// //                                                         }
-
-// //                                                     />
-
-
-// //                                                     {
-// //                                                         discount > 0 && (
-
-// //                                                             <span className="discount-badge">
-
-// //                                                                 {discount}%
-// //                                                                 {" "}
-// //                                                                 OFF
-
-// //                                                             </span>
-
-// //                                                         )
-// //                                                     }
-
-// //                                                 </div>
-
-
-// //                                                 {/* DETAILS */}
-
-// //                                                 <div className="product-info">
-
-// //                                                     <h3>
-
-// //                                                         {product.name}
-
-// //                                                     </h3>
-
-
-// //                                                     <p className="category">
-
-// //                                                         {
-// //                                                             product.category?.name ||
-// //                                                             "No Category"
-// //                                                         }
-
-// //                                                     </p>
-
-
-// //                                                     <p className="brand">
-
-// //                                                         {
-// //                                                             product.brand?.name ||
-// //                                                             "No Brand"
-// //                                                         }
-
-// //                                                     </p>
-
-
-// //                                                     <p className="sku">
-
-// //                                                         SKU:
-// //                                                         {" "}
-// //                                                         {
-// //                                                             product.sku ||
-// //                                                             "-"
-// //                                                         }
-
-// //                                                     </p>
-
-
-// //                                                     {/* PRICE */}
-
-// //                                                     <div className="price-section">
-
-// //                                                         <span className="selling-price">
-
-// //                                                             ₹{" "}
-
-// //                                                             {
-// //                                                                 product.pricing?.sellingPrice ??
-// //                                                                 0
-// //                                                             }
-
-// //                                                         </span>
-
-
-// //                                                         {
-// //                                                             Number(
-// //                                                                 product.pricing?.mrp || 0
-// //                                                             ) >
-// //                                                             Number(
-// //                                                                 product.pricing?.sellingPrice || 0
-// //                                                             )
-
-// //                                                             &&
-
-// //                                                             (
-
-// //                                                                 <span className="mrp-price">
-
-// //                                                                     ₹{" "}
-
-// //                                                                     {
-// //                                                                         product.pricing.mrp
-// //                                                                     }
-
-// //                                                                 </span>
-
-// //                                                             )
-
-// //                                                         }
-
-// //                                                     </div>
-
-
-// //                                                     {/* STOCK */}
-
-// //                                                     <div className="stock-information">
-
-
-// //                                                         {
-// //                                                             inStock
-
-// //                                                                 ?
-
-// //                                                                 (
-
-// //                                                                     <>
-
-// //                                                                         <span className="stock in-stock">
-
-// //                                                                             In Stock
-
-// //                                                                         </span>
-
-
-// //                                                                         <span className="available-stock">
-
-// //                                                                             {availableStock}
-
-// //                                                                             {" "}
-// //                                                                             available
-
-// //                                                                         </span>
-
-// //                                                                     </>
-
-// //                                                                 )
-
-// //                                                                 :
-
-// //                                                                 (
-
-// //                                                                     <span className="stock out-stock">
-
-// //                                                                         Out Of Stock
-
-// //                                                                     </span>
-
-// //                                                                 )
-
-// //                                                         }
-
-
-// //                                                         {
-// //                                                             reservedStock > 0 && (
-
-// //                                                                 <span className="reserved-stock">
-
-// //                                                                     Reserved:
-// //                                                                     {" "}
-// //                                                                     {reservedStock}
-
-// //                                                                 </span>
-
-// //                                                             )
-// //                                                         }
-
-
-// //                                                         {
-// //                                                             inStock &&
-// //                                                             currentStock > 0 &&
-// //                                                             availableStock <= 5 && (
-
-// //                                                                 <span className="low-stock-message">
-
-// //                                                                     Only{" "}
-// //                                                                     {availableStock}
-// //                                                                     {" "}
-// //                                                                     left
-
-// //                                                                 </span>
-
-// //                                                             )
-// //                                                         }
-
-// //                                                     </div>
-
-// //                                                 </div>
-
-
-// //                                                 {/* BUTTONS */}
-
-// //                                                 <div className="product-buttons">
-
-
-// //                                                     <Link
-
-// //                                                         to={
-// //                                                             `/shop/product/${product._id}`
-// //                                                         }
-
-// //                                                         className="details-btn"
-
-// //                                                     >
-
-// //                                                         View Details
-
-// //                                                     </Link>
-
-
-// //                                                     <button
-
-// //                                                         className="cart-btn"
-
-// //                                                         onClick={() =>
-// //                                                             handleAddToCart(
-// //                                                                 product
-// //                                                             )
-// //                                                         }
-
-// //                                                         disabled={
-// //                                                             !inStock ||
-// //                                                             addingCartId ===
-// //                                                             product._id
-// //                                                         }
-
-// //                                                     >
-
-// //                                                         {
-// //                                                             addingCartId ===
-// //                                                             product._id
-
-// //                                                                 ?
-
-// //                                                                 "Adding..."
-
-// //                                                                 :
-
-// //                                                             inStock
-
-// //                                                                 ?
-
-// //                                                                 "Add To Cart"
-
-// //                                                                 :
-
-// //                                                                 "Out Of Stock"
-
-// //                                                         }
-
-// //                                                     </button>
-
-
-// //                                                     <button
-
-// //                                                         className="wishlist-btn"
-
-// //                                                         onClick={() =>
-// //                                                             handleWishlist(
-// //                                                                 product
-// //                                                             )
-// //                                                         }
-
-// //                                                         disabled={
-// //                                                             wishlistLoadingId ===
-// //                                                             product._id
-// //                                                         }
-
-// //                                                     >
-
-// //                                                         {
-// //                                                             wishlistLoadingId ===
-// //                                                             product._id
-
-// //                                                                 ?
-
-// //                                                                 "..."
-
-// //                                                                 :
-
-// //                                                                 "❤️"
-
-// //                                                         }
-
-// //                                                     </button>
-
-// //                                                 </div>
-
-// //                                             </div>
-
-// //                                         );
-
-// //                                     }
-// //                                 )
-// //                             }
-
-// //                         </div>
-
-// //                     )
-
-// //                     :
-
-// //                     (
-
-// //                         <div className="no-products">
-
-// //                             No Products Found
-
-// //                         </div>
-
-// //                     )
-
-// //             }
-
-// //         </div>
-
-// //     );
-
-// // };
-
-
-// // export default Shop;
-
-
 // import React, { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 // import { motion } from "framer-motion";
 // import { toast } from "react-toastify";
 
-// // Shared Layout Components
-// // import Topbar from "../../components/Topbar/Topbar";
+// // =====================================================
+// // SHARED LAYOUT
+// // =====================================================
 
-// import Topbar from "../../components/TopBar/TopBar";
-// import Header from "../../components/Header/Header";
+// // import Topbar from "../../components/TopBar/TopBar";
+// // import Header from "../../components/Header/Header";
 // import Footer from "../../components/Footer/Footer";
 
-// // Page Sub-Component
+// // =====================================================
+// // PAGE COMPONENT
+// // =====================================================
+
 // import LaptopSection from "./LaptopSection/LaptopSection";
 
-// // Services
+// // =====================================================
+// // SERVICES
+// // =====================================================
+
 // import { getShopProducts } from "../../services/productService";
+// import { getActiveOffers } from "../../services/offerService";
 // import { addToCart } from "../../services/cartService";
 // import { addToWishlist } from "../../services/wishlistService";
 
-// // Theme configuration for category sections
+// // =====================================================
+// // THEMES
+// // =====================================================
+
 // const THEMES = {
 //   gaming: {
 //     badgeBg: "from-purple-600 to-indigo-600",
 //     badgeShadow: "shadow-purple-500/20",
-//     pillBg: "bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border-purple-200/60 dark:border-purple-800/60",
+//     pillBg:
+//       "bg-purple-50 dark:bg-purple-950/50 text-purple-700 dark:text-purple-300 border-purple-200/60 dark:border-purple-800/60",
 //   },
+
 //   business: {
 //     badgeBg: "from-blue-600 to-indigo-600",
 //     badgeShadow: "shadow-blue-500/20",
-//     pillBg: "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border-blue-200/60 dark:border-blue-800/60",
+//     pillBg:
+//       "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border-blue-200/60 dark:border-blue-800/60",
 //   },
+
 //   chromebook: {
 //     badgeBg: "from-amber-500 to-orange-600",
 //     badgeShadow: "shadow-amber-500/20",
-//     pillBg: "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200/60 dark:border-amber-800/60",
+//     pillBg:
+//       "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200/60 dark:border-amber-800/60",
 //   },
+
 //   other: {
 //     badgeBg: "from-teal-500 to-emerald-600",
 //     badgeShadow: "shadow-teal-500/20",
-//     pillBg: "bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border-teal-200/60 dark:border-teal-800/60",
+//     pillBg:
+//       "bg-teal-50 dark:bg-teal-950/50 text-teal-700 dark:text-teal-300 border-teal-200/60 dark:border-teal-800/60",
 //   },
 // };
+
+// // =====================================================
+// // HELPERS
+// // =====================================================
+
+// const getProductId = (product) => {
+//   if (!product) return null;
+
+//   if (typeof product === "string") {
+//     return product;
+//   }
+
+//   return product._id || product.id || null;
+// };
+
+// // =====================================================
+// // PRODUCT PRICE
+// // =====================================================
+
+// const getProductPrice = (product) => {
+//   return Number(
+//     product?.finalPrice ??
+//       product?.pricing?.sellingPrice ??
+//       product?.sellingPrice ??
+//       product?.price ??
+//       0
+//   );
+// };
+
+// // =====================================================
+// // OFFER ACTIVE CHECK
+// // =====================================================
+
+// const isOfferCurrentlyActive = (offer) => {
+//   if (!offer) {
+//     return false;
+//   }
+
+//   // -----------------------------------------------
+//   // STATUS
+//   // -----------------------------------------------
+
+//   if (
+//     offer.status &&
+//     String(offer.status).toUpperCase() !== "ACTIVE"
+//   ) {
+//     return false;
+//   }
+
+//   const now = new Date();
+
+//   // -----------------------------------------------
+//   // START DATE
+//   // -----------------------------------------------
+
+//   if (offer.startDate) {
+//     const start = new Date(offer.startDate);
+
+//     if (now < start) {
+//       return false;
+//     }
+//   }
+
+//   // -----------------------------------------------
+//   // END DATE
+//   // -----------------------------------------------
+
+//   if (offer.endDate) {
+//     const end = new Date(offer.endDate);
+
+//     // Complete end date ko active rakho
+//     end.setHours(23, 59, 59, 999);
+
+//     if (now > end) {
+//       return false;
+//     }
+//   }
+
+//   return true;
+// };
+
+// // =====================================================
+// // CALCULATE OFFER PRICE
+// // =====================================================
+
+// const calculateOfferPrice = (product, offer) => {
+//   const originalPrice = getProductPrice(product);
+
+//   // No offer
+//   if (!offer) {
+//     return {
+//       originalPrice,
+//       finalPrice: originalPrice,
+//       discountAmount: 0,
+//       offer: null,
+//     };
+//   }
+
+//   const discountValue = Number(
+//     offer.discountValue ?? 0
+//   );
+
+//   // Invalid discount
+//   if (discountValue <= 0) {
+//     return {
+//       originalPrice,
+//       finalPrice: originalPrice,
+//       discountAmount: 0,
+//       offer: null,
+//     };
+//   }
+
+//   let discountAmount = 0;
+
+//   // -----------------------------------------------
+//   // PERCENTAGE
+//   // -----------------------------------------------
+
+//   if (
+//     String(offer.discountType).toUpperCase() ===
+//     "PERCENTAGE"
+//   ) {
+//     discountAmount =
+//       (originalPrice * discountValue) / 100;
+//   }
+
+//   // -----------------------------------------------
+//   // FIXED
+//   // -----------------------------------------------
+
+//   else if (
+//     String(offer.discountType).toUpperCase() ===
+//     "FIXED"
+//   ) {
+//     discountAmount = discountValue;
+//   }
+
+//   // -----------------------------------------------
+//   // PROTECT PRICE
+//   // -----------------------------------------------
+
+//   discountAmount = Math.min(
+//     Math.max(discountAmount, 0),
+//     originalPrice
+//   );
+
+//   const finalPrice =
+//     originalPrice - discountAmount;
+
+//   return {
+//     originalPrice,
+//     finalPrice,
+//     discountAmount,
+//     offer,
+//   };
+// };
+
+// // =====================================================
+// // SHOP
+// // =====================================================
 
 // const Shop = () => {
 //   const navigate = useNavigate();
 
-//   // State
-//   const [products, setProducts] = useState([]);
-//   const [filteredProducts, setFilteredProducts] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [search, setSearch] = useState("");
-//   const [category, setCategory] = useState("");
-//   const [brand, setBrand] = useState("");
-//   const [sort, setSort] = useState("");
+//   // ===================================================
+//   // STATE
+//   // ===================================================
 
-//   // 1. Fetch Products
+//   const [products, setProducts] = useState([]);
+
+//   const [filteredProducts, setFilteredProducts] =
+//     useState([]);
+
+//   const [offers, setOffers] = useState([]);
+
+//   const [loading, setLoading] =
+//     useState(true);
+
+//   const [search, setSearch] =
+//     useState("");
+
+//   const [category, setCategory] =
+//     useState("");
+
+//   const [brand, setBrand] =
+//     useState("");
+
+//   const [sort, setSort] =
+//     useState("");
+
+//   // ===================================================
+//   // LOAD SHOP
+//   // ===================================================
+
 //   useEffect(() => {
-//     loadProducts();
+//     loadProductsAndOffers();
 //   }, []);
 
-//   // const loadProducts = async () => {
-//   //   try {
-//   //     setLoading(true);
-//   //     const res = await getShopProducts();
-//   //     const productList = Array.isArray(res.data?.data) ? res.data.data : [];
+//   // ===================================================
+//   // LOAD PRODUCTS + ACTIVE OFFERS
+//   // ===================================================
 
-//   //     setProducts(productList);
-//   //     setFilteredProducts(productList);
-//   //   } catch (err) {
-//   //     console.error(err);
-//   //   } finally {
-//   //     setLoading(false);
-//   //   }
-//   // };
+//   const loadProductsAndOffers = async () => {
+//     try {
+//       setLoading(true);
 
-//   // 2. Dynamic Dropdown Lists derived directly from products state
- 
-//  const loadProducts = async () => {
+//       // ------------------------------------------------
+//       // IMPORTANT
+//       //
+//       // getShopProducts = public
+//       // getActiveOffers = public
+//       //
+//       // Do NOT use getOffers() here.
+//       // ------------------------------------------------
 
-//   try {
+//       const [
+//         productsResponse,
+//         offersResponse,
+//       ] = await Promise.all([
+//         getShopProducts(),
+//         getActiveOffers(),
+//       ]);
 
-//     setLoading(true);
+//       // =================================================
+//       // PRODUCTS RESPONSE
+//       // =================================================
 
-//     const res =
-//       await getShopProducts();
+//       console.log(
+//         "SHOP PRODUCTS RESPONSE:",
+//         productsResponse?.data
+//       );
 
-
-//     console.log(
-//       "SHOP API RESPONSE:",
-//       res.data
-//     );
-
-
-//     const productList =
-//       Array.isArray(res.data?.data)
-//         ? res.data.data
-//         : [];
-
-
-//     console.log(
-//       "SHOP PRODUCT LIST:",
-//       productList
-//     );
-
-
-//     setProducts(productList);
-
-//     setFilteredProducts(productList);
-
-
-//   } catch (err) {
-
-//     console.error(
-//       "SHOP PRODUCTS ERROR:",
-//       err
-//     );
-
-
-//     console.error(
-//       "SHOP PRODUCTS ERROR RESPONSE:",
-//       err.response?.data
-//     );
-
-
-//     toast.error(
-//       err.response?.data?.message ||
-//       "Failed to load products"
-//     );
-
-
-//     setProducts([]);
-
-//     setFilteredProducts([]);
-
-
-//   } finally {
-
-//     setLoading(false);
-
-//   }
-
-// };
- 
- 
- 
-//   const categoriesList = Array.from(
-//     new Set(
-//       products
-//         .map((p) =>
-//           typeof p.category === "object" ? p.category?.name : p.category
+//       const productList =
+//         Array.isArray(
+//           productsResponse?.data?.data
 //         )
-//         .filter(Boolean)
-//     )
-//   );
+//           ? productsResponse.data.data
+//           : Array.isArray(
+//               productsResponse?.data?.products
+//             )
+//           ? productsResponse.data.products
+//           : Array.isArray(
+//               productsResponse?.data
+//             )
+//           ? productsResponse.data
+//           : [];
 
-//   const brandsList = Array.from(
-//     new Set(
-//       products
-//         .map((p) => (typeof p.brand === "object" ? p.brand?.name : p.brand))
-//         .filter(Boolean)
-//     )
-//   );
+//       // =================================================
+//       // OFFERS RESPONSE
+//       // =================================================
 
-//   // 3. Filter & Sort Logic
+//       console.log(
+//         "SHOP ACTIVE OFFERS RESPONSE:",
+//         offersResponse?.data
+//       );
+
+//       const offerList =
+//         Array.isArray(
+//           offersResponse?.data?.offers
+//         )
+//           ? offersResponse.data.offers
+//           : Array.isArray(
+//               offersResponse?.data?.data
+//             )
+//           ? offersResponse.data.data
+//           : Array.isArray(
+//               offersResponse?.data
+//             )
+//           ? offersResponse.data
+//           : [];
+
+//       console.log(
+//         "SHOP PRODUCT LIST:",
+//         productList
+//       );
+
+//       console.log(
+//         "SHOP OFFER LIST:",
+//         offerList
+//       );
+
+//       // =================================================
+//       // ACTIVE OFFERS
+//       // =================================================
+
+//       const activeOffers =
+//         offerList.filter(
+//           isOfferCurrentlyActive
+//         );
+
+//       console.log(
+//         "ACTIVE SHOP OFFERS:",
+//         activeOffers
+//       );
+
+//       // =================================================
+//       // APPLY OFFERS
+//       // =================================================
+
+//       const productsWithOffers =
+//         productList.map((product) => {
+//           const productId =
+//             getProductId(product);
+
+//           // --------------------------------------------
+//           // FIND OFFERS FOR CURRENT PRODUCT
+//           // --------------------------------------------
+
+//           const productOffers =
+//             activeOffers.filter(
+//               (offer) => {
+//                 if (
+//                   !Array.isArray(
+//                     offer?.products
+//                   )
+//                 ) {
+//                   return false;
+//                 }
+
+//                 return offer.products.some(
+//                   (offerProduct) => {
+//                     const offerProductId =
+//                       getProductId(
+//                         offerProduct
+//                       );
+
+//                     return (
+//                       String(
+//                         offerProductId
+//                       ) ===
+//                       String(productId)
+//                     );
+//                   }
+//                 );
+//               }
+//             );
+
+//           // --------------------------------------------
+//           // NO OFFER
+//           // --------------------------------------------
+
+//           if (
+//             productOffers.length === 0
+//           ) {
+//             const price =
+//               getProductPrice(product);
+
+//             return {
+//               ...product,
+
+//               originalPrice: price,
+
+//               finalPrice: price,
+
+//               discountAmount: 0,
+
+//               offer: null,
+
+//               hasOffer: false,
+
+//               offerTitle: "",
+
+//               offerDiscountType: null,
+
+//               offerDiscountValue: 0,
+//             };
+//           }
+
+//           // --------------------------------------------
+//           // CALCULATE ALL OFFERS
+//           // --------------------------------------------
+
+//           const calculatedOffers =
+//             productOffers
+//               .map((offer) =>
+//                 calculateOfferPrice(
+//                   product,
+//                   offer
+//                 )
+//               )
+//               .filter(
+//                 (item) =>
+//                   item.offer !== null
+//               );
+
+//           // Safety
+//           if (
+//             calculatedOffers.length === 0
+//           ) {
+//             const price =
+//               getProductPrice(product);
+
+//             return {
+//               ...product,
+
+//               originalPrice: price,
+
+//               finalPrice: price,
+
+//               discountAmount: 0,
+
+//               offer: null,
+
+//               hasOffer: false,
+//             };
+//           }
+
+//           // --------------------------------------------
+//           // BEST OFFER
+//           // Lowest final price
+//           // --------------------------------------------
+
+//           const bestOffer =
+//             calculatedOffers.reduce(
+//               (best, current) => {
+//                 if (!best) {
+//                   return current;
+//                 }
+
+//                 return current.finalPrice <
+//                   best.finalPrice
+//                   ? current
+//                   : best;
+//               },
+//               null
+//             );
+
+//           // --------------------------------------------
+//           // PRODUCT WITH OFFER
+//           // --------------------------------------------
+
+//           return {
+//             ...product,
+
+//             originalPrice:
+//               bestOffer.originalPrice,
+
+//             finalPrice:
+//               bestOffer.finalPrice,
+
+//             discountAmount:
+//               bestOffer.discountAmount,
+
+//             offer:
+//               bestOffer.offer,
+
+//             hasOffer: true,
+
+//             offerTitle:
+//               bestOffer.offer?.title ||
+//               "Special Offer",
+
+//             offerDiscountType:
+//               bestOffer.offer
+//                 ?.discountType,
+
+//             offerDiscountValue:
+//               bestOffer.offer
+//                 ?.discountValue ?? 0,
+//           };
+//         });
+
+//       // =================================================
+//       // LOG FINAL DATA
+//       // =================================================
+
+//       console.log(
+//         "PRODUCTS WITH OFFERS:",
+//         productsWithOffers
+//       );
+
+//       // =================================================
+//       // SET STATE
+//       // =================================================
+
+//       setOffers(activeOffers);
+
+//       setProducts(
+//         productsWithOffers
+//       );
+
+//       setFilteredProducts(
+//         productsWithOffers
+//       );
+//     } catch (error) {
+//       console.error(
+//         "SHOP PRODUCTS/OFFERS ERROR:",
+//         error
+//       );
+
+//       console.error(
+//         "SHOP ERROR RESPONSE:",
+//         error?.response?.data
+//       );
+
+//       // -----------------------------------------------
+//       // IMPORTANT
+//       // -----------------------------------------------
+//       //
+//       // Agar offers fail ho jayein,
+//       // products phir bhi show hone chahiye.
+//       //
+//       // Isliye Promise.all ke wajah se
+//       // entire shop blank nahi karenge.
+//       //
+//       // -----------------------------------------------
+
+//       try {
+//         const productsResponse =
+//           await getShopProducts();
+
+//         const productList =
+//           Array.isArray(
+//             productsResponse?.data?.data
+//           )
+//             ? productsResponse.data.data
+//             : Array.isArray(
+//                 productsResponse?.data?.products
+//               )
+//             ? productsResponse.data.products
+//             : Array.isArray(
+//                 productsResponse?.data
+//               )
+//             ? productsResponse.data
+//             : [];
+
+//         const productsWithoutOffers =
+//           productList.map(
+//             (product) => {
+//               const price =
+//                 getProductPrice(
+//                   product
+//                 );
+
+//               return {
+//                 ...product,
+
+//                 originalPrice: price,
+
+//                 finalPrice: price,
+
+//                 discountAmount: 0,
+
+//                 offer: null,
+
+//                 hasOffer: false,
+//               };
+//             }
+//           );
+
+//         setProducts(
+//           productsWithoutOffers
+//         );
+
+//         setFilteredProducts(
+//           productsWithoutOffers
+//         );
+
+//         setOffers([]);
+
+//         console.log(
+//           "SHOP LOADED WITHOUT OFFERS:",
+//           productsWithoutOffers
+//         );
+//       } catch (productError) {
+//         console.error(
+//           "SHOP PRODUCTS ERROR:",
+//           productError
+//         );
+
+//         toast.error(
+//           productError?.response
+//             ?.data?.message ||
+//             "Failed to load products"
+//         );
+
+//         setProducts([]);
+
+//         setFilteredProducts([]);
+
+//         setOffers([]);
+//       }
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ===================================================
+//   // CATEGORY LIST
+//   // ===================================================
+
+//   const categoriesList =
+//     Array.from(
+//       new Set(
+//         products
+//           .map((product) =>
+//             typeof product.category ===
+//             "object"
+//               ? product.category?.name
+//               : product.category
+//           )
+//           .filter(Boolean)
+//       )
+//     );
+
+//   // ===================================================
+//   // BRAND LIST
+//   // ===================================================
+
+//   const brandsList =
+//     Array.from(
+//       new Set(
+//         products
+//           .map((product) =>
+//             typeof product.brand ===
+//             "object"
+//               ? product.brand?.name
+//               : product.brand
+//           )
+//           .filter(Boolean)
+//       )
+//     );
+
+//   // ===================================================
+//   // FILTER + SORT
+//   // ===================================================
+
 //   useEffect(() => {
-//     let data = Array.isArray(products) ? [...products] : [];
+//     let data = Array.isArray(
+//       products
+//     )
+//       ? [...products]
+//       : [];
+
+//     // -------------------------------------------------
+//     // SEARCH
+//     // -------------------------------------------------
 
 //     if (search) {
-//       data = data.filter((product) =>
-//         product.name?.toLowerCase().includes(search.toLowerCase())
+//       data = data.filter(
+//         (product) =>
+//           product.name
+//             ?.toLowerCase()
+//             .includes(
+//               search.toLowerCase()
+//             )
 //       );
 //     }
+
+//     // -------------------------------------------------
+//     // CATEGORY
+//     // -------------------------------------------------
 
 //     if (category) {
 //       data = data.filter(
 //         (product) =>
-//           (product.category?.name || product.category) === category
+//           (
+//             product.category?.name ||
+//             product.category
+//           ) === category
 //       );
 //     }
+
+//     // -------------------------------------------------
+//     // BRAND
+//     // -------------------------------------------------
 
 //     if (brand) {
 //       data = data.filter(
 //         (product) =>
-//           (product.brand?.name || product.brand) === brand
+//           (
+//             product.brand?.name ||
+//             product.brand
+//           ) === brand
 //       );
 //     }
 
-//     // if (sort === "low") {
-//     //   data.sort((a, b) => a.sellingPrice - b.sellingPrice);
-//     // }
-
-//     // if (sort === "high") {
-//     //   data.sort((a, b) => b.sellingPrice - a.sellingPrice);
-//     // }
+//     // -------------------------------------------------
+//     // LOW TO HIGH
+//     // -------------------------------------------------
 
 //     if (sort === "low") {
+//       data.sort(
+//         (a, b) =>
+//           Number(
+//             a.finalPrice ??
+//               getProductPrice(a)
+//           ) -
+//           Number(
+//             b.finalPrice ??
+//               getProductPrice(b)
+//           )
+//       );
+//     }
 
-//   data.sort(
-//     (a, b) =>
-//       Number(
-//         a.finalPrice ??
-//         a.pricing?.sellingPrice ??
-//         0
-//       )
-//       -
-//       Number(
-//         b.finalPrice ??
-//         b.pricing?.sellingPrice ??
-//         0
-//       )
-//   );
+//     // -------------------------------------------------
+//     // HIGH TO LOW
+//     // -------------------------------------------------
 
-// }
-
-
-// if (sort === "high") {
-
-//   data.sort(
-//     (a, b) =>
-//       Number(
-//         b.finalPrice ??
-//         b.pricing?.sellingPrice ??
-//         0
-//       )
-//       -
-//       Number(
-//         a.finalPrice ??
-//         a.pricing?.sellingPrice ??
-//         0
-//       )
-//   );
-
-// }
+//     if (sort === "high") {
+//       data.sort(
+//         (a, b) =>
+//           Number(
+//             b.finalPrice ??
+//               getProductPrice(b)
+//           ) -
+//           Number(
+//             a.finalPrice ??
+//               getProductPrice(a)
+//           )
+//       );
+//     }
 
 //     setFilteredProducts(data);
-//   }, [search, category, brand, sort, products]);
+//   }, [
+//     search,
+//     category,
+//     brand,
+//     sort,
+//     products,
+//   ]);
 
-//   // Cart Handler
-//   // const handleAddToCart = async (product) => {
-//   //   const token = localStorage.getItem("token");
-//   //   if (!token) {
-//   //     toast.error("Please Login First");
-//   //     navigate("/login");
-//   //     return;
-//   //   }
+//   // ===================================================
+//   // ADD TO CART
+//   // ===================================================
 
-//   //   try {
-//   //     await addToCart({ product: product._id, quantity: 1 });
-//   //     toast.error("Added To Cart");
-//   //   } catch (error) {
-//   //     toast.error(error.response?.data?.message || "Failed to add to cart");
-//   //   }
-//   // };
+//   const handleAddToCart =
+//     async (product) => {
+//       const token =
+//         localStorage.getItem(
+//           "token"
+//         );
 
-// const handleAddToCart = async (product) => {
-//   const token = localStorage.getItem("token");
+//       if (!token) {
+//         toast.error(
+//           "Please Login First"
+//         );
+
+//         navigate("/login");
+
+//         return;
+//       }
+
+//       try {
+//         await addToCart({
+//           product:
+//             product._id,
+
+//           quantity: 1,
+//         });
+
+//         toast.success(
+//           "Added To Cart"
+//         );
+
+//         navigate("/cart");
+//       } catch (error) {
+//         toast.error(
+//           error?.response?.data
+//             ?.message ||
+//             "Failed to add to cart"
+//         );
+//       }
+//     };
+
+//   // ===================================================
+//   // WISHLIST
+//   // ===================================================
+
+//   // const handleWishlist =
+//   //   async (product) => {
+//   //     const token =
+//   //       localStorage.getItem(
+//   //         "token"
+//   //       );
+
+//   //     if (!token) {
+//   //       toast.error(
+//   //         "Please Login First"
+//   //       );
+
+//   //       navigate("/login");
+
+//   //       return;
+//   //     }
+
+//   //     try {
+//   //       await addToWishlist(
+//   //         product._id
+//   //       );
+
+//   //       toast.success(
+//   //         "Added To Wishlist"
+//   //       );
+//   //     } catch (error) {
+//   //       toast.error(
+//   //         error?.response?.data
+//   //           ?.message ||
+//   //           "Failed to update wishlist"
+//   //       );
+//   //     }
+//   //   };
+
+
+// const handleWishlist = async (product) => {
+
+//   const token =
+//     localStorage.getItem("token");
+
+//   // ===============================================
+//   // LOGIN CHECK
+//   // ===============================================
 
 //   if (!token) {
-//     toast.error("Please Login First");
+
+//     toast.error(
+//       "Please Login First"
+//     );
+
 //     navigate("/login");
+
+//     return;
+//   }
+
+//   // ===============================================
+//   // PRODUCT ID
+//   // ===============================================
+
+//   const productId =
+//     product?._id ||
+//     product?.id;
+
+//   if (!productId) {
+
+//     console.error(
+//       "Wishlist Product ID Missing:",
+//       product
+//     );
+
+//     toast.error(
+//       "Product ID not found"
+//     );
+
 //     return;
 //   }
 
 //   try {
-//     await addToCart({
-//       product: product._id,
-//       quantity: 1,
-//     });
 
-//     toast.success("Added To Cart");
+//     console.log(
+//       "Adding Wishlist Product:",
+//       productId
+//     );
 
-//     // Navigate to Cart Page
-//     navigate("/cart");
+//     // =============================================
+//     // ADD WISHLIST
+//     // =============================================
+
+//     const response =
+//       await addToWishlist(
+//         productId
+//       );
+
+//     console.log(
+//       "ADD WISHLIST RESPONSE:",
+//       response?.data
+//     );
+
+//     // =============================================
+//     // SUCCESS
+//     // =============================================
+
+//     toast.success(
+//       "Added To Wishlist"
+//     );
 
 //   } catch (error) {
-//     toast.error(
-//       error.response?.data?.message || "Failed to add to cart"
-//     );
-//   }
-// };
-  
 
-//   // Wishlist Handler
-//   const handleWishlist = async (product) => {
-//     const token = localStorage.getItem("token");
-//     if (!token) {
-//       toast.error("Please Login First");
-//       navigate("/login");
+//     console.error(
+//       "ADD WISHLIST ERROR:",
+//       error
+//     );
+
+//     console.error(
+//       "ADD WISHLIST ERROR RESPONSE:",
+//       error?.response?.data
+//     );
+
+//     const message =
+//       error?.response?.data?.message ||
+//       error?.response?.data?.error ||
+//       "Failed to update wishlist";
+
+//     // ---------------------------------------------
+//     // If already exists
+//     // ---------------------------------------------
+
+//     if (
+//       String(message)
+//         .toLowerCase()
+//         .includes("already")
+//     ) {
+
+//       toast.info(
+//         "Product is already in Wishlist"
+//       );
+
 //       return;
 //     }
 
-//     try {
-//       await addToWishlist(product._id);
-//       toast.success("Added To Wishlist");
-//     } catch (error) {
-//       toast.error(error.response?.data?.message || "Failed to update wishlist");
-//     }
-//   };
+//     toast.error(message);
+//   }
+// };
+
+//   // ===================================================
+//   // RENDER
+//   // ===================================================
 
 //   return (
 //     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
-//       <Topbar />
-//       <Header />
+
+//       {/* <Topbar />
+
+//       <Header /> */}
 
 //       <main className="flex-grow py-8 px-4 sm:px-8 lg:px-12 max-w-[1400px] mx-auto w-full space-y-8">
 
-//         {/* MAIN PAGE TITLE WITH SLOWER SMOOTH ZOOM */}
+//         {/* =================================================
+//             TITLE
+//         ================================================= */}
+
 //         <div className="overflow-hidden py-1">
+
 //           <motion.h1
 //             initial={{
 //               fontWeight: 300,
@@ -1869,31 +1004,83 @@
 //             }}
 //             transition={{
 //               duration: 1.2,
-//               ease: [0.25, 1, 0.5, 1],
+//               ease: [
+//                 0.25,
+//                 1,
+//                 0.5,
+//                 1,
+//               ],
 //             }}
-//             viewport={{ once: false, amount: 0.3 }}
+//             viewport={{
+//               once: false,
+//               amount: 0.3,
+//             }}
 //             className="text-4xl sm:text-5xl text-gray-900 dark:text-white tracking-tight origin-left transition-colors duration-300"
 //           >
 //             Laptops
 //           </motion.h1>
+
 //         </div>
 
-//         {/* ACTION BAR */}
+//         {/* =================================================
+//             OFFER INFO
+//         ================================================= */}
+
+//         {offers.length > 0 && (
+//           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900">
+
+//             <span className="text-xl">
+//               🎁
+//             </span>
+
+//             <div>
+
+//               <p className="text-sm font-bold text-indigo-700 dark:text-indigo-300">
+//                 Special Offers Available
+//               </p>
+
+//               <p className="text-xs text-indigo-600 dark:text-indigo-400">
+//                 {offers.length} active offer
+//                 {offers.length !== 1
+//                   ? "s"
+//                   : ""}{" "}
+//                 available on selected
+//                 products.
+//               </p>
+
+//             </div>
+
+//           </div>
+//         )}
+
+//         {/* =================================================
+//             ACTION BAR
+//         ================================================= */}
+
 //         <div className="flex flex-wrap items-center justify-between gap-4 py-2 border-b border-gray-100/80 dark:border-slate-800">
 
-//           {/* Left Side: Search + Filters */}
+//           {/* LEFT */}
+
 //           <div className="flex items-center gap-3 flex-wrap">
 
-//             {/* 1. Search Bar */}
+//             {/* SEARCH */}
+
 //             <div className="relative">
+
 //               <input
 //                 type="text"
 //                 placeholder="Search..."
 //                 value={search}
-//                 onChange={(e) => setSearch(e.target.value)}
+//                 onChange={(e) =>
+//                   setSearch(
+//                     e.target.value
+//                   )
+//                 }
 //                 className="bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 focus:bg-white dark:focus:bg-slate-900 pl-8 pr-4 py-1.5 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 focus:outline-none border border-transparent focus:border-gray-300 dark:border-slate-800 dark:focus:border-slate-700 transition-all w-40 focus:w-52"
 //               />
+
 //               <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500">
+
 //                 <svg
 //                   xmlns="http://www.w3.org/2000/svg"
 //                   fill="none"
@@ -1902,71 +1089,131 @@
 //                   stroke="currentColor"
 //                   className="w-3.5 h-3.5"
 //                 >
+
 //                   <path
 //                     strokeLinecap="round"
 //                     strokeLinejoin="round"
 //                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
 //                   />
+
 //                 </svg>
+
 //               </div>
+
 //             </div>
 
-//             {/* Separator / Filter Label */}
-//             <span className="text-sm font-semibold text-gray-900 dark:text-slate-200 ml-1">Filters:</span>
+//             {/* FILTER LABEL */}
 
-//             {/* 2. Category Pill Dropdown */}
+//             <span className="text-sm font-semibold text-gray-900 dark:text-slate-200 ml-1">
+//               Filters:
+//             </span>
+
+//             {/* CATEGORY */}
+
 //             <div className="relative">
+
 //               <select
 //                 value={category}
-//                 onChange={(e) => setCategory(e.target.value)}
+//                 onChange={(e) =>
+//                   setCategory(
+//                     e.target.value
+//                   )
+//                 }
 //                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //               >
-//                 <option value="" className="dark:bg-slate-900 dark:text-slate-200">Category</option>
-//                 {categoriesList.map((cat) => (
-//                   <option key={cat} value={cat} className="dark:bg-slate-900 dark:text-slate-200">
-//                     {cat}
-//                   </option>
-//                 ))}
+
+//                 <option value="">
+//                   Category
+//                 </option>
+
+//                 {categoriesList.map(
+//                   (cat) => (
+//                     <option
+//                       key={cat}
+//                       value={cat}
+//                     >
+//                       {cat}
+//                     </option>
+//                   )
+//                 )}
+
 //               </select>
+
 //               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //                 ▼
 //               </div>
+
 //             </div>
 
-//             {/* 3. Brand Pill Dropdown */}
+//             {/* BRAND */}
+
 //             <div className="relative">
+
 //               <select
 //                 value={brand}
-//                 onChange={(e) => setBrand(e.target.value)}
+//                 onChange={(e) =>
+//                   setBrand(
+//                     e.target.value
+//                   )
+//                 }
 //                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //               >
-//                 <option value="" className="dark:bg-slate-900 dark:text-slate-200">Brand</option>
-//                 {brandsList.map((b) => (
-//                   <option key={b} value={b} className="dark:bg-slate-900 dark:text-slate-200">
-//                     {b}
-//                   </option>
-//                 ))}
+
+//                 <option value="">
+//                   Brand
+//                 </option>
+
+//                 {brandsList.map(
+//                   (b) => (
+//                     <option
+//                       key={b}
+//                       value={b}
+//                     >
+//                       {b}
+//                     </option>
+//                   )
+//                 )}
+
 //               </select>
+
 //               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //                 ▼
 //               </div>
+
 //             </div>
+
 //           </div>
 
-//           {/* Right Side: Sort Pill Dropdown */}
+//           {/* SORT */}
+
 //           <div className="relative">
+
 //             <select
 //               value={sort}
-//               onChange={(e) => setSort(e.target.value)}
+//               onChange={(e) =>
+//                 setSort(
+//                   e.target.value
+//                 )
+//               }
 //               className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pl-8 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //             >
-//               <option value="" className="dark:bg-slate-900 dark:text-slate-200">Sort by: Recommended</option>
-//               <option value="low" className="dark:bg-slate-900 dark:text-slate-200">Price: Low to High</option>
-//               <option value="high" className="dark:bg-slate-900 dark:text-slate-200">Price: High to Low</option>
+
+//               <option value="">
+//                 Sort by: Recommended
+//               </option>
+
+//               <option value="low">
+//                 Price: Low to High
+//               </option>
+
+//               <option value="high">
+//                 Price: High to Low
+//               </option>
+
 //             </select>
 
-//             {/* Sort Icon */}
 //             <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-slate-400">
+
 //               <svg
 //                 xmlns="http://www.w3.org/2000/svg"
 //                 fill="none"
@@ -1975,160 +1222,257 @@
 //                 stroke="currentColor"
 //                 className="w-3.5 h-3.5"
 //               >
+
 //                 <path
 //                   strokeLinecap="round"
 //                   strokeLinejoin="round"
 //                   d="M3.75 6.75h16.5M3.75 12h12m-12 5.25h7.5"
 //                 />
+
 //               </svg>
+
 //             </div>
 
-//             {/* Arrow Icon */}
 //             <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //               ▼
 //             </div>
+
 //           </div>
+
 //         </div>
 
-//         {/* MAIN PRODUCT LIST SECTIONS */}
+//         {/* =================================================
+//             PRODUCTS
+//         ================================================= */}
+
 //         {loading ? (
+
 //           <div className="flex flex-col justify-center items-center py-28">
-//             <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 dark:border-slate-100 border-t-transparent"></div>
+
+//             <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 dark:border-slate-100 border-t-transparent" />
+
 //             <span className="mt-3 text-gray-500 dark:text-slate-400 font-medium text-xs">
 //               Loading laptops...
 //             </span>
+
 //           </div>
+
 //         ) : filteredProducts.length === 0 ? (
+
 //           <div className="text-center py-20 bg-gray-50/50 dark:bg-slate-900/50 border border-transparent dark:border-slate-800 rounded-3xl space-y-2">
-//             <div className="text-2xl">🔍</div>
-//             <p className="text-gray-900 dark:text-white font-bold text-base">No Products Found</p>
-//             <p className="text-gray-400 dark:text-slate-400 text-xs">Try adjusting your search or filters.</p>
+
+//             <div className="text-2xl">
+//               🔍
+//             </div>
+
+//             <p className="text-gray-900 dark:text-white font-bold text-base">
+//               No Products Found
+//             </p>
+
+//             <p className="text-gray-400 dark:text-slate-400 text-xs">
+//               Try adjusting your search or filters.
+//             </p>
+
 //           </div>
+
 //         ) : (
+
 //           <div className="space-y-10">
-//             {/* 1. Gaming Laptops Section */}
-//             {filteredProducts.some((p) =>
-//               (p.category?.name || p.category || "")
-//                 .toLowerCase()
-//                 .includes("gaming")
-//             ) && (
-//                 <LaptopSection
-//                   icon="🎮"
-//                   title="Gaming Laptops"
-//                   items={filteredProducts.filter((p) =>
-//                     (p.category?.name || p.category || "")
-//                       .toLowerCase()
-//                       .includes("gaming")
-//                   )}
-//                   theme={THEMES.gaming}
-//                   onAddToCart={handleAddToCart}
-//                   onAddToWishlist={handleWishlist}
-//                 />
-//               )}
 
-//             {/* 2. Business Laptops Section */}
-//             {filteredProducts.some((p) =>
-//               (p.category?.name || p.category || "")
-//                 .toLowerCase()
-//                 .includes("business")
-//             ) && (
-//                 <LaptopSection
-//                   icon="💼"
-//                   title="Business Laptops"
-//                   items={filteredProducts.filter((p) =>
-//                     (p.category?.name || p.category || "")
-//                       .toLowerCase()
-//                       .includes("business")
-//                   )}
-//                   theme={THEMES.business}
-//                   onAddToCart={handleAddToCart}
-//                   onAddToWishlist={handleWishlist}
-//                 />
-//               )}
+//             {/* =================================================
+//                 GAMING
+//             ================================================= */}
 
-//             {/* 3. Chromebook Laptops Section */}
-//             {filteredProducts.some((p) =>
-//               (p.category?.name || p.category || "")
-//                 .toLowerCase()
-//                 .includes("chromebook")
-//             ) && (
-//                 <LaptopSection
-//                   icon="💻"
-//                   title="Chromebook Laptops"
-//                   items={filteredProducts.filter((p) =>
-//                     (p.category?.name || p.category || "")
-//                       .toLowerCase()
-//                       .includes("chromebook")
-//                   )}
-//                   theme={THEMES.chromebook}
-//                   onAddToCart={handleAddToCart}
-//                   onAddToWishlist={handleWishlist}
-//                 />
-//               )}
-
-//             {/* 4. Other Products Section */}
 //             {filteredProducts.some(
 //               (p) =>
-//                 !["gaming", "business", "chromebook"].some((key) =>
-//                   (p.category?.name || p.category || "")
+//                 (
+//                   p.category?.name ||
+//                   p.category ||
+//                   ""
+//                 )
+//                   .toLowerCase()
+//                   .includes("gaming")
+//             ) && (
+
+//               <LaptopSection
+//                 icon="🎮"
+//                 title="Gaming Laptops"
+//                 items={filteredProducts.filter(
+//                   (p) =>
+//                     (
+//                       p.category?.name ||
+//                       p.category ||
+//                       ""
+//                     )
+//                       .toLowerCase()
+//                       .includes("gaming")
+//                 )}
+//                 theme={THEMES.gaming}
+//                 onAddToCart={
+//                   handleAddToCart
+//                 }
+//                 onAddToWishlist={
+//                   handleWishlist
+//                 }
+//               />
+
+//             )}
+
+//             {/* =================================================
+//                 BUSINESS
+//             ================================================= */}
+
+//             {filteredProducts.some(
+//               (p) =>
+//                 (
+//                   p.category?.name ||
+//                   p.category ||
+//                   ""
+//                 )
+//                   .toLowerCase()
+//                   .includes("business")
+//             ) && (
+
+//               <LaptopSection
+//                 icon="💼"
+//                 title="Business Laptops"
+//                 items={filteredProducts.filter(
+//                   (p) =>
+//                     (
+//                       p.category?.name ||
+//                       p.category ||
+//                       ""
+//                     )
+//                       .toLowerCase()
+//                       .includes("business")
+//                 )}
+//                 theme={THEMES.business}
+//                 onAddToCart={
+//                   handleAddToCart
+//                 }
+//                 onAddToWishlist={
+//                   handleWishlist
+//                 }
+//               />
+
+//             )}
+
+//             {/* =================================================
+//                 CHROMEBOOK
+//             ================================================= */}
+
+//             {filteredProducts.some(
+//               (p) =>
+//                 (
+//                   p.category?.name ||
+//                   p.category ||
+//                   ""
+//                 )
+//                   .toLowerCase()
+//                   .includes("chromebook")
+//             ) && (
+
+//               <LaptopSection
+//                 icon="💻"
+//                 title="Chromebook Laptops"
+//                 items={filteredProducts.filter(
+//                   (p) =>
+//                     (
+//                       p.category?.name ||
+//                       p.category ||
+//                       ""
+//                     )
+//                       .toLowerCase()
+//                       .includes("chromebook")
+//                 )}
+//                 theme={THEMES.chromebook}
+//                 onAddToCart={
+//                   handleAddToCart
+//                 }
+//                 onAddToWishlist={
+//                   handleWishlist
+//                 }
+//               />
+
+//             )}
+
+//             {/* =================================================
+//                 OTHER
+//             ================================================= */}
+
+//             {filteredProducts.some(
+//               (p) =>
+//                 ![
+//                   "gaming",
+//                   "business",
+//                   "chromebook",
+//                 ].some((key) =>
+//                   (
+//                     p.category?.name ||
+//                     p.category ||
+//                     ""
+//                   )
 //                     .toLowerCase()
 //                     .includes(key)
 //                 )
 //             ) && (
-//                 <LaptopSection
-//                   icon="📦"
-//                   title="Other Laptops & Products"
-//                   items={filteredProducts.filter(
-//                     (p) =>
-//                       !["gaming", "business", "chromebook"].some((key) =>
-//                         (p.category?.name || p.category || "")
-//                           .toLowerCase()
-//                           .includes(key)
+
+//               <LaptopSection
+//                 icon="📦"
+//                 title="Other Laptops & Products"
+//                 items={filteredProducts.filter(
+//                   (p) =>
+//                     ![
+//                       "gaming",
+//                       "business",
+//                       "chromebook",
+//                     ].some((key) =>
+//                       (
+//                         p.category?.name ||
+//                         p.category ||
+//                         ""
 //                       )
-//                   )}
-//                   theme={THEMES.other}
-//                   onAddToCart={handleAddToCart}
-//                   onAddToWishlist={handleWishlist}
-//                 />
-//               )}
+//                         .toLowerCase()
+//                         .includes(key)
+//                     )
+//                 )}
+//                 theme={THEMES.other}
+//                 onAddToCart={
+//                   handleAddToCart
+//                 }
+//                 onAddToWishlist={
+//                   handleWishlist
+//                 }
+//               />
+
+//             )}
+
 //           </div>
+
 //         )}
+
 //       </main>
 
 //       <Footer />
+
 //     </div>
 //   );
 // };
 
 // export default Shop;
 
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-
-
-
-
-import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
-// =====================================================
-// SHARED LAYOUT
-// =====================================================
-
-import Topbar from "../../components/TopBar/TopBar";
-import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-
-// =====================================================
-// PAGE COMPONENT
-// =====================================================
-
 import LaptopSection from "./LaptopSection/LaptopSection";
-
-// =====================================================
-// SERVICES
-// =====================================================
 
 import { getShopProducts } from "../../services/productService";
 import { getActiveOffers } from "../../services/offerService";
@@ -2161,6 +1505,13 @@ const THEMES = {
       "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200/60 dark:border-amber-800/60",
   },
 
+  refurbished: {
+    badgeBg: "from-emerald-600 to-teal-600",
+    badgeShadow: "shadow-emerald-500/20",
+    pillBg:
+      "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200/60 dark:border-emerald-800/60",
+  },
+
   other: {
     badgeBg: "from-teal-500 to-emerald-600",
     badgeShadow: "shadow-teal-500/20",
@@ -2170,21 +1521,28 @@ const THEMES = {
 };
 
 // =====================================================
-// HELPERS
+// GET PRODUCT ID
 // =====================================================
 
 const getProductId = (product) => {
-  if (!product) return null;
+  if (!product) {
+    return null;
+  }
 
   if (typeof product === "string") {
     return product;
   }
 
-  return product._id || product.id || null;
+  return (
+    product._id ||
+    product.id ||
+    product.productId ||
+    null
+  );
 };
 
 // =====================================================
-// PRODUCT PRICE
+// GET PRODUCT PRICE
 // =====================================================
 
 const getProductPrice = (product) => {
@@ -2198,7 +1556,280 @@ const getProductPrice = (product) => {
 };
 
 // =====================================================
-// OFFER ACTIVE CHECK
+// GENERIC OBJECT NAME
+// =====================================================
+
+const getObjectName = (value) => {
+  if (!value) {
+    return "";
+  }
+
+  if (typeof value === "object") {
+    return String(
+      value.name ??
+        value.title ??
+        value.label ??
+        value.categoryName ??
+        value.subcategoryName ??
+        value.subCategoryName ??
+        ""
+    ).trim();
+  }
+
+  return String(value).trim();
+};
+
+// =====================================================
+// CATEGORY
+// =====================================================
+
+const getCategoryName = (product) => {
+  if (!product) {
+    return "";
+  }
+
+  return getObjectName(
+    product.category ??
+      product.categoryId ??
+      product.categoryData
+  );
+};
+
+// =====================================================
+// SUBCATEGORY
+// =====================================================
+
+const getSubcategoryName = (product) => {
+  if (!product) {
+    return "";
+  }
+
+  const possibleValues = [
+    product.subcategory,
+    product.subCategory,
+    product.subcategoryId,
+    product.subCategoryId,
+    product.subcategoryData,
+    product.subCategoryData,
+  ];
+
+  for (const value of possibleValues) {
+    const name = getObjectName(value);
+
+    if (name) {
+      return name;
+    }
+  }
+
+  return "";
+};
+
+// =====================================================
+// BRAND
+// =====================================================
+
+const getBrandName = (product) => {
+  if (!product) {
+    return "";
+  }
+
+  return getObjectName(
+    product.brand ??
+      product.brandId ??
+      product.brandData
+  );
+};
+
+// =====================================================
+// PRODUCT CONDITION
+//
+// IMPORTANT:
+// productType is now the MAIN SOURCE.
+//
+// NEW          -> New
+// REFURBISHED  -> Refurbished
+//
+// Old fallback fields are checked ONLY when
+// productType is missing.
+// =====================================================
+
+const isProductRefurbished = (product) => {
+  if (!product) {
+    return false;
+  }
+
+  // =================================================
+  // 1. PRODUCT TYPE - AUTHORITATIVE
+  // =================================================
+
+  const rawProductType =
+    product.productType;
+
+  if (
+    rawProductType !== undefined &&
+    rawProductType !== null &&
+    String(rawProductType).trim() !== ""
+  ) {
+    const productType = String(
+      rawProductType
+    )
+      .trim()
+      .toUpperCase()
+      .replace(/[\s-]+/g, "_");
+
+    // -----------------------------------------------
+    // NEW IS ALWAYS NEW
+    // -----------------------------------------------
+
+    if (
+      productType === "NEW" ||
+      productType === "NEW_PRODUCT"
+    ) {
+      return false;
+    }
+
+    // -----------------------------------------------
+    // REFURBISHED IS ALWAYS REFURBISHED
+    // -----------------------------------------------
+
+    if (
+      productType === "REFURBISHED" ||
+      productType === "REFURB" ||
+      productType === "RENEWED" ||
+      productType === "RECONDITIONED" ||
+      productType === "REFURBISHED_PRODUCT"
+    ) {
+      return true;
+    }
+
+    // -----------------------------------------------
+    // If productType exists but is unknown,
+    // DO NOT guess from refurbishedDetails.
+    // -----------------------------------------------
+
+    return false;
+  }
+
+  // =================================================
+  // 2. OLD DATA FALLBACK
+  //
+  // Only used when productType does not exist.
+  // =================================================
+
+  if (product.isRefurbished === true) {
+    return true;
+  }
+
+  if (product.refurbished === true) {
+    return true;
+  }
+
+  // =================================================
+  // 3. STRING BOOLEAN
+  // =================================================
+
+  const isRefurbishedValue = String(
+    product.isRefurbished ?? ""
+  )
+    .trim()
+    .toLowerCase();
+
+  if (
+    [
+      "true",
+      "yes",
+      "1",
+      "refurbished",
+      "refurb",
+    ].includes(isRefurbishedValue)
+  ) {
+    return true;
+  }
+
+  const refurbishedValue = String(
+    product.refurbished ?? ""
+  )
+    .trim()
+    .toLowerCase();
+
+  if (
+    [
+      "true",
+      "yes",
+      "1",
+      "refurbished",
+      "refurb",
+    ].includes(refurbishedValue)
+  ) {
+    return true;
+  }
+
+  // =================================================
+  // 4. OLD CONDITION FIELD
+  // =================================================
+
+  const conditionValue = String(
+    product.condition ??
+      product.productCondition ??
+      product.type ??
+      ""
+  )
+    .trim()
+    .toLowerCase();
+
+  if (
+    conditionValue === "refurbished" ||
+    conditionValue === "refurb" ||
+    conditionValue === "renewed" ||
+    conditionValue === "reconditioned"
+  ) {
+    return true;
+  }
+
+  // =================================================
+  // 5. OLD REFURBISHED DETAILS
+  //
+  // Only for products without productType.
+  // =================================================
+
+  if (
+    product.refurbishedDetails &&
+    typeof product.refurbishedDetails ===
+      "object"
+  ) {
+    const details =
+      product.refurbishedDetails;
+
+    const hasRealRefurbishedValue =
+      Boolean(
+        details.grade ||
+          details.batteryHealth !==
+            undefined ||
+          details.warrantyMonths !==
+            undefined ||
+          details.testingStatus
+      );
+
+    if (hasRealRefurbishedValue) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+// =====================================================
+// PRODUCT CONDITION TEXT
+// =====================================================
+
+const getProductCondition = (product) => {
+  return isProductRefurbished(product)
+    ? "Refurbished"
+    : "New";
+};
+
+// =====================================================
+// ACTIVE OFFER CHECK
 // =====================================================
 
 const isOfferCurrentlyActive = (offer) => {
@@ -2206,40 +1837,37 @@ const isOfferCurrentlyActive = (offer) => {
     return false;
   }
 
-  // -----------------------------------------------
-  // STATUS
-  // -----------------------------------------------
-
   if (
     offer.status &&
-    String(offer.status).toUpperCase() !== "ACTIVE"
+    String(offer.status).toUpperCase() !==
+      "ACTIVE"
   ) {
     return false;
   }
 
   const now = new Date();
 
-  // -----------------------------------------------
-  // START DATE
-  // -----------------------------------------------
-
   if (offer.startDate) {
-    const start = new Date(offer.startDate);
+    const start = new Date(
+      offer.startDate
+    );
 
     if (now < start) {
       return false;
     }
   }
 
-  // -----------------------------------------------
-  // END DATE
-  // -----------------------------------------------
-
   if (offer.endDate) {
-    const end = new Date(offer.endDate);
+    const end = new Date(
+      offer.endDate
+    );
 
-    // Complete end date ko active rakho
-    end.setHours(23, 59, 59, 999);
+    end.setHours(
+      23,
+      59,
+      59,
+      999
+    );
 
     if (now > end) {
       return false;
@@ -2253,10 +1881,13 @@ const isOfferCurrentlyActive = (offer) => {
 // CALCULATE OFFER PRICE
 // =====================================================
 
-const calculateOfferPrice = (product, offer) => {
-  const originalPrice = getProductPrice(product);
+const calculateOfferPrice = (
+  product,
+  offer
+) => {
+  const originalPrice =
+    getProductPrice(product);
 
-  // No offer
   if (!offer) {
     return {
       originalPrice,
@@ -2270,7 +1901,6 @@ const calculateOfferPrice = (product, offer) => {
     offer.discountValue ?? 0
   );
 
-  // Invalid discount
   if (discountValue <= 0) {
     return {
       originalPrice,
@@ -2282,32 +1912,20 @@ const calculateOfferPrice = (product, offer) => {
 
   let discountAmount = 0;
 
-  // -----------------------------------------------
-  // PERCENTAGE
-  // -----------------------------------------------
+  const discountType = String(
+    offer.discountType ?? ""
+  ).toUpperCase();
 
-  if (
-    String(offer.discountType).toUpperCase() ===
-    "PERCENTAGE"
-  ) {
+  if (discountType === "PERCENTAGE") {
     discountAmount =
-      (originalPrice * discountValue) / 100;
+      (originalPrice *
+        discountValue) /
+      100;
   }
 
-  // -----------------------------------------------
-  // FIXED
-  // -----------------------------------------------
-
-  else if (
-    String(offer.discountType).toUpperCase() ===
-    "FIXED"
-  ) {
+  if (discountType === "FIXED") {
     discountAmount = discountValue;
   }
-
-  // -----------------------------------------------
-  // PROTECT PRICE
-  // -----------------------------------------------
 
   discountAmount = Math.min(
     Math.max(discountAmount, 0),
@@ -2315,7 +1933,8 @@ const calculateOfferPrice = (product, offer) => {
   );
 
   const finalPrice =
-    originalPrice - discountAmount;
+    originalPrice -
+    discountAmount;
 
   return {
     originalPrice,
@@ -2326,6 +1945,134 @@ const calculateOfferPrice = (product, offer) => {
 };
 
 // =====================================================
+// EXTRACT PRODUCTS
+// =====================================================
+
+const extractProducts = (response) => {
+  if (!response) {
+    return [];
+  }
+
+  if (
+    Array.isArray(
+      response?.data?.data
+    )
+  ) {
+    return response.data.data;
+  }
+
+  if (
+    Array.isArray(
+      response?.data?.products
+    )
+  ) {
+    return response.data.products;
+  }
+
+  if (
+    Array.isArray(
+      response?.data?.items
+    )
+  ) {
+    return response.data.items;
+  }
+
+  if (
+    Array.isArray(response?.data)
+  ) {
+    return response.data;
+  }
+
+  return [];
+};
+
+// =====================================================
+// EXTRACT OFFERS
+// =====================================================
+
+const extractOffers = (response) => {
+  if (!response) {
+    return [];
+  }
+
+  if (
+    Array.isArray(
+      response?.data?.offers
+    )
+  ) {
+    return response.data.offers;
+  }
+
+  if (
+    Array.isArray(
+      response?.data?.data
+    )
+  ) {
+    return response.data.data;
+  }
+
+  if (
+    Array.isArray(response?.data)
+  ) {
+    return response.data;
+  }
+
+  return [];
+};
+
+// =====================================================
+// REMOVE DUPLICATE PRODUCTS
+// =====================================================
+
+const removeDuplicateProducts = (
+  productList
+) => {
+  if (!Array.isArray(productList)) {
+    return [];
+  }
+
+  const seen = new Set();
+
+  const uniqueProducts =
+    productList.filter((product) => {
+      const id =
+        getProductId(product);
+
+      // If no ID, keep product.
+      if (!id) {
+        return true;
+      }
+
+      const key = String(id);
+
+      if (seen.has(key)) {
+        return false;
+      }
+
+      seen.add(key);
+
+      return true;
+    });
+
+  console.log(
+    "PRODUCT DUPLICATE CHECK:",
+    {
+      originalCount:
+        productList.length,
+
+      uniqueCount:
+        uniqueProducts.length,
+
+      removed:
+        productList.length -
+        uniqueProducts.length,
+    }
+  );
+
+  return uniqueProducts;
+};
+
+// =====================================================
 // SHOP
 // =====================================================
 
@@ -2333,15 +2080,19 @@ const Shop = () => {
   const navigate = useNavigate();
 
   // ===================================================
-  // STATE
+  // STATES
   // ===================================================
 
-  const [products, setProducts] = useState([]);
-
-  const [filteredProducts, setFilteredProducts] =
+  const [products, setProducts] =
     useState([]);
 
-  const [offers, setOffers] = useState([]);
+  const [
+    filteredProducts,
+    setFilteredProducts,
+  ] = useState([]);
+
+  const [offers, setOffers] =
+    useState([]);
 
   const [loading, setLoading] =
     useState(true);
@@ -2355,11 +2106,17 @@ const Shop = () => {
   const [brand, setBrand] =
     useState("");
 
+  const [subcategory, setSubcategory] =
+    useState("");
+
+  const [condition, setCondition] =
+    useState("");
+
   const [sort, setSort] =
     useState("");
 
   // ===================================================
-  // LOAD SHOP
+  // LOAD
   // ===================================================
 
   useEffect(() => {
@@ -2367,432 +2124,473 @@ const Shop = () => {
   }, []);
 
   // ===================================================
-  // LOAD PRODUCTS + ACTIVE OFFERS
+  // LOAD PRODUCTS + OFFERS
   // ===================================================
 
-  const loadProductsAndOffers = async () => {
-    try {
-      setLoading(true);
+  const loadProductsAndOffers =
+    async () => {
+      try {
+        setLoading(true);
 
-      // ------------------------------------------------
-      // IMPORTANT
-      //
-      // getShopProducts = public
-      // getActiveOffers = public
-      //
-      // Do NOT use getOffers() here.
-      // ------------------------------------------------
+        const [
+          productsResponse,
+          offersResponse,
+        ] = await Promise.all([
+          getShopProducts(),
+          getActiveOffers(),
+        ]);
 
-      const [
-        productsResponse,
-        offersResponse,
-      ] = await Promise.all([
-        getShopProducts(),
-        getActiveOffers(),
-      ]);
-
-      // =================================================
-      // PRODUCTS RESPONSE
-      // =================================================
-
-      console.log(
-        "SHOP PRODUCTS RESPONSE:",
-        productsResponse?.data
-      );
-
-      const productList =
-        Array.isArray(
-          productsResponse?.data?.data
-        )
-          ? productsResponse.data.data
-          : Array.isArray(
-              productsResponse?.data?.products
-            )
-          ? productsResponse.data.products
-          : Array.isArray(
-              productsResponse?.data
-            )
-          ? productsResponse.data
-          : [];
-
-      // =================================================
-      // OFFERS RESPONSE
-      // =================================================
-
-      console.log(
-        "SHOP ACTIVE OFFERS RESPONSE:",
-        offersResponse?.data
-      );
-
-      const offerList =
-        Array.isArray(
-          offersResponse?.data?.offers
-        )
-          ? offersResponse.data.offers
-          : Array.isArray(
-              offersResponse?.data?.data
-            )
-          ? offersResponse.data.data
-          : Array.isArray(
-              offersResponse?.data
-            )
-          ? offersResponse.data
-          : [];
-
-      console.log(
-        "SHOP PRODUCT LIST:",
-        productList
-      );
-
-      console.log(
-        "SHOP OFFER LIST:",
-        offerList
-      );
-
-      // =================================================
-      // ACTIVE OFFERS
-      // =================================================
-
-      const activeOffers =
-        offerList.filter(
-          isOfferCurrentlyActive
+        console.log(
+          "SHOP PRODUCTS RESPONSE:",
+          productsResponse?.data
         );
 
-      console.log(
-        "ACTIVE SHOP OFFERS:",
-        activeOffers
-      );
+        // ---------------------------------------------
+        // RAW PRODUCTS
+        // ---------------------------------------------
 
-      // =================================================
-      // APPLY OFFERS
-      // =================================================
+        const rawProductList =
+          extractProducts(
+            productsResponse
+          );
 
-      const productsWithOffers =
-        productList.map((product) => {
-          const productId =
-            getProductId(product);
+        console.log(
+          "RAW SHOP PRODUCT LIST:",
+          rawProductList
+        );
 
-          // --------------------------------------------
-          // FIND OFFERS FOR CURRENT PRODUCT
-          // --------------------------------------------
+        // ---------------------------------------------
+        // REMOVE REAL DUPLICATES ONLY
+        // ---------------------------------------------
 
-          const productOffers =
-            activeOffers.filter(
-              (offer) => {
-                if (
-                  !Array.isArray(
-                    offer?.products
-                  )
-                ) {
-                  return false;
-                }
+        const productList =
+          removeDuplicateProducts(
+            rawProductList
+          );
 
-                return offer.products.some(
-                  (offerProduct) => {
-                    const offerProductId =
-                      getProductId(
+        console.log(
+          "UNIQUE SHOP PRODUCT LIST:",
+          productList
+        );
+
+        // ---------------------------------------------
+        // DEBUG CONDITION
+        // ---------------------------------------------
+
+        productList.forEach(
+          (product, index) => {
+            console.log(
+              `PRODUCT ${index + 1}:`,
+              {
+                id:
+                  getProductId(
+                    product
+                  ),
+
+                name:
+                  product?.name,
+
+                productType:
+                  product?.productType,
+
+                condition:
+                  product?.condition,
+
+                isRefurbished:
+                  product?.isRefurbished,
+
+                refurbished:
+                  product?.refurbished,
+
+                refurbishedDetails:
+                  product?.refurbishedDetails,
+
+                detectedCondition:
+                  getProductCondition(
+                    product
+                  ),
+              }
+            );
+          }
+        );
+
+        // ---------------------------------------------
+        // OFFERS
+        // ---------------------------------------------
+
+        const offerList =
+          extractOffers(
+            offersResponse
+          );
+
+        const activeOffers =
+          offerList.filter(
+            isOfferCurrentlyActive
+          );
+
+        // ---------------------------------------------
+        // APPLY OFFERS
+        // ---------------------------------------------
+
+        const productsWithOffers =
+          productList.map(
+            (product) => {
+              const productId =
+                getProductId(
+                  product
+                );
+
+              const productOffers =
+                activeOffers.filter(
+                  (offer) => {
+                    if (
+                      !Array.isArray(
+                        offer?.products
+                      )
+                    ) {
+                      return false;
+                    }
+
+                    return offer.products.some(
+                      (
                         offerProduct
-                      );
+                      ) => {
+                        const offerProductId =
+                          getProductId(
+                            offerProduct
+                          );
 
-                    return (
-                      String(
-                        offerProductId
-                      ) ===
-                      String(productId)
+                        return (
+                          String(
+                            offerProductId
+                          ) ===
+                          String(
+                            productId
+                          )
+                        );
+                      }
                     );
                   }
                 );
+
+              // ---------------------------------------
+              // NO OFFER
+              // ---------------------------------------
+
+              if (
+                productOffers.length ===
+                0
+              ) {
+                const price =
+                  getProductPrice(
+                    product
+                  );
+
+                return {
+                  ...product,
+
+                  originalPrice:
+                    price,
+
+                  finalPrice:
+                    price,
+
+                  discountAmount: 0,
+
+                  offer: null,
+
+                  hasOffer: false,
+
+                  offerTitle: "",
+
+                  offerDiscountType:
+                    null,
+
+                  offerDiscountValue: 0,
+                };
               }
-            );
 
-          // --------------------------------------------
-          // NO OFFER
-          // --------------------------------------------
+              // ---------------------------------------
+              // CALCULATE OFFERS
+              // ---------------------------------------
 
-          if (
-            productOffers.length === 0
-          ) {
-            const price =
-              getProductPrice(product);
+              const calculatedOffers =
+                productOffers
+                  .map((offer) =>
+                    calculateOfferPrice(
+                      product,
+                      offer
+                    )
+                  )
+                  .filter(
+                    (item) =>
+                      item.offer !==
+                      null
+                  );
 
-            return {
-              ...product,
+              if (
+                calculatedOffers.length ===
+                0
+              ) {
+                const price =
+                  getProductPrice(
+                    product
+                  );
 
-              originalPrice: price,
+                return {
+                  ...product,
 
-              finalPrice: price,
+                  originalPrice:
+                    price,
 
-              discountAmount: 0,
+                  finalPrice:
+                    price,
 
-              offer: null,
+                  discountAmount: 0,
 
-              hasOffer: false,
+                  offer: null,
 
-              offerTitle: "",
+                  hasOffer: false,
 
-              offerDiscountType: null,
+                  offerTitle: "",
 
-              offerDiscountValue: 0,
-            };
-          }
+                  offerDiscountType:
+                    null,
 
-          // --------------------------------------------
-          // CALCULATE ALL OFFERS
-          // --------------------------------------------
+                  offerDiscountValue: 0,
+                };
+              }
 
-          const calculatedOffers =
-            productOffers
-              .map((offer) =>
-                calculateOfferPrice(
-                  product,
-                  offer
-                )
-              )
-              .filter(
-                (item) =>
-                  item.offer !== null
-              );
+              // ---------------------------------------
+              // BEST OFFER
+              // ---------------------------------------
 
-          // Safety
-          if (
-            calculatedOffers.length === 0
-          ) {
-            const price =
-              getProductPrice(product);
+              const bestOffer =
+                calculatedOffers.reduce(
+                  (
+                    best,
+                    current
+                  ) => {
+                    if (!best) {
+                      return current;
+                    }
 
-            return {
-              ...product,
-
-              originalPrice: price,
-
-              finalPrice: price,
-
-              discountAmount: 0,
-
-              offer: null,
-
-              hasOffer: false,
-            };
-          }
-
-          // --------------------------------------------
-          // BEST OFFER
-          // Lowest final price
-          // --------------------------------------------
-
-          const bestOffer =
-            calculatedOffers.reduce(
-              (best, current) => {
-                if (!best) {
-                  return current;
-                }
-
-                return current.finalPrice <
-                  best.finalPrice
-                  ? current
-                  : best;
-              },
-              null
-            );
-
-          // --------------------------------------------
-          // PRODUCT WITH OFFER
-          // --------------------------------------------
-
-          return {
-            ...product,
-
-            originalPrice:
-              bestOffer.originalPrice,
-
-            finalPrice:
-              bestOffer.finalPrice,
-
-            discountAmount:
-              bestOffer.discountAmount,
-
-            offer:
-              bestOffer.offer,
-
-            hasOffer: true,
-
-            offerTitle:
-              bestOffer.offer?.title ||
-              "Special Offer",
-
-            offerDiscountType:
-              bestOffer.offer
-                ?.discountType,
-
-            offerDiscountValue:
-              bestOffer.offer
-                ?.discountValue ?? 0,
-          };
-        });
-
-      // =================================================
-      // LOG FINAL DATA
-      // =================================================
-
-      console.log(
-        "PRODUCTS WITH OFFERS:",
-        productsWithOffers
-      );
-
-      // =================================================
-      // SET STATE
-      // =================================================
-
-      setOffers(activeOffers);
-
-      setProducts(
-        productsWithOffers
-      );
-
-      setFilteredProducts(
-        productsWithOffers
-      );
-    } catch (error) {
-      console.error(
-        "SHOP PRODUCTS/OFFERS ERROR:",
-        error
-      );
-
-      console.error(
-        "SHOP ERROR RESPONSE:",
-        error?.response?.data
-      );
-
-      // -----------------------------------------------
-      // IMPORTANT
-      // -----------------------------------------------
-      //
-      // Agar offers fail ho jayein,
-      // products phir bhi show hone chahiye.
-      //
-      // Isliye Promise.all ke wajah se
-      // entire shop blank nahi karenge.
-      //
-      // -----------------------------------------------
-
-      try {
-        const productsResponse =
-          await getShopProducts();
-
-        const productList =
-          Array.isArray(
-            productsResponse?.data?.data
-          )
-            ? productsResponse.data.data
-            : Array.isArray(
-                productsResponse?.data?.products
-              )
-            ? productsResponse.data.products
-            : Array.isArray(
-                productsResponse?.data
-              )
-            ? productsResponse.data
-            : [];
-
-        const productsWithoutOffers =
-          productList.map(
-            (product) => {
-              const price =
-                getProductPrice(
-                  product
+                    return current.finalPrice <
+                      best.finalPrice
+                      ? current
+                      : best;
+                  },
+                  null
                 );
 
               return {
                 ...product,
 
-                originalPrice: price,
+                originalPrice:
+                  bestOffer.originalPrice,
 
-                finalPrice: price,
+                finalPrice:
+                  bestOffer.finalPrice,
 
-                discountAmount: 0,
+                discountAmount:
+                  bestOffer.discountAmount,
 
-                offer: null,
+                offer:
+                  bestOffer.offer,
 
-                hasOffer: false,
+                hasOffer: true,
+
+                offerTitle:
+                  bestOffer.offer
+                    ?.title ||
+                  "Special Offer",
+
+                offerDiscountType:
+                  bestOffer.offer
+                    ?.discountType,
+
+                offerDiscountValue:
+                  bestOffer.offer
+                    ?.discountValue ??
+                  0,
               };
             }
           );
 
         setProducts(
-          productsWithoutOffers
+          productsWithOffers
         );
 
         setFilteredProducts(
-          productsWithoutOffers
+          productsWithOffers
         );
 
-        setOffers([]);
-
-        console.log(
-          "SHOP LOADED WITHOUT OFFERS:",
-          productsWithoutOffers
+        setOffers(
+          activeOffers
         );
-      } catch (productError) {
+      } catch (error) {
         console.error(
-          "SHOP PRODUCTS ERROR:",
-          productError
+          "SHOP PRODUCTS/OFFERS ERROR:",
+          error
         );
 
-        toast.error(
-          productError?.response
-            ?.data?.message ||
-            "Failed to load products"
+        console.error(
+          "SHOP ERROR RESPONSE:",
+          error?.response?.data
         );
 
-        setProducts([]);
+        // ---------------------------------------------
+        // FALLBACK PRODUCTS
+        // ---------------------------------------------
 
-        setFilteredProducts([]);
+        try {
+          const productsResponse =
+            await getShopProducts();
 
-        setOffers([]);
+          const rawProductList =
+            extractProducts(
+              productsResponse
+            );
+
+          const productList =
+            removeDuplicateProducts(
+              rawProductList
+            );
+
+          const productsWithoutOffers =
+            productList.map(
+              (product) => {
+                const price =
+                  getProductPrice(
+                    product
+                  );
+
+                return {
+                  ...product,
+
+                  originalPrice:
+                    price,
+
+                  finalPrice:
+                    price,
+
+                  discountAmount: 0,
+
+                  offer: null,
+
+                  hasOffer: false,
+
+                  offerTitle: "",
+
+                  offerDiscountType:
+                    null,
+
+                  offerDiscountValue: 0,
+                };
+              }
+            );
+
+          setProducts(
+            productsWithoutOffers
+          );
+
+          setFilteredProducts(
+            productsWithoutOffers
+          );
+
+          setOffers([]);
+        } catch (productError) {
+          console.error(
+            "SHOP PRODUCTS ERROR:",
+            productError
+          );
+
+          toast.error(
+            productError
+              ?.response?.data
+              ?.message ||
+              "Failed to load products"
+          );
+
+          setProducts([]);
+
+          setFilteredProducts([]);
+
+          setOffers([]);
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   // ===================================================
-  // CATEGORY LIST
+  // CATEGORIES
   // ===================================================
 
   const categoriesList =
-    Array.from(
-      new Set(
-        products
-          .map((product) =>
-            typeof product.category ===
-            "object"
-              ? product.category?.name
-              : product.category
-          )
-          .filter(Boolean)
-      )
-    );
+    useMemo(() => {
+      return Array.from(
+        new Set(
+          products
+            .map(
+              getCategoryName
+            )
+            .filter(Boolean)
+        )
+      ).sort((a, b) =>
+        a.localeCompare(b)
+      );
+    }, [products]);
 
   // ===================================================
-  // BRAND LIST
+  // SUBCATEGORIES
+  // ===================================================
+
+  const subcategoriesList =
+    useMemo(() => {
+      let source = products;
+
+      if (category) {
+        source = source.filter(
+          (product) =>
+            getCategoryName(
+              product
+            ) === category
+        );
+      }
+
+      return Array.from(
+        new Set(
+          source
+            .map(
+              getSubcategoryName
+            )
+            .filter(Boolean)
+        )
+      ).sort((a, b) =>
+        a.localeCompare(b)
+      );
+    }, [products, category]);
+
+  // ===================================================
+  // BRANDS
   // ===================================================
 
   const brandsList =
-    Array.from(
-      new Set(
-        products
-          .map((product) =>
-            typeof product.brand ===
-            "object"
-              ? product.brand?.name
-              : product.brand
-          )
-          .filter(Boolean)
-      )
-    );
+    useMemo(() => {
+      return Array.from(
+        new Set(
+          products
+            .map(getBrandName)
+            .filter(Boolean)
+        )
+      ).sort((a, b) =>
+        a.localeCompare(b)
+      );
+    }, [products]);
 
   // ===================================================
-  // FILTER + SORT
+  // FILTER PRODUCTS
   // ===================================================
 
   useEffect(() => {
@@ -2802,52 +2600,135 @@ const Shop = () => {
       ? [...products]
       : [];
 
-    // -------------------------------------------------
+    // =================================================
     // SEARCH
-    // -------------------------------------------------
+    // =================================================
 
-    if (search) {
+    if (search.trim()) {
+      const searchValue =
+        search
+          .toLowerCase()
+          .trim();
+
       data = data.filter(
-        (product) =>
-          product.name
-            ?.toLowerCase()
-            .includes(
-              search.toLowerCase()
+        (product) => {
+          const productName =
+            String(
+              product?.name || ""
+            ).toLowerCase();
+
+          const categoryName =
+            getCategoryName(
+              product
+            ).toLowerCase();
+
+          const subcategoryName =
+            getSubcategoryName(
+              product
+            ).toLowerCase();
+
+          const brandName =
+            getBrandName(
+              product
+            ).toLowerCase();
+
+          const conditionName =
+            getProductCondition(
+              product
+            ).toLowerCase();
+
+          return (
+            productName.includes(
+              searchValue
+            ) ||
+            categoryName.includes(
+              searchValue
+            ) ||
+            subcategoryName.includes(
+              searchValue
+            ) ||
+            brandName.includes(
+              searchValue
+            ) ||
+            conditionName.includes(
+              searchValue
             )
+          );
+        }
       );
     }
 
-    // -------------------------------------------------
+    // =================================================
     // CATEGORY
-    // -------------------------------------------------
+    // =================================================
 
     if (category) {
       data = data.filter(
         (product) =>
-          (
-            product.category?.name ||
-            product.category
+          getCategoryName(
+            product
           ) === category
       );
     }
 
-    // -------------------------------------------------
+    // =================================================
+    // SUBCATEGORY
+    // =================================================
+
+    if (subcategory) {
+      data = data.filter(
+        (product) =>
+          getSubcategoryName(
+            product
+          ) === subcategory
+      );
+    }
+
+    // =================================================
     // BRAND
-    // -------------------------------------------------
+    // =================================================
 
     if (brand) {
       data = data.filter(
         (product) =>
-          (
-            product.brand?.name ||
-            product.brand
+          getBrandName(
+            product
           ) === brand
       );
     }
 
-    // -------------------------------------------------
-    // LOW TO HIGH
-    // -------------------------------------------------
+    // =================================================
+    // CONDITION - NEW
+    // =================================================
+
+    if (condition === "new") {
+      data = data.filter(
+        (product) =>
+          !isProductRefurbished(
+            product
+          )
+      );
+    }
+
+    // =================================================
+    // CONDITION - REFURBISHED
+    // =================================================
+
+    if (
+      condition ===
+      "refurbished"
+    ) {
+      data = data.filter(
+        (product) =>
+          isProductRefurbished(
+            product
+          )
+      );
+    }
+
+    // =================================================
+    // SORT LOW -> HIGH
+    // =================================================
 
     if (sort === "low") {
       data.sort(
@@ -2863,9 +2744,9 @@ const Shop = () => {
       );
     }
 
-    // -------------------------------------------------
-    // HIGH TO LOW
-    // -------------------------------------------------
+    // =================================================
+    // SORT HIGH -> LOW
+    // =================================================
 
     if (sort === "high") {
       data.sort(
@@ -2881,17 +2762,44 @@ const Shop = () => {
       );
     }
 
-    setFilteredProducts(data);
+    setFilteredProducts(
+      data
+    );
   }, [
+    products,
     search,
     category,
+    subcategory,
     brand,
+    condition,
     sort,
-    products,
   ]);
 
   // ===================================================
-  // ADD TO CART
+  // CLEAR FILTERS
+  // ===================================================
+
+  const clearFilters = () => {
+    setSearch("");
+    setCategory("");
+    setSubcategory("");
+    setBrand("");
+    setCondition("");
+    setSort("");
+  };
+
+  const hasActiveFilters =
+    Boolean(
+      search ||
+        category ||
+        subcategory ||
+        brand ||
+        condition ||
+        sort
+    );
+
+  // ===================================================
+  // CART
   // ===================================================
 
   const handleAddToCart =
@@ -2911,11 +2819,20 @@ const Shop = () => {
         return;
       }
 
+      const productId =
+        getProductId(product);
+
+      if (!productId) {
+        toast.error(
+          "Product ID not found"
+        );
+
+        return;
+      }
+
       try {
         await addToCart({
-          product:
-            product._id,
-
+          product: productId,
           quantity: 1,
         });
 
@@ -2937,149 +2854,204 @@ const Shop = () => {
   // WISHLIST
   // ===================================================
 
-  // const handleWishlist =
-  //   async (product) => {
-  //     const token =
-  //       localStorage.getItem(
-  //         "token"
-  //       );
+  const handleWishlist =
+    async (product) => {
+      const token =
+        localStorage.getItem(
+          "token"
+        );
 
-  //     if (!token) {
-  //       toast.error(
-  //         "Please Login First"
-  //       );
+      if (!token) {
+        toast.error(
+          "Please Login First"
+        );
 
-  //       navigate("/login");
+        navigate("/login");
 
-  //       return;
-  //     }
+        return;
+      }
 
-  //     try {
-  //       await addToWishlist(
-  //         product._id
-  //       );
+      const productId =
+        getProductId(product);
 
-  //       toast.success(
-  //         "Added To Wishlist"
-  //       );
-  //     } catch (error) {
-  //       toast.error(
-  //         error?.response?.data
-  //           ?.message ||
-  //           "Failed to update wishlist"
-  //       );
-  //     }
-  //   };
+      if (!productId) {
+        toast.error(
+          "Product ID not found"
+        );
 
+        return;
+      }
 
-const handleWishlist = async (product) => {
+      try {
+        await addToWishlist(
+          productId
+        );
 
-  const token =
-    localStorage.getItem("token");
+        toast.success(
+          "Added To Wishlist"
+        );
+      } catch (error) {
+        const message =
+          error?.response?.data
+            ?.message ||
+          error?.response?.data
+            ?.error ||
+          "Failed to update wishlist";
 
-  // ===============================================
-  // LOGIN CHECK
-  // ===============================================
+        if (
+          String(message)
+            .toLowerCase()
+            .includes("already")
+        ) {
+          toast.info(
+            "Product is already in Wishlist"
+          );
 
-  if (!token) {
+          return;
+        }
 
-    toast.error(
-      "Please Login First"
+        toast.error(message);
+      }
+    };
+
+  // ===================================================
+  // SECTION DATA
+  //
+  // IMPORTANT:
+  // Refurbished products are EXCLUDED from all normal
+  // sections.
+  // ===================================================
+
+  const gamingProducts =
+    filteredProducts.filter(
+      (product) =>
+        !isProductRefurbished(
+          product
+        ) &&
+        getCategoryName(product)
+          .toLowerCase()
+          .includes("gaming")
     );
 
-    navigate("/login");
-
-    return;
-  }
-
-  // ===============================================
-  // PRODUCT ID
-  // ===============================================
-
-  const productId =
-    product?._id ||
-    product?.id;
-
-  if (!productId) {
-
-    console.error(
-      "Wishlist Product ID Missing:",
-      product
+  const businessProducts =
+    filteredProducts.filter(
+      (product) =>
+        !isProductRefurbished(
+          product
+        ) &&
+        getCategoryName(product)
+          .toLowerCase()
+          .includes("business")
     );
 
-    toast.error(
-      "Product ID not found"
+  const chromebookProducts =
+    filteredProducts.filter(
+      (product) =>
+        !isProductRefurbished(
+          product
+        ) &&
+        getCategoryName(product)
+          .toLowerCase()
+          .includes("chromebook")
     );
 
-    return;
-  }
+  // ===================================================
+  // REFURBISHED
+  // ===================================================
 
-  try {
-
-    console.log(
-      "Adding Wishlist Product:",
-      productId
+  const refurbishedProducts =
+    filteredProducts.filter(
+      (product) =>
+        isProductRefurbished(
+          product
+        )
     );
 
-    // =============================================
-    // ADD WISHLIST
-    // =============================================
+  // ===================================================
+  // OTHER
+  //
+  // IMPORTANT:
+  // Refurbished products are NOT included here.
+  // ===================================================
 
-    const response =
-      await addToWishlist(
-        productId
+  const specialCategoryProducts =
+    filteredProducts.filter(
+      (product) => {
+        // ---------------------------------------------
+        // NEVER put refurbished in Other
+        // ---------------------------------------------
+
+        if (
+          isProductRefurbished(
+            product
+          )
+        ) {
+          return false;
+        }
+
+        const categoryName =
+          getCategoryName(
+            product
+          ).toLowerCase();
+
+        return ![
+          "gaming",
+          "business",
+          "chromebook",
+        ].some((key) =>
+          categoryName.includes(
+            key
+          )
+        );
+      }
+    );
+
+  // ===================================================
+  // DEBUG SECTION COUNTS
+  // ===================================================
+
+  useEffect(() => {
+    if (!loading) {
+      console.log(
+        "SHOP SECTION COUNTS:",
+        {
+          total:
+            filteredProducts.length,
+
+          newProducts:
+            filteredProducts.filter(
+              (product) =>
+                !isProductRefurbished(
+                  product
+                )
+            ).length,
+
+          refurbished:
+            refurbishedProducts.length,
+
+          gaming:
+            gamingProducts.length,
+
+          business:
+            businessProducts.length,
+
+          chromebook:
+            chromebookProducts.length,
+
+          other:
+            specialCategoryProducts.length,
+        }
       );
-
-    console.log(
-      "ADD WISHLIST RESPONSE:",
-      response?.data
-    );
-
-    // =============================================
-    // SUCCESS
-    // =============================================
-
-    toast.success(
-      "Added To Wishlist"
-    );
-
-  } catch (error) {
-
-    console.error(
-      "ADD WISHLIST ERROR:",
-      error
-    );
-
-    console.error(
-      "ADD WISHLIST ERROR RESPONSE:",
-      error?.response?.data
-    );
-
-    const message =
-      error?.response?.data?.message ||
-      error?.response?.data?.error ||
-      "Failed to update wishlist";
-
-    // ---------------------------------------------
-    // If already exists
-    // ---------------------------------------------
-
-    if (
-      String(message)
-        .toLowerCase()
-        .includes("already")
-    ) {
-
-      toast.info(
-        "Product is already in Wishlist"
-      );
-
-      return;
     }
-
-    toast.error(message);
-  }
-};
+  }, [
+    loading,
+    filteredProducts,
+    refurbishedProducts.length,
+    gamingProducts.length,
+    businessProducts.length,
+    chromebookProducts.length,
+    specialCategoryProducts.length,
+  ]);
 
   // ===================================================
   // RENDER
@@ -3088,10 +3060,6 @@ const handleWishlist = async (product) => {
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
 
-      {/* <Topbar />
-
-      <Header /> */}
-
       <main className="flex-grow py-8 px-4 sm:px-8 lg:px-12 max-w-[1400px] mx-auto w-full space-y-8">
 
         {/* =================================================
@@ -3099,7 +3067,6 @@ const handleWishlist = async (product) => {
         ================================================= */}
 
         <div className="overflow-hidden py-1">
-
           <motion.h1
             initial={{
               fontWeight: 300,
@@ -3128,54 +3095,48 @@ const handleWishlist = async (product) => {
           >
             Laptops
           </motion.h1>
-
         </div>
 
         {/* =================================================
-            OFFER INFO
+            OFFERS
         ================================================= */}
 
         {offers.length > 0 && (
           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900">
-
             <span className="text-xl">
               🎁
             </span>
 
             <div>
-
               <p className="text-sm font-bold text-indigo-700 dark:text-indigo-300">
                 Special Offers Available
               </p>
 
               <p className="text-xs text-indigo-600 dark:text-indigo-400">
-                {offers.length} active offer
-                {offers.length !== 1
+                {offers.length} active
+                offer
+                {offers.length !==
+                1
                   ? "s"
                   : ""}{" "}
                 available on selected
                 products.
               </p>
-
             </div>
-
           </div>
         )}
 
         {/* =================================================
-            ACTION BAR
+            FILTER BAR
         ================================================= */}
 
         <div className="flex flex-wrap items-center justify-between gap-4 py-2 border-b border-gray-100/80 dark:border-slate-800">
-
-          {/* LEFT */}
 
           <div className="flex items-center gap-3 flex-wrap">
 
             {/* SEARCH */}
 
             <div className="relative">
-
               <input
                 type="text"
                 placeholder="Search..."
@@ -3189,7 +3150,6 @@ const handleWishlist = async (product) => {
               />
 
               <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500">
-
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -3198,20 +3158,14 @@ const handleWishlist = async (product) => {
                   stroke="currentColor"
                   className="w-3.5 h-3.5"
                 >
-
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                   />
-
                 </svg>
-
               </div>
-
             </div>
-
-            {/* FILTER LABEL */}
 
             <span className="text-sm font-semibold text-gray-900 dark:text-slate-200 ml-1">
               Filters:
@@ -3220,17 +3174,17 @@ const handleWishlist = async (product) => {
             {/* CATEGORY */}
 
             <div className="relative">
-
               <select
                 value={category}
-                onChange={(e) =>
+                onChange={(e) => {
                   setCategory(
                     e.target.value
-                  )
-                }
+                  );
+
+                  setSubcategory("");
+                }}
                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
               >
-
                 <option value="">
                   Category
                 </option>
@@ -3245,19 +3199,49 @@ const handleWishlist = async (product) => {
                     </option>
                   )
                 )}
-
               </select>
 
               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
                 ▼
               </div>
+            </div>
 
+            {/* SUBCATEGORY */}
+
+            <div className="relative">
+              <select
+                value={subcategory}
+                onChange={(e) =>
+                  setSubcategory(
+                    e.target.value
+                  )
+                }
+                className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
+              >
+                <option value="">
+                  Subcategory
+                </option>
+
+                {subcategoriesList.map(
+                  (subcat) => (
+                    <option
+                      key={subcat}
+                      value={subcat}
+                    >
+                      {subcat}
+                    </option>
+                  )
+                )}
+              </select>
+
+              <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
+                ▼
+              </div>
             </div>
 
             {/* BRAND */}
 
             <div className="relative">
-
               <select
                 value={brand}
                 onChange={(e) =>
@@ -3267,7 +3251,6 @@ const handleWishlist = async (product) => {
                 }
                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
               >
-
                 <option value="">
                   Brand
                 </option>
@@ -3282,21 +3265,61 @@ const handleWishlist = async (product) => {
                     </option>
                   )
                 )}
-
               </select>
 
               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
                 ▼
               </div>
-
             </div>
 
+            {/* CONDITION */}
+
+            <div className="relative">
+              <select
+                value={condition}
+                onChange={(e) =>
+                  setCondition(
+                    e.target.value
+                  )
+                }
+                className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
+              >
+                <option value="">
+                  Condition
+                </option>
+
+                <option value="new">
+                  New
+                </option>
+
+                <option value="refurbished">
+                  Refurbished
+                </option>
+              </select>
+
+              <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
+                ▼
+              </div>
+            </div>
+
+            {/* CLEAR */}
+
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={
+                  clearFilters
+                }
+                className="px-4 py-1.5 rounded-full text-xs font-bold bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900 transition"
+              >
+                Clear
+              </button>
+            )}
           </div>
 
           {/* SORT */}
 
           <div className="relative">
-
             <select
               value={sort}
               onChange={(e) =>
@@ -3306,7 +3329,6 @@ const handleWishlist = async (product) => {
               }
               className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pl-8 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
             >
-
               <option value="">
                 Sort by: Recommended
               </option>
@@ -3318,58 +3340,51 @@ const handleWishlist = async (product) => {
               <option value="high">
                 Price: High to Low
               </option>
-
             </select>
-
-            <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-slate-400">
-
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-3.5 h-3.5"
-              >
-
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h12m-12 5.25h7.5"
-                />
-
-              </svg>
-
-            </div>
 
             <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
               ▼
             </div>
-
           </div>
-
         </div>
 
         {/* =================================================
-            PRODUCTS
+            RESULT INFO
+        ================================================= */}
+
+        {!loading && (
+          <div className="flex justify-between items-center">
+            <p className="text-xs font-semibold text-gray-500 dark:text-slate-400">
+              Showing{" "}
+              <span className="text-gray-900 dark:text-white">
+                {
+                  filteredProducts.length
+                }
+              </span>{" "}
+              product
+              {filteredProducts.length !==
+              1
+                ? "s"
+                : ""}
+            </p>
+          </div>
+        )}
+
+        {/* =================================================
+            LOADING
         ================================================= */}
 
         {loading ? (
-
           <div className="flex flex-col justify-center items-center py-28">
-
             <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 dark:border-slate-100 border-t-transparent" />
 
             <span className="mt-3 text-gray-500 dark:text-slate-400 font-medium text-xs">
               Loading laptops...
             </span>
-
           </div>
-
-        ) : filteredProducts.length === 0 ? (
-
+        ) : filteredProducts.length ===
+          0 ? (
           <div className="text-center py-20 bg-gray-50/50 dark:bg-slate-900/50 border border-transparent dark:border-slate-800 rounded-3xl space-y-2">
-
             <div className="text-2xl">
               🔍
             </div>
@@ -3379,191 +3394,190 @@ const handleWishlist = async (product) => {
             </p>
 
             <p className="text-gray-400 dark:text-slate-400 text-xs">
-              Try adjusting your search or filters.
+              Try adjusting your
+              search or filters.
             </p>
 
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={
+                  clearFilters
+                }
+                className="mt-3 px-5 py-2 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-xs font-bold"
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
-
         ) : (
-
           <div className="space-y-10">
+
+            {/* =================================================
+                REFURBISHED
+            ================================================= */}
+
+            {condition ===
+              "refurbished" &&
+              refurbishedProducts.length >
+                0 && (
+                <LaptopSection
+                  icon="♻️"
+                  title="Refurbished Laptops"
+                  items={
+                    refurbishedProducts
+                  }
+                  theme={
+                    THEMES.refurbished
+                  }
+                  onAddToCart={
+                    handleAddToCart
+                  }
+                  onAddToWishlist={
+                    handleWishlist
+                  }
+                />
+              )}
 
             {/* =================================================
                 GAMING
             ================================================= */}
 
-            {filteredProducts.some(
-              (p) =>
-                (
-                  p.category?.name ||
-                  p.category ||
-                  ""
-                )
-                  .toLowerCase()
-                  .includes("gaming")
-            ) && (
-
-              <LaptopSection
-                icon="🎮"
-                title="Gaming Laptops"
-                items={filteredProducts.filter(
-                  (p) =>
-                    (
-                      p.category?.name ||
-                      p.category ||
-                      ""
-                    )
-                      .toLowerCase()
-                      .includes("gaming")
-                )}
-                theme={THEMES.gaming}
-                onAddToCart={
-                  handleAddToCart
-                }
-                onAddToWishlist={
-                  handleWishlist
-                }
-              />
-
-            )}
+            {condition !==
+              "refurbished" &&
+              gamingProducts.length >
+                0 && (
+                <LaptopSection
+                  icon="🎮"
+                  title="Gaming Laptops"
+                  items={
+                    gamingProducts
+                  }
+                  theme={
+                    THEMES.gaming
+                  }
+                  onAddToCart={
+                    handleAddToCart
+                  }
+                  onAddToWishlist={
+                    handleWishlist
+                  }
+                />
+              )}
 
             {/* =================================================
                 BUSINESS
             ================================================= */}
 
-            {filteredProducts.some(
-              (p) =>
-                (
-                  p.category?.name ||
-                  p.category ||
-                  ""
-                )
-                  .toLowerCase()
-                  .includes("business")
-            ) && (
-
-              <LaptopSection
-                icon="💼"
-                title="Business Laptops"
-                items={filteredProducts.filter(
-                  (p) =>
-                    (
-                      p.category?.name ||
-                      p.category ||
-                      ""
-                    )
-                      .toLowerCase()
-                      .includes("business")
-                )}
-                theme={THEMES.business}
-                onAddToCart={
-                  handleAddToCart
-                }
-                onAddToWishlist={
-                  handleWishlist
-                }
-              />
-
-            )}
+            {condition !==
+              "refurbished" &&
+              businessProducts.length >
+                0 && (
+                <LaptopSection
+                  icon="💼"
+                  title="Business Laptops"
+                  items={
+                    businessProducts
+                  }
+                  theme={
+                    THEMES.business
+                  }
+                  onAddToCart={
+                    handleAddToCart
+                  }
+                  onAddToWishlist={
+                    handleWishlist
+                  }
+                />
+              )}
 
             {/* =================================================
                 CHROMEBOOK
             ================================================= */}
 
-            {filteredProducts.some(
-              (p) =>
-                (
-                  p.category?.name ||
-                  p.category ||
-                  ""
-                )
-                  .toLowerCase()
-                  .includes("chromebook")
-            ) && (
-
-              <LaptopSection
-                icon="💻"
-                title="Chromebook Laptops"
-                items={filteredProducts.filter(
-                  (p) =>
-                    (
-                      p.category?.name ||
-                      p.category ||
-                      ""
-                    )
-                      .toLowerCase()
-                      .includes("chromebook")
-                )}
-                theme={THEMES.chromebook}
-                onAddToCart={
-                  handleAddToCart
-                }
-                onAddToWishlist={
-                  handleWishlist
-                }
-              />
-
-            )}
+            {condition !==
+              "refurbished" &&
+              chromebookProducts.length >
+                0 && (
+                <LaptopSection
+                  icon="💻"
+                  title="Chromebook Laptops"
+                  items={
+                    chromebookProducts
+                  }
+                  theme={
+                    THEMES.chromebook
+                  }
+                  onAddToCart={
+                    handleAddToCart
+                  }
+                  onAddToWishlist={
+                    handleWishlist
+                  }
+                />
+              )}
 
             {/* =================================================
                 OTHER
             ================================================= */}
 
-            {filteredProducts.some(
-              (p) =>
-                ![
-                  "gaming",
-                  "business",
-                  "chromebook",
-                ].some((key) =>
-                  (
-                    p.category?.name ||
-                    p.category ||
-                    ""
-                  )
-                    .toLowerCase()
-                    .includes(key)
-                )
-            ) && (
+            {condition !==
+              "refurbished" &&
+              specialCategoryProducts.length >
+                0 && (
+                <LaptopSection
+                  icon="📦"
+                  title="Other Laptops & Products"
+                  items={
+                    specialCategoryProducts
+                  }
+                  theme={
+                    THEMES.other
+                  }
+                  onAddToCart={
+                    handleAddToCart
+                  }
+                  onAddToWishlist={
+                    handleWishlist
+                  }
+                />
+              )}
 
-              <LaptopSection
-                icon="📦"
-                title="Other Laptops & Products"
-                items={filteredProducts.filter(
-                  (p) =>
-                    ![
-                      "gaming",
-                      "business",
-                      "chromebook",
-                    ].some((key) =>
-                      (
-                        p.category?.name ||
-                        p.category ||
-                        ""
-                      )
-                        .toLowerCase()
-                        .includes(key)
-                    )
-                )}
-                theme={THEMES.other}
-                onAddToCart={
-                  handleAddToCart
-                }
-                onAddToWishlist={
-                  handleWishlist
-                }
-              />
+            {/* =================================================
+                REFURBISHED SECTION WHEN NO FILTER
+                =================================================
+                
+                If you want refurbished products to ALWAYS
+                show in Shop, even without selecting the
+                Refurbished filter, this section shows them.
+            ================================================= */}
 
-            )}
+            {condition === "" &&
+              refurbishedProducts.length >
+                0 && (
+                <LaptopSection
+                  icon="♻️"
+                  title="Refurbished Laptops"
+                  items={
+                    refurbishedProducts
+                  }
+                  theme={
+                    THEMES.refurbished
+                  }
+                  onAddToCart={
+                    handleAddToCart
+                  }
+                  onAddToWishlist={
+                    handleWishlist
+                  }
+                />
+              )}
 
           </div>
-
         )}
-
       </main>
 
       <Footer />
-
     </div>
   );
 };

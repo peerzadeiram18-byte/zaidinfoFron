@@ -611,7 +611,7 @@ const SalaryModal = ({
                     </th>
 
                     <th>
-                      Comment
+                      Review 
                     </th>
 
                   </tr>
@@ -889,7 +889,7 @@ const SalaryModal = ({
             <div className="form-group">
 
               <label>
-                Comment
+                Review 
               </label>
 
               <textarea
@@ -904,7 +904,7 @@ const SalaryModal = ({
                       event.target.value,
                   })
                 }
-                placeholder="Enter comment..."
+                placeholder="Enter review ..."
               />
 
             </div>

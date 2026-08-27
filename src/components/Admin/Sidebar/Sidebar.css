@@ -1,9 +1,28 @@
+/* =========================================================
+   GOOGLE FONT
+   ========================================================= */
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+
+/* =========================================================
+   GLOBAL
+   ========================================================= */
 
 * {
   box-sizing: border-box;
+}
+
+.sidebar,
+.sidebar *,
+.sidebar button {
   font-family: "Poppins", sans-serif;
 }
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
 
 .sidebar {
   position: fixed;
@@ -18,98 +37,173 @@
   flex-direction: column;
 
   background: rgba(255, 255, 255, 0.72);
+
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
 
   border-right: 1px solid rgba(34, 197, 94, 0.15);
 
-  box-shadow: 8px 0 30px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    8px 0 30px rgba(0, 0, 0, 0.08);
 
   overflow: hidden;
 
   z-index: 999;
+
+  transition:
+    width 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
-/* =======================
+
+
+/* =========================================================
    PROFILE
-======================= */
+   ========================================================= */
 
 .sidebar-profile {
+  flex-shrink: 0;
+
   padding: 30px 20px;
+
   text-align: center;
+
   border-bottom: 1px solid #eef3ef;
 }
+
 
 .sidebar-profile img {
   width: 85px;
   height: 85px;
+
   border-radius: 50%;
+
   object-fit: cover;
 
   border: 4px solid #22c55e;
 
-  box-shadow: 0 8px 25px rgba(34, 197, 94, .25);
+  box-shadow:
+    0 8px 25px rgba(34, 197, 94, 0.25);
 }
 
+
 .sidebar-profile h3 {
-  margin-top: 15px;
+  margin: 15px 0 0;
+
   font-size: 25px;
-    font-weight: 700;
+
+  font-weight: 700;
+
+  line-height: 1.3;
 
   color: #222;
 }
 
+
 .sidebar-profile span {
+  display: block;
+
+  margin-top: 4px;
+
   font-size: 13px;
+
   color: #777;
+
+  line-height: 1.4;
 }
 
-/* =======================
+
+/* =========================================================
    MENU
-======================= */
+   ========================================================= */
 
 .sidebar-menu {
   flex: 1;
+
+  min-height: 0;
+
   overflow-y: auto;
-  padding: 18px 14px;
+  overflow-x: hidden;
+
+  padding: 18px 14px 25px;
+
+  scrollbar-width: thin;
+  scrollbar-color: #22c55e transparent;
 }
+
 
 .sidebar-menu::-webkit-scrollbar {
   width: 6px;
 }
 
+
+.sidebar-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
 .sidebar-menu::-webkit-scrollbar-thumb {
   background: #22c55e;
+
   border-radius: 20px;
 }
 
-/* =======================
+
+.sidebar-menu::-webkit-scrollbar-thumb:hover {
+  background: #16a34a;
+}
+
+
+/* =========================================================
    SECTION
-======================= */
+   ========================================================= */
 
 .menu-section {
   margin-bottom: 25px;
 }
 
-.menu-title {
-  color: #8a8a8a;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  padding: 0 12px;
-  margin-bottom: 10px;
+
+.menu-section:last-child {
+  margin-bottom: 5px;
 }
 
-/* =======================
+
+.menu-title {
+  margin: 0 0 10px;
+
+  padding: 0 12px;
+
+  color: #8a8a8a;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  line-height: 1.4;
+}
+
+
+/* =========================================================
    MENU BUTTON
-======================= */
+   ========================================================= */
 
 .menu-item {
+  position: relative;
+
   width: 100%;
+
+  min-height: 48px;
+
   border: none;
+
   background: transparent;
 
   display: flex;
+
   align-items: center;
+
   gap: 15px;
 
   padding: 14px 18px;
@@ -119,42 +213,143 @@
   border-radius: 14px;
 
   color: #3d4451;
-    font-size: 14px;
+
+  font-size: 14px;
+
   font-weight: 600;
+
+  line-height: 1.3;
 
   cursor: pointer;
 
-  transition: .3s ease;
+  text-align: left;
+
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
+
 
 .menu-item:hover {
   background: #dcfce7;
+
   color: #16a34a;
-  transform: translateX(6px);
+
+  transform: translateX(5px);
 }
 
+
 .menu-item.active {
-  background: linear-gradient(
+  background:
+    linear-gradient(
       135deg,
       #22c55e,
-      #4ade80);
+      #4ade80
+    );
 
   color: white;
 
-  box-shadow: 0 12px 24px rgba(34, 197, 94, .28);
+  box-shadow:
+    0 12px 24px rgba(34, 197, 94, 0.28);
 }
 
-.icon {
+
+.menu-item.active:hover {
+  transform: translateX(0);
+
+  color: white;
+}
+
+
+/* =========================================================
+   MENU ICON
+   ========================================================= */
+
+.menu-item .icon {
+  flex-shrink: 0;
+
+  width: 24px;
+  min-width: 24px;
+
+  height: 24px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
   font-size: 22px;
-  min-width: 22px;
+
+  line-height: 1;
 }
 
-/* =======================
+
+/* =========================================================
+   MENU TEXT
+   ========================================================= */
+
+.menu-text {
+  flex: 1;
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   MENU ARROW
+   ========================================================= */
+
+.menu-arrow {
+  flex-shrink: 0;
+
+  width: 20px;
+  min-width: 20px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+
+  opacity: 0.75;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+.menu-item:hover .menu-arrow {
+  transform: translateX(2px);
+
+  opacity: 1;
+}
+
+
+/* =========================================================
    LOGOUT
-======================= */
+   ========================================================= */
+
+.sidebar-footer {
+  flex-shrink: 0;
+
+  padding: 0 16px 18px;
+}
+
 
 .logout-btn {
-  margin: 16px;
+  width: 100%;
+
+  margin: 0;
 
   border: none;
 
@@ -163,122 +358,194 @@
   border-radius: 15px;
 
   display: flex;
+
   justify-content: center;
+
   align-items: center;
+
   gap: 12px;
 
   cursor: pointer;
 
-  background: linear-gradient(
+  background:
+    linear-gradient(
       135deg,
       #ef4444,
-      #dc2626);
+      #dc2626
+    );
 
   color: white;
 
   font-size: 15px;
+
   font-weight: 600;
 
-  transition: .3s;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
+
 
 .logout-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(239, 68, 68, .30);
+
+  box-shadow:
+    0 12px 24px rgba(239, 68, 68, 0.30);
 }
 
-/* =======================
-   LARGE DESKTOP
-======================= */
 
-@media (min-width:1600px) {
+.logout-icon {
+  display: flex;
 
-  .sidebar {
-    width: 320px;
-  }
+  align-items: center;
+  justify-content: center;
 
+  font-size: 20px;
 }
 
-/* =======================
-   LAPTOP
-======================= */
 
-@media (max-width:1200px) {
+/* =========================================================
+   MOBILE DRAWER TOGGLE
+   ========================================================= */
 
-  .sidebar {
-    width: 250px;
-  }
+.sidebar-drawer-toggle {
+  display: none;
 
+  position: fixed;
+
+  top: 165px;
+  left: 15px;
+
+  width: 44px;
+  height: 44px;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  color: #222;
+
+  font-size: 24px;
+
+  cursor: pointer;
+
+  z-index: 1200;
+
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.12);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
-/* =======================
-   TABLET
-======================= */
 
-@media (max-width:992px) {
+.sidebar-drawer-toggle:hover {
+  background: #f0fdf4;
 
-  .sidebar {
-    width: 90px;
-  }
-
-  .sidebar-profile h3,
-  .sidebar-profile span,
-  .menu-title,
-  .menu-item span,
-  .logout-btn span {
-    display: none;
-  }
-
-  .sidebar-profile img {
-    width: 55px;
-    height: 55px;
-  }
-
-  .menu-item,
-  .logout-btn {
-    justify-content: center;
-    padding: 14px;
-  }
+  color: #16a34a;
 }
 
-/* =======================
-   MOBILE
-======================= */
 
-@media (max-width:768px) {
-
-  .sidebar {
-    width: 75px;
-  }
-
-  .menu-item {
-    padding: 12px;
-  }
-
-  .icon {
-    font-size: 24px;
-  }
-
+.sidebar-drawer-toggle:active {
+  transform: scale(0.94);
 }
 
-/* =========================================
-   SIDEBAR NOTIFICATIONS
-========================================= */
+
+/* =========================================================
+   MOBILE CLOSE BUTTON
+   ========================================================= */
+
+.sidebar-mobile-close {
+  display: none;
+
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  width: 38px;
+  height: 38px;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #f1f5f9;
+
+  color: #475569;
+
+  font-size: 22px;
+
+  cursor: pointer;
+
+  z-index: 10;
+}
+
+
+.sidebar-mobile-close:hover {
+  background: #dcfce7;
+
+  color: #16a34a;
+}
+
+
+/* =========================================================
+   MOBILE OVERLAY
+   ========================================================= */
+
+.sidebar-overlay {
+  display: none;
+
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(15, 23, 42, 0.48);
+
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+
+  z-index: 998;
+}
+
+
+/* =========================================================
+   NOTIFICATION AREA
+   ========================================================= */
 
 .sidebar-notification-area {
   position: relative;
+
   margin: 0 12px 10px;
 }
 
+
 .sidebar-notification-button {
   width: 100%;
+
   min-height: 46px;
 
   display: flex;
+
   align-items: center;
+
   gap: 12px;
 
   border: none;
+
   border-radius: 10px;
 
   background: transparent;
@@ -289,22 +556,33 @@
 
   color: inherit;
 
-  transition: all 0.2s ease;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
+
 
 .sidebar-notification-button:hover {
   background: rgba(34, 197, 94, 0.08);
 }
 
+
 .sidebar-notification-button.active {
   background: rgba(34, 197, 94, 0.12);
+
   color: #16a34a;
 }
+
+
+/* =========================================================
+   NOTIFICATION ICON
+   ========================================================= */
 
 .sidebar-notification-icon {
   position: relative;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -313,6 +591,7 @@
 
   font-size: 23px;
 }
+
 
 .sidebar-notification-badge {
   position: absolute;
@@ -326,15 +605,18 @@
   padding: 0 4px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
   border-radius: 999px;
 
   background: #dc2626;
+
   color: white;
 
   font-size: 10px;
+
   font-weight: 700;
 
   border: 2px solid white;
@@ -343,9 +625,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    NOTIFICATION DROPDOWN
-========================================= */
+   ========================================================= */
 
 .sidebar-notification-dropdown {
   position: absolute;
@@ -372,7 +654,9 @@
 }
 
 
-/* HEADER */
+/* =========================================================
+   NOTIFICATION HEADER
+   ========================================================= */
 
 .sidebar-notification-header {
   display: flex;
@@ -380,10 +664,13 @@
   align-items: center;
   justify-content: space-between;
 
+  gap: 10px;
+
   padding: 14px 16px;
 
   border-bottom: 1px solid #e5e7eb;
 }
+
 
 .sidebar-notification-header strong {
   display: block;
@@ -392,6 +679,7 @@
 
   color: #111827;
 }
+
 
 .sidebar-notification-header small {
   display: block;
@@ -403,7 +691,10 @@
   color: #6b7280;
 }
 
+
 .sidebar-mark-read {
+  flex-shrink: 0;
+
   border: none;
 
   background: transparent;
@@ -415,10 +706,14 @@
   font-weight: 600;
 
   cursor: pointer;
+
+  white-space: nowrap;
 }
 
 
-/* LIST */
+/* =========================================================
+   NOTIFICATION LIST
+   ========================================================= */
 
 .sidebar-notification-list {
   max-height: 380px;
@@ -427,7 +722,21 @@
 }
 
 
-/* ITEM */
+.sidebar-notification-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+
+.sidebar-notification-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+
+  border-radius: 10px;
+}
+
+
+/* =========================================================
+   NOTIFICATION ITEM
+   ========================================================= */
 
 .sidebar-notification-item {
   position: relative;
@@ -452,19 +761,24 @@
 
   cursor: pointer;
 
-  transition: background 0.2s ease;
+  transition:
+    background 0.2s ease;
 }
+
 
 .sidebar-notification-item:hover {
   background: #f8fafc;
 }
+
 
 .sidebar-notification-item.unread {
   background: #f0fdf4;
 }
 
 
-/* SMALL BELL */
+/* =========================================================
+   SMALL BELL
+   ========================================================= */
 
 .sidebar-small-bell {
   width: 32px;
@@ -487,13 +801,16 @@
 }
 
 
-/* CONTENT */
+/* =========================================================
+   NOTIFICATION CONTENT
+   ========================================================= */
 
 .sidebar-notification-content {
   min-width: 0;
 
   flex: 1;
 }
+
 
 .sidebar-notification-content strong {
   display: block;
@@ -511,6 +828,7 @@
   text-overflow: ellipsis;
 }
 
+
 .sidebar-notification-content span {
   display: -webkit-box;
 
@@ -523,10 +841,12 @@
   line-height: 1.4;
 
   -webkit-line-clamp: 2;
+
   -webkit-box-orient: vertical;
 
   overflow: hidden;
 }
+
 
 .sidebar-notification-content small {
   display: block;
@@ -539,13 +859,15 @@
 }
 
 
-/* UNREAD DOT */
+/* =========================================================
+   UNREAD DOT
+   ========================================================= */
 
 .sidebar-unread-dot {
   width: 7px;
-  height: 7px;
-
   min-width: 7px;
+
+  height: 7px;
 
   margin-top: 5px;
 
@@ -555,7 +877,9 @@
 }
 
 
-/* EMPTY */
+/* =========================================================
+   EMPTY NOTIFICATIONS
+   ========================================================= */
 
 .sidebar-notification-empty {
   min-height: 130px;
@@ -572,7 +896,10 @@
   color: #9ca3af;
 
   font-size: 12px;
+
+  text-align: center;
 }
+
 
 .sidebar-notification-empty svg {
   font-size: 28px;
@@ -581,7 +908,9 @@
 }
 
 
-/* VIEW ALL */
+/* =========================================================
+   VIEW ALL
+   ========================================================= */
 
 .sidebar-view-all {
   width: 100%;
@@ -603,14 +932,587 @@
   cursor: pointer;
 }
 
+
 .sidebar-view-all:hover {
   background: #f0fdf4;
 }
 
 
-/* =========================================
+/* =========================================================
+   LARGE DESKTOP
+   1600px+
+   ========================================================= */
+
+@media (min-width: 1600px) {
+
+  .sidebar {
+    width: 320px;
+  }
+
+}
+
+
+/* =========================================================
+   LAPTOP
+   1200px
+   ========================================================= */
+
+@media (max-width: 1200px) and (min-width: 993px) {
+
+  .sidebar {
+    width: 250px;
+  }
+
+
+  .menu-item {
+    padding: 13px 15px;
+
+    gap: 12px;
+
+    font-size: 13px;
+  }
+
+
+  .menu-item .icon {
+    font-size: 21px;
+  }
+
+
+  .sidebar-profile {
+    padding: 25px 15px;
+  }
+
+
+  .sidebar-profile h3 {
+    font-size: 22px;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   992px AND BELOW
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+  /*
+    IMPORTANT:
+    Instead of shrinking sidebar to 90px,
+    turn it into a proper drawer.
+  */
+
+  .sidebar {
+    top: 0;
+
+    width: 285px;
+
+    height: 100vh;
+
+    transform: translateX(-100%);
+
+    background: rgba(255, 255, 255, 0.96);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow: none;
+
+    z-index: 1100;
+  }
+
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+
+    box-shadow:
+      10px 0 35px rgba(0, 0, 0, 0.16);
+  }
+
+
+  .sidebar-drawer-toggle {
+    display: flex;
+
+    top: 165px;
+  }
+
+
+  .sidebar-mobile-close {
+    display: flex;
+  }
+
+
+  .sidebar-overlay {
+    display: block;
+  }
+
+
+  .sidebar-profile {
+    padding-top: 35px;
+  }
+
+
+  .sidebar-menu {
+    padding: 18px 14px 30px;
+  }
+
+
+  .menu-title {
+    display: block;
+  }
+
+
+  .menu-text {
+    display: block;
+  }
+
+
+  .menu-arrow {
+    display: flex;
+  }
+
+
+  .menu-item {
+    min-height: 48px;
+
+    padding: 13px 16px;
+
+    font-size: 14px;
+  }
+
+
+  .menu-item .icon {
+    font-size: 21px;
+  }
+
+
+  /* Notification dropdown */
+
+  .sidebar-notification-dropdown {
+    width: 350px;
+
+    max-width: calc(100vw - 320px);
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   768px AND BELOW
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    width: min(300px, 86vw);
+
+    height: 100vh;
+
+    top: 0;
+  }
+
+
+  .sidebar-drawer-toggle {
+    display: flex;
+
+    top: 162px;
+    left: 12px;
+
+    width: 42px;
+    height: 42px;
+  }
+
+
+  .sidebar-profile {
+    padding: 35px 18px 22px;
+  }
+
+
+  .sidebar-profile img {
+    width: 70px;
+    height: 70px;
+  }
+
+
+  .sidebar-profile h3 {
+    margin-top: 10px;
+
+    font-size: 21px;
+  }
+
+
+  .sidebar-profile span {
+    font-size: 12px;
+  }
+
+
+  .sidebar-menu {
+    padding: 16px 11px 25px;
+  }
+
+
+  .menu-section {
+    margin-bottom: 20px;
+  }
+
+
+  .menu-title {
+    font-size: 10px;
+
+    letter-spacing: 1.5px;
+
+    padding: 0 10px;
+
+    margin-bottom: 8px;
+  }
+
+
+  .menu-item {
+    min-height: 46px;
+
+    padding: 12px 13px;
+
+    margin-bottom: 6px;
+
+    gap: 11px;
+
+    border-radius: 11px;
+
+    font-size: 13px;
+  }
+
+
+  .menu-item:hover {
+    transform: translateX(3px);
+  }
+
+
+  .menu-item .icon {
+    width: 23px;
+    min-width: 23px;
+
+    font-size: 20px;
+  }
+
+
+  /* Notifications */
+
+  .sidebar-notification-area {
+    margin: 0 8px 8px;
+  }
+
+
+  .sidebar-notification-dropdown {
+    position: fixed;
+
+    top: 115px;
+    left: 50%;
+
+    width: min(390px, calc(100vw - 24px));
+
+    max-width: calc(100vw - 24px);
+
+    transform: translateX(-50%);
+
+    border-radius: 14px;
+  }
+
+
+  .sidebar-notification-list {
+    max-height: 55vh;
+  }
+
+
+  .sidebar-notification-item {
+    padding: 11px 12px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   480px AND BELOW
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .sidebar {
+    width: 88vw;
+
+    max-width: 300px;
+  }
+
+
+  .sidebar-drawer-toggle {
+    top: 160px;
+
+    left: 10px;
+
+    width: 40px;
+    height: 40px;
+
+    font-size: 22px;
+  }
+
+
+  .sidebar-profile {
+    padding: 34px 15px 20px;
+  }
+
+
+  .sidebar-profile img {
+    width: 62px;
+    height: 62px;
+
+    border-width: 3px;
+  }
+
+
+  .sidebar-profile h3 {
+    font-size: 19px;
+  }
+
+
+  .sidebar-profile span {
+    font-size: 11px;
+  }
+
+
+  .sidebar-menu {
+    padding: 14px 9px 22px;
+  }
+
+
+  .menu-title {
+    padding: 0 9px;
+
+    font-size: 9px;
+
+    letter-spacing: 1.3px;
+  }
+
+
+  .menu-item {
+    min-height: 44px;
+
+    padding: 11px;
+
+    gap: 10px;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+  }
+
+
+  .menu-item .icon {
+    width: 21px;
+    min-width: 21px;
+
+    font-size: 19px;
+  }
+
+
+  .menu-arrow {
+    width: 18px;
+    min-width: 18px;
+
+    font-size: 16px;
+  }
+
+
+  /* Notification */
+
+  .sidebar-notification-dropdown {
+    top: 108px;
+
+    width: calc(100vw - 20px);
+
+    max-width: calc(100vw - 20px);
+  }
+
+
+  .sidebar-notification-header {
+    padding: 12px;
+  }
+
+
+  .sidebar-notification-header strong {
+    font-size: 13px;
+  }
+
+
+  .sidebar-notification-header small {
+    font-size: 10px;
+  }
+
+
+  .sidebar-mark-read {
+    font-size: 10px;
+  }
+
+
+  .sidebar-notification-content strong {
+    font-size: 11px;
+  }
+
+
+  .sidebar-notification-content span {
+    font-size: 10px;
+  }
+
+
+  .sidebar-notification-content small {
+    font-size: 8px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL DEVICES
+   360px AND BELOW
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .sidebar {
+    width: 91vw;
+  }
+
+
+  .sidebar-drawer-toggle {
+    top: 158px;
+
+    width: 38px;
+    height: 38px;
+
+    font-size: 20px;
+  }
+
+
+  .sidebar-profile {
+    padding-top: 32px;
+  }
+
+
+  .sidebar-profile img {
+    width: 56px;
+    height: 56px;
+  }
+
+
+  .sidebar-profile h3 {
+    font-size: 18px;
+  }
+
+
+  .sidebar-menu {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+
+  .menu-item {
+    min-height: 42px;
+
+    padding: 10px;
+
+    font-size: 11px;
+  }
+
+
+  .menu-item .icon {
+    font-size: 18px;
+  }
+
+
+  .menu-arrow {
+    font-size: 15px;
+  }
+
+
+  .sidebar-notification-dropdown {
+    width: calc(100vw - 14px);
+
+    max-width: calc(100vw - 14px);
+
+    left: 50%;
+  }
+
+}
+
+
+/* =========================================================
    DARK MODE
-========================================= */
+   ========================================================= */
+
+.dark .sidebar {
+  background: rgba(15, 23, 42, 0.96);
+
+  border-right-color: rgba(74, 222, 128, 0.15);
+}
+
+
+.dark .sidebar-profile {
+  border-bottom-color: #1e293b;
+}
+
+
+.dark .sidebar-profile h3 {
+  color: #f8fafc;
+}
+
+
+.dark .sidebar-profile span {
+  color: #94a3b8;
+}
+
+
+.dark .menu-title {
+  color: #64748b;
+}
+
+
+.dark .menu-item {
+  color: #cbd5e1;
+}
+
+
+.dark .menu-item:hover {
+  background: rgba(34, 197, 94, 0.12);
+
+  color: #4ade80;
+}
+
+
+.dark .menu-item.active {
+  color: white;
+}
+
+
+.dark .sidebar-drawer-toggle {
+  background: #0f172a;
+
+  border-color: #334155;
+
+  color: white;
+}
+
+
+.dark .sidebar-mobile-close {
+  background: #1e293b;
+
+  color: #cbd5e1;
+}
+
+
+/* =========================================================
+   DARK MODE NOTIFICATIONS
+   ========================================================= */
 
 .dark .sidebar-notification-dropdown {
   background: #0f172a;
@@ -618,17 +1520,21 @@
   border-color: #334155;
 }
 
+
 .dark .sidebar-notification-header {
   border-color: #334155;
 }
+
 
 .dark .sidebar-notification-header strong {
   color: white;
 }
 
+
 .dark .sidebar-notification-header small {
   color: #94a3b8;
 }
+
 
 .dark .sidebar-notification-item {
   background: #0f172a;
@@ -636,24 +1542,763 @@
   border-color: #1e293b;
 }
 
+
 .dark .sidebar-notification-item:hover {
   background: #1e293b;
 }
+
 
 .dark .sidebar-notification-item.unread {
   background: rgba(20, 83, 45, 0.25);
 }
 
+
 .dark .sidebar-notification-content strong {
   color: white;
 }
+
 
 .dark .sidebar-notification-content span {
   color: #94a3b8;
 }
 
+
+.dark .sidebar-notification-content small {
+  color: #64748b;
+}
+
+
 .dark .sidebar-view-all {
   background: #1e293b;
 
   border-color: #334155;
+
+  color: #4ade80;
+}
+
+
+.dark .sidebar-notification-button:hover {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.menu-item:focus-visible,
+.sidebar-drawer-toggle:focus-visible,
+.sidebar-mobile-close:focus-visible,
+.sidebar-notification-button:focus-visible,
+.sidebar-mark-read:focus-visible,
+.sidebar-view-all:focus-visible {
+  outline: 2px solid #22c55e;
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   REDUCE MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .sidebar,
+  .menu-item,
+  .logout-btn,
+  .sidebar-drawer-toggle,
+  .sidebar-notification-button {
+    transition: none;
+  }
+
+}
+/* =========================================================
+   GLOBAL SIDEBAR SEARCH
+   ========================================================= */
+
+.sidebar-global-search {
+  width: calc(100% - 20px);
+
+  height: 42px;
+
+  margin: 8px 10px 14px;
+
+  padding: 0 10px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.sidebar-global-search:focus-within {
+  background: #ffffff;
+
+  border-color: #9ca3af;
+
+  box-shadow:
+    0 0 0 3px rgba(107, 114, 128, 0.08);
+}
+
+
+.sidebar-search-icon {
+  flex-shrink: 0;
+
+  color: #6b7280;
+
+  font-size: 20px;
+}
+
+
+.sidebar-global-search input {
+  width: 100%;
+  min-width: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #111827;
+
+  font-family: inherit;
+
+  font-size: 12px;
+}
+
+
+.sidebar-global-search input::placeholder {
+  color: #9ca3af;
+}
+
+
+.sidebar-search-clear {
+  flex-shrink: 0;
+
+  width: 24px;
+  height: 24px;
+
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #e5e7eb;
+
+  color: #4b5563;
+
+  cursor: pointer;
+}
+
+
+.sidebar-search-clear:hover {
+  background: #d1d5db;
+}
+
+
+.sidebar-search-clear svg {
+  font-size: 15px;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 280px;
+  height: 100vh;
+
+  z-index: 1000;
+
+  overflow: visible;
+
+  background: #ffffff;
+}
+
+
+/* =====================================================
+   SIDEBAR MENU
+===================================================== */
+
+.sidebar-menu {
+  position: relative;
+
+  overflow-y: auto;
+  overflow-x: visible;
+
+  height: calc(100vh - 170px);
+
+  padding-bottom: 30px;
+}
+
+
+/*
+  IMPORTANT:
+  Notification panel ko clip hone se bachane ke liye
+*/
+
+.menu-section {
+  position: relative;
+  overflow: visible;
+}
+
+.sidebar-menu-wrapper {
+  position: relative;
+  overflow: visible;
+}
+
+
+/* =====================================================
+   MENU ITEM
+===================================================== */
+
+.menu-item {
+  position: relative;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+
+  text-align: left;
+}
+
+
+/* =====================================================
+   NOTIFICATION PANEL
+===================================================== */
+
+.sidebar-notification-panel {
+  position: absolute;
+
+  left: calc(100% + 10px);
+  top: 0;
+
+  width: 390px;
+  max-width: 390px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.18);
+
+  z-index: 99999;
+
+  overflow: hidden;
+
+  animation: notificationPanelOpen 0.18s ease;
+}
+
+
+/* =====================================================
+   OPEN ANIMATION
+===================================================== */
+
+@keyframes notificationPanelOpen {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+/* =====================================================
+   NOTIFICATION HEADER
+===================================================== */
+
+.notification-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 16px 18px;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+.notification-panel-header h4 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.notification-panel-header span {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 12px;
+  color: #777777;
+}
+
+
+/* =====================================================
+   REFRESH BUTTON
+===================================================== */
+
+.notification-refresh-btn {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #f5f5f5;
+
+  cursor: pointer;
+
+  font-size: 20px;
+}
+
+.notification-refresh-btn:hover {
+  background: #eeeeee;
+}
+
+
+/* =====================================================
+   REFRESH ANIMATION
+===================================================== */
+
+.notification-refresh-spin {
+  animation: notificationRefreshSpin 1s linear infinite;
+}
+
+@keyframes notificationRefreshSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.notification-search-box {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  margin: 12px 14px;
+
+  height: 42px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dddddd;
+  border-radius: 9px;
+
+  background: #fafafa;
+}
+
+.notification-search-box > svg {
+  flex-shrink: 0;
+
+  margin-right: 8px;
+
+  font-size: 20px;
+  color: #777777;
+}
+
+.notification-search-box input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  font-size: 13px;
+}
+
+.notification-search-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+
+  font-size: 18px;
+}
+
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.notification-panel-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 8px 14px;
+
+  border-bottom: 1px solid #eeeeee;
+
+  font-size: 12px;
+  color: #777777;
+}
+
+.notification-panel-actions button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  border: none;
+  background: transparent;
+
+  color: #2563eb;
+
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* =====================================================
+   NOTIFICATION LIST
+===================================================== */
+
+.notification-list {
+  max-height: 430px;
+
+  overflow-y: auto;
+}
+
+
+/* =====================================================
+   NOTIFICATION ITEM
+===================================================== */
+
+.notification-item {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 12px;
+
+  padding: 13px 14px;
+
+  border: none;
+  border-bottom: 1px solid #eeeeee;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  text-align: left;
+}
+
+.notification-item:hover {
+  background: #f7f9fc;
+}
+
+
+/* =====================================================
+   NOTIFICATION ICON
+===================================================== */
+
+.notification-item-icon {
+  position: relative;
+
+  flex-shrink: 0;
+
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eef4ff;
+
+  color: #2563eb;
+
+  font-size: 19px;
+}
+
+.notification-unread-dot {
+  position: absolute;
+
+  top: -1px;
+  right: -1px;
+
+  width: 9px;
+  height: 9px;
+
+  border-radius: 50%;
+
+  background: #ef4444;
+
+  border: 2px solid #ffffff;
+}
+
+
+/* =====================================================
+   NOTIFICATION CONTENT
+===================================================== */
+
+.notification-item-content {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.notification-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+}
+
+.notification-item-top strong {
+  font-size: 13px;
+  color: #222222;
+}
+
+.notification-small-dot {
+  flex-shrink: 0;
+
+  font-size: 8px;
+
+  color: #2563eb;
+}
+
+.notification-item-content p {
+  margin: 5px 0;
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  color: #555555;
+
+  word-break: break-word;
+}
+
+
+/* =====================================================
+   BOTTOM INFO
+===================================================== */
+
+.notification-item-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 8px;
+
+  margin-top: 5px;
+
+  font-size: 10px;
+}
+
+.notification-item-bottom span {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.notification-item-bottom time {
+  color: #999999;
+}
+
+
+/* =====================================================
+   READ / UNREAD
+===================================================== */
+
+.notification-unread {
+  background: #f8fbff;
+}
+
+.notification-read {
+  opacity: 0.78;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.notification-empty-state {
+  min-height: 180px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px 20px;
+
+  text-align: center;
+
+  color: #888888;
+}
+
+.notification-empty-state > svg {
+  font-size: 36px;
+
+  margin-bottom: 10px;
+}
+
+.notification-empty-state p {
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.notification-empty-state span {
+  margin-top: 5px;
+
+  font-size: 12px;
+}
+
+
+/* =====================================================
+   LOADER
+===================================================== */
+
+.notification-loader {
+  width: 28px;
+  height: 28px;
+
+  margin-bottom: 12px;
+
+  border: 3px solid #eeeeee;
+  border-top-color: #2563eb;
+
+  border-radius: 50%;
+
+  animation: notificationLoaderSpin 0.8s linear infinite;
+}
+
+@keyframes notificationLoaderSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =====================================================
+   VIEW ALL
+===================================================== */
+
+.notification-view-all {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  padding: 13px;
+
+  border: none;
+  border-top: 1px solid #eeeeee;
+
+  background: #ffffff;
+
+  color: #2563eb;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.notification-view-all:hover {
+  background: #f7f9fc;
+}
+
+
+/* =====================================================
+   NOTIFICATION COUNT
+===================================================== */
+
+.notification-count-badge {
+  min-width: 21px;
+  height: 21px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-left: auto;
+  margin-right: 6px;
+
+  padding: 0 6px;
+
+  border-radius: 20px;
+
+  background: #ef4444;
+
+  color: #ffffff;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   ARROW
+===================================================== */
+
+.notification-arrow-open {
+  transform: rotate(90deg);
+
+  transition: transform 0.2s ease;
 }

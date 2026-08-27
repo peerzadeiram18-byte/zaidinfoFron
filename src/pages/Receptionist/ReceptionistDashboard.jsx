@@ -536,6 +536,13 @@ const ReceptionistDashboard = () => {
         navigate("/receptionist/customers");
     };
 
+  const handleApplyLeave = () => {
+    navigate("/receptionist/leave/apply");
+};
+
+const handleMyLeaves = () => {
+    navigate("/receptionist/leaves");
+};
     return (
         <div className="receptionist-dashboard">
 
@@ -547,7 +554,7 @@ const ReceptionistDashboard = () => {
 
                 <div>
                     <h1>
-                        Receptionist Dashboard
+                        Sales  Dashboard
                     </h1>
 
                     <p>
@@ -558,12 +565,12 @@ const ReceptionistDashboard = () => {
                 <div className="receptionist-user">
 
                     <div className="receptionist-avatar">
-                        R
+                        S
                     </div>
 
                     <div>
                         <strong>
-                            Receptionist
+                            Sales 
                         </strong>
 
                         <span>
@@ -743,7 +750,7 @@ const ReceptionistDashboard = () => {
                     </h2>
 
                     <p className="quick-actions-subtitle">
-                        Common receptionist actions
+                        Common Sales  actions
                     </p>
 
 
@@ -832,6 +839,63 @@ const ReceptionistDashboard = () => {
                         </span>
 
                     </button>
+
+                    {/* APPLY LEAVE */}
+
+<button
+    type="button"
+    className="quick-action"
+    onClick={handleApplyLeave}
+>
+
+    <span className="quick-action-icon">
+        📝
+    </span>
+
+    <span>
+        <strong>
+            Apply Leave
+        </strong>
+
+        <small>
+            Submit leave request
+        </small>
+    </span>
+
+    <span className="action-arrow">
+        →
+    </span>
+
+</button>
+
+
+{/* MY LEAVES */}
+
+<button
+    type="button"
+    className="quick-action"
+    onClick={handleMyLeaves}
+>
+
+    <span className="quick-action-icon">
+        📋
+    </span>
+
+    <span>
+        <strong>
+            My Leaves
+        </strong>
+
+        <small>
+            Check leave status
+        </small>
+    </span>
+
+    <span className="action-arrow">
+        →
+    </span>
+
+</button>
 
                 </div>
 

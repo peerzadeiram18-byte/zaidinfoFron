@@ -1,0 +1,926 @@
+.leave-management {
+  padding: 24px;
+  min-height: 100vh;
+  background: #f6f7fb;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.leave-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.leave-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.leave-header p {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.leave-header-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #e8f5ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+
+/* =========================================
+   SUMMARY
+========================================= */
+
+.leave-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.leave-summary-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.summary-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+}
+
+.summary-icon.pending {
+  background: #fff7df;
+}
+
+.summary-icon.approved {
+  background: #e7f8ed;
+}
+
+.summary-icon.rejected {
+  background: #fdeaea;
+}
+
+.summary-icon.holiday {
+  background: #e9f1ff;
+}
+
+.leave-summary-card span {
+  display: block;
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 5px;
+}
+
+.leave-summary-card strong {
+  font-size: 24px;
+  color: #111827;
+}
+
+
+/* =========================================
+   TABS
+========================================= */
+
+.leave-tabs {
+  display: flex;
+  gap: 8px;
+  background: #ffffff;
+  padding: 8px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.leave-tab {
+  border: none;
+  background: transparent;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.leave-tab:hover {
+  background: #f3f4f6;
+}
+
+.leave-tab.active {
+  background: #22c55e;
+  color: #ffffff;
+}
+
+
+/* =========================================
+   CONTENT
+========================================= */
+
+.leave-content {
+  background: #ffffff;
+  border-radius: 14px;
+  min-height: 400px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.leave-section {
+  padding: 24px;
+}
+
+
+/* =========================================
+   SECTION HEADER
+========================================= */
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 20px;
+}
+
+.section-header p {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.primary-btn {
+  border: none;
+  background: #22c55e;
+  color: #ffffff;
+  padding: 11px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-btn:hover {
+  background: #16a34a;
+}
+
+.edit-btn {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  padding: 7px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.edit-btn:hover {
+  background: #f3f4f6;
+}
+
+
+/* =========================================
+   FILTER
+========================================= */
+
+.leave-filter {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 14px;
+  outline: none;
+  background: #ffffff;
+}
+
+
+/* =========================================
+   EMPTY STATE
+========================================= */
+
+.empty-state {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+.empty-state h3 {
+  margin: 0 0 7px;
+  color: #374151;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+
+/* =========================================
+   POLICY
+========================================= */
+
+.policy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.policy-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.policy-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.policy-card-header h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.active-badge {
+  background: #dcfce7;
+  color: #15803d;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.policy-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.policy-info span {
+  display: block;
+  color: #6b7280;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.policy-info strong {
+  font-size: 18px;
+  color: #111827;
+}
+
+.policy-footer {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eeeeee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.policy-footer span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .leave-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .policy-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .leave-management {
+    padding: 15px;
+  }
+
+  .leave-header h1 {
+    font-size: 22px;
+  }
+
+  .leave-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .leave-tabs {
+    overflow-x: auto;
+  }
+
+  .leave-tab {
+    white-space: nowrap;
+    padding: 10px 14px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   HOLIDAY MANAGEMENT
+===================================================== */
+
+.holiday-management-page {
+  padding: 24px;
+  min-height: 100vh;
+  background: #f6f7fb;
+}
+
+
+/* HEADER */
+
+.holiday-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.holiday-page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #1f2937;
+}
+
+.holiday-page-header p {
+  margin: 6px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+
+/* BUTTON */
+
+.holiday-add-btn {
+  border: none;
+  background: #22c55e;
+  color: white;
+  padding: 11px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.holiday-add-btn:hover {
+  background: #16a34a;
+}
+
+.holiday-add-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* ERROR */
+
+.holiday-error {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+
+/* SUMMARY */
+
+.holiday-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.holiday-summary-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.holiday-summary-card span {
+  display: block;
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.holiday-summary-card strong {
+  font-size: 26px;
+  color: #111827;
+}
+
+
+/* TABLE CARD */
+
+.holiday-table-card {
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.holiday-table-header {
+  padding: 22px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.holiday-table-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #1f2937;
+}
+
+.holiday-table-header p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.holiday-refresh-btn {
+  background: white;
+  border: 1px solid #d1d5db;
+  padding: 9px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.holiday-refresh-btn:hover {
+  background: #f3f4f6;
+}
+
+
+/* TABLE */
+
+.holiday-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.holiday-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.holiday-table th {
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 12px;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.holiday-table td {
+  padding: 16px 18px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #374151;
+  font-size: 14px;
+}
+
+.holiday-table tbody tr:hover {
+  background: #fafafa;
+}
+
+
+/* HOLIDAY NAME */
+
+.holiday-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.holiday-calendar-icon {
+  width: 38px;
+  height: 38px;
+  background: #e8f5ee;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.holiday-name strong {
+  color: #111827;
+}
+
+
+/* DESCRIPTION */
+
+.holiday-description {
+  color: #6b7280;
+  max-width: 220px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* TYPE */
+
+.holiday-type {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.holiday-type.permanent {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.holiday-type.special {
+  background: #fff7df;
+  color: #a16207;
+}
+
+
+/* STATUS */
+
+.holiday-status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.holiday-status.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.holiday-status.inactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+
+/* ACTIONS */
+
+.holiday-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.holiday-edit-btn,
+.holiday-delete-btn {
+  border-radius: 7px;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.holiday-edit-btn {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+}
+
+.holiday-edit-btn:hover {
+  background: #f3f4f6;
+}
+
+.holiday-delete-btn {
+  border: 1px solid #fecaca;
+  background: #fff5f5;
+  color: #dc2626;
+}
+
+.holiday-delete-btn:hover {
+  background: #fee2e2;
+}
+
+
+/* LOADING */
+
+.holiday-loading {
+  padding: 80px 20px;
+  text-align: center;
+  color: #6b7280;
+}
+
+
+/* EMPTY */
+
+.holiday-empty {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.holiday-empty-icon {
+  width: 70px;
+  height: 70px;
+  margin: auto;
+  margin-bottom: 15px;
+  border-radius: 50%;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+
+.holiday-empty h3 {
+  margin: 0 0 7px;
+  color: #374151;
+}
+
+.holiday-empty p {
+  color: #9ca3af;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.holiday-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.holiday-modal {
+  width: 100%;
+  max-width: 520px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.holiday-modal-header {
+  padding: 20px 22px;
+  border-bottom: 1px solid #eeeeee;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.holiday-modal-header h2 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 20px;
+}
+
+.holiday-modal-header p {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.holiday-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 28px;
+  color: #6b7280;
+  cursor: pointer;
+  line-height: 1;
+}
+
+
+/* FORM */
+
+.holiday-form {
+  padding: 22px;
+}
+
+.holiday-form-group {
+  margin-bottom: 18px;
+}
+
+.holiday-form-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.holiday-form-group label span {
+  color: #dc2626;
+  margin-left: 3px;
+}
+
+.holiday-form-group input,
+.holiday-form-group select,
+.holiday-form-group textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 11px 12px;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.holiday-form-group input:focus,
+.holiday-form-group select:focus,
+.holiday-form-group textarea:focus {
+  border-color: #22c55e;
+}
+
+.holiday-form-group textarea {
+  resize: vertical;
+}
+
+
+/* CHECKBOX */
+
+.holiday-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+}
+
+.holiday-checkbox input {
+  width: 17px;
+  height: 17px;
+  accent-color: #22c55e;
+}
+
+.holiday-checkbox label {
+  font-size: 13px;
+  color: #374151;
+}
+
+
+/* FORM BUTTONS */
+
+.holiday-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 5px;
+}
+
+.holiday-cancel-btn,
+.holiday-save-btn {
+  padding: 10px 17px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.holiday-cancel-btn {
+  background: white;
+  border: 1px solid #d1d5db;
+  color: #374151;
+}
+
+.holiday-save-btn {
+  background: #22c55e;
+  border: 1px solid #22c55e;
+  color: white;
+}
+
+.holiday-save-btn:hover {
+  background: #16a34a;
+}
+
+.holiday-save-btn:disabled,
+.holiday-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .holiday-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .holiday-management-page {
+    padding: 15px;
+  }
+
+  .holiday-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .holiday-page-header h1 {
+    font-size: 23px;
+  }
+
+  .holiday-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .holiday-table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .holiday-modal {
+    max-height: 95vh;
+  }
+
+}

@@ -363,6 +363,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./AttendanceManagement.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 

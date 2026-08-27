@@ -1,0 +1,430 @@
+:root {
+  --modal-bg: #ebf0fe;
+  --navy-dark: #020b38;
+  --blue-banner: #334ab5;
+  --input-bg: #c3d0ff;
+  --input-border: #8ca2f8;
+  --input-text: #0f172a;
+  --card-border: #1e293b;
+}
+
+/* Modal Wrapper */
+.bokwrap-modal {
+  width: 1320px;
+  max-width: calc(100vw - 40px);
+  margin: 30px auto;
+  position: relative;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Main Modal Card */
+.bokwrap-modal .card-custom {
+  background-color: var(--modal-bg);
+  border-radius: 12px;
+  padding: 45px 35px 35px 35px;
+  position: relative;
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.25);
+  border: 1px solid #dbe2fe;
+  overflow: visible;
+}
+
+/* Corner Accents */
+.bokwrap-modal .card-custom::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 50px 50px 0;
+  border-color: transparent var(--blue-banner) transparent transparent;
+  border-top-right-radius: 12px;
+  z-index: 1;
+}
+
+.bokwrap-modal .card-custom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 0 0 50px;
+  border-color: transparent transparent transparent var(--navy-dark);
+  border-bottom-left-radius: 12px;
+  z-index: 1;
+}
+
+/* Top Badge Bar */
+.top-header-badge {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--navy-dark);
+  color: #ffffff;
+  padding: 10px 28px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
+
+/* Step Title Banner Bar */
+.step-header-bar {
+  background-color: var(--blue-banner);
+  color: #ffffff;
+  padding: 12px 16px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  margin-top: 15px;
+  margin-bottom: 24px;
+}
+
+/* Form Container & Spacing */
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group-block {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-group-block label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+/* Input Fields */
+.input-soft-blue {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  border-radius: 6px !important;
+  padding: 11px 14px !important;
+  font-size: 0.9rem !important;
+  color: var(--input-text) !important;
+  outline: none !important;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.input-soft-blue:focus {
+  border-color: var(--blue-banner) !important;
+  box-shadow: 0 0 0 2px rgba(51, 74, 181, 0.25) !important;
+}
+
+select.input-soft-blue {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%22%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230f172a%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px top 50%;
+  background-size: 10px auto;
+}
+
+/* Device Tile Selection Cards */
+.device-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.device-tile {
+  height: 90px;
+  background-color: #ffffff;
+  border: 1.5px solid var(--card-border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 6px;
+}
+
+.device-tile svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: #0f172a;
+  stroke-width: 2;
+  margin-bottom: 6px;
+}
+
+.device-tile span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.device-tile.active {
+  background-color: var(--navy-dark);
+  border-color: var(--navy-dark);
+}
+
+.device-tile.active span {
+  color: #ffffff;
+}
+
+.device-tile.active svg {
+  stroke: #ffffff;
+}
+
+/* Radio Option Rows (Step 3) */
+.options-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.custom-radio-card {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--input-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.custom-radio-card.wide {
+  flex: 1;
+  min-width: 220px;
+}
+
+.custom-radio-card input[type="radio"] {
+  display: none;
+}
+
+/* Custom Radio Dot Visual */
+.radio-circle {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #475569;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+  background-color: #ffffff;
+}
+
+.custom-radio-card.selected .radio-circle {
+  border-color: #ffffff;
+}
+
+.custom-radio-card.selected .radio-circle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--navy-dark);
+}
+
+.custom-radio-card.selected.dark .radio-circle::after {
+  background-color: var(--navy-dark);
+}
+
+/* Radio Selection Styles */
+.custom-radio-card.selected {
+  border-color: var(--blue-banner);
+}
+
+.custom-radio-card.selected.dark {
+  background-color: var(--navy-dark);
+  color: #ffffff;
+  border-color: var(--navy-dark);
+}
+
+/* Sub-Card Box for Date & Slots */
+.service-details-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 10px;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Pickup & Drop Pricing Table Fixes */
+.charges-table-container {
+  border: 1px solid #2563eb;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  background-color: #ffffff;
+}
+
+.charges-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.charges-table th {
+  background-color: #f1f5f9;
+  color: var(--navy-dark) !important;
+  font-weight: 700;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid #2563eb;
+}
+
+.charges-table td {
+  padding: 10px 14px;
+  text-align: left;
+  color: #0f172a !important;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.charges-table tr.total-row {
+  background-color: #f8fafc;
+}
+
+.charges-table tr.total-row td {
+  font-weight: 700;
+  color: var(--navy-dark) !important;
+  border-bottom: none;
+}
+
+/* Slot Selection Grid */
+.slots-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.slot-card {
+  padding: 8px 12px;
+  font-size: 0.82rem;
+}
+
+/* Navigation Buttons */
+.btn-gradient-submit {
+  background: linear-gradient(90deg, #2f54eb, #722ed1);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 36px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(47, 84, 235, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-gradient-submit:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.btn-dark-submit {
+  background-color: var(--navy-dark);
+  color: #ffffff;
+  padding: 12px 36px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(2, 11, 56, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-dark-submit:hover {
+  background-color: #08134a;
+  transform: translateY(-1px);
+}
+
+.action-button-group {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.btn-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: #64748b;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .bokwrap-modal {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    margin: 30px auto;
+  }
+
+  .bokwrap-modal .card-custom {
+    padding: 45px 20px 30px 20px;
+  }
+
+  .device-tile-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .custom-radio-card.wide {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .bokwrap-modal {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+  }
+
+  .bokwrap-modal .card-custom {
+    padding: 45px 15px 25px 15px;
+  }
+
+  .top-header-badge {
+    font-size: 0.75rem;
+    padding: 9px 18px;
+  }
+
+  .device-tile {
+    height: 80px;
+  }
+}

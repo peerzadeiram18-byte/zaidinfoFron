@@ -1,0 +1,269 @@
+.subcategory-list-page {
+  width: 100%;
+  min-height: 100%;
+  padding: 30px;
+  background: #f7f8fc;
+}
+
+.subcategory-list-card {
+  width: 100%;
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.subcategory-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.subcategory-list-header h1 {
+  margin: 0;
+  color: #202124;
+  font-size: 28px;
+}
+
+.subcategory-list-header p {
+  margin: 7px 0 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.add-subcategory-btn {
+  border: none;
+  border-radius: 9px;
+  padding: 12px 18px;
+  background: #5b55e8;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-subcategory-btn:hover {
+  background: #4943d4;
+}
+
+.subcategory-error {
+  padding: 13px;
+  margin-bottom: 18px;
+  border-radius: 9px;
+  background: #fff0f0;
+  border: 1px solid #efb5b5;
+  color: #c62828;
+}
+
+.subcategory-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.subcategory-toolbar input {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 15px;
+  border: 1px solid #ddd;
+  border-radius: 9px;
+  outline: none;
+  font-size: 14px;
+}
+
+.subcategory-toolbar input:focus {
+  border-color: #5b55e8;
+}
+
+.refresh-subcategory-btn {
+  border: none;
+  background: #eef0f6;
+  padding: 0 18px;
+  border-radius: 9px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.refresh-subcategory-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.subcategory-count {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.subcategory-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.subcategory-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+}
+
+.subcategory-table th {
+  text-align: left;
+  padding: 15px;
+  background: #f6f7fb;
+  color: #555;
+  font-size: 13px;
+  font-weight: 700;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.subcategory-table td {
+  padding: 16px 15px;
+  border-bottom: 1px solid #eeeeee;
+  color: #444;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.subcategory-table tbody tr:hover {
+  background: #fafaff;
+}
+
+.subcategory-name-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.subcategory-name-cell strong {
+  color: #222;
+  font-size: 15px;
+}
+
+.subcategory-name-cell small {
+  color: #999;
+  font-size: 11px;
+}
+
+.parent-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  background: #f1f0ff;
+  color: #5149d8;
+  border-radius: 8px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.description-cell {
+  max-width: 280px;
+  color: #777 !important;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-badge.active {
+  background: #e8f8ee;
+  color: #16803c;
+}
+
+.status-badge.inactive {
+  background: #fff0f0;
+  color: #c62828;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-btn,
+.delete-btn {
+  border: none;
+  border-radius: 7px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background: #eef0ff;
+  color: #5149d8;
+}
+
+.delete-btn {
+  background: #fff0f0;
+  color: #d32f2f;
+}
+
+.delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.subcategory-loading,
+.subcategory-empty {
+  text-align: center;
+  padding: 70px 20px;
+  color: #777;
+}
+
+.subcategory-empty .empty-icon {
+  font-size: 45px;
+  margin-bottom: 10px;
+}
+
+.subcategory-empty h3 {
+  color: #333;
+  margin: 5px 0;
+}
+
+.subcategory-empty p {
+  margin-bottom: 20px;
+}
+
+.subcategory-empty button {
+  border: none;
+  background: #5b55e8;
+  color: white;
+  padding: 11px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .subcategory-list-page {
+    padding: 15px;
+  }
+
+  .subcategory-list-card {
+    padding: 18px;
+  }
+
+  .subcategory-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .add-subcategory-btn {
+    width: 100%;
+  }
+
+  .subcategory-toolbar {
+    flex-direction: column;
+  }
+
+  .refresh-subcategory-btn {
+    padding: 12px;
+  }
+}
