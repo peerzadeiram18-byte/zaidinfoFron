@@ -1347,6 +1347,12 @@ function Sidebar() {
         },
 
         {
+          name: "Availability Requests",
+          icon: <MdInventory />,
+          path: "/admin/availability-requests",
+        },
+
+        {
           name: "Stock History",
           icon: <MdInventory />,
           path: "/stock-history",
@@ -1786,7 +1792,7 @@ function Sidebar() {
         {/* =======================================
             PROFILE
         ======================================== */}
-
+{/* 
         <div className="sidebar-profile">
           <div className="profile-image-wrapper">
             <span className="profile-online-dot" />
@@ -1799,7 +1805,7 @@ function Sidebar() {
               System Administrator
             </span>
           </div>
-        </div>
+        </div> */}
 
         {/* =======================================
             GLOBAL SIDEBAR SEARCH

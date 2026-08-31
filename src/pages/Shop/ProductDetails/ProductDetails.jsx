@@ -35,8 +35,8 @@ import {
 } from "../../../services/inventoryService";
 
 import ProductReviews from "../../../components/Reviews/ProductReviews";
-
-
+import AvailabilityRequestModal
+    from "../../../components/AvailabilityRequest/AvailabilityRequestModal";
 /* =====================================================
    API / IMAGE BASE URL
 ===================================================== */
@@ -110,6 +110,7 @@ const getProductId = (
         null
     );
 };
+
 
 
 /* =====================================================
@@ -858,6 +859,10 @@ const ProductDetails = () => {
         setInventoryLoading
     ] = useState(false);
 
+    const [
+    showAvailabilityModal,
+    setShowAvailabilityModal
+] = useState(false);
 
     /* =================================================
        LOAD
@@ -2276,65 +2281,83 @@ const ProductDetails = () => {
                     </div>
 
 
-                    {/* =================================================
-                        ACTION BUTTONS
-                    ================================================= */}
-
-                    <div className="action-buttons3">
-
-                        <button
-                            type="button"
-                            className="cart-btn3"
-                            disabled={
-                                isOutOfStock
-                            }
-                            onClick={
-                                handleAddToCart
-                            }
-                        >
-
-                            <span>
-                                🛒
-                            </span>
-
-                            Add To Cart
-
-                        </button>
+                  
+{/* =================================================
+    ACTION BUTTONS
+================================================= */}
 
 
-                        <button
-                            type="button"
-                            className="buy-btn3"
-                            disabled={
-                                isOutOfStock
-                            }
-                            onClick={
-                                handleBuyNow
-                            }
-                        >
+{/* =================================================
+    ACTION BUTTONS
+================================================= */}
 
-                            Buy Now
+<div className="action-buttons3">
 
-                        </button>
+    {isOutOfStock ? (
+
+        <button
+            type="button"
+            className="availability-request-btn3"
+            onClick={() =>
+                setShowAvailabilityModal(true)
+            }
+        >
+            <span>
+                📦
+            </span>
+
+            Request Availability
+        </button>
+
+    ) : (
+
+        <>
+            <button
+                type="button"
+                className="cart-btn3"
+                onClick={handleAddToCart}
+            >
+                <span>
+                    🛒
+                </span>
+
+                Add To Cart
+            </button>
 
 
-                        <button
-                            type="button"
-                            className="wishlist-btn3"
-                            onClick={
-                                handleWishlist
-                            }
-                        >
+            <button
+                type="button"
+                className="buy-btn3"
+                onClick={handleBuyNow}
+            >
+                Buy Now
+            </button>
+        </>
 
-                            <span>
-                                ♡
-                            </span>
+    )}
 
-                            Wishlist
 
-                        </button>
+    {/* =================================================
+        WISHLIST
+    ================================================= */}
 
-                    </div>
+    <button
+        type="button"
+        className="wishlist-btn3"
+        onClick={handleWishlist}
+    >
+        <span>
+            ♡
+        </span>
+
+        Wishlist
+    </button>
+
+</div>
+
+
+
+
 
 
                     {/* =================================================
@@ -2545,6 +2568,37 @@ const ProductDetails = () => {
                 />
 
             </section>
+
+           
+{/* =================================================
+    AVAILABILITY REQUEST MODAL
+================================================= */}
+
+{showAvailabilityModal && (
+
+    <AvailabilityRequestModal
+
+        product={product}
+
+        onClose={() =>
+            setShowAvailabilityModal(false)
+        }
+
+        onSuccess={() => {
+
+            setShowAvailabilityModal(false);
+
+            toast.success(
+                "Availability request submitted successfully."
+            );
+
+        }}
+
+    />
+
+)}
+
+
 
         </div>
     );

@@ -1,0 +1,242 @@
+:root {
+  --rep-bg-primary: #f8fafc;
+  --rep-sidebar-bg: #ffffff;
+  --rep-accent: #2563eb;
+  --rep-accent-hover: #1d4ed8;
+  --rep-accent-light: #eff6ff;
+  --rep-text-dark: #0f172a;
+  --rep-text-muted: #64748b;
+  --rep-border-color: #e2e8f0;
+  --rep-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --rep-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.rep-layout-root {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--rep-bg-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--rep-text-dark);
+}
+
+/* Mobile Topbar */
+.rep-mobile-topbar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--rep-border-color);
+  padding: 0 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+}
+
+.rep-brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--rep-accent);
+}
+
+.rep-menu-toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--rep-text-dark);
+  cursor: pointer;
+}
+
+/* Sidebar Structure */
+.rep-sidebar {
+  width: 270px;
+  min-width: 270px;
+  background: var(--rep-sidebar-bg);
+  border-right: 1px solid var(--rep-border-color);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 90;
+  transition: transform 0.25s ease;
+}
+
+.rep-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--rep-border-color);
+}
+
+.rep-brand-avatar {
+  width: 38px;
+  height: 38px;
+  background: var(--rep-accent);
+  color: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.rep-brand-text h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.rep-brand-text span {
+  font-size: 0.75rem;
+  color: var(--rep-text-muted);
+}
+
+/* Navigation List */
+.rep-nav-section {
+  flex: 1;
+  padding: 1.25rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow-y: auto;
+}
+
+.rep-nav-heading {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--rep-text-muted);
+  letter-spacing: 0.05em;
+  padding: 0.75rem 0.75rem 0.25rem;
+}
+
+.rep-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 6px;
+  color: var(--rep-text-muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+}
+
+.rep-nav-item:hover {
+  background: #f1f5f9;
+  color: var(--rep-text-dark);
+}
+
+.rep-nav-item-active {
+  background: var(--rep-accent-light) !important;
+  color: var(--rep-accent) !important;
+  font-weight: 600;
+}
+
+.rep-nav-icon {
+  font-size: 1rem;
+}
+
+/* Sidebar Footer */
+.rep-sidebar-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--rep-border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+}
+
+.rep-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rep-user-badge {
+  width: 34px;
+  height: 34px;
+  background: #e2e8f0;
+  color: #334155;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.rep-user-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.rep-user-meta strong {
+  font-size: 0.82rem;
+}
+
+.rep-user-meta small {
+  font-size: 0.72rem;
+  color: #16a34a;
+}
+
+.rep-logout-btn {
+  background: transparent;
+  border: none;
+  color: var(--rep-text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.rep-logout-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Main Outlet Area */
+.rep-main-canvas {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .rep-mobile-topbar {
+    display: flex;
+  }
+
+  .rep-sidebar {
+    position: fixed;
+    top: 60px;
+    bottom: 0;
+    height: calc(100vh - 60px);
+    transform: translateX(-100%);
+  }
+
+  .rep-sidebar-open {
+    transform: translateX(0);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  .rep-main-canvas {
+    padding: 5rem 1rem 1.5rem;
+  }
+}

@@ -1,0 +1,754 @@
+/* =========================================================
+   TECHNICIAN STAFF
+   Receptionist Dashboard Outlet
+   ========================================================= */
+
+.technician-page {
+  width: 100%;
+  min-width: 0;
+  padding: 22px;
+  box-sizing: border-box;
+  color: #172033;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.technician-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.technician-page-header h1 {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #172033;
+}
+
+.technician-page-header p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #7b8496;
+}
+
+
+/* =========================================================
+   TECHNICIAN COUNT
+   ========================================================= */
+
+.technician-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 14px;
+
+  background: #ffffff;
+  border: 1px solid #e8ebf0;
+  border-radius: 10px;
+
+  box-shadow: 0 3px 12px rgba(20, 30, 50, 0.04);
+}
+
+.technician-count span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 30px;
+  height: 30px;
+
+  padding: 0 7px;
+
+  border-radius: 8px;
+
+  background: #eaf8f2;
+  color: #15966a;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.technician-count small {
+  font-size: 12px;
+  color: #727b8c;
+  font-weight: 500;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.technician-card {
+  width: 100%;
+  background: #ffffff;
+
+  border: 1px solid #e8ebf0;
+  border-radius: 14px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 4px 16px rgba(20, 30, 50, 0.04),
+    0 1px 3px rgba(20, 30, 50, 0.03);
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.technician-card-header {
+  min-height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 14px 18px;
+
+  border-bottom: 1px solid #edf0f3;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.technician-card-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.technician-icon {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #effaf5;
+  border: 1px solid #d9f2e7;
+  border-radius: 10px;
+
+  font-size: 19px;
+}
+
+.technician-card-title h2 {
+  margin: 0;
+
+  font-size: 16px;
+  font-weight: 650;
+
+  color: #1c2638;
+}
+
+.technician-card-title p {
+  margin: 3px 0 0;
+
+  font-size: 11px;
+  color: #8a92a1;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.technician-search {
+  position: relative;
+
+  width: 280px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+
+  flex-shrink: 1;
+}
+
+.technician-search input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0 38px 0 36px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e1e5ea;
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #f9fafb;
+
+  color: #293346;
+
+  font-size: 12px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.technician-search input::placeholder {
+  color: #a1a8b5;
+}
+
+.technician-search input:focus {
+  background: #ffffff;
+  border-color: #75cba8;
+
+  box-shadow: 0 0 0 3px rgba(45, 179, 126, 0.09);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+
+  z-index: 2;
+
+  color: #8992a2;
+
+  font-size: 20px;
+  line-height: 1;
+
+  pointer-events: none;
+}
+
+.clear-search {
+  position: absolute;
+  right: 9px;
+
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #e9edf1;
+
+  color: #70798a;
+
+  cursor: pointer;
+
+  font-size: 16px;
+  line-height: 1;
+}
+
+.clear-search:hover {
+  background: #dfe4e9;
+  color: #343d4d;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.technician-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 12px 18px 0;
+  padding: 9px 11px;
+
+  border: 1px solid #f4d4d4;
+  border-radius: 8px;
+
+  background: #fff7f7;
+
+  color: #c54848;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   TABLE WRAPPER
+   ========================================================= */
+
+.technician-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.technician-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 760px;
+}
+
+
+/* =========================================================
+   TABLE HEAD
+   ========================================================= */
+
+.technician-table thead {
+  background: #f8fafb;
+}
+
+.technician-table th {
+  height: 42px;
+
+  padding: 0 14px;
+
+  border-bottom: 1px solid #e8ebef;
+
+  text-align: left;
+
+  color: #737d8e;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.45px;
+
+  white-space: nowrap;
+}
+
+.technician-table th:first-child {
+  padding-left: 18px;
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.technician-table tbody tr {
+  height: 62px;
+
+  border-bottom: 1px solid #f0f2f4;
+
+  transition:
+    background 0.18s ease;
+}
+
+.technician-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.technician-table tbody tr:hover {
+  background: #fafdfb;
+}
+
+.technician-table td {
+  padding: 8px 14px;
+
+  color: #4d5667;
+
+  font-size: 12px;
+
+  vertical-align: middle;
+
+  white-space: nowrap;
+}
+
+.technician-table td:first-child {
+  padding-left: 18px;
+}
+
+
+/* =========================================================
+   SERIAL NUMBER
+   ========================================================= */
+
+.sr-column {
+  width: 48px;
+}
+
+.serial-number {
+  color: #9099a8;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   TECHNICIAN NAME
+   ========================================================= */
+
+.technician-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.technician-avatar {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 9px;
+
+  background: #eaf8f2;
+  color: #15966a;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.name-info {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.name-info strong {
+  color: #263144;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.name-info span {
+  color: #9aa2af;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   EMAIL
+   ========================================================= */
+
+.email-text {
+  color: #667083;
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   ROLE
+   ========================================================= */
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 24px;
+
+  padding: 0 9px;
+
+  border-radius: 6px;
+
+  background: #f0f7ff;
+  color: #4b78b7;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   DESIGNATION / DEPARTMENT
+   ========================================================= */
+
+.designation-text,
+.department-text {
+  color: #596477;
+
+  font-size: 11px;
+}
+
+.department-text {
+  color: #687385;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-cell {
+  height: 250px !important;
+  padding: 0 !important;
+}
+
+.empty-state {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  text-align: center;
+}
+
+.empty-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 9px;
+
+  border-radius: 12px;
+
+  background: #f4f6f8;
+
+  font-size: 21px;
+}
+
+.empty-state h3 {
+  margin: 0;
+
+  color: #4b5567;
+
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.empty-state p {
+  margin: 5px 0 12px;
+
+  color: #9aa2af;
+
+  font-size: 11px;
+}
+
+.empty-state button {
+  height: 30px;
+
+  padding: 0 13px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: #15966a;
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.empty-state button:hover {
+  background: #117e58;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.technician-loading {
+  height: 260px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  color: #858e9e;
+
+  font-size: 12px;
+}
+
+.loading-spinner {
+  width: 25px;
+  height: 25px;
+
+  border: 2px solid #e5e9ed;
+  border-top-color: #15966a;
+
+  border-radius: 50%;
+
+  animation: technician-spin 0.7s linear infinite;
+}
+
+@keyframes technician-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   CARD FOOTER
+   ========================================================= */
+
+.technician-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  min-height: 40px;
+
+  padding: 0 18px;
+
+  border-top: 1px solid #edf0f3;
+
+  background: #fafbfc;
+
+  color: #8b94a2;
+
+  font-size: 10px;
+}
+
+.technician-card-footer strong {
+  color: #596476;
+  font-weight: 650;
+}
+
+
+/* =========================================================
+   RESPONSIVE - LAPTOP
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .technician-page {
+    padding: 18px;
+  }
+
+  .technician-card-header {
+    padding: 13px 15px;
+  }
+
+  .technician-search {
+    width: 240px;
+  }
+
+  .technician-table th,
+  .technician-table td {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .technician-table td:first-child,
+  .technician-table th:first-child {
+    padding-left: 14px;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 800px) {
+  .technician-page {
+    padding: 14px;
+  }
+
+  .technician-page-header {
+    align-items: flex-start;
+  }
+
+  .technician-page-header h1 {
+    font-size: 21px;
+  }
+
+  .technician-card-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .technician-search {
+    width: 100%;
+  }
+
+  .technician-count {
+    padding: 6px 10px;
+  }
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 520px) {
+  .technician-page {
+    padding: 10px;
+  }
+
+  .technician-page-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .technician-page-header h1 {
+    font-size: 19px;
+  }
+
+  .technician-page-header p {
+    font-size: 11px;
+  }
+
+  .technician-count {
+    align-self: flex-start;
+  }
+
+  .technician-card {
+    border-radius: 11px;
+  }
+
+  .technician-card-header {
+    padding: 12px;
+  }
+
+  .technician-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .technician-card-title h2 {
+    font-size: 14px;
+  }
+
+  .technician-table {
+    min-width: 720px;
+  }
+
+  .technician-card-footer {
+    justify-content: center;
+  }
+}

@@ -851,6 +851,25 @@ import SubCategoryList
 import EditSubCategory
   from "./pages/Admin/Category/SubCategory/EditSubCategory";
 
+
+import AvailabilityRequests
+    from "./pages/Admin/AvailabilityRequests/AvailabilityRequests";
+
+
+import TechnicianOverview from "./pages/Technician/TechnicianOverview.jsx";
+import TechnicianServiceRates from "./pages/Technician/TechnicianServiceRates.jsx";
+import MyRepairs from "./pages/Technician/MyRepairs.jsx";
+import TechnicianWorkOrders from "./pages/Technician/TechnicianWorkOrders.jsx";
+import TechnicianAssignedRepairs from "./pages/Technician/TechnicianAssignedRepairs.jsx";
+import TechnicianDashboardAnalytic from "./pages/Technician/TechnicianDashboardAnalytic.jsx";
+import TechnicianRepairHistory from "./pages/Technician/TechnicianRepairHistory.jsx";
+import InventoryManagement from "./pages/Technician/InventoryManagement.jsx";
+
+import RepairRates from "./pages/Receptionist/RepairRates.jsx";
+import TechinicaStaff from "./pages/Receptionist/TechinicaStaff.jsx";
+import ReceptionistLayout from "./pages/Receptionist/ReceptionistLayout.jsx";
+import RepairCustomer from "./pages/Receptionist/RepairCustomer.jsx";
+
   // =====================================================
 // APP
 // =====================================================
@@ -1012,6 +1031,12 @@ function App() {
                     <Route
                         path="/customers"
                         element={<CustomerList />}
+                    />
+                     <Route
+                         path="/admin/availability-requests"
+                         element={
+                   <AvailabilityRequests />
+                           }
                     />
 
                     {/* =========================================
@@ -1575,7 +1600,7 @@ function App() {
                     RECEPTIONIST
                 ================================================= */}
 
-                <Route
+                {/* <Route
                     path="/receptionist-dashboard"
                     element={<ReceptionistDashboard />}
                 />
@@ -1593,7 +1618,21 @@ function App() {
                 <Route
                     path="/receptionist/walk-in-invoice/:invoiceId"
                     element={<WalkInInvoice />}
-                />
+                /> */}
+
+
+{/* 
+                 <Route path="/receptionist-dashboard" element={<ReceptionistLayout />}>
+                    <Route index element={<ReceptionistDashboard/>}/> 
+                    <Route path="repair-customers" element={<RepairCustomer/>} />
+                    <Route path="repair-rates" element={<RepairRates/>}/>
+                    <Route path="receptionist/walk-in-order/new" element={<NewWalkInOrder />}/>
+                    <Route path="receptionist/walk-in-orders" element={<WalkInOrders />}/>
+                    <Route path="receptionist/walk-in-invoice/:invoiceId" element={<WalkInInvoice />}  /> 
+                    <Route path="staff-list" element={<TechinicaStaff/>} />
+                  
+                 
+
                 <Route
                     path="/receptionist/leave/apply"
                     element={<ApplyLeave />}
@@ -1606,15 +1645,130 @@ function App() {
     path="/receptionist/leaves/:id"
     element={<LeaveDetails />}
 />
+  </Route> */}
 
-                {/* =================================================
-                    TECHNICIAN
-                ================================================= */}
 
-                <Route
-                    path="/technician-dashboard"
-                    element={<TechnicianDashboard />}
-                />
+  {/* =================================================
+    RECEPTIONIST
+================================================= */}
+
+<Route
+    path="/receptionist-dashboard"
+    element={<ReceptionistLayout />}
+>
+    {/* Dashboard */}
+    <Route
+        index
+        element={<ReceptionistDashboard />}
+    />
+
+    {/* Repair Customers */}
+    <Route
+        path="repair-customers"
+        element={<RepairCustomer />}
+    />
+
+    {/* Repair Rates */}
+    <Route
+        path="repair-rates"
+        element={<RepairRates />}
+    />
+
+    {/* Walk-in New Order */}
+    <Route
+        path="walk-in-order/new"
+        element={<NewWalkInOrder />}
+    />
+
+    {/* Walk-in Orders */}
+    <Route
+        path="walk-in-orders"
+        element={<WalkInOrders />}
+    />
+
+    {/* Walk-in Invoice */}
+    <Route
+        path="walk-in-invoice/:invoiceId"
+        element={<WalkInInvoice />}
+    />
+
+    {/* Technician / Staff List */}
+    <Route
+        path="staff-list"
+        element={<TechinicaStaff />}
+    />
+
+    {/* Leave Apply */}
+    <Route
+        path="leave/apply"
+        element={<ApplyLeave />}
+    />
+
+    {/* My Leaves */}
+    <Route
+        path="leaves"
+        element={<MyLeaves />}
+    />
+
+    {/* Leave Details */}
+    <Route
+        path="leaves/:id"
+        element={<LeaveDetails />}
+    />
+</Route>
+
+
+{/* =================================================
+    TECHNICIAN
+================================================= */}
+
+<Route
+    path="/technician-dashboard"
+    element={<TechnicianDashboard />}
+>
+    {/* /technician-dashboard */}
+    <Route
+        index
+        element={<TechnicianDashboardAnalytic />}
+    />
+
+    {/* /technician-dashboard/charges */}
+    <Route
+        path="charges"
+        element={<TechnicianServiceRates />}
+    />
+
+    {/* /technician-dashboard/my-repairs */}
+    <Route
+        path="my-repairs"
+        element={<TechnicianAssignedRepairs />}
+    />
+
+    {/* /technician-dashboard/history */}
+    <Route
+        path="history"
+        element={<TechnicianRepairHistory />}
+    />
+
+    {/* /technician-dashboard/inventory */}
+    <Route
+        path="inventory"
+        element={<InventoryManagement />}
+    />
+
+    {/* /technician-dashboard/notifications */}
+    <Route
+        path="notifications"
+        element={<div>Notifications Content</div>}
+    />
+
+    {/* /technician-dashboard/settings */}
+    <Route
+        path="settings"
+        element={<div>Settings Content</div>}
+    />
+</Route>
+                
 
                 {/* =================================================
                     INVENTORY

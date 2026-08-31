@@ -1364,3 +1364,82 @@
     }
 
 }
+
+/* =====================================================
+   AVAILABILITY REQUEST BUTTON
+===================================================== */
+
+.availability-request-btn3 {
+
+    flex: 1;
+
+    min-height: 48px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 12px 18px;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.availability-request-btn3:hover {
+
+    background: #000000;
+
+    transform: translateY(-1px);
+}
+
+
+.availability-request-btn3:active {
+
+    transform: translateY(0);
+}
+
+
+.availability-request-btn3 span {
+
+    font-size: 18px;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .availability-request-btn3 {
+
+        width: 100%;
+
+        min-height: 46px;
+
+        font-size: 14px;
+
+    }
+
+}

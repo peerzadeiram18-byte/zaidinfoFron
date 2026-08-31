@@ -1,0 +1,380 @@
+/* ======================================================
+   OVERLAY
+====================================================== */
+
+.availability-modal-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+}
+
+
+/* ======================================================
+   MODAL
+====================================================== */
+
+.availability-modal {
+
+    width: 100%;
+
+    max-width: 520px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: #ffffff;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.2);
+
+}
+
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.availability-modal-header {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 22px 24px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+}
+
+
+.availability-modal-header h2 {
+
+    margin: 0;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+}
+
+
+.availability-modal-header p {
+
+    margin: 6px 0 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+}
+
+
+.availability-close-btn {
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 30px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    color: #6b7280;
+
+}
+
+
+.availability-close-btn:hover {
+
+    color: #111827;
+
+}
+
+
+/* ======================================================
+   FORM
+====================================================== */
+
+.availability-form {
+
+    padding: 24px;
+
+}
+
+
+.availability-field {
+
+    margin-bottom: 18px;
+
+}
+
+
+.availability-field label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #374151;
+
+}
+
+
+.availability-field label span {
+
+    margin-left: 3px;
+
+    color: #dc2626;
+
+}
+
+
+.availability-field input,
+.availability-field textarea {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    padding: 11px 12px;
+
+    font-size: 14px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+
+}
+
+
+.availability-field textarea {
+
+    resize: vertical;
+
+    min-height: 100px;
+
+}
+
+
+.availability-field input:focus,
+.availability-field textarea:focus {
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.1);
+
+}
+
+
+.availability-field input:disabled,
+.availability-field textarea:disabled {
+
+    background: #f3f4f6;
+
+    cursor: not-allowed;
+
+}
+
+
+/* ======================================================
+   ERROR
+====================================================== */
+
+.availability-error {
+
+    margin-bottom: 16px;
+
+    padding: 11px 13px;
+
+    border-radius: 7px;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    font-size: 14px;
+
+}
+
+
+/* ======================================================
+   SUCCESS
+====================================================== */
+
+.availability-success {
+
+    margin-bottom: 16px;
+
+    padding: 11px 13px;
+
+    border-radius: 7px;
+
+    background: #ecfdf5;
+
+    color: #047857;
+
+    font-size: 14px;
+
+}
+
+
+/* ======================================================
+   ACTIONS
+====================================================== */
+
+.availability-form-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 22px;
+
+}
+
+
+.availability-cancel-btn,
+.availability-submit-btn {
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding: 11px 18px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+}
+
+
+.availability-cancel-btn {
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+}
+
+
+.availability-submit-btn {
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+}
+
+
+.availability-submit-btn:hover {
+
+    background: #1d4ed8;
+
+}
+
+
+.availability-cancel-btn:disabled,
+.availability-submit-btn:disabled {
+
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+}
+
+
+/* ======================================================
+   MOBILE
+====================================================== */
+
+@media (max-width: 600px) {
+
+    .availability-modal-overlay {
+
+        padding: 12px;
+
+        align-items: flex-end;
+
+    }
+
+
+    .availability-modal {
+
+        max-height: 92vh;
+
+        border-radius: 14px 14px 0 0;
+
+    }
+
+
+    .availability-modal-header {
+
+        padding: 18px;
+
+    }
+
+
+    .availability-form {
+
+        padding: 18px;
+
+    }
+
+
+    .availability-form-actions {
+
+        flex-direction: column-reverse;
+
+    }
+
+
+    .availability-cancel-btn,
+    .availability-submit-btn {
+
+        width: 100%;
+
+    }
+
+}
+

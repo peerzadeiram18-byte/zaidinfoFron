@@ -1,0 +1,248 @@
+:root {
+  --two-bg: #f8fafc;
+  --two-surface: #ffffff;
+  --two-border: #e2e8f0;
+  --two-text-main: #0f172a;
+  --two-text-muted: #64748b;
+  --two-primary: #2563eb;
+  --two-primary-hover: #1d4ed8;
+  --two-radius: 12px;
+  --two-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Base Wrapper for Outlet */
+.two-container {
+  padding: 1.5rem;
+  background-color: var(--two-bg);
+  min-height: 100%;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--two-text-main);
+}
+
+/* Header Area */
+.two-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.two-eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--two-primary);
+  margin-bottom: 0.25rem;
+}
+
+.two-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--two-text-main);
+}
+
+.two-header p {
+  font-size: 0.875rem;
+  color: var(--two-text-muted);
+  margin: 0.25rem 0 0 0;
+}
+
+/* Filter Controls */
+.two-selector-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--two-surface);
+  padding: 0.5rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--two-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.two-selector-wrap label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--two-text-main);
+  white-space: nowrap;
+}
+
+.two-select {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--two-border);
+  border-radius: 6px;
+  background: #f8fafc;
+  font-size: 0.875rem;
+  color: var(--two-text-main);
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.two-select:focus {
+  border-color: var(--two-primary);
+  background: #ffffff;
+}
+
+/* Card Container */
+.two-card {
+  background: var(--two-surface);
+  border: 1px solid var(--two-border);
+  border-radius: var(--two-radius);
+  box-shadow: var(--two-shadow);
+  overflow: hidden;
+}
+
+/* Table Design */
+.two-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.two-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+}
+
+.two-table th {
+  background: #f8fafc;
+  color: var(--two-text-muted);
+  font-weight: 600;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--two-border);
+  white-space: nowrap;
+}
+
+.two-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.two-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* Cell Elements */
+.two-ticket-code {
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--two-primary);
+  background: #eff6ff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.two-user-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.two-user-cell strong {
+  color: var(--two-text-main);
+  font-size: 0.9rem;
+}
+
+.two-user-cell span {
+  font-size: 0.75rem;
+  color: var(--two-text-muted);
+}
+
+.two-desc-cell {
+  max-width: 280px;
+  font-size: 0.85rem;
+  color: #334155;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.two-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--two-text-muted);
+  white-space: nowrap;
+}
+
+.two-price {
+  font-weight: 700;
+  color: #059669;
+  font-size: 0.9rem;
+}
+
+/* Status Pills */
+.two-status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.two-status-received { background: #fef3c7; color: #92400e; }
+.two-status-assigned { background: #e0e7ff; color: #3730a3; }
+.two-status-in-progress { background: #dbeafe; color: #1e40af; }
+.two-status-waiting-for-parts { background: #ffedd5; color: #9a3412; }
+.two-status-ready-for-delivery { background: #e0e7ff; color: #4338ca; }
+.two-status-completed, .two-status-delivered { background: #d1fae5; color: #065f46; }
+.two-status-cancelled { background: #fee2e2; color: #991b1b; }
+.two-status-default { background: #f1f5f9; color: #475569; }
+
+/* Empty & Loading States */
+.two-state-box {
+  padding: 4rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--two-text-muted);
+}
+
+.two-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e2e8f0;
+  border-top-color: var(--two-primary);
+  border-radius: 50%;
+  animation: two-spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes two-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Mobile & Tablet Responsiveness */
+@media (max-width: 768px) {
+  .two-container {
+    padding: 1rem;
+  }
+
+  .two-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .two-selector-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .two-select {
+    width: 100%;
+  }
+}
