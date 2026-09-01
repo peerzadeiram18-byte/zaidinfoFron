@@ -952,3 +952,78 @@
 .mobile-nav-item-active {
   color: var(--header-accent-green);
 }
+
+
+/* ==========================================================================
+   Compare Popup (empty / single-selected states)
+   ========================================================================== */
+.compare-popup-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.55);
+  z-index: 200;
+  padding: 16px;
+}
+
+.compare-popup-box {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 16px;
+  background: var(--header-bg);
+  border: 1px solid var(--header-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  padding: 24px;
+  text-align: center;
+}
+
+.compare-popup-box p {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--header-navy);
+  font-weight: 600;
+}
+
+.compare-popup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.compare-popup-primary-btn {
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  background: var(--header-accent-green);
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.compare-popup-primary-btn:hover {
+  background: var(--header-accent-green-hover);
+}
+
+.compare-popup-close-btn {
+  width: 100%;
+  border: 1px solid var(--header-border);
+  border-radius: 10px;
+  background: transparent;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--header-muted);
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.compare-popup-close-btn:hover {
+  background-color: var(--header-item-hover-bg);
+  color: var(--header-navy);
+}

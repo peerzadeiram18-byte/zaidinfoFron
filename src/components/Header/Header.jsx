@@ -1,599 +1,228 @@
-// import React, { useEffect, useState } from "react";
+// import React, { useState, useEffect } from "react";
+// import { useNavigate, Link, NavLink, useLocation } from "react-router-dom";
 // import { motion, AnimatePresence } from "framer-motion";
-// import {
-//   Search,
-//   Heart,
-//   ShoppingCart,
-//   UserRound,
-//   LogOut,
-//   Menu,
-//   X,
-//   Sun,
-//   Moon,
-//   Bell,
-//   CircleUserRound,
-//   LayoutDashboard
-// } from "lucide-react";
-// // import { Link, NavLink, useNavigate } from "react-router-dom";
 
-// import {
-//   Link,
-//   NavLink,
-//   useNavigate,
-//   useLocation
-// } from "react-router-dom";
+// import zaidInfotechLogoDark from "../../assets/images/zaidinfotechlogo-white.png";
 
+// // Context & API Services
 // import { useTheme } from "../../context/ThemeContext";
-
-// import logoImg from "../../assets/images/zaidinfotechlogo.png";
-// import logoDark from "../../assets/images/zaidinfotechlogo-white.png";
-
-// // import {
-// //   Bell,
-// //   LayoutDashboard
-// // } from "lucide-react";
-
+// import { getWishlist } from "../../services/wishlistService";
+// import { getCart } from "../../services/cartService";
 // import {
 //   getMyNotifications,
 //   markNotificationAsRead,
-//   markAllNotificationsAsRead
+//   markAllNotificationsAsRead,
 // } from "../../services/notificationService";
-// import { getWishlist } from "../../services/wishlistService";
-// import { getCart } from "../../services/cartService";
 
-// const navLinks = [
-//   { name: "Home", href: "/" },
-//   { name: "Shop", href: "/shop" },
-//   { name: "Rental", href: "/rental" },
-//   { name: "Repair Services", href: "/repair" },
-//   { name: "About Us", href: "/about-us" },
-//   { name: "Contact", href: "/contact" },
+// // Lucide Icons
+// import {
+//   BriefcaseBusiness,
+//   ChevronDown,
+//   GraduationCap,
+//   Heart,
+//   Home,
+//   Info,
+//   Laptop,
+//   Moon,
+//   Search,
+//   ShoppingCart,
+//   SlidersHorizontal,
+//   Sun,
+//   Wrench,
+//   LogOut,
+//   UserRound,
+//   Menu,
+//   X,
+//   Bell,
+//   LayoutDashboard,
+//   CircleUserRound,
+// } from "lucide-react";
+
+// import zaidInfotechLogo from "../../assets/images/zaidinfotechlogo.png";
+// import "./Header.css";
+
+// const categories = ["All Categories", "Laptops", "Accessories", "Services"];
+
+// const navigationItems = [
+//   { label: "HOME", subtitle: "Back to Homepage", icon: Home, path: "/" },
+//   { label: "BUY", subtitle: "Laptops & Accessories", icon: Laptop, path: "/shop" },
+//   { label: "RENT", subtitle: "Laptops on Rent", icon: GraduationCap, path: "/rental" },
+//   { label: "REPAIRS", subtitle: "Service & Support", icon: Wrench, path: "/repair" },
+//   { label: "REFURBISHED", subtitle: "Certified Laptops", icon: ShoppingCart, path: "/shop" },
+//   { label: "ABOUT US", subtitle: "Why Choose Us?", icon: Info, path: "/about-us" },
+//   { label: "CONTACT", subtitle: "Solutions for Business", icon: BriefcaseBusiness, path: "/contact" },
 // ];
 
-// const Header = () => {
+// const iconVariants = {
+//   hover: { scale: 1.12 },
+//   tap: { scale: 0.94 },
+// };
+
+// const desktopAuthVariants = {
+//   hover: { scale: 1.05 },
+//   tap: { scale: 0.95 },
+// };
+
+// const mobileAuthVariants = {
+//   hover: { scale: 1.02 },
+//   tap: { scale: 0.97 },
+// };
+
+// function HeaderAction({ icon: Icon, label, badge, onClick }) {
+//   return (
+//     <button className="header-action" type="button" onClick={onClick}>
+//       <span className="action-icon-wrap">
+//         <Icon aria-hidden="true" />
+//         {badge !== undefined && <span className="cart-badge">{badge}</span>}
+//       </span>
+//       <span>{label}</span>
+//     </button>
+//   );
+// }
+
+// export default function Header() {
+//   const [category, setCategory] = useState(categories[0]);
+//   const [query, setQuery] = useState("");
+//   const [wishlistCount, setWishlistCount] = useState(0);
+//   const [cartCount, setCartCount] = useState(0);
+
+//   const [isLoggedIn, setIsLoggedIn] = useState(() => {
+//     const token = localStorage.getItem("token");
+//     const loggedInStatus = localStorage.getItem("isLoggedIn");
+//     return Boolean(token) || loggedInStatus === "true";
+//   });
+
+//   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+//   // --- NOTIFICATION STATE ---
+//   const [notifications, setNotifications] = useState([]);
+//   const [unreadCount, setUnreadCount] = useState(0);
+//   const [notificationOpen, setNotificationOpen] = useState(false);
+//   const [notificationLoading, setNotificationLoading] = useState(false);
+
+//   const { theme, toggleTheme } = useTheme();
 //   const navigate = useNavigate();
 //   const location = useLocation();
 
-//   const { theme, toggleTheme } = useTheme();
-
-//   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-//   // const [wishlistCount] = useState(0);
-//   // const [cartCount] = useState(0);
-
-// const [wishlistCount, setWishlistCount] = useState(0);
-// const [cartCount, setCartCount] = useState(0);
-
-//   const [isScrolled, setIsScrolled] = useState(false);
-
-//   // --- LOGGED-IN STATUS STATE ---
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-//   const [notifications, setNotifications] = useState([]);
-// const [unreadCount, setUnreadCount] = useState(0);
-// const [notificationOpen, setNotificationOpen] = useState(false);
-// const [notificationLoading, setNotificationLoading] = useState(false);
-
-
-// const getDashboardPath = () => {
-
-//   try {
-
-//     const userData = localStorage.getItem("user");
-
-//     if (!userData) {
-//       return "/customer-dashboard";
-//     }
-
-//     const user = JSON.parse(userData);
-
-//     const role = String(
-//       user?.role ||
-//       user?.userRole ||
-//       user?.type ||
-//       ""
-//     ).toUpperCase();
-
-//     switch (role) {
-
-//       case "ADMIN":
-//         return "/admin-dashboard";
-
-//       case "INVENTORY":
-//       case "INVENTORY_MANAGER":
-//         return "/inventory-dashboard";
-
-//       case "RECEPTIONIST":
-//         return "/receptionist-dashboard";
-
-//       case "TECHNICIAN":
-//         return "/technician-dashboard";
-
-//       case "ACCOUNTANT":
-//         return "/accountant-dashboard";
-
-//       case "CUSTOMER":
-//       default:
-//         return "/customer-dashboard";
-
-//     }
-
-//   } catch (error) {
-
-//     console.error(
-//       "DASHBOARD ROLE ERROR:",
-//       error
-//     );
-
-//     return "/customer-dashboard";
-
-//   }
-
-// };
-
-//   // useEffect(() => {
-//   //   // Check localStorage for logged-in status
-//   //   const token = localStorage.getItem("token");
-//   //   const loggedInStatus = localStorage.getItem("isLoggedIn");
-
-//   //   if (token || loggedInStatus === "true") {
-//   //     setIsLoggedIn(true);
-//   //   } else {
-//   //     setIsLoggedIn(false);
-//   //   }
-
-//   //   const handleScroll = () => {
-//   //     setIsScrolled(window.scrollY > 30);
-//   //   };
-
-//   //   window.addEventListener("scroll", handleScroll);
-//   //   return () => window.removeEventListener("scroll", handleScroll);
-//   // }, []);
-
-//   // --- LOGOUT HANDLER ---
-  
-// useEffect(() => {
-
-//   if (!isLoggedIn) {
-//     return;
-//   }
-
-
-//   const interval = setInterval(() => {
-
-//     loadNotifications();
-
-//   }, 15000);
-
-
-//   return () => {
-
-//     clearInterval(interval);
-
-//   };
-
-// }, [isLoggedIn]);
- 
-
-// // useEffect(() => {
-
-// //   const token =
-// //     localStorage.getItem("token");
-
-// //   const loggedInStatus =
-// //     localStorage.getItem("isLoggedIn");
-
-
-// //   const loggedIn =
-// //     Boolean(token) ||
-// //     loggedInStatus === "true";
-
-
-// //   setIsLoggedIn(loggedIn);
-
-
-// //   if (loggedIn && token) {
-
-// //     loadNotifications();
-
-// //   } else {
-
-// //     setNotifications([]);
-// //     setUnreadCount(0);
-
-// //   }
-
-
-// //   const handleScroll = () => {
-
-// //     setIsScrolled(
-// //       window.scrollY > 30
-// //     );
-
-// //   };
-
-
-// //   window.addEventListener(
-// //     "scroll",
-// //     handleScroll
-// //   );
-
-
-// //   return () => {
-
-// //     window.removeEventListener(
-// //       "scroll",
-// //       handleScroll
-// //     );
-
-// //   };
-
-
-// // }, []);
-  
-  
-// // useEffect(() => {
-
-// //   const checkLoginStatus = () => {
-
-// //     const token = localStorage.getItem("token");
-
-// //     const loggedInStatus =
-// //       localStorage.getItem("isLoggedIn");
-
-// //     const loggedIn =
-// //       Boolean(token) ||
-// //       loggedInStatus === "true";
-
-// //     setIsLoggedIn(loggedIn);
-
-// //     if (loggedIn && token) {
-
-// //       loadNotifications();
-// //        loadHeaderCounts();
-
-// //     } else {
-
-// //       setNotifications([]);
-// //       setUnreadCount(0);
-
-// //     }
-
-// //   };
-
-// //   // Initial check
-// //   checkLoginStatus();
-
-// //   // Login/logout ke baad same tab me update
-// //   window.addEventListener(
-// //     "authChanged",
-// //     checkLoginStatus
-// //   );
-
-// //   // Route change ke baad bhi check
-// //   checkLoginStatus();
-
-// //   return () => {
-
-// //     window.removeEventListener(
-// //       "authChanged",
-// //       checkLoginStatus
-// //     );
-
-// //   };
-
-// // }, [location.pathname]);
-  
-// useEffect(() => {
-
-//   const checkLoginStatus = () => {
-
+//   // ---------------------------------------------------------------------------
+//   // AUTH LOGIC
+//   // ---------------------------------------------------------------------------
+
+//   const checkAuthStatus = () => {
 //     const token = localStorage.getItem("token");
-
-//     const loggedInStatus =
-//       localStorage.getItem("isLoggedIn");
-
-//     const loggedIn =
-//       Boolean(token) ||
-//       loggedInStatus === "true";
-
-//     setIsLoggedIn(loggedIn);
-
-//     if (loggedIn && token) {
-
-//       loadNotifications();
-//       loadHeaderCounts();
-
-//     } else {
-
-//       setNotifications([]);
-//       setUnreadCount(0);
-
-//       setWishlistCount(0);
-//       setCartCount(0);
-
-//     }
-
+//     const loggedInStatus = localStorage.getItem("isLoggedIn");
+//     setIsLoggedIn(Boolean(token) || loggedInStatus === "true");
 //   };
 
-//   checkLoginStatus();
-
-//   window.addEventListener(
-//     "authChanged",
-//     checkLoginStatus
-//   );
-
-//   checkLoginStatus();
-
-//   return () => {
-
-//     window.removeEventListener(
-//       "authChanged",
-//       checkLoginStatus
-//     );
-
-//   };
-
-// }, [location.pathname]);
-
-  
-//   // const handleLogout = () => {
-//   //   localStorage.removeItem("token");
-//   //   localStorage.removeItem("isLoggedIn");
-//   //   localStorage.removeItem("user");
-//   //   setIsLoggedIn(false);
-//   //   setMobileMenuOpen(false);
-//   //   navigate("/login");
-//   // };
-
-// const handleLogout = () => {
-//   localStorage.removeItem("token");
-//   localStorage.removeItem("isLoggedIn");
-//   localStorage.removeItem("user");
-
-//   setIsLoggedIn(false);
-//   setNotifications([]);
-//   setUnreadCount(0);
-//   setWishlistCount(0);
-//   setCartCount(0);
-//   setNotificationOpen(false);
-//   setMobileMenuOpen(false);
-
-//   navigate("/login");
-// };
-
-//   const iconVariants = {
-//     hover: { scale: 1.12 },
-//     tap: { scale: 0.94 },
-//   };
-
-//   const loginButtonVariants = {
-//     hover: {
-//       scale: 1.03,
-//       boxShadow: "0 10px 25px rgba(22,163,74,.2)",
-//     },
-//     tap: { scale: 0.97 },
-//   };
-
-//   const logoutButtonVariants = {
-//     hover: {
-//       scale: 1.03,
-//       boxShadow: "0 10px 25px rgba(239,68,68,.15)",
-//     },
-//     tap: { scale: 0.97 },
-//   };
-
-//   const mobileMenuVariants = {
-//     initial: { opacity: 0, height: 0 },
-//     animate: { opacity: 1, height: "auto" },
-//     exit: { opacity: 0, height: 0 },
-//     transition: { duration: 0.3 },
-//   };
-  
-
-// const loadNotifications = async () => {
-
-//   const token = localStorage.getItem("token");
-
-//   if (!token) {
-
-//     setNotifications([]);
-//     setUnreadCount(0);
-
-//     return;
-//   }
-
-
-//   try {
-
-//     setNotificationLoading(true);
-
-
-//     const response =
-//       await getMyNotifications();
-
-
-//     setNotifications(
-//       Array.isArray(response?.notifications)
-//         ? response.notifications
-//         : []
-//     );
-
-
-//     setUnreadCount(
-//       Number(response?.unreadCount || 0)
-//     );
-
-
-//   } catch (error) {
-
-//     console.error(
-//       "HEADER NOTIFICATION ERROR:",
-//       error
-//     );
-
-
-//     // Token invalid / expired
-//     if (
-//       error?.message?.toLowerCase()?.includes("token") ||
-//       error?.message?.toLowerCase()?.includes("unauthorized")
-//     ) {
-
-//       setNotifications([]);
-//       setUnreadCount(0);
-
-//     }
-
-
-//   } finally {
-
-//     setNotificationLoading(false);
-
-//   }
-
-// };
-
-// const handleNotificationClick = async (
-//   notification
-// ) => {
-
-//   try {
-
-//     if (!notification.isRead) {
-
-//       await markNotificationAsRead(
-//         notification._id
-//       );
-
-//       setNotifications((prev) =>
-//         prev.map((item) =>
-//           item._id === notification._id
-//             ? {
-//                 ...item,
-//                 isRead: true
-//               }
-//             : item
-//         )
-//       );
-
-//       setUnreadCount((prev) =>
-//         Math.max(prev - 1, 0)
-//       );
-
-//     }
-
-//   }
-//   catch (error) {
-
-//     console.error(
-//       "MARK NOTIFICATION ERROR:",
-//       error
-//     );
-
-//   }
-
-
-//   setNotificationOpen(false);
-
-
-//   if (
-//     notification.relatedModel ===
-//       "Order" &&
-//     notification.relatedId
-//   ) {
-
-//     navigate(
-//       `/order/${notification.relatedId}`
-//     );
-
-//     return;
-
-//   }
-
-
-//   navigate("/notifications");
-
-// };
-
-
-// const handleMarkAllRead = async () => {
-
-//   try {
-
-//     await markAllNotificationsAsRead();
-
-//     setNotifications((prev) =>
-//       prev.map((item) => ({
-//         ...item,
-//         isRead: true
-//       }))
-//     );
-
-//     setUnreadCount(0);
-
-//   }
-//   catch (error) {
-
-//     console.error(
-//       "MARK ALL READ ERROR:",
-//       error
-//     );
-
-//   }
-
-// };
-
-
-// // =====================================================
-// // LOAD CART + WISHLIST COUNTS
-// // =====================================================
-
-// const loadHeaderCounts = async () => {
-//   const token = localStorage.getItem("token");
-
-//   if (!token) {
+//   const handleLogout = () => {
+//     localStorage.removeItem("token");
+//     localStorage.removeItem("isLoggedIn");
+//     localStorage.removeItem("user");
+//     setIsLoggedIn(false);
 //     setWishlistCount(0);
 //     setCartCount(0);
-//     return;
-//   }
+//     setNotifications([]);
+//     setUnreadCount(0);
+//     setNotificationOpen(false);
+//     setMobileMenuOpen(false);
+//     navigate("/");
+//   };
 
+//   // ---------------------------------------------------------------------------
+//   // ROLE BASED DASHBOARD LOGIC
+//   // ---------------------------------------------------------------------------
+//   const getDashboardPath = () => {
+//     try {
+//       const userData = localStorage.getItem("user");
+
+//       if (!userData) {
+//         return "/customer-dashboard";
+//       }
+
+//       const user = JSON.parse(userData);
+
+//       const role = String(
+//         user?.role || user?.userRole || user?.type || ""
+//       ).toUpperCase();
+
+//       switch (role) {
+//         case "ADMIN":
+//           return "/admin-dashboard";
+//         case "INVENTORY":
+//         case "INVENTORY_MANAGER":
+//           return "/inventory-dashboard";
+//         case "RECEPTIONIST":
+//           return "/receptionist-dashboard";
+//         case "TECHNICIAN":
+//           return "/technician-dashboard";
+//         case "ACCOUNTANT":
+//           return "/accountant-dashboard";
+//         case "CUSTOMER":
+//         default:
+//           return "/customer-dashboard";
+//       }
+//     } catch (error) {
+//       console.error("DASHBOARD ROLE ERROR:", error);
+//       return "/customer-dashboard";
+//     }
+//   };
+
+// //ROLE CHECK: HIDE CART/WISHLIST FOR INVENTORY ROLE
+// // Cart and Wishlist are customer-only shopping features.
+// // Inventory staff should not see these icons in the header.
+//   const isInventoryRole = () => {
 //   try {
-//     const [wishlistResponse, cartResponse] =
-//       await Promise.all([
+//     const userData = localStorage.getItem("user");
+//     if (!userData) return false; // guests → show cart/wishlist
+
+//     const user = JSON.parse(userData);
+//     const role = String(user?.role || user?.userRole || user?.type || "").toUpperCase();
+
+//     return role === "INVENTORY" || role === "INVENTORY_MANAGER";
+//   } catch (error) {
+//     console.error("ROLE CHECK ERROR:", error);
+//     return false;
+//   }
+// };
+
+//   const loadHeaderCounts = async () => {
+//     const token = localStorage.getItem("token");
+
+//     if (!token) {
+//       setWishlistCount(0);
+//       setCartCount(0);
+//       return;
+//     }
+
+//     try {
+//       const [wishlistResponse, cartResponse] = await Promise.all([
 //         getWishlist(),
 //         getCart(),
 //       ]);
 
-//     // ================================================
-//     // WISHLIST
-//     // ================================================
+//       const wishlistData =
+//         wishlistResponse?.data || wishlistResponse?.wishlist || wishlistResponse;
 
-//     const wishlistData =
-//       wishlistResponse?.data ||
-//       wishlistResponse?.wishlist ||
-//       wishlistResponse;
+//         console.log("wishlistData is printed below")
+//         console.log(wishlistData)
 
-//     const wishlistItems =
-//       Array.isArray(wishlistData?.items)
+//       const wishlistItems = Array.isArray(wishlistData?.wishlist?.products)
+//         ? wishlistData.wishlist.products
+//         : Array.isArray(wishlistData?.products)
+//         ? wishlistData.products
+//         : Array.isArray(wishlistData?.items)
 //         ? wishlistData.items
-//         : Array.isArray(wishlistData?.wishlist)
-//         ? wishlistData.wishlist
 //         : Array.isArray(wishlistData)
 //         ? wishlistData
 //         : [];
 
-//     setWishlistCount(wishlistItems.length);
+//       setWishlistCount(wishlistItems.length);
 
-//     // ================================================
-//     // CART
-//     // ================================================
+//       const cartData = cartResponse?.data || cartResponse?.cart || cartResponse;
 
-//     const cartData =
-//       cartResponse?.data ||
-//       cartResponse?.cart ||
-//       cartResponse;
-
-//     const cartItems =
-//       Array.isArray(cartData?.items)
+//       const cartItems = Array.isArray(cartData?.data?.items)
+//         ? cartData.data.items
+//         : Array.isArray(cartData?.items)
 //         ? cartData.items
 //         : Array.isArray(cartData?.cartItems)
 //         ? cartData.cartItems
@@ -601,994 +230,534 @@
 //         ? cartData
 //         : [];
 
-//     setCartCount(cartItems.length);
+//       setCartCount(cartItems.length);
+//     } catch (error) {
+//       console.error("HEADER CART/WISHLIST COUNT ERROR:", error);
+//     }
+//   };
 
-//   } catch (error) {
+//   // ---------------------------------------------------------------------------
+//   // NOTIFICATION LOGIC
+//   // ---------------------------------------------------------------------------
 
-//     console.error(
-//       "HEADER CART/WISHLIST COUNT ERROR:",
-//       error
-//     );
+//   const loadNotifications = async () => {
+//     const token = localStorage.getItem("token");
 
-//   }
-// };
-//   return (
-//   <header
-//   className={`relative w-full bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 transition-all duration-300 ${
-//     isScrolled
-//       ? "shadow-[0_6px_25px_rgba(0,0,0,.08)]"
-//       : "shadow-sm"
-//   }`}
-// >
-//       <div className="max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
-//         <div
-//           className={`flex items-center justify-between gap-4 transition-all duration-300 ${
-//             isScrolled ? "h-[90px]" : "h-[120px]"
-//           }`}
-//         >
-//           {/* Prominent Logo Container */}
-//           <Link
-//             to="/"
-//             className="flex items-center flex-shrink-0 py-2 max-w-[280px] sm:max-w-[340px]"
-//           >
-//   <motion.img
-//   whileHover={{ scale: 1.03 }}
-//   transition={{ duration: 0.25 }}
-//   src={theme === "dark" ? logoDark : logoImg}
-//   alt="ZAID INFOTECH"
-//   draggable="false"
-//   className={`w-auto object-contain transition-all duration-300 ${
-//     isScrolled
-//       ? "h-16 sm:h-20"
-//       : "h-20 sm:h-24 lg:h-28"
-//   }`}
-// />
-//           </Link>
+//     if (!token) {
+//       setNotifications([]);
+//       setUnreadCount(0);
+//       return;
+//     }
 
-//           {/* Centered Desktop Navigation */}
-//           <nav className="hidden xl:flex flex-1 justify-center items-center gap-8 xl:gap-10 2xl:gap-14 px-4">
-//             {navLinks.map((link) => (
-//               <NavLink
-//                 key={link.name}
-//                 to={link.href}
-//                 className={({ isActive }) => `
-//                   relative
-//                   text-[16px]
-//                   font-semibold
-//                   whitespace-nowrap
-//                   transition-all
-//                   duration-300
+//     try {
+//       setNotificationLoading(true);
 
-//                   after:absolute
-//                   after:left-0
-//                   after:-bottom-2
-//                   after:h-[2px]
-//                   after:bg-green-600
-//                   dark:after:bg-green-400
-//                   after:transition-all
-//                   after:duration-300
+//       const response = await getMyNotifications();
 
-//                   ${
-//                     isActive
-//                       ? "text-green-600 dark:text-green-400 after:w-full"
-//                       : "text-gray-800 dark:text-slate-100 after:w-0 hover:text-green-600 dark:hover:text-green-400 hover:after:w-full"
-//                   }
-//                 `}
-//               >
-//                 {link.name}
-//               </NavLink>
-//             ))}
-//           </nav>
+//       setNotifications(
+//         Array.isArray(response?.notifications) ? response.notifications : []
+//       );
 
-//           {/* Right Side Actions */}
-//           <div className="flex items-center gap-2 sm:gap-3 xl:gap-4 flex-shrink-0">
-//             {/* Theme Toggle Switcher (Desktop) */}
-//             <motion.button
-//               variants={iconVariants}
-//               whileHover="hover"
-//               whileTap="tap"
-//               onClick={toggleTheme}
-//               className="hidden lg:flex h-11 w-11 items-center justify-center rounded-full text-gray-700 dark:text-slate-200 transition-all hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
-//               aria-label="Toggle theme"
-//             >
-//               {theme === "dark" ? (
-//                 <Sun size={22} className="text-amber-400" strokeWidth={2} />
-//               ) : (
-//                 <Moon size={22} strokeWidth={2} />
-//               )}
-//             </motion.button>
+//       setUnreadCount(Number(response?.unreadCount || 0));
+//     } catch (error) {
+//       console.error("HEADER NOTIFICATION ERROR:", error);
 
-//             {/* ==================================================
-//     CUSTOMER NOTIFICATIONS
-// ================================================== */}
-
-// {isLoggedIn && (
-
-//   <div className="relative">
-
-//     <motion.button
-//       variants={iconVariants}
-//       whileHover="hover"
-//       whileTap="tap"
-//       onClick={() =>
-//         setNotificationOpen(
-//           !notificationOpen
-//         )
+//       if (
+//         error?.message?.toLowerCase()?.includes("token") ||
+//         error?.message?.toLowerCase()?.includes("unauthorized")
+//       ) {
+//         setNotifications([]);
+//         setUnreadCount(0);
 //       }
-//       className="
-//         hidden
-//         lg:flex
-//         relative
-//         h-11
-//         w-11
-//         items-center
-//         justify-center
-//         rounded-full
-//         text-gray-700
-//         dark:text-slate-200
-//         transition-all
-//         hover:bg-green-50
-//         dark:hover:bg-slate-800
-//         hover:text-green-600
-//         dark:hover:text-green-400
-//       "
-//       aria-label="Notifications"
-//     >
+//     } finally {
+//       setNotificationLoading(false);
+//     }
+//   };
 
-//       <Bell
-//         size={22}
-//         strokeWidth={2}
-//       />
+//   const handleNotificationClick = async (notification) => {
+//     try {
+//       if (!notification.isRead) {
+//         await markNotificationAsRead(notification._id);
 
-//       {unreadCount > 0 && (
+//         setNotifications((prev) =>
+//           prev.map((item) =>
+//             item._id === notification._id ? { ...item, isRead: true } : item
+//           )
+//         );
 
-//         <span
-//           className="
-//             absolute
-//             -top-1
-//             -right-1
-//             min-w-[20px]
-//             h-5
-//             px-1
-//             flex
-//             items-center
-//             justify-center
-//             rounded-full
-//             bg-red-600
-//             text-[10px]
-//             font-bold
-//             text-white
-//           "
-//         >
-//           {unreadCount > 99
-//             ? "99+"
-//             : unreadCount}
-//         </span>
+//         setUnreadCount((prev) => Math.max(prev - 1, 0));
+//       }
+//     } catch (error) {
+//       console.error("MARK NOTIFICATION ERROR:", error);
+//     }
 
-//       )}
+//     setNotificationOpen(false);
 
-//     </motion.button>
+//     if (notification.relatedModel === "Order" && notification.relatedId) {
+//       navigate(`/order/${notification.relatedId}`);
+//       return;
+//     }
 
+//     navigate("/notifications");
+//   };
 
-//     {/* ==================================================
-//         NOTIFICATION DROPDOWN
-//     ================================================== */}
+//   const handleMarkAllRead = async () => {
+//     try {
+//       await markAllNotificationsAsRead();
 
-//     <AnimatePresence>
+//       setNotifications((prev) => prev.map((item) => ({ ...item, isRead: true })));
 
-//       {notificationOpen && (
+//       setUnreadCount(0);
+//     } catch (error) {
+//       console.error("MARK ALL READ ERROR:", error);
+//     }
+//   };
 
-//         <motion.div
+//   // ---------------------------------------------------------------------------
+//   // MAIN AUTH + NOTIFICATION EFFECT (reruns on route change / authChanged)
+//   // ---------------------------------------------------------------------------
+//   useEffect(() => {
+//     checkAuthStatus();
+//     loadHeaderCounts();
 
-//           initial={{
-//             opacity: 0,
-//             y: -10,
-//             scale: 0.98
-//           }}
+//     const handleCartWishlistUpdate = () => {
+//       checkAuthStatus();
+//       loadHeaderCounts();
+//     };
 
-//           animate={{
-//             opacity: 1,
-//             y: 0,
-//             scale: 1
-//           }}
+//     window.addEventListener("cart-updated", handleCartWishlistUpdate);
+//     window.addEventListener("wishlist-updated", handleCartWishlistUpdate);
+//     window.addEventListener("authChanged", handleCartWishlistUpdate);
 
-//           exit={{
-//             opacity: 0,
-//             y: -10,
-//             scale: 0.98
-//           }}
+//     return () => {
+//       window.removeEventListener("cart-updated", handleCartWishlistUpdate);
+//       window.removeEventListener("wishlist-updated", handleCartWishlistUpdate);
+//       window.removeEventListener("authChanged", handleCartWishlistUpdate);
+//     };
+//   }, [location.pathname]);
 
-//           className="
-//             absolute
-//             right-0
-//             top-14
-//             w-[360px]
-//             max-w-[90vw]
-//             overflow-hidden
-//             rounded-2xl
-//             border
-//             border-gray-200
-//             bg-white
-//             shadow-2xl
-//             dark:border-slate-700
-//             dark:bg-slate-900
-//             z-[100]
-//           "
-//         >
+//   // Load notifications whenever auth state flips to logged-in
+//   useEffect(() => {
+//     if (isLoggedIn) {
+//       loadNotifications();
+//     } else {
+//       setNotifications([]);
+//       setUnreadCount(0);
+//     }
+//   }, [isLoggedIn]);
 
-//           {/* HEADER */}
+//   // Poll for new notifications every 15s while logged in
+//   useEffect(() => {
+//     if (!isLoggedIn) {
+//       return;
+//     }
+//     const interval = setInterval(() => {
+//       loadNotifications();
+//     }, 15000);
+//     return () => {
+//       clearInterval(interval);
+//     };
+//   }, [isLoggedIn]);
 
-//           <div
-//             className="
-//               flex
-//               items-center
-//               justify-between
-//               border-b
-//               border-gray-100
-//               px-4
-//               py-4
-//               dark:border-slate-700
-//             "
-//           >
+//   const announce = (label) => {
+//     if (typeof window !== "undefined") {
+//       window.dispatchEvent(new CustomEvent("zaid-header-action", { detail: label }));
+//     }
+//   };
 
-//             <div>
+//   const submitSearch = (event) => {
+//     event.preventDefault();
+//     if (query.trim()) {
+//       navigate(`/shop?search=${encodeURIComponent(query.trim())}`);
+//     } else {
+//       navigate("/shop");
+//     }
+//   };
 
-//               <h3
-//                 className="
-//                   text-base
-//                   font-bold
-//                   text-gray-900
-//                   dark:text-white
-//                 "
-//               >
-//                 Notifications
-//               </h3>
+//   // ---------------------------------------------------------------------------
+//   // RENDER
+//   // ---------------------------------------------------------------------------
+//   return (
+//     <header className="site-header">
+//       <div className="header-main">
+//         <Link to="/" aria-label="Zaid Infotech home">
+//          <img
+//     src={theme === "dark" ? zaidInfotechLogoDark : zaidInfotechLogo}
+//     alt="Zaid Infotech"
+//     className="header-logo"
+//   />
+//         </Link>
 
-//               <p
-//                 className="
-//                   text-xs
-//                   text-gray-500
-//                   dark:text-slate-400
-//                 "
-//               >
-//                 {unreadCount > 0
-//                   ? `${unreadCount} unread`
-//                   : "You're all caught up"}
-//               </p>
-
-//             </div>
-
-
-//             {unreadCount > 0 && (
-
-//               <button
-//                 onClick={
-//                   handleMarkAllRead
-//                 }
-//                 className="
-//                   text-xs
-//                   font-semibold
-//                   text-green-600
-//                   hover:text-green-700
-//                 "
-//               >
-//                 Mark all read
-//               </button>
-
-//             )}
-
+//         <form className="header-search" onSubmit={submitSearch} role="search">
+//           <label className="sr-only" htmlFor="header-category">Search category</label>
+//           <div className="category-select">
+//             <select
+//               id="header-category"
+//               value={category}
+//               onChange={(event) => setCategory(event.target.value)}
+//               aria-label="Search category"
+//             >
+//               {categories.map((item) => (
+//                 <option key={item}>{item}</option>
+//               ))}
+//             </select>
+//             <ChevronDown aria-hidden="true" />
 //           </div>
+//           <label className="sr-only" htmlFor="header-query">Search laptops, brands, services</label>
+//           <input
+//             id="header-query"
+//             type="search"
+//             value={query}
+//             onChange={(event) => setQuery(event.target.value)}
+//             placeholder="Search laptops, brands, services..."
+//           />
+//           <button className="search-button" type="submit" aria-label="Search">
+//             <Search aria-hidden="true" />
+//           </button>
+//         </form>
 
-
-//           {/* NOTIFICATIONS */}
-
-//           <div
-//             className="
-//               max-h-[420px]
-//               overflow-y-auto
-//             "
+//         <div className="header-actions">
+//           <motion.button
+//             variants={iconVariants}
+//             whileHover="hover"
+//             whileTap="tap"
+//             onClick={toggleTheme}
+//             className="theme-toggle-btn"
+//             aria-label="Toggle theme"
 //           >
-
-//             {notificationLoading ? (
-
-//               <div
-//                 className="
-//                   px-5
-//                   py-10
-//                   text-center
-//                   text-sm
-//                   text-gray-500
-//                 "
-//               >
-//                 Loading notifications...
-//               </div>
-
-//             ) : notifications.length === 0 ? (
-
-//               <div
-//                 className="
-//                   px-5
-//                   py-10
-//                   text-center
-//                 "
-//               >
-
-//                 <Bell
-//                   size={35}
-//                   className="
-//                     mx-auto
-//                     mb-3
-//                     text-gray-300
-//                   "
-//                 />
-
-//                 <p
-//                   className="
-//                     text-sm
-//                     font-medium
-//                     text-gray-600
-//                     dark:text-slate-300
-//                   "
-//                 >
-//                   No notifications
-//                 </p>
-
-//                 <p
-//                   className="
-//                     mt-1
-//                     text-xs
-//                     text-gray-400
-//                   "
-//                 >
-//                   New order updates will appear here.
-//                 </p>
-
-//               </div>
-
+//             {theme === "dark" ? (
+//               <Sun size={22} className="sun-icon" strokeWidth={2} />
 //             ) : (
-
-//               notifications.map(
-//                 (notification) => (
-
-//                   <button
-
-//                     key={
-//                       notification._id
-//                     }
-
-//                     onClick={() =>
-//                       handleNotificationClick(
-//                         notification
-//                       )
-//                     }
-
-//                     className={`
-//                       w-full
-//                       border-b
-//                       border-gray-100
-//                       px-4
-//                       py-4
-//                       text-left
-//                       transition
-//                       hover:bg-gray-50
-//                       dark:border-slate-800
-//                       dark:hover:bg-slate-800
-
-//                       ${
-//                         !notification.isRead
-//                           ? "bg-green-50/70 dark:bg-green-950/20"
-//                           : ""
-//                       }
-//                     `}
-//                   >
-
-//                     <div
-//                       className="
-//                         flex
-//                         gap-3
-//                       "
-//                     >
-
-//                       <div
-//                         className="
-//                           flex
-//                           h-9
-//                           w-9
-//                           min-w-[36px]
-//                           items-center
-//                           justify-center
-//                           rounded-full
-//                           bg-green-100
-//                           text-green-600
-//                           dark:bg-green-900/40
-//                           dark:text-green-400
-//                         "
-//                       >
-
-//                         <Bell
-//                           size={17}
-//                         />
-
-//                       </div>
-
-
-//                       <div
-//                         className="
-//                           min-w-0
-//                           flex-1
-//                         "
-//                       >
-
-//                         <div
-//                           className="
-//                             flex
-//                             items-start
-//                             justify-between
-//                             gap-2
-//                           "
-//                         >
-
-//                           <h4
-//                             className="
-//                               text-sm
-//                               font-bold
-//                               text-gray-900
-//                               dark:text-white
-//                             "
-//                           >
-//                             {
-//                               notification.title
-//                             }
-//                           </h4>
-
-//                           {!notification.isRead && (
-
-//                             <span
-//                               className="
-//                                 mt-1
-//                                 h-2
-//                                 w-2
-//                                 min-w-[8px]
-//                                 rounded-full
-//                                 bg-green-600
-//                               "
-//                             />
-
-//                           )}
-
-//                         </div>
-
-
-//                         <p
-//                           className="
-//                             mt-1
-//                             line-clamp-2
-//                             text-xs
-//                             leading-5
-//                             text-gray-600
-//                             dark:text-slate-400
-//                           "
-//                         >
-//                           {
-//                             notification.message
-//                           }
-//                         </p>
-
-
-//                         {notification.createdAt && (
-
-//                           <p
-//                             className="
-//                               mt-2
-//                               text-[10px]
-//                               text-gray-400
-//                             "
-//                           >
-//                             {new Date(
-//                               notification.createdAt
-//                             ).toLocaleString(
-//                               "en-IN"
-//                             )}
-//                           </p>
-
-//                         )}
-
-//                       </div>
-
-//                     </div>
-
-//                   </button>
-
-//                 )
-//               )
-
+//               <Moon size={22} strokeWidth={2} />
 //             )}
+//           </motion.button>
 
-//           </div>
-
-
-//           {/* FOOTER */}
-
-//           {notifications.length > 0 && (
-
-//             <div
-//               className="
-//                 border-t
-//                 border-gray-100
-//                 p-3
-//                 dark:border-slate-700
-//               "
-//             >
-
-//               <button
-//                 onClick={() => {
-
-//                   setNotificationOpen(
-//                     false
-//                   );
-
-//                   navigate(
-//                     "/notifications"
-//                   );
-
-//                 }}
-//                 className="
-//                   w-full
-//                   rounded-xl
-//                   bg-green-50
-//                   py-2.5
-//                   text-sm
-//                   font-semibold
-//                   text-green-700
-//                   hover:bg-green-100
-//                   dark:bg-green-950/30
-//                   dark:text-green-400
-//                 "
-//               >
-//                 View All Notifications
-//               </button>
-
-//             </div>
-
-//           )}
-
-//         </motion.div>
-
-//       )}
-
-//     </AnimatePresence>
-
-//   </div>
-
-// )}
-
-//             {/* Search */}
-//             <motion.button
-//               variants={iconVariants}
-//               whileHover="hover"
-//               whileTap="tap"
-//               onClick={() => navigate("/shop")}
-//               className="hidden lg:flex h-11 w-11 items-center justify-center rounded-full text-gray-700 dark:text-slate-200 transition-all hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
-//             >
-//               <Search size={22} strokeWidth={2} />
-//             </motion.button>
-
-//             {/* Wishlist */}
-//             <motion.button
-//               variants={iconVariants}
-//               whileHover="hover"
-//               whileTap="tap"
-//               onClick={() => navigate("/wishlist")}
-//               className="hidden lg:flex relative h-11 w-11 items-center justify-center rounded-full text-gray-700 dark:text-slate-200 transition-all hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
-//             >
-//               <Heart size={22} strokeWidth={2} />
-//               {/* <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white">
-//                 {wishlistCount}
-//               </span> */}
-//               {wishlistCount > 0 && (
-//   <span className="absolute -top-1 -right-1 flex h-5 min-w-5 px-1 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white">
-//     {wishlistCount > 99 ? "99+" : wishlistCount}
-//   </span>
-// )}
-//             </motion.button>
-
-//             {/* Cart */}
-//             <motion.button
-//               variants={iconVariants}
-//               whileHover="hover"
-//               whileTap="tap"
-//               onClick={() => navigate("/cart")}
-//               className="hidden lg:flex relative h-11 w-11 items-center justify-center rounded-full text-gray-700 dark:text-slate-200 transition-all hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
-//             >
-//               <ShoppingCart size={22} strokeWidth={2} />
-//               {/* <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white">
-//                 {cartCount}
-//               </span> */}
-//               {cartCount > 0 && (
-//   <span className="absolute -top-1 -right-1 flex h-5 min-w-5 px-1 items-center justify-center rounded-full bg-green-600 text-[10px] font-bold text-white">
-//     {cartCount > 99 ? "99+" : cartCount}
-//   </span>
-// )}
-//             </motion.button>
-
-
-
-// {isLoggedIn && (
-
-//   <motion.button
-//     variants={iconVariants}
-//     whileHover="hover"
-//     whileTap="tap"
-// onClick={() => navigate(getDashboardPath())}
-//     className="
-//       hidden
-//       lg:flex
-//       h-11
-//       w-11
-//       items-center
-//       justify-center
-//       rounded-full
-//       text-gray-700
-//       dark:text-slate-200
-//       transition-all
-//       hover:bg-green-50
-//       dark:hover:bg-slate-800
-//       hover:text-green-600
-//       dark:hover:text-green-400
-//     "
-//     aria-label="Dashboard"
-//     title="Dashboard"
-//   >
-
-//     <CircleUserRound
-//       size={22}
-//       strokeWidth={2}
-//     />
-
-//   </motion.button>
-
-// )}
-
-//             {/* --- CONDITIONAL DESKTOP AUTH BUTTON --- */}
-// {isLoggedIn ? (
-//   <motion.button
-//     variants={logoutButtonVariants}
-//     whileHover="hover"
-//     whileTap="tap"
-//     onClick={handleLogout}
-//     className="
-//       hidden
-//       lg:flex
-//       h-11
-//       w-11
-//       items-center
-//       justify-center
-//       rounded-full
-//       border
-//       border-red-200
-//       dark:border-red-900/40
-//       bg-red-50/50
-//       dark:bg-red-950/20
-//       text-red-600
-//       dark:text-red-400
-//       transition-all
-//       hover:bg-red-100
-//       dark:hover:bg-red-900/40
-//     "
-//     aria-label="Logout"
-//     title="Logout"
-//   >
-//     <LogOut
-//       size={22}
-//       strokeWidth={2}
-//     />
-//   </motion.button>
-// ) : (
+//           {/* --- NOTIFICATION BELL (Desktop) --- */}
+//           {isLoggedIn && (
+//             <div className="notification-wrap">
 //               <motion.button
-//                 variants={loginButtonVariants}
+//                 variants={iconVariants}
 //                 whileHover="hover"
 //                 whileTap="tap"
-//                 onClick={() => navigate("/login")}
-//                 className="
-//                 hidden
-//                 lg:flex
-//                 items-center
-//                 gap-2.5
-//                 rounded-2xl
-//                 bg-green-600
-//                 px-6
-//                 py-2.5
-//                 text-[15px]
-//                 font-semibold
-//                 text-white
-//                 shadow-md
-//                 transition-all
-//                 hover:bg-green-700
-//                 "
+//                 onClick={() => setNotificationOpen(!notificationOpen)}
+//                 className="header-icon-btn notification-bell-btn"
+//                 aria-label="Notifications"
 //               >
-//                 <UserRound size={19} strokeWidth={2} />
-//                 Login
+//                 <Bell size={22} strokeWidth={2} />
+//                 {unreadCount > 0 && (
+//                   <span className="notification-badge">
+//                     {unreadCount > 99 ? "99+" : unreadCount}
+//                   </span>
+//                 )}
 //               </motion.button>
-//             )}
 
-//             {/* Mobile Menu Button */}
-//             <button
-//               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-//               className="rounded-xl p-2 text-gray-700 dark:text-slate-200 transition-all hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400 xl:hidden"
+//               <AnimatePresence>
+//                 {notificationOpen && (
+//                   <motion.div
+//                     initial={{ opacity: 0, y: -10, scale: 0.98 }}
+//                     animate={{ opacity: 1, y: 0, scale: 1 }}
+//                     exit={{ opacity: 0, y: -10, scale: 0.98 }}
+//                     className="notification-dropdown"
+//                   >
+//                     <div className="notification-dropdown-header">
+//                       <div>
+//                         <h3>Notifications</h3>
+//                         <p>
+//                           {unreadCount > 0
+//                             ? `${unreadCount} unread`
+//                             : "You're all caught up"}
+//                         </p>
+//                       </div>
+//                       {unreadCount > 0 && (
+//                         <button
+//                           className="mark-all-read-btn"
+//                           onClick={handleMarkAllRead}
+//                           type="button"
+//                         >
+//                           Mark all read
+//                         </button>
+//                       )}
+//                     </div>
+
+//                     <div className="notification-list">
+//                       {notificationLoading ? (
+//                         <div className="notification-status">
+//                           Loading notifications...
+//                         </div>
+//                       ) : notifications.length === 0 ? (
+//                         <div className="notification-empty">
+//                           <Bell size={35} />
+//                           <p className="notification-empty-title">No notifications</p>
+//                           <p className="notification-empty-sub">
+//                             New order updates will appear here.
+//                           </p>
+//                         </div>
+//                       ) : (
+//                         notifications.map((notification) => (
+//                           <button
+//                             key={notification._id}
+//                             type="button"
+//                             onClick={() => handleNotificationClick(notification)}
+//                             className={`notification-item${
+//                               !notification.isRead ? " notification-item-unread" : ""
+//                             }`}
+//                           >
+//                             <div className="notification-item-row">
+//                               <div className="notification-item-icon">
+//                                 <Bell size={17} />
+//                               </div>
+//                               <div className="notification-item-body">
+//                                 <div className="notification-item-heading">
+//                                   <h4>{notification.title}</h4>
+//                                   {!notification.isRead && (
+//                                     <span className="notification-dot" />
+//                                   )}
+//                                 </div>
+//                                 <p className="notification-item-message">
+//                                   {notification.message}
+//                                 </p>
+//                                 {notification.createdAt && (
+//                                   <p className="notification-item-time">
+//                                     {new Date(notification.createdAt).toLocaleString(
+//                                       "en-IN"
+//                                     )}
+//                                   </p>
+//                                 )}
+//                               </div>
+//                             </div>
+//                           </button>
+//                         ))
+//                       )}
+//                     </div>
+
+//                     {notifications.length > 0 && (
+//                       <div className="notification-dropdown-footer">
+//                         <button
+//                           type="button"
+//                           onClick={() => {
+//                             setNotificationOpen(false);
+//                             navigate("/notifications");
+//                           }}
+//                         >
+//                           View All Notifications
+//                         </button>
+//                       </div>
+//                     )}
+//                   </motion.div>
+//                 )}
+//               </AnimatePresence>
+//             </div>
+//           )}
+
+//           <HeaderAction icon={SlidersHorizontal} label="Compare" onClick={() => announce("Compare")} />
+
+//           {!isInventoryRole() && (
+//             <>
+//           <motion.button
+//             variants={iconVariants}
+//             whileHover="hover"
+//             whileTap="tap"
+//             onClick={() => navigate("/wishlist")}
+//             className="header-icon-btn"
+//             aria-label="Wishlist"
+//           >
+//             <Heart size={22} strokeWidth={2} />
+//             {wishlistCount > 0 && (
+//               <span className="header-badge">{wishlistCount > 99 ? "99+" : wishlistCount}</span>
+//             )}
+//           </motion.button>
+
+//           <motion.button
+//             variants={iconVariants}
+//             whileHover="hover"
+//             whileTap="tap"
+//             onClick={() => navigate("/cart")}
+//             className="header-icon-btn"
+//             aria-label="Cart"
+//           >
+//             <ShoppingCart size={22} strokeWidth={2} />
+//             {cartCount > 0 && (
+//               <span className="header-badge">{cartCount > 99 ? "99+" : cartCount}</span>
+//             )}
+//           </motion.button>
+
+//           <button className="quote-button" type="button" onClick={() => announce("Request a Quote")}>
+//             <span>Request a Quote</span>
+//             <small>For Business</small>
+//           </button>
+//           </>
+//           )}
+
+//           {/* --- ROLE BASED DASHBOARD (Desktop) --- */}
+//           {isLoggedIn && (
+//             <motion.button
+//               variants={iconVariants}
+//               whileHover="hover"
+//               whileTap="tap"
+//               onClick={() => navigate(getDashboardPath())}
+//               className="header-icon-btn"
+//               aria-label="Dashboard"
+//               title="Dashboard"
 //             >
-//               {mobileMenuOpen ? (
-//                 <X size={28} />
-//               ) : (
-//                 <Menu size={28} />
-//               )}
-//             </button>
-//           </div>
+//               <CircleUserRound size={22} strokeWidth={2} />
+//             </motion.button>
+//           )}
+
+//           {/* DESKTOP LOGIN / LOGOUT */}
+//           {isLoggedIn ? (
+//             <motion.button
+//               variants={desktopAuthVariants}
+//               whileHover="hover"
+//               whileTap="tap"
+//               onClick={handleLogout}
+//               className="desktop-logout-btn"
+//               aria-label="Logout"
+//               title="Logout"
+//             >
+//               <LogOut size={22} strokeWidth={2} />
+//             </motion.button>
+//           ) : (
+//             <motion.button
+//               variants={desktopAuthVariants}
+//               whileHover="hover"
+//               whileTap="tap"
+//               onClick={() => navigate("/login")}
+//               className="desktop-login-btn"
+//             >
+//               <UserRound size={19} strokeWidth={2} />
+//               Login
+//             </motion.button>
+//           )}
+
+//           <button
+//             className="mobile-menu-toggle"
+//             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+//             aria-label="Toggle mobile menu"
+//           >
+//             {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+//           </button>
 //         </div>
 //       </div>
 
-//       {/* Mobile Drawer */}
+//       {/* --- MAIN NAV WITH ACTIVE LINK STYLING --- */}
+//       <nav className="category-nav" aria-label="Main navigation">
+//         {navigationItems.map(({ label, subtitle, icon: Icon, path }) => (
+//           <NavLink
+//             className={({ isActive }) =>
+//               `nav-item${isActive ? " nav-item-active" : ""}`
+//             }
+//             to={path}
+//             key={label}
+//             onClick={() => announce(label)}
+//             end={path === "/"}
+//           >
+//             <Icon aria-hidden="true" />
+//             <span className="nav-copy">
+//               <strong>{label}</strong>
+//               <small>{subtitle}</small>
+//             </span>
+//           </NavLink>
+//         ))}
+//       </nav>
+
 //       <AnimatePresence>
 //         {mobileMenuOpen && (
 //           <motion.div
-//             variants={mobileMenuVariants}
-//             initial="initial"
-//             animate="animate"
-//             exit="exit"
-//             className="xl:hidden overflow-hidden border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl"
+//             className="mobile-drawer"
+//             initial={{ opacity: 0, height: 0 }}
+//             animate={{ opacity: 1, height: "auto" }}
+//             exit={{ opacity: 0, height: 0 }}
 //           >
-//             <div className="px-6 py-6">
-//               {/* Navigation Links */}
-//               <div className="space-y-1">
-//                 {navLinks.map((link) => (
-//                   <NavLink
-//                     key={link.name}
-//                     to={link.href}
-//                     onClick={() => setMobileMenuOpen(false)}
-//                     className={({ isActive }) => `
-//                       block rounded-xl px-4 py-3 text-base font-semibold transition-all duration-300
-//                       ${
-//                         isActive
-//                           ? "text-green-600 dark:text-green-400"
-//                           : "text-gray-700 dark:text-slate-200 hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
-//                       }
-//                     `}
-//                   >
-//                     {link.name}
-//                   </NavLink>
-//                 ))}
-//               </div>
+//             <nav className="mobile-nav">
+//               {navigationItems.map(({ label, subtitle, icon: Icon, path }) => (
+//                 <NavLink
+//                   className={({ isActive }) =>
+//                     `mobile-nav-item${isActive ? " mobile-nav-item-active" : ""}`
+//                   }
+//                   to={path}
+//                   key={label}
+//                   onClick={() => setMobileMenuOpen(false)}
+//                   end={path === "/"}
+//                 >
+//                   <Icon size={20} />
+//                   <div>
+//                     <strong>{label}</strong>
+//                     <small>{subtitle}</small>
+//                   </div>
+//                 </NavLink>
+//               ))}
 
-//               {/* Divider */}
-//               <div className="my-4 border-t border-gray-200 dark:border-slate-800"></div>
-
-//               {/* Theme Toggle Button (Mobile) */}
-//               <button
-//                 onClick={toggleTheme}
-//                 className="mb-2 flex w-full items-center gap-4 rounded-xl px-4 py-3 text-gray-700 dark:text-slate-200 transition-all duration-300 hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
-//               >
-//                 {theme === "dark" ? (
-//                   <>
-//                     <Sun size={22} className="text-amber-400" strokeWidth={2} />
-//                     <span className="font-medium">Light Mode</span>
-//                   </>
-//                 ) : (
-//                   <>
-//                     <Moon size={22} strokeWidth={2} />
-//                     <span className="font-medium">Dark Mode</span>
-//                   </>
-//                 )}
-//               </button>
-
-//               {/* Search */}
-//               <button
-//                 onClick={() => {
-//                   setMobileMenuOpen(false);
-//                   navigate("/shop");
-//                 }}
-//                 className="mb-2 flex w-full items-center gap-4 rounded-xl px-4 py-3 text-gray-700 dark:text-slate-200 transition-all duration-300 hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
-//               >
-//                 <Search size={22} strokeWidth={2} />
-//                 <span className="font-medium">Search</span>
-//               </button>
-
+//               {/* --- NOTIFICATION (Mobile) --- */}
 //               {isLoggedIn && (
+//                 <button
+//                   type="button"
+//                   className="mobile-notification-item"
+//                   onClick={() => {
+//                     setMobileMenuOpen(false);
+//                     setNotificationOpen(false);
+//                     navigate("/notifications");
+//                   }}
+//                 >
+//                   <div className="mobile-notification-left">
+//                     <Bell size={20} strokeWidth={2} />
+//                     <span>Notifications</span>
+//                   </div>
+//                   {unreadCount > 0 && (
+//                     <span className="mobile-notification-badge">
+//                       {unreadCount > 99 ? "99+" : unreadCount}
+//                     </span>
+//                   )}
+//                 </button>
+//               )}
 
-//   <button
-//     onClick={() => {
+//               {/* --- ROLE BASED DASHBOARD (Mobile) --- */}
+//               {isLoggedIn && (
+//                 <button
+//                   type="button"
+//                   className="mobile-dashboard-item"
+//                   onClick={() => {
+//                     setMobileMenuOpen(false);
+//                     navigate(getDashboardPath());
+//                   }}
+//                 >
+//                   <LayoutDashboard size={20} strokeWidth={2} />
+//                   <span>Dashboard</span>
+//                 </button>
+//               )}
 
-//       setMobileMenuOpen(false);
-
-//       setNotificationOpen(false);
-
-//       navigate("/notifications");
-
-//     }}
-//     className="
-//       mb-2
-//       flex
-//       w-full
-//       items-center
-//       justify-between
-//       rounded-xl
-//       px-4
-//       py-3
-//       text-gray-700
-//       dark:text-slate-200
-//       transition-all
-//       hover:bg-green-50
-//       dark:hover:bg-slate-800
-//       hover:text-green-600
-//     "
-//   >
-
-//     <div className="flex items-center gap-4">
-
-//       <Bell
-//         size={22}
-//         strokeWidth={2}
-//       />
-
-//       <span className="font-medium">
-//         Notifications
-//       </span>
-
-//     </div>
-
-
-//     {unreadCount > 0 && (
-
-//       <span
-//         className="
-//           flex
-//           h-6
-//           min-w-6
-//           px-1
-//           items-center
-//           justify-center
-//           rounded-full
-//           bg-red-600
-//           text-xs
-//           font-bold
-//           text-white
-//         "
-//       >
-//         {unreadCount}
-//       </span>
-
-//     )}
-
-//   </button>
-
-// )}
-
-// {isLoggedIn && (
-
-//   <button
-//     onClick={() => {
-
-//       setMobileMenuOpen(false);
-
-//      navigate(getDashboardPath());
-
-//     }}
-//     className="
-//       mb-2
-//       flex
-//       w-full
-//       items-center
-//       gap-4
-//       rounded-xl
-//       px-4
-//       py-3
-//       text-gray-700
-//       dark:text-slate-200
-//       transition-all
-//       hover:bg-green-50
-//       dark:hover:bg-slate-800
-//       hover:text-green-600
-//     "
-//   >
-
-//     <LayoutDashboard
-//       size={22}
-//     />
-
-//     <span className="font-medium">
-//       Dashboard
-//     </span>
-
-//   </button>
-
-// )}
-
-//               {/* Wishlist */}
-//               <button
-//                 onClick={() => {
-//                   setMobileMenuOpen(false);
-//                   navigate("/wishlist");
-//                 }}
-//                 className="mb-2 flex w-full items-center justify-between rounded-xl px-4 py-3 text-gray-700 dark:text-slate-200 transition-all duration-300 hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
-//               >
-//                 <div className="flex items-center gap-4">
-//                   <Heart size={22} strokeWidth={2} />
-//                   <span className="font-medium">Wishlist</span>
-//                 </div>
-
-//                 {/* <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
-//                   {wishlistCount}
-//                 </span> */}
-//                 {wishlistCount > 0 && (
-//   <span className="flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
-//     {wishlistCount > 99 ? "99+" : wishlistCount}
-//   </span>
-// )}
-//               </button>
-
-//               {/* Cart */}
-//               <button
-//                 onClick={() => {
-//                   setMobileMenuOpen(false);
-//                   navigate("/cart");
-//                 }}
-//                 className="mb-2 flex w-full items-center justify-between rounded-xl px-4 py-3 text-gray-700 dark:text-slate-200 transition-all duration-300 hover:bg-green-50 dark:hover:bg-slate-800 hover:text-green-600 dark:hover:text-green-400"
-//               >
-//                 <div className="flex items-center gap-4">
-//                   <ShoppingCart size={22} strokeWidth={2} />
-//                   <span className="font-medium">Cart</span>
-//                 </div>
-
-//                 {/* <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
-//                   {cartCount}
-//                 </span> */}
-//                 {cartCount > 0 && (
-//   <span className="flex h-6 min-w-6 px-1 items-center justify-center rounded-full bg-green-600 text-xs font-bold text-white">
-//     {cartCount > 99 ? "99+" : cartCount}
-//   </span>
-// )}
-//               </button>
-
-//               {/* --- CONDITIONAL MOBILE AUTH BUTTON --- */}
 //               {isLoggedIn ? (
 //                 <motion.button
-//                   variants={logoutButtonVariants}
+//                   variants={mobileAuthVariants}
 //                   whileHover="hover"
 //                   whileTap="tap"
 //                   onClick={handleLogout}
-//                   className="mt-6 flex w-full items-center justify-center gap-3 rounded-2xl border border-red-200 dark:border-red-900/40 bg-red-50/50 dark:bg-red-950/20 px-5 py-3.5 text-base font-semibold text-red-600 dark:text-red-400 shadow-sm transition-all hover:bg-red-100/70 dark:hover:bg-red-900/40"
+//                   className="mobile-logout-btn"
 //                 >
 //                   <LogOut size={20} strokeWidth={2} />
 //                   Logout
 //                 </motion.button>
 //               ) : (
 //                 <motion.button
-//                   variants={loginButtonVariants}
+//                   variants={mobileAuthVariants}
 //                   whileHover="hover"
 //                   whileTap="tap"
 //                   onClick={() => {
 //                     setMobileMenuOpen(false);
 //                     navigate("/login");
 //                   }}
-//                   className="mt-6 flex w-full items-center justify-center gap-3 rounded-2xl bg-green-600 px-5 py-4 text-base font-semibold text-white shadow-lg transition-all hover:bg-green-700"
+//                   className="mobile-login-btn"
 //                 >
 //                   <UserRound size={22} strokeWidth={2} />
 //                   Login
 //                 </motion.button>
 //               )}
-//             </div>
+//             </nav>
 //           </motion.div>
 //         )}
 //       </AnimatePresence>
 //     </header>
 //   );
-// };
-
-// export default Header;
-
-
-
-
-
-
+// }
 
 
 
@@ -1601,6 +770,7 @@ import zaidInfotechLogoDark from "../../assets/images/zaidinfotechlogo-white.png
 
 // Context & API Services
 import { useTheme } from "../../context/ThemeContext";
+import { useCompare } from "../../context/CompareContext";
 import { getWishlist } from "../../services/wishlistService";
 import { getCart } from "../../services/cartService";
 import {
@@ -1643,7 +813,7 @@ const navigationItems = [
   { label: "BUY", subtitle: "Laptops & Accessories", icon: Laptop, path: "/shop" },
   { label: "RENT", subtitle: "Laptops on Rent", icon: GraduationCap, path: "/rental" },
   { label: "REPAIRS", subtitle: "Service & Support", icon: Wrench, path: "/repair" },
-  { label: "REFURBISHED", subtitle: "Certified Laptops", icon: ShoppingCart, path: "/shop" },
+ { label: "REFURBISHED", subtitle: "Certified Laptops", icon: ShoppingCart, path: "/shop?condition=refurbished" },
   { label: "ABOUT US", subtitle: "Why Choose Us?", icon: Info, path: "/about-us" },
   { label: "CONTACT", subtitle: "Solutions for Business", icon: BriefcaseBusiness, path: "/contact" },
 ];
@@ -1694,6 +864,11 @@ export default function Header() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notificationLoading, setNotificationLoading] = useState(false);
+
+  // --- COMPARE STATE ---
+  const { compareList } = useCompare();
+  const [comparePopup, setComparePopup] = useState(null);
+  // null = hidden, "empty" = 0 products selected, "single" = 1 product selected
 
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -1905,6 +1080,20 @@ export default function Header() {
       setUnreadCount(0);
     } catch (error) {
       console.error("MARK ALL READ ERROR:", error);
+    }
+  };
+
+  // ---------------------------------------------------------------------------
+  // COMPARE LOGIC
+  // ---------------------------------------------------------------------------
+
+  const handleCompareClick = () => {
+    if (compareList.length === 0) {
+      setComparePopup("empty");
+    } else if (compareList.length === 1) {
+      setComparePopup("single");
+    } else {
+      navigate("/compare");
     }
   };
 
@@ -2144,7 +1333,12 @@ export default function Header() {
             </div>
           )}
 
-          <HeaderAction icon={SlidersHorizontal} label="Compare" onClick={() => announce("Compare")} />
+          <HeaderAction
+            icon={SlidersHorizontal}
+            label="Compare"
+            badge={compareList.length > 0 ? compareList.length : undefined}
+            onClick={handleCompareClick}
+          />
 
           {!isInventoryRole() && (
             <>
@@ -2282,6 +1476,26 @@ export default function Header() {
                 </NavLink>
               ))}
 
+              {/* --- COMPARE (Mobile) --- */}
+              <button
+                type="button"
+                className="mobile-nav-item"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleCompareClick();
+                }}
+              >
+                <SlidersHorizontal size={20} />
+                <div>
+                  <strong>COMPARE</strong>
+                  <small>
+                    {compareList.length > 0
+                      ? `${compareList.length} selected`
+                      : "Compare products"}
+                  </small>
+                </div>
+              </button>
+
               {/* --- NOTIFICATION (Mobile) --- */}
               {isLoggedIn && (
                 <button
@@ -2347,6 +1561,56 @@ export default function Header() {
                 </motion.button>
               )}
             </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* --- COMPARE POPUP (0 or 1 product selected) --- */}
+      <AnimatePresence>
+        {comparePopup && (
+          <motion.div
+            className="compare-popup-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setComparePopup(null)}
+          >
+            <motion.div
+              className="compare-popup-box"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <p>
+                {comparePopup === "empty"
+                  ? "No products added to compare yet."
+                  : "Add at least one more product to compare."}
+              </p>
+
+              <div className="compare-popup-actions">
+                {comparePopup === "empty" && (
+                  <button
+                    type="button"
+                    className="compare-popup-primary-btn"
+                    onClick={() => {
+                      setComparePopup(null);
+                      navigate("/shop");
+                    }}
+                  >
+                    Browse Laptops
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  className="compare-popup-close-btn"
+                  onClick={() => setComparePopup(null)}
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
