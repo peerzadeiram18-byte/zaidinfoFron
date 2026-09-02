@@ -870,6 +870,9 @@ import TechinicaStaff from "./pages/Receptionist/TechinicaStaff.jsx";
 import ReceptionistLayout from "./pages/Receptionist/ReceptionistLayout.jsx";
 import RepairCustomer from "./pages/Receptionist/RepairCustomer.jsx";
 
+
+
+import VerifyEmail from "./pages/auth/VerifyEmail";
   // =====================================================
 // APP
 // =====================================================
@@ -921,6 +924,7 @@ function App() {
                     PUBLIC
                 ================================================= */}
 
+
                 <Route
                     path="/"
                     element={<Home />}
@@ -959,6 +963,10 @@ function App() {
                 <Route
                     path="/register"
                     element={<Register />}
+                />
+                 <Route
+                   path="/verify-email"
+                   element={<VerifyEmail />}
                 />
 
                 <Route
