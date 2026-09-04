@@ -446,11 +446,11 @@ function Sidebar() {
       title: "OTHERS",
 
       links: [
-        {
-          name: "Blogs",
-          icon: <MdArticle />,
-          path: "/blogs",
-        },
+        // {
+        //   name: "Blogs",
+        //   icon: <MdArticle />,
+        //   path: "/blogs",
+        // },
 
         {
           name: "Reports",
