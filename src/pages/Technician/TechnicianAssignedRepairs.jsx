@@ -26,7 +26,9 @@ const STATUS_OPTIONS = [
   "Cancelled",
 ];
 
-const BASE_URL = "http://localhost:5000/api/newRepair";
+// const BASE_URL = "http://localhost:5000/api/newRepair";
+
+const BASE_URL = `${import.meta.env.VITE_API_URL}/newRepair`;
 
 export default function TechnicianAssignedTasks() {
   const [repairs, setRepairs] = useState([]);

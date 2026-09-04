@@ -817,8 +817,14 @@ import {
 import { toast } from "react-toastify";
 import "./TechnicianRepairHistory.css";
 
-const BASE_URL = "http://localhost:5000/api/newRepair";
-const SERVICES_API = "http://localhost:5000/api/repair-service/get-services";
+// const BASE_URL = "http://localhost:5000/api/newRepair";
+// const SERVICES_API = "http://localhost:5000/api/repair-service/get-services";
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+const BASE_URL = `${API_URL}/newRepair`;
+const SERVICES_API = `${API_URL}/repair-service/get-services`;
+
 
 export default function TechnicianRepairHistory() {
   const [repairs, setRepairs] = useState([]);

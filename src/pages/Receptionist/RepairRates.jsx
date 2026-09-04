@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './RepairRates.css';
 
-const REPAIR_RATE_URL = 'http://localhost:5000/api/repair-service';
+// const REPAIR_RATE_URL = 'http://localhost:5000/api/repair-service';
+
+const API_URL = import.meta.env.VITE_API_URL;
+const REPAIR_RATE_URL = `${API_URL}/repair-service`;
+
 
 const RepairRates = () => {
   const [services, setServices] = useState([]);

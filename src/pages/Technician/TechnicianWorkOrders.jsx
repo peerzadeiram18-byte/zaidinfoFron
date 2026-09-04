@@ -4,8 +4,12 @@ import { FiUserCheck, FiClock, FiCalendar, FiDollarSign } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "./TechnicianWorkOrders.css";
 
-const BASE_URL = "http://localhost:5000/api/newRepair";
-const TECHNICIAN_URL = "http://localhost:5000/api/newRepair/technicians";
+// const BASE_URL = "http://localhost:5000/api/newRepair";
+// const TECHNICIAN_URL = "http://localhost:5000/api/newRepair/technicians";
+
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/newRepair`;
+const TECHNICIAN_URL = `${import.meta.env.VITE_API_URL}/api/newRepair/technicians`;
+
 
 const TechnicianWorkOrders = () => {
   const [technicians, setTechnicians] = useState([]);

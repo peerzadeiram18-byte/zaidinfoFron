@@ -1,18 +1,4 @@
-/* =========================================================
-   ADMIN DASHBOARD
-   NO TOPBAR
-   SIDEBAR + MAIN CONTENT
-   DESKTOP + LAPTOP + MOBILE
-========================================================= */
-
-
-/* =========================================================
-   ROOT
-========================================================= */
-
 :root {
-  --admin-sidebar-width: 278px;
-
   --bg: #f5f6f5;
   --surface: #ffffff;
   --surface-2: #fafbfa;
@@ -41,69 +27,67 @@
   --violet-soft: #f0e9f8;
   --violet-dark: #6a3f98;
 
-  --shadow-sm:
-    0 1px 2px rgba(20, 23, 27, 0.05);
-
-  --shadow-md:
-    0 6px 16px rgba(20, 23, 27, 0.07),
-    0 1px 3px rgba(20, 23, 27, 0.05);
-
+  --shadow-sm: 0 1px 2px rgba(20, 23, 27, 0.05);
+  --shadow-md: 0 6px 16px rgba(20, 23, 27, 0.07), 0 1px 3px rgba(20, 23, 27, 0.05);
   --radius: 16px;
 }
 
+/* ============================================
+   DARK MODE OVERRIDES
+   Applied when ThemeProvider adds .dark to <html>
+   ============================================ */
+.dark {
+  --bg: #121417;
+  --surface: #1b1e22;
+  --surface-2: #22262b;
 
-/* =========================================================
-   RESET
-========================================================= */
+  /* Heading/body text: near-white for strong contrast on dark bg */
+  --ink: #f5f6f7;
+  --ink-soft: #b8bcc2;
+  --ink-faint: #7d838a;
+
+  --line: #2c3036;
+
+  --accent: #2fd39a;
+  --accent-dark: #58e0b3;
+  --accent-soft: rgba(47, 211, 154, 0.14);
+
+  --danger: #ef6b60;
+  --danger-soft: rgba(239, 107, 96, 0.14);
+
+  --warning: #f0b054;
+  --warning-soft: rgba(240, 176, 84, 0.14);
+
+  --blue: #5b9ee6;
+  --blue-soft: rgba(91, 158, 230, 0.14);
+  --blue-dark: #8cbdf0;
+
+  --violet: #b98fe8;
+  --violet-soft: rgba(185, 143, 232, 0.14);
+  --violet-dark: #cfaef0;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.25);
+}
 
 * {
   box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  width: 100%;
-  min-height: 100%;
   margin: 0;
   padding: 0;
 }
 
-html {
-  overflow-x: hidden;
-}
-
 body {
-  min-height: 100vh;
-
   background: var(--bg);
   color: var(--ink);
-
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
-
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
   font-size: 14px;
   line-height: 1.45;
-
-  overflow-x: hidden;
-
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-button,
-input,
-textarea,
-select {
-  font-family: inherit;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 button {
+  font-family: inherit;
   cursor: pointer;
 }
 
@@ -111,190 +95,159 @@ svg {
   display: block;
 }
 
-img {
-  max-width: 100%;
-  display: block;
-}
-
-
-/* =========================================================
-   APP
-========================================================= */
-
-.admin-app {
-  position: relative;
-
+.app {
+  display: flex;
   width: 100%;
   min-height: 100vh;
-
-  background: var(--bg);
 }
 
-
-/* =========================================================
-   MAIN
-   DESKTOP FIX
-   SIDEBAR IS FIXED
-   SO MAIN MUST START AFTER SIDEBAR
-========================================================= */
-
-.admin-app > .admin-main {
-  position: relative;
-
-  width: calc(100% - var(--admin-sidebar-width));
+main {
+  flex: 1;
   min-width: 0;
-
-  min-height: 100vh;
-
-  margin-left: var(--admin-sidebar-width);
-
-  padding: 0;
-
-  background: var(--bg);
-}
-
-
-/* =========================================================
-   CONTENT
-========================================================= */
-
-.admin-main > .content {
   width: 100%;
-  max-width: none;
-
-  min-height: 100vh;
-
-  margin: 0;
-  padding: 32px 32px 48px;
-
-  background: var(--bg);
 }
 
-
-/* =========================================================
-   IMPORTANT OVERRIDES
-   OLD CSS MARGIN/WIDTH KO REMOVE KARTA HAI
-========================================================= */
-
-.admin-main,
-.admin-main .content {
-  box-sizing: border-box;
-}
-
-.admin-main .content {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-
-  width: 100% !important;
-  max-width: none !important;
-}
-
-
-/* =========================================================
-   TOPBAR COMPLETELY HIDDEN
-========================================================= */
-
-.admin-app .topbar,
-.admin-app .topbar-left,
-.admin-app .topbar-right,
-.admin-app .page-title,
-.admin-app .page-sub,
-.admin-app .icon-btn,
-.admin-app .avatar-sm {
-  display: none !important;
-}
-
-
-/* =========================================================
-   DASHBOARD HEADER
-========================================================= */
-
-.dashboard-header {
-  width: 100%;
-
+/* TOPBAR */
+.topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  gap: 20px;
-
-  margin: 0 0 24px;
+  gap: 16px;
+  padding: 20px 28px 12px;
+  background: var(--bg);
+  flex-wrap: wrap;
 }
 
-.dashboard-header-left {
-  min-width: 0;
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.dashboard-title {
-  margin: 0;
-
+/* Heading: force it to use --ink explicitly so it always
+   tracks the theme correctly and is never left behind
+   by an inherited color rule higher up the tree. */
+.page-title {
+  font-weight: 600;
+  font-size: 22px;
   color: var(--ink);
-
-  font-size: 28px;
-  line-height: 1.2;
-
-  font-weight: 650;
 }
 
-.dashboard-subtitle {
-  margin: 6px 0 0;
+.page-sub {
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin-top: 2px;
+}
 
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* SEARCH */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 12px;
+  width: 240px;
+  color: var(--ink-faint);
+}
+
+.search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  width: 100%;
+}
+
+.search input::placeholder {
+  color: var(--ink-faint);
+}
+
+.search svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* BUTTONS & AVATAR */
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--ink-soft);
-
-  font-size: 14px;
+  position: relative;
+  flex-shrink: 0;
 }
 
+.icon-btn:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
 
-/* =========================================================
-   STATS
-========================================================= */
+.icon-btn svg {
+  width: 17px;
+  height: 17px;
+}
 
+.dot-badge {
+  position: absolute;
+  top: 7px;
+  right: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--danger);
+}
+
+.avatar-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* CONTENT CONTAINER */
+.content {
+  padding: 16px 28px 48px;
+}
+
+/* STAT CARDS */
 .stats {
-  width: 100%;
-
   display: grid;
-
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-
+  grid-template-columns: repeat(4, 1fr);
   gap: 14px;
-
-  margin: 0 0 16px;
+  margin-bottom: 16px;
 }
-
-
-/* =========================================================
-   DASHBOARD CARD SAFETY
-========================================================= */
-
-.stats > * {
-  min-width: 0;
-  width: 100%;
-}
-
-
-/* =========================================================
-   GENERIC STAT
-========================================================= */
 
 .stat {
-  position: relative;
-
-  min-width: 0;
-
   background: var(--surface);
-
   border: 1px solid var(--line);
-
   border-radius: var(--radius);
-
-  padding: 18px;
-
+  padding: 16px 18px;
   box-shadow: var(--shadow-sm);
-
-  transition:
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+  transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
 .stat:hover {
@@ -302,90 +255,54 @@ img {
   transform: translateY(-2px);
 }
 
-
-/* =========================================================
-   STAT TOP
-========================================================= */
-
 .stat-top {
   display: flex;
-
   align-items: flex-start;
   justify-content: space-between;
-
-  gap: 10px;
 }
 
 .stat-label {
-  min-width: 0;
-
-  color: var(--ink-soft);
-
   font-size: 12.5px;
+  color: var(--ink-soft);
   font-weight: 500;
 }
 
-
-/* =========================================================
-   STAT ICON
-========================================================= */
-
 .stat-icon {
-  width: 40px;
-  height: 40px;
-
-  flex-shrink: 0;
-
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  border-radius: 11px;
+  flex-shrink: 0;
 }
 
 .stat-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
-
-
-/* =========================================================
-   STAT BOTTOM
-========================================================= */
 
 .stat-bottom {
   display: flex;
-
   align-items: flex-end;
   justify-content: space-between;
-
-  gap: 12px;
-
-  margin-top: 16px;
+  margin-top: 12px;
+  gap: 8px;
 }
 
-.stat-value {
+.stat-value1 {
+  font-size: 26px;
+  font-weight: 600;
   color: var(--ink);
-
-  font-size: 28px;
-  line-height: 1.1;
-
-  font-weight: 650;
-
-  white-space: nowrap;
 }
 
 .stat-delta {
+  font-size: 11px;
+  margin-top: 5px;
+  color: var(--ink-faint);
   display: flex;
   align-items: center;
-
   gap: 3px;
-
-  margin-top: 7px;
-
-  color: var(--ink-faint);
-
-  font-size: 11px;
 }
 
 .stat-delta.up {
@@ -397,181 +314,73 @@ img {
   height: 11px;
 }
 
-
-/* =========================================================
-   SPARK
-========================================================= */
-
 .spark {
-  width: 72px;
-  height: 32px;
-
   flex-shrink: 0;
-
-  overflow: visible;
 }
 
+/* ACCENT ACCENTS */
+.stat-accent .stat-icon { background: var(--accent-soft); color: var(--accent-dark); }
+.stat-blue .stat-icon { background: var(--blue-soft); color: var(--blue-dark); }
+.stat-violet .stat-icon { background: var(--violet-soft); color: var(--violet-dark); }
+.stat-warning .stat-icon { background: var(--warning-soft); color: var(--warning); }
 
-/* =========================================================
-   STAT COLORS
-========================================================= */
+.stat-accent .spark-line { stroke: var(--accent); }
+.stat-blue .spark-line { stroke: var(--blue); }
+.stat-violet .spark-line { stroke: var(--violet); }
+.stat-warning .spark-line { stroke: var(--warning); }
 
-.stat-accent .stat-icon {
-  background: var(--accent-soft);
-  color: var(--accent-dark);
-}
-
-.stat-blue .stat-icon {
-  background: var(--blue-soft);
-  color: var(--blue-dark);
-}
-
-.stat-violet .stat-icon {
-  background: var(--violet-soft);
-  color: var(--violet-dark);
-}
-
-.stat-warning .stat-icon {
-  background: var(--warning-soft);
-  color: var(--warning);
-}
-
-
-/* =========================================================
-   SPARK COLORS
-========================================================= */
-
-.stat-accent .spark-line {
-  stroke: var(--accent);
-}
-
-.stat-blue .spark-line {
-  stroke: var(--blue);
-}
-
-.stat-violet .spark-line {
-  stroke: var(--violet);
-}
-
-.stat-warning .spark-line {
-  stroke: var(--warning);
-}
-
-
-/* =========================================================
-   CHART GRID
-========================================================= */
-
+/* PANELS & GRID */
 .grid-2 {
-  width: 100%;
-
   display: grid;
-
-  grid-template-columns:
-    minmax(0, 1.65fr)
-    minmax(280px, 1fr);
-
+  grid-template-columns: 1.65fr 1fr;
   gap: 14px;
-
-  margin: 0 0 16px;
+  margin-bottom: 16px;
 }
-
-
-/* =========================================================
-   PANEL
-========================================================= */
 
 .panel {
-  min-width: 0;
-  width: 100%;
-
   background: var(--surface);
-
   border: 1px solid var(--line);
-
   border-radius: var(--radius);
-
   box-shadow: var(--shadow-sm);
-
   overflow: hidden;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .panel-pad {
   padding: 18px 20px;
 }
 
-
-/* =========================================================
-   PANEL HEADER
-========================================================= */
-
 .panel-head {
   display: flex;
-
   align-items: center;
   justify-content: space-between;
-
-  gap: 12px;
 }
 
 .panel-title {
-  color: var(--ink);
-
-  font-size: 15px;
   font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
 }
 
 .panel-sub {
-  margin-top: 2px;
-
-  color: var(--ink-faint);
-
   font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 2px;
 }
-
-
-/* =========================================================
-   PILL
-========================================================= */
 
 .pill {
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  flex-shrink: 0;
-
-  padding: 4px 10px;
-
-  border-radius: 20px;
-
-  background: var(--accent-soft);
-  color: var(--accent-dark);
-
   font-size: 11.5px;
   font-weight: 600;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  padding: 4px 10px;
+  border-radius: 20px;
 }
 
-
-/* =========================================================
-   REVENUE CHART
-========================================================= */
-
+/* CHART STYLES */
 .chart-wrap {
-  position: relative;
-
-  width: 100%;
-  height: 180px;
-
+  height: 150px;
   margin-top: 14px;
-
-  overflow: hidden;
-}
-
-.chart-wrap svg {
-  width: 100%;
-  height: 100%;
 }
 
 .chart-grid-line {
@@ -594,232 +403,109 @@ img {
 }
 
 .revenue-line {
-  fill: none;
-
   stroke: var(--accent);
-
-  stroke-width: 2.5;
 }
 
 .orders-line {
-  fill: none;
-
   stroke: var(--ink-faint);
-
-  stroke-width: 1.5;
-
-  stroke-dasharray: 5 5;
 }
-
-
-/* =========================================================
-   LEGEND
-========================================================= */
 
 .legend {
   display: flex;
-  flex-wrap: wrap;
-
-  align-items: center;
-
   gap: 16px;
-
   margin-top: 10px;
-
-  color: var(--ink-soft);
-
   font-size: 11.5px;
+  color: var(--ink-soft);
 }
 
 .legend span {
   display: inline-flex;
-
   align-items: center;
-
   gap: 5px;
 }
 
 .legend i {
   width: 8px;
   height: 8px;
-
-  flex-shrink: 0;
-
   border-radius: 2px;
 }
 
-.legend-revenue {
-  background: var(--accent);
-}
+.legend-revenue { background: var(--accent); }
+.legend-orders { background: var(--ink-faint); }
 
-.legend-orders {
-  background: var(--ink-faint);
-}
-
-
-/* =========================================================
-   DONUT
-========================================================= */
-
+/* DONUT CHART */
 .donut-wrap {
   display: flex;
-
   align-items: center;
-
   gap: 18px;
-
-  min-width: 0;
-
   margin-top: 16px;
+  flex-wrap: wrap;
 }
 
 .donut {
-  width: 112px;
-  height: 112px;
-
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
   flex-shrink: 0;
-
-  border-radius: 50%;
-
-  background:
-    conic-gradient(
-      var(--accent) 0% 42%,
-      var(--blue) 42% 68%,
-      var(--violet) 68% 86%,
-      var(--warning) 86% 100%
-    );
-
-  position: relative;
+  background: conic-gradient(
+    var(--accent) 0% 42%,
+    var(--blue) 42% 68%,
+    var(--violet) 68% 86%,
+    var(--warning) 86% 100%
+  );
 }
-
-
-/* DONUT HOLE */
-
-.donut::after {
-  content: "";
-
-  position: absolute;
-
-  width: 52px;
-  height: 52px;
-
-  top: 50%;
-  left: 50%;
-
-  transform: translate(-50%, -50%);
-
-  border-radius: 50%;
-
-  background: var(--surface);
-}
-
-
-/* =========================================================
-   DONUT LEGEND
-========================================================= */
 
 .donut-legend {
   display: flex;
-
   flex-direction: column;
-
-  gap: 10px;
-
+  gap: 9px;
   flex: 1;
-
-  min-width: 0;
+  min-width: 140px;
 }
 
 .donut-row {
   display: flex;
-
   align-items: center;
-
   gap: 8px;
-
-  min-width: 0;
-
   font-size: 12.5px;
 }
 
 .donut-dot {
   width: 8px;
   height: 8px;
-
-  flex-shrink: 0;
-
   border-radius: 2px;
+  flex-shrink: 0;
 }
 
-.donut-accent {
-  background: var(--accent);
-}
-
-.donut-blue {
-  background: var(--blue);
-}
-
-.donut-violet {
-  background: var(--violet);
-}
-
-.donut-warning {
-  background: var(--warning);
-}
+.donut-accent { background: var(--accent); }
+.donut-blue { background: var(--blue); }
+.donut-violet { background: var(--violet); }
+.donut-warning { background: var(--warning); }
 
 .donut-label {
   flex: 1;
-
-  min-width: 0;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  white-space: nowrap;
-
   color: var(--ink-soft);
 }
 
 .donut-val {
-  flex-shrink: 0;
-
-  color: var(--ink);
-
   font-size: 12px;
-  font-weight: 600;
+  color: var(--ink);
 }
 
-
-/* =========================================================
-   TABLE
-========================================================= */
-
+/* TABLE PANEL */
 .table-header {
   padding-bottom: 14px;
 }
 
 .view-all {
-  display: inline-flex;
-
-  align-items: center;
-
-  gap: 4px;
-
-  border: none;
-
-  background: transparent;
-
-  color: var(--accent-dark);
-
   font-size: 12.5px;
   font-weight: 600;
-
-  white-space: nowrap;
-}
-
-.view-all:hover {
-  text-decoration: underline;
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
 }
 
 .view-all svg {
@@ -827,158 +513,82 @@ img {
   height: 13px;
 }
 
-
-/* =========================================================
-   TABLE SCROLL
-========================================================= */
-
 .table-scroll {
-  width: 100%;
-
   overflow-x: auto;
-  overflow-y: hidden;
-
   -webkit-overflow-scrolling: touch;
-
-  scrollbar-width: thin;
 }
 
-.table-scroll table {
+table {
   width: 100%;
-
-  min-width: 520px;
-
   border-collapse: collapse;
-
-  border-spacing: 0;
+  min-width: 480px;
 }
-
-
-/* =========================================================
-   TABLE HEAD
-========================================================= */
 
 .table-scroll thead th {
-  padding: 11px 20px;
-
-  background: var(--surface-2);
-
-  border-bottom: 1px solid var(--line);
-
-  color: var(--ink-faint);
-
-  font-size: 11px;
-
-  font-weight: 600;
-
   text-align: left;
-
+  font-size: 11px;
   text-transform: uppercase;
-
   letter-spacing: 0.06em;
-
-  white-space: nowrap;
-}
-
-
-/* =========================================================
-   TABLE BODY
-========================================================= */
-
-.table-scroll tbody td {
-  padding: 12px 20px;
-
+  color: var(--ink-faint);
+  font-weight: 600;
+  padding: 11px 20px;
+  background: var(--surface-2);
   border-bottom: 1px solid var(--line);
-
-  color: var(--ink);
-
-  font-size: 13.5px;
-
-  white-space: nowrap;
 }
 
-.table-scroll tbody tr:last-child td {
+tbody td {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13.5px;
+  color: var(--ink);
+}
+
+tbody tr:last-child td {
   border-bottom: none;
 }
 
-.table-scroll tbody tr:hover td {
+tbody tr:hover td {
   background: var(--surface-2);
 }
 
-
-/* =========================================================
-   CUSTOMER
-========================================================= */
-
 .cust-cell {
   display: flex;
-
   align-items: center;
-
   gap: 10px;
-
-  min-width: 180px;
 }
 
 .cust-avatar {
   width: 30px;
   height: 30px;
-
-  flex-shrink: 0;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
   border-radius: 50%;
-
   background: var(--accent-soft);
   color: var(--accent-dark);
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 11.5px;
   font-weight: 600;
+  flex-shrink: 0;
 }
 
-.cust-name {
-  font-weight: 500;
-}
+.cust-name { font-weight: 500; color: var(--ink); }
+.cust-email { color: var(--ink-soft); font-size: 13px; }
 
-.cust-email {
-  color: var(--ink-soft);
-  font-size: 13px;
-}
-
-
-/* =========================================================
-   BADGES
-========================================================= */
-
+/* BADGES */
 .badge {
   display: inline-flex;
-
   align-items: center;
-
   gap: 5px;
-
   padding: 3px 9px;
-
   border-radius: 20px;
-
   font-size: 11.5px;
   font-weight: 500;
-
-  white-space: nowrap;
 }
 
 .badge::before {
   content: "";
-
   width: 5px;
   height: 5px;
-
-  flex-shrink: 0;
-
   border-radius: 50%;
 }
 
@@ -1000,417 +610,113 @@ img {
   background: var(--warning);
 }
 
+/* ============================================
+   RESPONSIVE MEDIA QUERIES
+   ============================================ */
 
-/* =========================================================
-   DESKTOP 1400+
-========================================================= */
-
-@media (min-width: 1400px) {
-
-  .admin-main > .content {
-    padding: 34px 36px 52px;
-  }
-
-  .stats {
-    gap: 16px;
-  }
-
-  .grid-2 {
-    gap: 16px;
-  }
-
-  .stat {
-    padding: 20px;
-  }
+/* Large tablets / small laptops */
+@media (max-width: 1180px) {
+  .grid-2 { grid-template-columns: 1fr; }
 }
 
-
-/* =========================================================
-   LAPTOP
-   1200px - 1399px
-========================================================= */
-
-@media (max-width: 1399px) and (min-width: 1080px) {
-
-  .admin-main > .content {
-    padding: 30px 28px 48px;
-  }
-
-  .stats {
-    grid-template-columns:
-      repeat(4, minmax(0, 1fr));
-  }
-
-  .stat-value {
-    font-size: 26px;
-  }
+/* Tablets */
+@media (max-width: 1080px) {
+  .stats { grid-template-columns: repeat(2, 1fr); }
 }
 
-
-/* =========================================================
-   SMALL LAPTOP
-   900px - 1079px
-========================================================= */
-
-@media (max-width: 1079px) and (min-width: 769px) {
-
-  :root {
-    --admin-sidebar-width: 250px;
-  }
-
-  .admin-main > .content {
-    padding: 26px 22px 42px;
-  }
-
-  .stats {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-
-    gap: 14px;
-  }
-
-  .grid-2 {
-    grid-template-columns: 1fr;
-  }
-
-  .stat {
-    padding: 17px;
-  }
-
-  .stat-value {
-    font-size: 25px;
-  }
-
-  .panel-pad {
-    padding: 17px 18px;
-  }
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
+/* Small tablets / large phones */
 @media (max-width: 768px) {
+  .topbar {
+    padding: 16px 18px 10px;
+  }
 
-  /*
-    MOBILE PAR SIDEBAR FIXED DRAWER HAI.
-    MAIN KO SIDEBAR SPACE NAHI DENA.
-  */
+  .page-title {
+    font-size: 19px;
+  }
 
-  .admin-app > .admin-main {
+  .topbar-right {
     width: 100%;
-
-    min-width: 0;
-
-    margin-left: 0;
+    justify-content: space-between;
   }
 
-  .admin-main > .content {
+  .search {
     width: 100%;
-
-    min-height: 100vh;
-
-    margin: 0 !important;
-
-    padding: 22px 18px 40px;
+    order: 1;
   }
 
-  .dashboard-header {
-    flex-direction: column;
-
-    align-items: stretch;
-
-    gap: 14px;
-
-    margin-bottom: 18px;
-  }
-
-  .dashboard-title {
-    font-size: 24px;
-  }
-
-  .dashboard-subtitle {
-    font-size: 13px;
-  }
-
-  .stats {
-    grid-template-columns: 1fr;
-
-    gap: 12px;
-
-    margin-bottom: 14px;
-  }
-
-  .grid-2 {
-    grid-template-columns: 1fr;
-
-    gap: 12px;
-
-    margin-bottom: 12px;
-  }
-
-  .stat {
-    padding: 16px;
-  }
-
-  .stat-value {
-    font-size: 26px;
-  }
-
-  .panel {
-    border-radius: 14px;
+  .content {
+    padding: 14px 18px 40px;
   }
 
   .panel-pad {
     padding: 16px;
   }
 
-  .chart-wrap {
-    height: 160px;
-  }
-
-  .donut {
-    width: 100px;
-    height: 100px;
-  }
-
-  .donut::after {
-    width: 46px;
-    height: 46px;
+  .donut-wrap {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
-
-/* =========================================================
-   MOBILE 560
-========================================================= */
-
+/* Phones */
 @media (max-width: 560px) {
+  .stats { grid-template-columns: 1fr; }
 
-  .admin-main > .content {
-    padding: 18px 14px 34px;
+  .content { padding: 14px 14px 40px; }
+
+  .topbar {
+    padding: 14px 14px 10px;
+    gap: 10px;
   }
 
-  .dashboard-title {
+  .topbar-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .page-title {
+    font-size: 18px;
+  }
+
+  .page-sub {
+    font-size: 12px;
+  }
+
+  .search {
+    width: 100%;
+  }
+
+  .grid-2 {
+    gap: 12px;
+  }
+
+  .panel-pad {
+    padding: 14px;
+  }
+
+  .stat-value {
     font-size: 22px;
   }
 
-  .dashboard-subtitle {
-    font-size: 12.5px;
-  }
-
-  .stats {
-    gap: 10px;
-  }
-
-  .stat {
-    padding: 15px;
-    border-radius: 13px;
-  }
-
-  .stat-icon {
-    width: 36px;
-    height: 36px;
-
-    border-radius: 10px;
-  }
-
-  .stat-icon svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .stat-bottom {
-    margin-top: 13px;
-
-    gap: 8px;
-  }
-
-  .stat-value {
-    font-size: 24px;
-  }
-
-  .stat-delta {
-    font-size: 10.5px;
-  }
-
-  .spark {
-    width: 60px;
-  }
-
-  .panel-pad {
-    padding: 15px;
-  }
-
-  .panel-title {
-    font-size: 14px;
-  }
-
-  .panel-sub {
-    font-size: 11.5px;
-  }
-
-  .chart-wrap {
-    height: 140px;
-    margin-top: 12px;
-  }
-
-  .legend {
-    gap: 10px;
-    font-size: 10.5px;
-  }
-
-  .donut {
-    width: 86px;
-    height: 86px;
-  }
-
-  .donut::after {
-    width: 40px;
-    height: 40px;
-  }
-
-  .donut-wrap {
-    gap: 14px;
-  }
-
-  .donut-legend {
-    gap: 8px;
-  }
-
-  .donut-row {
-    font-size: 11.5px;
-  }
-
-  .donut-val {
-    font-size: 11px;
+  tbody td,
+  .table-scroll thead th {
+    padding: 10px 14px;
   }
 }
 
-
-/* =========================================================
-   VERY SMALL MOBILE
-========================================================= */
-
-@media (max-width: 400px) {
-
-  .admin-main > .content {
-    padding: 16px 10px 30px;
+/* Very small phones */
+@media (max-width: 380px) {
+  .avatar-sm,
+  .icon-btn {
+    width: 32px;
+    height: 32px;
   }
 
-  .dashboard-title {
-    font-size: 21px;
+  .page-title {
+    font-size: 17px;
   }
 
   .stat {
     padding: 14px;
-  }
-
-  .stat-value {
-    font-size: 23px;
-  }
-
-  .stat-icon {
-    width: 34px;
-    height: 34px;
-  }
-
-  .spark {
-    width: 50px;
-  }
-
-  .panel-pad {
-    padding: 14px;
-  }
-
-  .donut {
-    width: 78px;
-    height: 78px;
-  }
-
-  .donut::after {
-    width: 36px;
-    height: 36px;
-  }
-
-  .donut-wrap {
-    gap: 10px;
-  }
-}
-
-
-/* =========================================================
-   LANDSCAPE MOBILE
-========================================================= */
-
-@media (max-height: 500px) and (orientation: landscape) {
-
-  .admin-app > .admin-main {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .admin-main > .content {
-    padding-top: 18px;
-  }
-
-  .stats {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-  }
-
-  .grid-2 {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* =========================================================
-   TOUCH
-========================================================= */
-
-@media (hover: none) {
-
-  .stat:hover {
-    transform: none;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .table-scroll tbody tr:hover td {
-    background: transparent;
-  }
-}
-
-
-/* =========================================================
-   ACCESSIBILITY
-========================================================= */
-
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-
-/* =========================================================
-   REDUCE MOTION
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-
-    transition-duration: 0.01ms !important;
-
-    animation-duration: 0.01ms !important;
-
-    animation-iteration-count: 1 !important;
   }
 }

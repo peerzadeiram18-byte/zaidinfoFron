@@ -1,6 +1,129 @@
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
+// import { FaPlus, FaTrash, FaEdit, FaTools, FaClock } from "react-icons/fa";
+// import EditServiceModal from "./EditServiceModal";
+// import "./TechnicianServiceRates.css";
+
+// const CATEGORIES = [
+//   "Hardware Repair",
+//   "Hardware Replacement",
+//   "Software & OS",
+//   "Maintenance",
+//   "Diagnostics",
+// ];
+
+// // const API_BASE = "http://localhost:5000/api/repair-service";
+
+// const API_BASE = `${import.meta.env.VITE_API_URL}/repair-service`;
+
+
+// export default function TechnicianServiceRates() {
+//   const [services, setServices] = useState([]);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState("");
+//   const [selectedService, setSelectedService] = useState(null);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+
+//   const [formData, setFormData] = useState({
+//     serviceName: "",
+//     category: "Hardware Repair",
+//     partCost: "",
+//     laborCost: "",
+//     estimatedTime: "1-2 hours",
+//     description: "",
+//   });
+
+//   const getHeaders = () => {
+//     const token = localStorage.getItem("token");
+//     return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+//   };
+
+//   const fetchServices = async () => {
+//     try {
+//       setLoading(true);
+//       setError("");
+//       const res = await axios.get(`${API_BASE}/get-services`, getHeaders());
+//       setServices(res.data?.services || res.data || []);
+//     } catch (err) {
+//       console.error("Fetch Error:", err);
+//       setError(err.response?.data?.message || "Failed to load service charges.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchServices();
+//   }, []);
+
+//   const handleChange = (e) => {
+//     setFormData({ ...formData, [e.target.name]: e.target.value });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//       const payload = {
+//         ...formData,
+//         partCost: Number(formData.partCost) || 0,
+//         laborCost: Number(formData.laborCost) || 0,
+//       };
+
+//       const res = await axios.post(`${API_BASE}/create-service`, payload, getHeaders());
+//       const newService = res.data?.service || res.data;
+
+//       if (newService) {
+//         setServices((prev) => [...prev, newService]);
+//       } else {
+//         fetchServices();
+//       }
+
+//       setFormData({
+//         serviceName: "",
+//         category: "Hardware Repair",
+//         partCost: "",
+//         laborCost: "",
+//         estimatedTime: "1-2 hours",
+//         description: "",
+//       });
+//       alert("Service rate saved successfully!");
+//     } catch (err) {
+//       console.error("Create Error:", err);
+//       alert(err.response?.data?.message || "Failed to add service rate.");
+//     }
+//   };
+
+//   const handleDelete = async (id) => {
+//     if (!window.confirm("Remove this rate card item?")) return;
+//     try {
+//       await axios.delete(`${API_BASE}/delete-service/${id}`, getHeaders());
+//       setServices((prev) => prev.filter((s) => s._id !== id));
+//     } catch (err) {
+//       console.error("Delete Error:", err);
+//       alert(err.response?.data?.message || "Failed to delete service rate.");
+//     }
+//   };
+
+//   const handleEditClick = (service) => {
+//     setSelectedService(service);
+//     setIsModalOpen(true);
+//   };
+
+//   const handleServiceUpdated = (updated) => {
+//     setServices((prev) => prev.map((s) => (s._id === updated._id ? updated : s)));
+//   };
+
+
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaPlus, FaTrash, FaEdit, FaTools, FaClock } from "react-icons/fa";
+import {
+  FaPlus,
+  FaTrash,
+  FaEdit,
+  FaTools,
+  FaClock,
+} from "react-icons/fa";
 import EditServiceModal from "./EditServiceModal";
 import "./TechnicianServiceRates.css";
 
@@ -12,7 +135,11 @@ const CATEGORIES = [
   "Diagnostics",
 ];
 
-const API_BASE = "http://localhost:5000/api/repair-service";
+// VITE_API_URL already contains /api
+// .env:
+// VITE_API_URL=http://localhost:5000/api
+
+const API_BASE = `${import.meta.env.VITE_API_URL}/repair-service`;
 
 export default function TechnicianServiceRates() {
   const [services, setServices] = useState([]);
@@ -32,18 +159,39 @@ export default function TechnicianServiceRates() {
 
   const getHeaders = () => {
     const token = localStorage.getItem("token");
-    return token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+
+    return token
+      ? {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      : {};
   };
 
   const fetchServices = async () => {
     try {
       setLoading(true);
       setError("");
-      const res = await axios.get(`${API_BASE}/get-services`, getHeaders());
-      setServices(res.data?.services || res.data || []);
+
+      const res = await axios.get(
+        `${API_BASE}/get-services`,
+        getHeaders()
+      );
+
+      const data =
+        res.data?.services ||
+        res.data?.data ||
+        (Array.isArray(res.data) ? res.data : []);
+
+      setServices(data);
     } catch (err) {
       console.error("Fetch Error:", err);
-      setError(err.response?.data?.message || "Failed to load service charges.");
+
+      setError(
+        err.response?.data?.message ||
+          "Failed to load service charges."
+      );
     } finally {
       setLoading(false);
     }
@@ -54,11 +202,15 @@ export default function TechnicianServiceRates() {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const payload = {
         ...formData,
@@ -66,8 +218,14 @@ export default function TechnicianServiceRates() {
         laborCost: Number(formData.laborCost) || 0,
       };
 
-      const res = await axios.post(`${API_BASE}/create-service`, payload, getHeaders());
-      const newService = res.data?.service || res.data;
+      const res = await axios.post(
+        `${API_BASE}/create-service`,
+        payload,
+        getHeaders()
+      );
+
+      const newService =
+        res.data?.service || res.data;
 
       if (newService) {
         setServices((prev) => [...prev, newService]);
@@ -83,21 +241,39 @@ export default function TechnicianServiceRates() {
         estimatedTime: "1-2 hours",
         description: "",
       });
+
       alert("Service rate saved successfully!");
     } catch (err) {
       console.error("Create Error:", err);
-      alert(err.response?.data?.message || "Failed to add service rate.");
+
+      alert(
+        err.response?.data?.message ||
+          "Failed to add service rate."
+      );
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Remove this rate card item?")) return;
+    if (!window.confirm("Remove this rate card item?")) {
+      return;
+    }
+
     try {
-      await axios.delete(`${API_BASE}/delete-service/${id}`, getHeaders());
-      setServices((prev) => prev.filter((s) => s._id !== id));
+      await axios.delete(
+        `${API_BASE}/delete-service/${id}`,
+        getHeaders()
+      );
+
+      setServices((prev) =>
+        prev.filter((s) => s._id !== id)
+      );
     } catch (err) {
       console.error("Delete Error:", err);
-      alert(err.response?.data?.message || "Failed to delete service rate.");
+
+      alert(
+        err.response?.data?.message ||
+          "Failed to delete service rate."
+      );
     }
   };
 
@@ -107,8 +283,16 @@ export default function TechnicianServiceRates() {
   };
 
   const handleServiceUpdated = (updated) => {
-    setServices((prev) => prev.map((s) => (s._id === updated._id ? updated : s)));
+    setServices((prev) =>
+      prev.map((s) =>
+        s._id === updated._id ? updated : s
+      )
+    );
   };
+
+
+
+
 
   return (
     <div className="sr-page-wrapper">

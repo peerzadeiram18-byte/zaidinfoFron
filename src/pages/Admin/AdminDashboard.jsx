@@ -270,11 +270,12 @@ export default function AdminDashboard() {
 
   const [counts, setCounts] = useState({
     orderCount: 0,
-    employeeCount: 10,
+    employeeCount: 0,
   });
 
   useEffect(() => {
     getOrders();
+    getEmployees();
   }, []);
 
   const getOrders = async () => {
@@ -299,6 +300,31 @@ export default function AdminDashboard() {
       }));
     } catch (error) {
       console.error("Dashboard orders error:", error);
+    }
+  };
+
+
+  const getEmployees = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await axios.get(`${API_URL}/users/employees`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+
+      const employeeLength =
+        res?.data?.data?.length ||
+        0;
+
+      setCounts((prev) => ({
+        ...prev,
+        employeeCount: employeeLength,
+      }));
+    } catch (error) {
+      console.error("Cant get the employees :", error);
     }
   };
 

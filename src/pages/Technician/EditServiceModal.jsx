@@ -10,7 +10,10 @@ const CATEGORIES = [
   "Diagnostics",
 ];
 
-const API_BASE = "http://localhost:5000/api/repair-service";
+// const API_BASE = "http://localhost:5000/api/repair-service";
+
+const API_BASE = `${import.meta.env.VITE_API_URL}/repair-service`;
+
 
 export default function EditServiceModal({ isOpen, service, onClose, onServiceUpdated }) {
   const [formData, setFormData] = useState({

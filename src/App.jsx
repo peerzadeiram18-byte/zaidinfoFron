@@ -1449,7 +1449,7 @@ import RepairCustomer from "./pages/Receptionist/RepairCustomer.jsx";
 // ===============================
 
 import VerifyEmail from "./pages/auth/VerifyEmail";
-
+import Compare from "./pages/Compare.jsx";
 // =====================================================
 // APP
 // =====================================================
@@ -1872,6 +1872,11 @@ function App() {
                     <Route
                         path="/rental"
                         element={<Rental />}
+                    />
+
+                    <Route
+                        path="/compare"
+                        element={<Compare />}
                     />
 
                     {/* =================================================

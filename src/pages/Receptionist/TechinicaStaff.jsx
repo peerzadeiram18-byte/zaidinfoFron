@@ -2,8 +2,12 @@
 import axios from "axios";
 import "./TechinicaStaff.css";
 
-const TECHNICIAN_STAFF =
-  "http://localhost:5000/api/newRepair/technicians";
+// const TECHNICIAN_STAFF =
+//   "http://localhost:5000/api/newRepair/technicians";
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+const TECHNICIAN_STAFF = `${API_URL}/newRepair/technicians`;
 
 const TechinicaStaff = () => {
   const [technicians, setTechnicians] = useState([]);

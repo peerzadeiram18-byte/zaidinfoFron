@@ -27,7 +27,9 @@ import {
 } from "react-icons/fi";
 import "./TechnicianDashboardAnalytic.css";
 
-const BASE_URL = "http://localhost:5000/api/newRepair";
+// const BASE_URL = "http://localhost:5000/api/newRepair";
+
+const BASE_URL = `${import.meta.env.VITE_API_URL}/newRepair`;
 
 const PIE_COLORS = ["#2563eb", "#3b82f6", "#f59e0b", "#10b981", "#ef4444", "#8b5cf6"];
 

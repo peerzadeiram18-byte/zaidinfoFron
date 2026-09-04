@@ -17,8 +17,13 @@ import {
 import { toast } from "react-toastify";
 import "./InventoryManagement.css";
 
-const API_PARTS = "http://localhost:5000/api/repairInventory";
-const API_REPAIRS = "http://localhost:5000/api/newRepair";
+// const API_PARTS = "http://localhost:5000/api/repairInventory";
+// const API_REPAIRS = "http://localhost:5000/api/newRepair";
+
+const API_BASE = import.meta.env.VITE_API_URL;
+
+const API_PARTS = `${API_BASE}/repairInventory`;
+const API_REPAIRS = `${API_BASE}/newRepair`;
 
 const CATEGORIES = [
   "Display / Screen",
