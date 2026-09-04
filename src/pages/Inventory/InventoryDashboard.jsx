@@ -806,33 +806,90 @@ const loadInventoryNotifications = async () => {
     };
 
 
+
+// const getStockStatus = (item) => {
+//     const currentStock = Number(item.currentStock || 0);
+//     const reservedStock = Number(item.reservedStock || 0);
+
+//     const availableStock = Math.max(
+//         currentStock - reservedStock,
+//         0
+//     );
+
+//     if (availableStock === 0) {
+//         return "OUT_OF_STOCK";
+//     }
+
+//     if (availableStock >= 1 && availableStock <= 5) {
+//         return "LOW_STOCK";
+//     }
+
+//     return "IN_STOCK";
+// };
     // ==========================================
     // DASHBOARD DATA
     // ==========================================
+
+const getStockStatus = (item) => {
+
+    const currentStock =
+        Number(item.currentStock || 0);
+
+    const reservedStock =
+        Number(item.reservedStock || 0);
+
+    const availableStock =
+        Math.max(
+            currentStock - reservedStock,
+            0
+        );
+
+    // 0 = OUT OF STOCK
+    if (availableStock === 0) {
+
+        return "OUT_OF_STOCK";
+
+    }
+
+    // 1 to 5 = LOW STOCK
+    if (
+        availableStock >= 1 &&
+        availableStock <= 5
+    ) {
+
+        return "LOW_STOCK";
+
+    }
+
+    // 6+ = IN STOCK
+    return "IN_STOCK";
+
+};
+
 
     const totalProducts =
         inventory.length;
 
 
-    const inStock =
-        inventory.filter(
-            item =>
-                item.status === "IN_STOCK"
-        ).length;
+   const inStock =
+    inventory.filter(
+        item =>
+            getStockStatus(item) === "IN_STOCK"
+    ).length;
 
 
-    const lowStock =
-        inventory.filter(
-            item =>
-                item.status === "LOW_STOCK"
-        ).length;
+const lowStock =
+    inventory.filter(
+        item =>
+            getStockStatus(item) === "LOW_STOCK"
+    ).length;
 
 
-    const outOfStock =
-        inventory.filter(
-            item =>
-                item.status === "OUT_OF_STOCK"
-        ).length;
+const outOfStock =
+    inventory.filter(
+        item =>
+            getStockStatus(item) === "OUT_OF_STOCK"
+    ).length;
 
 
     const totalStock =
@@ -926,13 +983,9 @@ const matchNotificationProduct =
 
 
             const matchStatus =
-
-                statusFilter === "ALL"
-
-                ||
-
-                item.status ===
-                statusFilter;
+    statusFilter === "ALL"
+    ||
+    getStockStatus(item) === statusFilter;
 
 
           return (
@@ -1337,16 +1390,17 @@ const matchNotificationProduct =
 
                                             (
 
-                                                filteredInventory.map(
-                                                    (
-                                                        item,
-                                                        index
-                                                    ) => {
+                                              filteredInventory.map(
+    (
+        item,
+        index
+    ) => {
 
+        const product =
+            item.product;
 
-                                                        const product =
-                                                            item.product;
-
+        const stockStatus =
+            getStockStatus(item);
 
                                                         const image =
                                                             product
@@ -1576,36 +1630,18 @@ const matchNotificationProduct =
 
                                                                     <span
 
-                                                                        className={
-
-                                                                            item.status ===
-                                                                            "IN_STOCK"
-
-                                                                                ?
-
-                                                                                "status in-stock"
-
-                                                                                :
-
-                                                                            item.status ===
-                                                                            "LOW_STOCK"
-
-                                                                                ?
-
-                                                                                "status low-stock"
-
-                                                                                :
-
-                                                                                "status out-stock"
-
-                                                                        }
+                                                                       className={
+    stockStatus === "IN_STOCK"
+        ? "status in-stock"
+        : stockStatus === "LOW_STOCK"
+            ? "status low-stock"
+            : "status out-stock"
+}
 
                                                                     >
 
                                                                         {
-                                                                            getStatusText(
-                                                                                item.status
-                                                                            )
+                                                                           getStatusText(stockStatus)
                                                                         }
 
                                                                     </span>

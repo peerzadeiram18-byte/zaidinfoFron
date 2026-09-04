@@ -1,25 +1,15 @@
-// import React, { useEffect, useState } from "react";
+// import React, {
+//   useEffect,
+//   useMemo,
+//   useState,
+// } from "react";
+
 // import { useNavigate } from "react-router-dom";
 // import { motion } from "framer-motion";
 // import { toast } from "react-toastify";
 
-// // =====================================================
-// // SHARED LAYOUT
-// // =====================================================
-
-// // import Topbar from "../../components/TopBar/TopBar";
-// // import Header from "../../components/Header/Header";
 // import Footer from "../../components/Footer/Footer";
-
-// // =====================================================
-// // PAGE COMPONENT
-// // =====================================================
-
 // import LaptopSection from "./LaptopSection/LaptopSection";
-
-// // =====================================================
-// // SERVICES
-// // =====================================================
 
 // import { getShopProducts } from "../../services/productService";
 // import { getActiveOffers } from "../../services/offerService";
@@ -52,6 +42,13 @@
 //       "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200/60 dark:border-amber-800/60",
 //   },
 
+//   refurbished: {
+//     badgeBg: "from-emerald-600 to-teal-600",
+//     badgeShadow: "shadow-emerald-500/20",
+//     pillBg:
+//       "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200/60 dark:border-emerald-800/60",
+//   },
+
 //   other: {
 //     badgeBg: "from-teal-500 to-emerald-600",
 //     badgeShadow: "shadow-teal-500/20",
@@ -61,21 +58,28 @@
 // };
 
 // // =====================================================
-// // HELPERS
+// // GET PRODUCT ID
 // // =====================================================
 
 // const getProductId = (product) => {
-//   if (!product) return null;
+//   if (!product) {
+//     return null;
+//   }
 
 //   if (typeof product === "string") {
 //     return product;
 //   }
 
-//   return product._id || product.id || null;
+//   return (
+//     product._id ||
+//     product.id ||
+//     product.productId ||
+//     null
+//   );
 // };
 
 // // =====================================================
-// // PRODUCT PRICE
+// // GET PRODUCT PRICE
 // // =====================================================
 
 // const getProductPrice = (product) => {
@@ -89,7 +93,280 @@
 // };
 
 // // =====================================================
-// // OFFER ACTIVE CHECK
+// // GENERIC OBJECT NAME
+// // =====================================================
+
+// const getObjectName = (value) => {
+//   if (!value) {
+//     return "";
+//   }
+
+//   if (typeof value === "object") {
+//     return String(
+//       value.name ??
+//         value.title ??
+//         value.label ??
+//         value.categoryName ??
+//         value.subcategoryName ??
+//         value.subCategoryName ??
+//         ""
+//     ).trim();
+//   }
+
+//   return String(value).trim();
+// };
+
+// // =====================================================
+// // CATEGORY
+// // =====================================================
+
+// const getCategoryName = (product) => {
+//   if (!product) {
+//     return "";
+//   }
+
+//   return getObjectName(
+//     product.category ??
+//       product.categoryId ??
+//       product.categoryData
+//   );
+// };
+
+// // =====================================================
+// // SUBCATEGORY
+// // =====================================================
+
+// const getSubcategoryName = (product) => {
+//   if (!product) {
+//     return "";
+//   }
+
+//   const possibleValues = [
+//     product.subcategory,
+//     product.subCategory,
+//     product.subcategoryId,
+//     product.subCategoryId,
+//     product.subcategoryData,
+//     product.subCategoryData,
+//   ];
+
+//   for (const value of possibleValues) {
+//     const name = getObjectName(value);
+
+//     if (name) {
+//       return name;
+//     }
+//   }
+
+//   return "";
+// };
+
+// // =====================================================
+// // BRAND
+// // =====================================================
+
+// const getBrandName = (product) => {
+//   if (!product) {
+//     return "";
+//   }
+
+//   return getObjectName(
+//     product.brand ??
+//       product.brandId ??
+//       product.brandData
+//   );
+// };
+
+// // =====================================================
+// // PRODUCT CONDITION
+// //
+// // IMPORTANT:
+// // productType is now the MAIN SOURCE.
+// //
+// // NEW          -> New
+// // REFURBISHED  -> Refurbished
+// //
+// // Old fallback fields are checked ONLY when
+// // productType is missing.
+// // =====================================================
+
+// const isProductRefurbished = (product) => {
+//   if (!product) {
+//     return false;
+//   }
+
+//   // =================================================
+//   // 1. PRODUCT TYPE - AUTHORITATIVE
+//   // =================================================
+
+//   const rawProductType =
+//     product.productType;
+
+//   if (
+//     rawProductType !== undefined &&
+//     rawProductType !== null &&
+//     String(rawProductType).trim() !== ""
+//   ) {
+//     const productType = String(
+//       rawProductType
+//     )
+//       .trim()
+//       .toUpperCase()
+//       .replace(/[\s-]+/g, "_");
+
+//     // -----------------------------------------------
+//     // NEW IS ALWAYS NEW
+//     // -----------------------------------------------
+
+//     if (
+//       productType === "NEW" ||
+//       productType === "NEW_PRODUCT"
+//     ) {
+//       return false;
+//     }
+
+//     // -----------------------------------------------
+//     // REFURBISHED IS ALWAYS REFURBISHED
+//     // -----------------------------------------------
+
+//     if (
+//       productType === "REFURBISHED" ||
+//       productType === "REFURB" ||
+//       productType === "RENEWED" ||
+//       productType === "RECONDITIONED" ||
+//       productType === "REFURBISHED_PRODUCT"
+//     ) {
+//       return true;
+//     }
+
+//     // -----------------------------------------------
+//     // If productType exists but is unknown,
+//     // DO NOT guess from refurbishedDetails.
+//     // -----------------------------------------------
+
+//     return false;
+//   }
+
+//   // =================================================
+//   // 2. OLD DATA FALLBACK
+//   //
+//   // Only used when productType does not exist.
+//   // =================================================
+
+//   if (product.isRefurbished === true) {
+//     return true;
+//   }
+
+//   if (product.refurbished === true) {
+//     return true;
+//   }
+
+//   // =================================================
+//   // 3. STRING BOOLEAN
+//   // =================================================
+
+//   const isRefurbishedValue = String(
+//     product.isRefurbished ?? ""
+//   )
+//     .trim()
+//     .toLowerCase();
+
+//   if (
+//     [
+//       "true",
+//       "yes",
+//       "1",
+//       "refurbished",
+//       "refurb",
+//     ].includes(isRefurbishedValue)
+//   ) {
+//     return true;
+//   }
+
+//   const refurbishedValue = String(
+//     product.refurbished ?? ""
+//   )
+//     .trim()
+//     .toLowerCase();
+
+//   if (
+//     [
+//       "true",
+//       "yes",
+//       "1",
+//       "refurbished",
+//       "refurb",
+//     ].includes(refurbishedValue)
+//   ) {
+//     return true;
+//   }
+
+//   // =================================================
+//   // 4. OLD CONDITION FIELD
+//   // =================================================
+
+//   const conditionValue = String(
+//     product.condition ??
+//       product.productCondition ??
+//       product.type ??
+//       ""
+//   )
+//     .trim()
+//     .toLowerCase();
+
+//   if (
+//     conditionValue === "refurbished" ||
+//     conditionValue === "refurb" ||
+//     conditionValue === "renewed" ||
+//     conditionValue === "reconditioned"
+//   ) {
+//     return true;
+//   }
+
+//   // =================================================
+//   // 5. OLD REFURBISHED DETAILS
+//   //
+//   // Only for products without productType.
+//   // =================================================
+
+//   if (
+//     product.refurbishedDetails &&
+//     typeof product.refurbishedDetails ===
+//       "object"
+//   ) {
+//     const details =
+//       product.refurbishedDetails;
+
+//     const hasRealRefurbishedValue =
+//       Boolean(
+//         details.grade ||
+//           details.batteryHealth !==
+//             undefined ||
+//           details.warrantyMonths !==
+//             undefined ||
+//           details.testingStatus
+//       );
+
+//     if (hasRealRefurbishedValue) {
+//       return true;
+//     }
+//   }
+
+//   return false;
+// };
+
+// // =====================================================
+// // PRODUCT CONDITION TEXT
+// // =====================================================
+
+// const getProductCondition = (product) => {
+//   return isProductRefurbished(product)
+//     ? "Refurbished"
+//     : "New";
+// };
+
+// // =====================================================
+// // ACTIVE OFFER CHECK
 // // =====================================================
 
 // const isOfferCurrentlyActive = (offer) => {
@@ -97,40 +374,37 @@
 //     return false;
 //   }
 
-//   // -----------------------------------------------
-//   // STATUS
-//   // -----------------------------------------------
-
 //   if (
 //     offer.status &&
-//     String(offer.status).toUpperCase() !== "ACTIVE"
+//     String(offer.status).toUpperCase() !==
+//       "ACTIVE"
 //   ) {
 //     return false;
 //   }
 
 //   const now = new Date();
 
-//   // -----------------------------------------------
-//   // START DATE
-//   // -----------------------------------------------
-
 //   if (offer.startDate) {
-//     const start = new Date(offer.startDate);
+//     const start = new Date(
+//       offer.startDate
+//     );
 
 //     if (now < start) {
 //       return false;
 //     }
 //   }
 
-//   // -----------------------------------------------
-//   // END DATE
-//   // -----------------------------------------------
-
 //   if (offer.endDate) {
-//     const end = new Date(offer.endDate);
+//     const end = new Date(
+//       offer.endDate
+//     );
 
-//     // Complete end date ko active rakho
-//     end.setHours(23, 59, 59, 999);
+//     end.setHours(
+//       23,
+//       59,
+//       59,
+//       999
+//     );
 
 //     if (now > end) {
 //       return false;
@@ -144,10 +418,13 @@
 // // CALCULATE OFFER PRICE
 // // =====================================================
 
-// const calculateOfferPrice = (product, offer) => {
-//   const originalPrice = getProductPrice(product);
+// const calculateOfferPrice = (
+//   product,
+//   offer
+// ) => {
+//   const originalPrice =
+//     getProductPrice(product);
 
-//   // No offer
 //   if (!offer) {
 //     return {
 //       originalPrice,
@@ -161,7 +438,6 @@
 //     offer.discountValue ?? 0
 //   );
 
-//   // Invalid discount
 //   if (discountValue <= 0) {
 //     return {
 //       originalPrice,
@@ -173,32 +449,20 @@
 
 //   let discountAmount = 0;
 
-//   // -----------------------------------------------
-//   // PERCENTAGE
-//   // -----------------------------------------------
+//   const discountType = String(
+//     offer.discountType ?? ""
+//   ).toUpperCase();
 
-//   if (
-//     String(offer.discountType).toUpperCase() ===
-//     "PERCENTAGE"
-//   ) {
+//   if (discountType === "PERCENTAGE") {
 //     discountAmount =
-//       (originalPrice * discountValue) / 100;
+//       (originalPrice *
+//         discountValue) /
+//       100;
 //   }
 
-//   // -----------------------------------------------
-//   // FIXED
-//   // -----------------------------------------------
-
-//   else if (
-//     String(offer.discountType).toUpperCase() ===
-//     "FIXED"
-//   ) {
+//   if (discountType === "FIXED") {
 //     discountAmount = discountValue;
 //   }
-
-//   // -----------------------------------------------
-//   // PROTECT PRICE
-//   // -----------------------------------------------
 
 //   discountAmount = Math.min(
 //     Math.max(discountAmount, 0),
@@ -206,7 +470,8 @@
 //   );
 
 //   const finalPrice =
-//     originalPrice - discountAmount;
+//     originalPrice -
+//     discountAmount;
 
 //   return {
 //     originalPrice,
@@ -217,6 +482,134 @@
 // };
 
 // // =====================================================
+// // EXTRACT PRODUCTS
+// // =====================================================
+
+// const extractProducts = (response) => {
+//   if (!response) {
+//     return [];
+//   }
+
+//   if (
+//     Array.isArray(
+//       response?.data?.data
+//     )
+//   ) {
+//     return response.data.data;
+//   }
+
+//   if (
+//     Array.isArray(
+//       response?.data?.products
+//     )
+//   ) {
+//     return response.data.products;
+//   }
+
+//   if (
+//     Array.isArray(
+//       response?.data?.items
+//     )
+//   ) {
+//     return response.data.items;
+//   }
+
+//   if (
+//     Array.isArray(response?.data)
+//   ) {
+//     return response.data;
+//   }
+
+//   return [];
+// };
+
+// // =====================================================
+// // EXTRACT OFFERS
+// // =====================================================
+
+// const extractOffers = (response) => {
+//   if (!response) {
+//     return [];
+//   }
+
+//   if (
+//     Array.isArray(
+//       response?.data?.offers
+//     )
+//   ) {
+//     return response.data.offers;
+//   }
+
+//   if (
+//     Array.isArray(
+//       response?.data?.data
+//     )
+//   ) {
+//     return response.data.data;
+//   }
+
+//   if (
+//     Array.isArray(response?.data)
+//   ) {
+//     return response.data;
+//   }
+
+//   return [];
+// };
+
+// // =====================================================
+// // REMOVE DUPLICATE PRODUCTS
+// // =====================================================
+
+// const removeDuplicateProducts = (
+//   productList
+// ) => {
+//   if (!Array.isArray(productList)) {
+//     return [];
+//   }
+
+//   const seen = new Set();
+
+//   const uniqueProducts =
+//     productList.filter((product) => {
+//       const id =
+//         getProductId(product);
+
+//       // If no ID, keep product.
+//       if (!id) {
+//         return true;
+//       }
+
+//       const key = String(id);
+
+//       if (seen.has(key)) {
+//         return false;
+//       }
+
+//       seen.add(key);
+
+//       return true;
+//     });
+
+//   console.log(
+//     "PRODUCT DUPLICATE CHECK:",
+//     {
+//       originalCount:
+//         productList.length,
+
+//       uniqueCount:
+//         uniqueProducts.length,
+
+//       removed:
+//         productList.length -
+//         uniqueProducts.length,
+//     }
+//   );
+
+//   return uniqueProducts;
+// };
+
+// // =====================================================
 // // SHOP
 // // =====================================================
 
@@ -224,15 +617,19 @@
 //   const navigate = useNavigate();
 
 //   // ===================================================
-//   // STATE
+//   // STATES
 //   // ===================================================
 
-//   const [products, setProducts] = useState([]);
-
-//   const [filteredProducts, setFilteredProducts] =
+//   const [products, setProducts] =
 //     useState([]);
 
-//   const [offers, setOffers] = useState([]);
+//   const [
+//     filteredProducts,
+//     setFilteredProducts,
+//   ] = useState([]);
+
+//   const [offers, setOffers] =
+//     useState([]);
 
 //   const [loading, setLoading] =
 //     useState(true);
@@ -246,11 +643,17 @@
 //   const [brand, setBrand] =
 //     useState("");
 
+//   const [subcategory, setSubcategory] =
+//     useState("");
+
+//   const [condition, setCondition] =
+//     useState("");
+
 //   const [sort, setSort] =
 //     useState("");
 
 //   // ===================================================
-//   // LOAD SHOP
+//   // LOAD
 //   // ===================================================
 
 //   useEffect(() => {
@@ -258,432 +661,473 @@
 //   }, []);
 
 //   // ===================================================
-//   // LOAD PRODUCTS + ACTIVE OFFERS
+//   // LOAD PRODUCTS + OFFERS
 //   // ===================================================
 
-//   const loadProductsAndOffers = async () => {
-//     try {
-//       setLoading(true);
+//   const loadProductsAndOffers =
+//     async () => {
+//       try {
+//         setLoading(true);
 
-//       // ------------------------------------------------
-//       // IMPORTANT
-//       //
-//       // getShopProducts = public
-//       // getActiveOffers = public
-//       //
-//       // Do NOT use getOffers() here.
-//       // ------------------------------------------------
+//         const [
+//           productsResponse,
+//           offersResponse,
+//         ] = await Promise.all([
+//           getShopProducts(),
+//           getActiveOffers(),
+//         ]);
 
-//       const [
-//         productsResponse,
-//         offersResponse,
-//       ] = await Promise.all([
-//         getShopProducts(),
-//         getActiveOffers(),
-//       ]);
-
-//       // =================================================
-//       // PRODUCTS RESPONSE
-//       // =================================================
-
-//       console.log(
-//         "SHOP PRODUCTS RESPONSE:",
-//         productsResponse?.data
-//       );
-
-//       const productList =
-//         Array.isArray(
-//           productsResponse?.data?.data
-//         )
-//           ? productsResponse.data.data
-//           : Array.isArray(
-//               productsResponse?.data?.products
-//             )
-//           ? productsResponse.data.products
-//           : Array.isArray(
-//               productsResponse?.data
-//             )
-//           ? productsResponse.data
-//           : [];
-
-//       // =================================================
-//       // OFFERS RESPONSE
-//       // =================================================
-
-//       console.log(
-//         "SHOP ACTIVE OFFERS RESPONSE:",
-//         offersResponse?.data
-//       );
-
-//       const offerList =
-//         Array.isArray(
-//           offersResponse?.data?.offers
-//         )
-//           ? offersResponse.data.offers
-//           : Array.isArray(
-//               offersResponse?.data?.data
-//             )
-//           ? offersResponse.data.data
-//           : Array.isArray(
-//               offersResponse?.data
-//             )
-//           ? offersResponse.data
-//           : [];
-
-//       console.log(
-//         "SHOP PRODUCT LIST:",
-//         productList
-//       );
-
-//       console.log(
-//         "SHOP OFFER LIST:",
-//         offerList
-//       );
-
-//       // =================================================
-//       // ACTIVE OFFERS
-//       // =================================================
-
-//       const activeOffers =
-//         offerList.filter(
-//           isOfferCurrentlyActive
+//         console.log(
+//           "SHOP PRODUCTS RESPONSE:",
+//           productsResponse?.data
 //         );
 
-//       console.log(
-//         "ACTIVE SHOP OFFERS:",
-//         activeOffers
-//       );
+//         // ---------------------------------------------
+//         // RAW PRODUCTS
+//         // ---------------------------------------------
 
-//       // =================================================
-//       // APPLY OFFERS
-//       // =================================================
+//         const rawProductList =
+//           extractProducts(
+//             productsResponse
+//           );
 
-//       const productsWithOffers =
-//         productList.map((product) => {
-//           const productId =
-//             getProductId(product);
+//         console.log(
+//           "RAW SHOP PRODUCT LIST:",
+//           rawProductList
+//         );
 
-//           // --------------------------------------------
-//           // FIND OFFERS FOR CURRENT PRODUCT
-//           // --------------------------------------------
+//         // ---------------------------------------------
+//         // REMOVE REAL DUPLICATES ONLY
+//         // ---------------------------------------------
 
-//           const productOffers =
-//             activeOffers.filter(
-//               (offer) => {
-//                 if (
-//                   !Array.isArray(
-//                     offer?.products
-//                   )
-//                 ) {
-//                   return false;
-//                 }
+//         const productList =
+//           removeDuplicateProducts(
+//             rawProductList
+//           );
 
-//                 return offer.products.some(
-//                   (offerProduct) => {
-//                     const offerProductId =
-//                       getProductId(
+//         console.log(
+//           "UNIQUE SHOP PRODUCT LIST:",
+//           productList
+//         );
+
+//         // ---------------------------------------------
+//         // DEBUG CONDITION
+//         // ---------------------------------------------
+
+//         productList.forEach(
+//           (product, index) => {
+//             console.log(
+//               `PRODUCT ${index + 1}:`,
+//               {
+//                 id:
+//                   getProductId(
+//                     product
+//                   ),
+
+//                 name:
+//                   product?.name,
+
+//                 productType:
+//                   product?.productType,
+
+//                 condition:
+//                   product?.condition,
+
+//                 isRefurbished:
+//                   product?.isRefurbished,
+
+//                 refurbished:
+//                   product?.refurbished,
+
+//                 refurbishedDetails:
+//                   product?.refurbishedDetails,
+
+//                 detectedCondition:
+//                   getProductCondition(
+//                     product
+//                   ),
+//               }
+//             );
+//           }
+//         );
+
+//         // ---------------------------------------------
+//         // OFFERS
+//         // ---------------------------------------------
+
+//         const offerList =
+//           extractOffers(
+//             offersResponse
+//           );
+
+//         const activeOffers =
+//           offerList.filter(
+//             isOfferCurrentlyActive
+//           );
+
+//         // ---------------------------------------------
+//         // APPLY OFFERS
+//         // ---------------------------------------------
+
+//         const productsWithOffers =
+//           productList.map(
+//             (product) => {
+//               const productId =
+//                 getProductId(
+//                   product
+//                 );
+
+//               const productOffers =
+//                 activeOffers.filter(
+//                   (offer) => {
+//                     if (
+//                       !Array.isArray(
+//                         offer?.products
+//                       )
+//                     ) {
+//                       return false;
+//                     }
+
+//                     return offer.products.some(
+//                       (
 //                         offerProduct
-//                       );
+//                       ) => {
+//                         const offerProductId =
+//                           getProductId(
+//                             offerProduct
+//                           );
 
-//                     return (
-//                       String(
-//                         offerProductId
-//                       ) ===
-//                       String(productId)
+//                         return (
+//                           String(
+//                             offerProductId
+//                           ) ===
+//                           String(
+//                             productId
+//                           )
+//                         );
+//                       }
 //                     );
 //                   }
 //                 );
+
+//               // ---------------------------------------
+//               // NO OFFER
+//               // ---------------------------------------
+
+//               if (
+//                 productOffers.length ===
+//                 0
+//               ) {
+//                 const price =
+//                   getProductPrice(
+//                     product
+//                   );
+
+//                 return {
+//                   ...product,
+
+//                   originalPrice:
+//                     price,
+
+//                   finalPrice:
+//                     price,
+
+//                   discountAmount: 0,
+
+//                   offer: null,
+
+//                   hasOffer: false,
+
+//                   offerTitle: "",
+
+//                   offerDiscountType:
+//                     null,
+
+//                   offerDiscountValue: 0,
+//                 };
 //               }
-//             );
 
-//           // --------------------------------------------
-//           // NO OFFER
-//           // --------------------------------------------
+//               // ---------------------------------------
+//               // CALCULATE OFFERS
+//               // ---------------------------------------
 
-//           if (
-//             productOffers.length === 0
-//           ) {
-//             const price =
-//               getProductPrice(product);
+//               const calculatedOffers =
+//                 productOffers
+//                   .map((offer) =>
+//                     calculateOfferPrice(
+//                       product,
+//                       offer
+//                     )
+//                   )
+//                   .filter(
+//                     (item) =>
+//                       item.offer !==
+//                       null
+//                   );
 
-//             return {
-//               ...product,
+//               if (
+//                 calculatedOffers.length ===
+//                 0
+//               ) {
+//                 const price =
+//                   getProductPrice(
+//                     product
+//                   );
 
-//               originalPrice: price,
+//                 return {
+//                   ...product,
 
-//               finalPrice: price,
+//                   originalPrice:
+//                     price,
 
-//               discountAmount: 0,
+//                   finalPrice:
+//                     price,
 
-//               offer: null,
+//                   discountAmount: 0,
 
-//               hasOffer: false,
+//                   offer: null,
 
-//               offerTitle: "",
+//                   hasOffer: false,
 
-//               offerDiscountType: null,
+//                   offerTitle: "",
 
-//               offerDiscountValue: 0,
-//             };
-//           }
+//                   offerDiscountType:
+//                     null,
 
-//           // --------------------------------------------
-//           // CALCULATE ALL OFFERS
-//           // --------------------------------------------
+//                   offerDiscountValue: 0,
+//                 };
+//               }
 
-//           const calculatedOffers =
-//             productOffers
-//               .map((offer) =>
-//                 calculateOfferPrice(
-//                   product,
-//                   offer
-//                 )
-//               )
-//               .filter(
-//                 (item) =>
-//                   item.offer !== null
-//               );
+//               // ---------------------------------------
+//               // BEST OFFER
+//               // ---------------------------------------
 
-//           // Safety
-//           if (
-//             calculatedOffers.length === 0
-//           ) {
-//             const price =
-//               getProductPrice(product);
+//               const bestOffer =
+//                 calculatedOffers.reduce(
+//                   (
+//                     best,
+//                     current
+//                   ) => {
+//                     if (!best) {
+//                       return current;
+//                     }
 
-//             return {
-//               ...product,
-
-//               originalPrice: price,
-
-//               finalPrice: price,
-
-//               discountAmount: 0,
-
-//               offer: null,
-
-//               hasOffer: false,
-//             };
-//           }
-
-//           // --------------------------------------------
-//           // BEST OFFER
-//           // Lowest final price
-//           // --------------------------------------------
-
-//           const bestOffer =
-//             calculatedOffers.reduce(
-//               (best, current) => {
-//                 if (!best) {
-//                   return current;
-//                 }
-
-//                 return current.finalPrice <
-//                   best.finalPrice
-//                   ? current
-//                   : best;
-//               },
-//               null
-//             );
-
-//           // --------------------------------------------
-//           // PRODUCT WITH OFFER
-//           // --------------------------------------------
-
-//           return {
-//             ...product,
-
-//             originalPrice:
-//               bestOffer.originalPrice,
-
-//             finalPrice:
-//               bestOffer.finalPrice,
-
-//             discountAmount:
-//               bestOffer.discountAmount,
-
-//             offer:
-//               bestOffer.offer,
-
-//             hasOffer: true,
-
-//             offerTitle:
-//               bestOffer.offer?.title ||
-//               "Special Offer",
-
-//             offerDiscountType:
-//               bestOffer.offer
-//                 ?.discountType,
-
-//             offerDiscountValue:
-//               bestOffer.offer
-//                 ?.discountValue ?? 0,
-//           };
-//         });
-
-//       // =================================================
-//       // LOG FINAL DATA
-//       // =================================================
-
-//       console.log(
-//         "PRODUCTS WITH OFFERS:",
-//         productsWithOffers
-//       );
-
-//       // =================================================
-//       // SET STATE
-//       // =================================================
-
-//       setOffers(activeOffers);
-
-//       setProducts(
-//         productsWithOffers
-//       );
-
-//       setFilteredProducts(
-//         productsWithOffers
-//       );
-//     } catch (error) {
-//       console.error(
-//         "SHOP PRODUCTS/OFFERS ERROR:",
-//         error
-//       );
-
-//       console.error(
-//         "SHOP ERROR RESPONSE:",
-//         error?.response?.data
-//       );
-
-//       // -----------------------------------------------
-//       // IMPORTANT
-//       // -----------------------------------------------
-//       //
-//       // Agar offers fail ho jayein,
-//       // products phir bhi show hone chahiye.
-//       //
-//       // Isliye Promise.all ke wajah se
-//       // entire shop blank nahi karenge.
-//       //
-//       // -----------------------------------------------
-
-//       try {
-//         const productsResponse =
-//           await getShopProducts();
-
-//         const productList =
-//           Array.isArray(
-//             productsResponse?.data?.data
-//           )
-//             ? productsResponse.data.data
-//             : Array.isArray(
-//                 productsResponse?.data?.products
-//               )
-//             ? productsResponse.data.products
-//             : Array.isArray(
-//                 productsResponse?.data
-//               )
-//             ? productsResponse.data
-//             : [];
-
-//         const productsWithoutOffers =
-//           productList.map(
-//             (product) => {
-//               const price =
-//                 getProductPrice(
-//                   product
+//                     return current.finalPrice <
+//                       best.finalPrice
+//                       ? current
+//                       : best;
+//                   },
+//                   null
 //                 );
 
 //               return {
 //                 ...product,
 
-//                 originalPrice: price,
+//                 originalPrice:
+//                   bestOffer.originalPrice,
 
-//                 finalPrice: price,
+//                 finalPrice:
+//                   bestOffer.finalPrice,
 
-//                 discountAmount: 0,
+//                 discountAmount:
+//                   bestOffer.discountAmount,
 
-//                 offer: null,
+//                 offer:
+//                   bestOffer.offer,
 
-//                 hasOffer: false,
+//                 hasOffer: true,
+
+//                 offerTitle:
+//                   bestOffer.offer
+//                     ?.title ||
+//                   "Special Offer",
+
+//                 offerDiscountType:
+//                   bestOffer.offer
+//                     ?.discountType,
+
+//                 offerDiscountValue:
+//                   bestOffer.offer
+//                     ?.discountValue ??
+//                   0,
 //               };
 //             }
 //           );
 
 //         setProducts(
-//           productsWithoutOffers
+//           productsWithOffers
 //         );
 
 //         setFilteredProducts(
-//           productsWithoutOffers
+//           productsWithOffers
 //         );
 
-//         setOffers([]);
-
-//         console.log(
-//           "SHOP LOADED WITHOUT OFFERS:",
-//           productsWithoutOffers
+//         setOffers(
+//           activeOffers
 //         );
-//       } catch (productError) {
+//       } catch (error) {
 //         console.error(
-//           "SHOP PRODUCTS ERROR:",
-//           productError
+//           "SHOP PRODUCTS/OFFERS ERROR:",
+//           error
 //         );
 
-//         toast.error(
-//           productError?.response
-//             ?.data?.message ||
-//             "Failed to load products"
+//         console.error(
+//           "SHOP ERROR RESPONSE:",
+//           error?.response?.data
 //         );
 
-//         setProducts([]);
+//         // ---------------------------------------------
+//         // FALLBACK PRODUCTS
+//         // ---------------------------------------------
 
-//         setFilteredProducts([]);
+//         try {
+//           const productsResponse =
+//             await getShopProducts();
 
-//         setOffers([]);
+//           const rawProductList =
+//             extractProducts(
+//               productsResponse
+//             );
+
+//           const productList =
+//             removeDuplicateProducts(
+//               rawProductList
+//             );
+
+//           const productsWithoutOffers =
+//             productList.map(
+//               (product) => {
+//                 const price =
+//                   getProductPrice(
+//                     product
+//                   );
+
+//                 return {
+//                   ...product,
+
+//                   originalPrice:
+//                     price,
+
+//                   finalPrice:
+//                     price,
+
+//                   discountAmount: 0,
+
+//                   offer: null,
+
+//                   hasOffer: false,
+
+//                   offerTitle: "",
+
+//                   offerDiscountType:
+//                     null,
+
+//                   offerDiscountValue: 0,
+//                 };
+//               }
+//             );
+
+//           setProducts(
+//             productsWithoutOffers
+//           );
+
+//           setFilteredProducts(
+//             productsWithoutOffers
+//           );
+
+//           setOffers([]);
+//         } catch (productError) {
+//           console.error(
+//             "SHOP PRODUCTS ERROR:",
+//             productError
+//           );
+
+//           toast.error(
+//             productError
+//               ?.response?.data
+//               ?.message ||
+//               "Failed to load products"
+//           );
+
+//           setProducts([]);
+
+//           setFilteredProducts([]);
+
+//           setOffers([]);
+//         }
+//       } finally {
+//         setLoading(false);
 //       }
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+//     };
 
 //   // ===================================================
-//   // CATEGORY LIST
+//   // CATEGORIES
 //   // ===================================================
 
 //   const categoriesList =
-//     Array.from(
-//       new Set(
-//         products
-//           .map((product) =>
-//             typeof product.category ===
-//             "object"
-//               ? product.category?.name
-//               : product.category
-//           )
-//           .filter(Boolean)
-//       )
-//     );
+//     useMemo(() => {
+//       return Array.from(
+//         new Set(
+//           products
+//             .map(
+//               getCategoryName
+//             )
+//             .filter(Boolean)
+//         )
+//       ).sort((a, b) =>
+//         a.localeCompare(b)
+//       );
+//     }, [products]);
 
 //   // ===================================================
-//   // BRAND LIST
+//   // SUBCATEGORIES
+//   // ===================================================
+
+//   const subcategoriesList =
+//     useMemo(() => {
+//       let source = products;
+
+//       if (category) {
+//         source = source.filter(
+//           (product) =>
+//             getCategoryName(
+//               product
+//             ) === category
+//         );
+//       }
+
+//       return Array.from(
+//         new Set(
+//           source
+//             .map(
+//               getSubcategoryName
+//             )
+//             .filter(Boolean)
+//         )
+//       ).sort((a, b) =>
+//         a.localeCompare(b)
+//       );
+//     }, [products, category]);
+
+//   // ===================================================
+//   // BRANDS
 //   // ===================================================
 
 //   const brandsList =
-//     Array.from(
-//       new Set(
-//         products
-//           .map((product) =>
-//             typeof product.brand ===
-//             "object"
-//               ? product.brand?.name
-//               : product.brand
-//           )
-//           .filter(Boolean)
-//       )
-//     );
+//     useMemo(() => {
+//       return Array.from(
+//         new Set(
+//           products
+//             .map(getBrandName)
+//             .filter(Boolean)
+//         )
+//       ).sort((a, b) =>
+//         a.localeCompare(b)
+//       );
+//     }, [products]);
 
 //   // ===================================================
-//   // FILTER + SORT
+//   // FILTER PRODUCTS
 //   // ===================================================
 
 //   useEffect(() => {
@@ -693,52 +1137,135 @@
 //       ? [...products]
 //       : [];
 
-//     // -------------------------------------------------
+//     // =================================================
 //     // SEARCH
-//     // -------------------------------------------------
+//     // =================================================
 
-//     if (search) {
+//     if (search.trim()) {
+//       const searchValue =
+//         search
+//           .toLowerCase()
+//           .trim();
+
 //       data = data.filter(
-//         (product) =>
-//           product.name
-//             ?.toLowerCase()
-//             .includes(
-//               search.toLowerCase()
+//         (product) => {
+//           const productName =
+//             String(
+//               product?.name || ""
+//             ).toLowerCase();
+
+//           const categoryName =
+//             getCategoryName(
+//               product
+//             ).toLowerCase();
+
+//           const subcategoryName =
+//             getSubcategoryName(
+//               product
+//             ).toLowerCase();
+
+//           const brandName =
+//             getBrandName(
+//               product
+//             ).toLowerCase();
+
+//           const conditionName =
+//             getProductCondition(
+//               product
+//             ).toLowerCase();
+
+//           return (
+//             productName.includes(
+//               searchValue
+//             ) ||
+//             categoryName.includes(
+//               searchValue
+//             ) ||
+//             subcategoryName.includes(
+//               searchValue
+//             ) ||
+//             brandName.includes(
+//               searchValue
+//             ) ||
+//             conditionName.includes(
+//               searchValue
 //             )
+//           );
+//         }
 //       );
 //     }
 
-//     // -------------------------------------------------
+//     // =================================================
 //     // CATEGORY
-//     // -------------------------------------------------
+//     // =================================================
 
 //     if (category) {
 //       data = data.filter(
 //         (product) =>
-//           (
-//             product.category?.name ||
-//             product.category
+//           getCategoryName(
+//             product
 //           ) === category
 //       );
 //     }
 
-//     // -------------------------------------------------
+//     // =================================================
+//     // SUBCATEGORY
+//     // =================================================
+
+//     if (subcategory) {
+//       data = data.filter(
+//         (product) =>
+//           getSubcategoryName(
+//             product
+//           ) === subcategory
+//       );
+//     }
+
+//     // =================================================
 //     // BRAND
-//     // -------------------------------------------------
+//     // =================================================
 
 //     if (brand) {
 //       data = data.filter(
 //         (product) =>
-//           (
-//             product.brand?.name ||
-//             product.brand
+//           getBrandName(
+//             product
 //           ) === brand
 //       );
 //     }
 
-//     // -------------------------------------------------
-//     // LOW TO HIGH
-//     // -------------------------------------------------
+//     // =================================================
+//     // CONDITION - NEW
+//     // =================================================
+
+//     if (condition === "new") {
+//       data = data.filter(
+//         (product) =>
+//           !isProductRefurbished(
+//             product
+//           )
+//       );
+//     }
+
+//     // =================================================
+//     // CONDITION - REFURBISHED
+//     // =================================================
+
+//     if (
+//       condition ===
+//       "refurbished"
+//     ) {
+//       data = data.filter(
+//         (product) =>
+//           isProductRefurbished(
+//             product
+//           )
+//       );
+//     }
+
+//     // =================================================
+//     // SORT LOW -> HIGH
+//     // =================================================
 
 //     if (sort === "low") {
 //       data.sort(
@@ -754,9 +1281,9 @@
 //       );
 //     }
 
-//     // -------------------------------------------------
-//     // HIGH TO LOW
-//     // -------------------------------------------------
+//     // =================================================
+//     // SORT HIGH -> LOW
+//     // =================================================
 
 //     if (sort === "high") {
 //       data.sort(
@@ -772,17 +1299,44 @@
 //       );
 //     }
 
-//     setFilteredProducts(data);
+//     setFilteredProducts(
+//       data
+//     );
 //   }, [
+//     products,
 //     search,
 //     category,
+//     subcategory,
 //     brand,
+//     condition,
 //     sort,
-//     products,
 //   ]);
 
 //   // ===================================================
-//   // ADD TO CART
+//   // CLEAR FILTERS
+//   // ===================================================
+
+//   const clearFilters = () => {
+//     setSearch("");
+//     setCategory("");
+//     setSubcategory("");
+//     setBrand("");
+//     setCondition("");
+//     setSort("");
+//   };
+
+//   const hasActiveFilters =
+//     Boolean(
+//       search ||
+//         category ||
+//         subcategory ||
+//         brand ||
+//         condition ||
+//         sort
+//     );
+
+//   // ===================================================
+//   // CART
 //   // ===================================================
 
 //   const handleAddToCart =
@@ -802,11 +1356,20 @@
 //         return;
 //       }
 
+//       const productId =
+//         getProductId(product);
+
+//       if (!productId) {
+//         toast.error(
+//           "Product ID not found"
+//         );
+
+//         return;
+//       }
+
 //       try {
 //         await addToCart({
-//           product:
-//             product._id,
-
+//           product: productId,
 //           quantity: 1,
 //         });
 
@@ -828,149 +1391,204 @@
 //   // WISHLIST
 //   // ===================================================
 
-//   // const handleWishlist =
-//   //   async (product) => {
-//   //     const token =
-//   //       localStorage.getItem(
-//   //         "token"
-//   //       );
+//   const handleWishlist =
+//     async (product) => {
+//       const token =
+//         localStorage.getItem(
+//           "token"
+//         );
 
-//   //     if (!token) {
-//   //       toast.error(
-//   //         "Please Login First"
-//   //       );
+//       if (!token) {
+//         toast.error(
+//           "Please Login First"
+//         );
 
-//   //       navigate("/login");
+//         navigate("/login");
 
-//   //       return;
-//   //     }
+//         return;
+//       }
 
-//   //     try {
-//   //       await addToWishlist(
-//   //         product._id
-//   //       );
+//       const productId =
+//         getProductId(product);
 
-//   //       toast.success(
-//   //         "Added To Wishlist"
-//   //       );
-//   //     } catch (error) {
-//   //       toast.error(
-//   //         error?.response?.data
-//   //           ?.message ||
-//   //           "Failed to update wishlist"
-//   //       );
-//   //     }
-//   //   };
+//       if (!productId) {
+//         toast.error(
+//           "Product ID not found"
+//         );
 
+//         return;
+//       }
 
-// const handleWishlist = async (product) => {
+//       try {
+//         await addToWishlist(
+//           productId
+//         );
 
-//   const token =
-//     localStorage.getItem("token");
+//         toast.success(
+//           "Added To Wishlist"
+//         );
+//       } catch (error) {
+//         const message =
+//           error?.response?.data
+//             ?.message ||
+//           error?.response?.data
+//             ?.error ||
+//           "Failed to update wishlist";
 
-//   // ===============================================
-//   // LOGIN CHECK
-//   // ===============================================
+//         if (
+//           String(message)
+//             .toLowerCase()
+//             .includes("already")
+//         ) {
+//           toast.info(
+//             "Product is already in Wishlist"
+//           );
 
-//   if (!token) {
+//           return;
+//         }
 
-//     toast.error(
-//       "Please Login First"
+//         toast.error(message);
+//       }
+//     };
+
+//   // ===================================================
+//   // SECTION DATA
+//   //
+//   // IMPORTANT:
+//   // Refurbished products are EXCLUDED from all normal
+//   // sections.
+//   // ===================================================
+
+//   const gamingProducts =
+//     filteredProducts.filter(
+//       (product) =>
+//         !isProductRefurbished(
+//           product
+//         ) &&
+//         getCategoryName(product)
+//           .toLowerCase()
+//           .includes("gaming")
 //     );
 
-//     navigate("/login");
-
-//     return;
-//   }
-
-//   // ===============================================
-//   // PRODUCT ID
-//   // ===============================================
-
-//   const productId =
-//     product?._id ||
-//     product?.id;
-
-//   if (!productId) {
-
-//     console.error(
-//       "Wishlist Product ID Missing:",
-//       product
+//   const businessProducts =
+//     filteredProducts.filter(
+//       (product) =>
+//         !isProductRefurbished(
+//           product
+//         ) &&
+//         getCategoryName(product)
+//           .toLowerCase()
+//           .includes("business")
 //     );
 
-//     toast.error(
-//       "Product ID not found"
+//   const chromebookProducts =
+//     filteredProducts.filter(
+//       (product) =>
+//         !isProductRefurbished(
+//           product
+//         ) &&
+//         getCategoryName(product)
+//           .toLowerCase()
+//           .includes("chromebook")
 //     );
 
-//     return;
-//   }
+//   // ===================================================
+//   // REFURBISHED
+//   // ===================================================
 
-//   try {
-
-//     console.log(
-//       "Adding Wishlist Product:",
-//       productId
+//   const refurbishedProducts =
+//     filteredProducts.filter(
+//       (product) =>
+//         isProductRefurbished(
+//           product
+//         )
 //     );
 
-//     // =============================================
-//     // ADD WISHLIST
-//     // =============================================
+//   // ===================================================
+//   // OTHER
+//   //
+//   // IMPORTANT:
+//   // Refurbished products are NOT included here.
+//   // ===================================================
 
-//     const response =
-//       await addToWishlist(
-//         productId
+//   const specialCategoryProducts =
+//     filteredProducts.filter(
+//       (product) => {
+//         // ---------------------------------------------
+//         // NEVER put refurbished in Other
+//         // ---------------------------------------------
+
+//         if (
+//           isProductRefurbished(
+//             product
+//           )
+//         ) {
+//           return false;
+//         }
+
+//         const categoryName =
+//           getCategoryName(
+//             product
+//           ).toLowerCase();
+
+//         return ![
+//           "gaming",
+//           "business",
+//           "chromebook",
+//         ].some((key) =>
+//           categoryName.includes(
+//             key
+//           )
+//         );
+//       }
+//     );
+
+//   // ===================================================
+//   // DEBUG SECTION COUNTS
+//   // ===================================================
+
+//   useEffect(() => {
+//     if (!loading) {
+//       console.log(
+//         "SHOP SECTION COUNTS:",
+//         {
+//           total:
+//             filteredProducts.length,
+
+//           newProducts:
+//             filteredProducts.filter(
+//               (product) =>
+//                 !isProductRefurbished(
+//                   product
+//                 )
+//             ).length,
+
+//           refurbished:
+//             refurbishedProducts.length,
+
+//           gaming:
+//             gamingProducts.length,
+
+//           business:
+//             businessProducts.length,
+
+//           chromebook:
+//             chromebookProducts.length,
+
+//           other:
+//             specialCategoryProducts.length,
+//         }
 //       );
-
-//     console.log(
-//       "ADD WISHLIST RESPONSE:",
-//       response?.data
-//     );
-
-//     // =============================================
-//     // SUCCESS
-//     // =============================================
-
-//     toast.success(
-//       "Added To Wishlist"
-//     );
-
-//   } catch (error) {
-
-//     console.error(
-//       "ADD WISHLIST ERROR:",
-//       error
-//     );
-
-//     console.error(
-//       "ADD WISHLIST ERROR RESPONSE:",
-//       error?.response?.data
-//     );
-
-//     const message =
-//       error?.response?.data?.message ||
-//       error?.response?.data?.error ||
-//       "Failed to update wishlist";
-
-//     // ---------------------------------------------
-//     // If already exists
-//     // ---------------------------------------------
-
-//     if (
-//       String(message)
-//         .toLowerCase()
-//         .includes("already")
-//     ) {
-
-//       toast.info(
-//         "Product is already in Wishlist"
-//       );
-
-//       return;
 //     }
-
-//     toast.error(message);
-//   }
-// };
+//   }, [
+//     loading,
+//     filteredProducts,
+//     refurbishedProducts.length,
+//     gamingProducts.length,
+//     businessProducts.length,
+//     chromebookProducts.length,
+//     specialCategoryProducts.length,
+//   ]);
 
 //   // ===================================================
 //   // RENDER
@@ -979,10 +1597,6 @@
 //   return (
 //     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
 
-//       {/* <Topbar />
-
-//       <Header /> */}
-
 //       <main className="flex-grow py-8 px-4 sm:px-8 lg:px-12 max-w-[1400px] mx-auto w-full space-y-8">
 
 //         {/* =================================================
@@ -990,7 +1604,6 @@
 //         ================================================= */}
 
 //         <div className="overflow-hidden py-1">
-
 //           <motion.h1
 //             initial={{
 //               fontWeight: 300,
@@ -1019,54 +1632,48 @@
 //           >
 //             Laptops
 //           </motion.h1>
-
 //         </div>
 
 //         {/* =================================================
-//             OFFER INFO
+//             OFFERS
 //         ================================================= */}
 
 //         {offers.length > 0 && (
 //           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900">
-
 //             <span className="text-xl">
 //               🎁
 //             </span>
 
 //             <div>
-
 //               <p className="text-sm font-bold text-indigo-700 dark:text-indigo-300">
 //                 Special Offers Available
 //               </p>
 
 //               <p className="text-xs text-indigo-600 dark:text-indigo-400">
-//                 {offers.length} active offer
-//                 {offers.length !== 1
+//                 {offers.length} active
+//                 offer
+//                 {offers.length !==
+//                 1
 //                   ? "s"
 //                   : ""}{" "}
 //                 available on selected
 //                 products.
 //               </p>
-
 //             </div>
-
 //           </div>
 //         )}
 
 //         {/* =================================================
-//             ACTION BAR
+//             FILTER BAR
 //         ================================================= */}
 
 //         <div className="flex flex-wrap items-center justify-between gap-4 py-2 border-b border-gray-100/80 dark:border-slate-800">
-
-//           {/* LEFT */}
 
 //           <div className="flex items-center gap-3 flex-wrap">
 
 //             {/* SEARCH */}
 
 //             <div className="relative">
-
 //               <input
 //                 type="text"
 //                 placeholder="Search..."
@@ -1080,7 +1687,6 @@
 //               />
 
 //               <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500">
-
 //                 <svg
 //                   xmlns="http://www.w3.org/2000/svg"
 //                   fill="none"
@@ -1089,20 +1695,14 @@
 //                   stroke="currentColor"
 //                   className="w-3.5 h-3.5"
 //                 >
-
 //                   <path
 //                     strokeLinecap="round"
 //                     strokeLinejoin="round"
 //                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
 //                   />
-
 //                 </svg>
-
 //               </div>
-
 //             </div>
-
-//             {/* FILTER LABEL */}
 
 //             <span className="text-sm font-semibold text-gray-900 dark:text-slate-200 ml-1">
 //               Filters:
@@ -1111,17 +1711,17 @@
 //             {/* CATEGORY */}
 
 //             <div className="relative">
-
 //               <select
 //                 value={category}
-//                 onChange={(e) =>
+//                 onChange={(e) => {
 //                   setCategory(
 //                     e.target.value
-//                   )
-//                 }
+//                   );
+
+//                   setSubcategory("");
+//                 }}
 //                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //               >
-
 //                 <option value="">
 //                   Category
 //                 </option>
@@ -1136,19 +1736,49 @@
 //                     </option>
 //                   )
 //                 )}
-
 //               </select>
 
 //               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //                 ▼
 //               </div>
+//             </div>
 
+//             {/* SUBCATEGORY */}
+
+//             <div className="relative">
+//               <select
+//                 value={subcategory}
+//                 onChange={(e) =>
+//                   setSubcategory(
+//                     e.target.value
+//                   )
+//                 }
+//                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
+//               >
+//                 <option value="">
+//                   Subcategory
+//                 </option>
+
+//                 {subcategoriesList.map(
+//                   (subcat) => (
+//                     <option
+//                       key={subcat}
+//                       value={subcat}
+//                     >
+//                       {subcat}
+//                     </option>
+//                   )
+//                 )}
+//               </select>
+
+//               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
+//                 ▼
+//               </div>
 //             </div>
 
 //             {/* BRAND */}
 
 //             <div className="relative">
-
 //               <select
 //                 value={brand}
 //                 onChange={(e) =>
@@ -1158,7 +1788,6 @@
 //                 }
 //                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //               >
-
 //                 <option value="">
 //                   Brand
 //                 </option>
@@ -1173,21 +1802,61 @@
 //                     </option>
 //                   )
 //                 )}
-
 //               </select>
 
 //               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //                 ▼
 //               </div>
-
 //             </div>
 
+//             {/* CONDITION */}
+
+//             <div className="relative">
+//               <select
+//                 value={condition}
+//                 onChange={(e) =>
+//                   setCondition(
+//                     e.target.value
+//                   )
+//                 }
+//                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
+//               >
+//                 <option value="">
+//                   Condition
+//                 </option>
+
+//                 <option value="new">
+//                   New
+//                 </option>
+
+//                 <option value="refurbished">
+//                   Refurbished
+//                 </option>
+//               </select>
+
+//               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
+//                 ▼
+//               </div>
+//             </div>
+
+//             {/* CLEAR */}
+
+//             {hasActiveFilters && (
+//               <button
+//                 type="button"
+//                 onClick={
+//                   clearFilters
+//                 }
+//                 className="px-4 py-1.5 rounded-full text-xs font-bold bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900 transition"
+//               >
+//                 Clear
+//               </button>
+//             )}
 //           </div>
 
 //           {/* SORT */}
 
 //           <div className="relative">
-
 //             <select
 //               value={sort}
 //               onChange={(e) =>
@@ -1197,7 +1866,6 @@
 //               }
 //               className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pl-8 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //             >
-
 //               <option value="">
 //                 Sort by: Recommended
 //               </option>
@@ -1209,58 +1877,51 @@
 //               <option value="high">
 //                 Price: High to Low
 //               </option>
-
 //             </select>
-
-//             <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-slate-400">
-
-//               <svg
-//                 xmlns="http://www.w3.org/2000/svg"
-//                 fill="none"
-//                 viewBox="0 0 24 24"
-//                 strokeWidth={2}
-//                 stroke="currentColor"
-//                 className="w-3.5 h-3.5"
-//               >
-
-//                 <path
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   d="M3.75 6.75h16.5M3.75 12h12m-12 5.25h7.5"
-//                 />
-
-//               </svg>
-
-//             </div>
 
 //             <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //               ▼
 //             </div>
-
 //           </div>
-
 //         </div>
 
 //         {/* =================================================
-//             PRODUCTS
+//             RESULT INFO
+//         ================================================= */}
+
+//         {!loading && (
+//           <div className="flex justify-between items-center">
+//             <p className="text-xs font-semibold text-gray-500 dark:text-slate-400">
+//               Showing{" "}
+//               <span className="text-gray-900 dark:text-white">
+//                 {
+//                   filteredProducts.length
+//                 }
+//               </span>{" "}
+//               product
+//               {filteredProducts.length !==
+//               1
+//                 ? "s"
+//                 : ""}
+//             </p>
+//           </div>
+//         )}
+
+//         {/* =================================================
+//             LOADING
 //         ================================================= */}
 
 //         {loading ? (
-
 //           <div className="flex flex-col justify-center items-center py-28">
-
 //             <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 dark:border-slate-100 border-t-transparent" />
 
 //             <span className="mt-3 text-gray-500 dark:text-slate-400 font-medium text-xs">
 //               Loading laptops...
 //             </span>
-
 //           </div>
-
-//         ) : filteredProducts.length === 0 ? (
-
+//         ) : filteredProducts.length ===
+//           0 ? (
 //           <div className="text-center py-20 bg-gray-50/50 dark:bg-slate-900/50 border border-transparent dark:border-slate-800 rounded-3xl space-y-2">
-
 //             <div className="text-2xl">
 //               🔍
 //             </div>
@@ -1270,196 +1931,200 @@
 //             </p>
 
 //             <p className="text-gray-400 dark:text-slate-400 text-xs">
-//               Try adjusting your search or filters.
+//               Try adjusting your
+//               search or filters.
 //             </p>
 
+//             {hasActiveFilters && (
+//               <button
+//                 type="button"
+//                 onClick={
+//                   clearFilters
+//                 }
+//                 className="mt-3 px-5 py-2 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-xs font-bold"
+//               >
+//                 Clear Filters
+//               </button>
+//             )}
 //           </div>
-
 //         ) : (
-
 //           <div className="space-y-10">
+
+//             {/* =================================================
+//                 REFURBISHED
+//             ================================================= */}
+
+//             {condition ===
+//               "refurbished" &&
+//               refurbishedProducts.length >
+//                 0 && (
+//                 <LaptopSection
+//                   icon="♻️"
+//                   title="Refurbished Laptops"
+//                   items={
+//                     refurbishedProducts
+//                   }
+//                   theme={
+//                     THEMES.refurbished
+//                   }
+//                   onAddToCart={
+//                     handleAddToCart
+//                   }
+//                   onAddToWishlist={
+//                     handleWishlist
+//                   }
+//                 />
+//               )}
 
 //             {/* =================================================
 //                 GAMING
 //             ================================================= */}
 
-//             {filteredProducts.some(
-//               (p) =>
-//                 (
-//                   p.category?.name ||
-//                   p.category ||
-//                   ""
-//                 )
-//                   .toLowerCase()
-//                   .includes("gaming")
-//             ) && (
-
-//               <LaptopSection
-//                 icon="🎮"
-//                 title="Gaming Laptops"
-//                 items={filteredProducts.filter(
-//                   (p) =>
-//                     (
-//                       p.category?.name ||
-//                       p.category ||
-//                       ""
-//                     )
-//                       .toLowerCase()
-//                       .includes("gaming")
-//                 )}
-//                 theme={THEMES.gaming}
-//                 onAddToCart={
-//                   handleAddToCart
-//                 }
-//                 onAddToWishlist={
-//                   handleWishlist
-//                 }
-//               />
-
-//             )}
+//             {condition !==
+//               "refurbished" &&
+//               gamingProducts.length >
+//                 0 && (
+//                 <LaptopSection
+//                   icon="🎮"
+//                   title="Gaming Laptops"
+//                   items={
+//                     gamingProducts
+//                   }
+//                   theme={
+//                     THEMES.gaming
+//                   }
+//                   onAddToCart={
+//                     handleAddToCart
+//                   }
+//                   onAddToWishlist={
+//                     handleWishlist
+//                   }
+//                 />
+//               )}
 
 //             {/* =================================================
 //                 BUSINESS
 //             ================================================= */}
 
-//             {filteredProducts.some(
-//               (p) =>
-//                 (
-//                   p.category?.name ||
-//                   p.category ||
-//                   ""
-//                 )
-//                   .toLowerCase()
-//                   .includes("business")
-//             ) && (
-
-//               <LaptopSection
-//                 icon="💼"
-//                 title="Business Laptops"
-//                 items={filteredProducts.filter(
-//                   (p) =>
-//                     (
-//                       p.category?.name ||
-//                       p.category ||
-//                       ""
-//                     )
-//                       .toLowerCase()
-//                       .includes("business")
-//                 )}
-//                 theme={THEMES.business}
-//                 onAddToCart={
-//                   handleAddToCart
-//                 }
-//                 onAddToWishlist={
-//                   handleWishlist
-//                 }
-//               />
-
-//             )}
+//             {condition !==
+//               "refurbished" &&
+//               businessProducts.length >
+//                 0 && (
+//                 <LaptopSection
+//                   icon="💼"
+//                   title="Business Laptops"
+//                   items={
+//                     businessProducts
+//                   }
+//                   theme={
+//                     THEMES.business
+//                   }
+//                   onAddToCart={
+//                     handleAddToCart
+//                   }
+//                   onAddToWishlist={
+//                     handleWishlist
+//                   }
+//                 />
+//               )}
 
 //             {/* =================================================
 //                 CHROMEBOOK
 //             ================================================= */}
 
-//             {filteredProducts.some(
-//               (p) =>
-//                 (
-//                   p.category?.name ||
-//                   p.category ||
-//                   ""
-//                 )
-//                   .toLowerCase()
-//                   .includes("chromebook")
-//             ) && (
-
-//               <LaptopSection
-//                 icon="💻"
-//                 title="Chromebook Laptops"
-//                 items={filteredProducts.filter(
-//                   (p) =>
-//                     (
-//                       p.category?.name ||
-//                       p.category ||
-//                       ""
-//                     )
-//                       .toLowerCase()
-//                       .includes("chromebook")
-//                 )}
-//                 theme={THEMES.chromebook}
-//                 onAddToCart={
-//                   handleAddToCart
-//                 }
-//                 onAddToWishlist={
-//                   handleWishlist
-//                 }
-//               />
-
-//             )}
+//             {condition !==
+//               "refurbished" &&
+//               chromebookProducts.length >
+//                 0 && (
+//                 <LaptopSection
+//                   icon="💻"
+//                   title="Chromebook Laptops"
+//                   items={
+//                     chromebookProducts
+//                   }
+//                   theme={
+//                     THEMES.chromebook
+//                   }
+//                   onAddToCart={
+//                     handleAddToCart
+//                   }
+//                   onAddToWishlist={
+//                     handleWishlist
+//                   }
+//                 />
+//               )}
 
 //             {/* =================================================
 //                 OTHER
 //             ================================================= */}
 
-//             {filteredProducts.some(
-//               (p) =>
-//                 ![
-//                   "gaming",
-//                   "business",
-//                   "chromebook",
-//                 ].some((key) =>
-//                   (
-//                     p.category?.name ||
-//                     p.category ||
-//                     ""
-//                   )
-//                     .toLowerCase()
-//                     .includes(key)
-//                 )
-//             ) && (
+//             {condition !==
+//               "refurbished" &&
+//               specialCategoryProducts.length >
+//                 0 && (
+//                 <LaptopSection
+//                   icon="📦"
+//                   title="Other Laptops & Products"
+//                   items={
+//                     specialCategoryProducts
+//                   }
+//                   theme={
+//                     THEMES.other
+//                   }
+//                   onAddToCart={
+//                     handleAddToCart
+//                   }
+//                   onAddToWishlist={
+//                     handleWishlist
+//                   }
+//                 />
+//               )}
 
-//               <LaptopSection
-//                 icon="📦"
-//                 title="Other Laptops & Products"
-//                 items={filteredProducts.filter(
-//                   (p) =>
-//                     ![
-//                       "gaming",
-//                       "business",
-//                       "chromebook",
-//                     ].some((key) =>
-//                       (
-//                         p.category?.name ||
-//                         p.category ||
-//                         ""
-//                       )
-//                         .toLowerCase()
-//                         .includes(key)
-//                     )
-//                 )}
-//                 theme={THEMES.other}
-//                 onAddToCart={
-//                   handleAddToCart
-//                 }
-//                 onAddToWishlist={
-//                   handleWishlist
-//                 }
-//               />
+//             {/* =================================================
+//                 REFURBISHED SECTION WHEN NO FILTER
+//                 =================================================
+                
+//                 If you want refurbished products to ALWAYS
+//                 show in Shop, even without selecting the
+//                 Refurbished filter, this section shows them.
+//             ================================================= */}
 
-//             )}
+//             {condition === "" &&
+//               refurbishedProducts.length >
+//                 0 && (
+//                 <LaptopSection
+//                   icon="♻️"
+//                   title="Refurbished Laptops"
+//                   items={
+//                     refurbishedProducts
+//                   }
+//                   theme={
+//                     THEMES.refurbished
+//                   }
+//                   onAddToCart={
+//                     handleAddToCart
+//                   }
+//                   onAddToWishlist={
+//                     handleWishlist
+//                   }
+//                 />
+//               )}
 
 //           </div>
-
 //         )}
-
 //       </main>
 
 //       <Footer />
-
 //     </div>
 //   );
 // };
 
 // export default Shop;
+
+
+
+
+
 
 import React, {
   useEffect,
@@ -1478,6 +2143,13 @@ import { getShopProducts } from "../../services/productService";
 import { getActiveOffers } from "../../services/offerService";
 import { addToCart } from "../../services/cartService";
 import { addToWishlist } from "../../services/wishlistService";
+
+// =====================================================
+// ⭐ ADD THIS
+// =====================================================
+
+import { getInventory } from "../../services/inventoryService";
+
 
 // =====================================================
 // THEMES
@@ -1520,6 +2192,7 @@ const THEMES = {
   },
 };
 
+
 // =====================================================
 // GET PRODUCT ID
 // =====================================================
@@ -1541,6 +2214,38 @@ const getProductId = (product) => {
   );
 };
 
+
+// =====================================================
+// ⭐ GET INVENTORY PRODUCT ID
+// =====================================================
+
+const getInventoryProductId = (inventory) => {
+  if (!inventory) {
+    return null;
+  }
+
+  const product =
+    inventory.product ||
+    inventory.productId ||
+    inventory.productData ||
+    null;
+
+  if (typeof product === "string") {
+    return product;
+  }
+
+  return (
+    product?._id ||
+    product?.id ||
+    product?.productId ||
+    inventory.product?._id ||
+    inventory.productId ||
+    inventory._id ||
+    null
+  );
+};
+
+
 // =====================================================
 // GET PRODUCT PRICE
 // =====================================================
@@ -1554,6 +2259,7 @@ const getProductPrice = (product) => {
       0
   );
 };
+
 
 // =====================================================
 // GENERIC OBJECT NAME
@@ -1579,6 +2285,7 @@ const getObjectName = (value) => {
   return String(value).trim();
 };
 
+
 // =====================================================
 // CATEGORY
 // =====================================================
@@ -1594,6 +2301,7 @@ const getCategoryName = (product) => {
       product.categoryData
   );
 };
+
 
 // =====================================================
 // SUBCATEGORY
@@ -1624,6 +2332,7 @@ const getSubcategoryName = (product) => {
   return "";
 };
 
+
 // =====================================================
 // BRAND
 // =====================================================
@@ -1640,27 +2349,15 @@ const getBrandName = (product) => {
   );
 };
 
+
 // =====================================================
 // PRODUCT CONDITION
-//
-// IMPORTANT:
-// productType is now the MAIN SOURCE.
-//
-// NEW          -> New
-// REFURBISHED  -> Refurbished
-//
-// Old fallback fields are checked ONLY when
-// productType is missing.
 // =====================================================
 
 const isProductRefurbished = (product) => {
   if (!product) {
     return false;
   }
-
-  // =================================================
-  // 1. PRODUCT TYPE - AUTHORITATIVE
-  // =================================================
 
   const rawProductType =
     product.productType;
@@ -1677,20 +2374,12 @@ const isProductRefurbished = (product) => {
       .toUpperCase()
       .replace(/[\s-]+/g, "_");
 
-    // -----------------------------------------------
-    // NEW IS ALWAYS NEW
-    // -----------------------------------------------
-
     if (
       productType === "NEW" ||
       productType === "NEW_PRODUCT"
     ) {
       return false;
     }
-
-    // -----------------------------------------------
-    // REFURBISHED IS ALWAYS REFURBISHED
-    // -----------------------------------------------
 
     if (
       productType === "REFURBISHED" ||
@@ -1702,19 +2391,8 @@ const isProductRefurbished = (product) => {
       return true;
     }
 
-    // -----------------------------------------------
-    // If productType exists but is unknown,
-    // DO NOT guess from refurbishedDetails.
-    // -----------------------------------------------
-
     return false;
   }
-
-  // =================================================
-  // 2. OLD DATA FALLBACK
-  //
-  // Only used when productType does not exist.
-  // =================================================
 
   if (product.isRefurbished === true) {
     return true;
@@ -1723,10 +2401,6 @@ const isProductRefurbished = (product) => {
   if (product.refurbished === true) {
     return true;
   }
-
-  // =================================================
-  // 3. STRING BOOLEAN
-  // =================================================
 
   const isRefurbishedValue = String(
     product.isRefurbished ?? ""
@@ -1764,10 +2438,6 @@ const isProductRefurbished = (product) => {
     return true;
   }
 
-  // =================================================
-  // 4. OLD CONDITION FIELD
-  // =================================================
-
   const conditionValue = String(
     product.condition ??
       product.productCondition ??
@@ -1785,12 +2455,6 @@ const isProductRefurbished = (product) => {
   ) {
     return true;
   }
-
-  // =================================================
-  // 5. OLD REFURBISHED DETAILS
-  //
-  // Only for products without productType.
-  // =================================================
 
   if (
     product.refurbishedDetails &&
@@ -1818,6 +2482,7 @@ const isProductRefurbished = (product) => {
   return false;
 };
 
+
 // =====================================================
 // PRODUCT CONDITION TEXT
 // =====================================================
@@ -1827,6 +2492,7 @@ const getProductCondition = (product) => {
     ? "Refurbished"
     : "New";
 };
+
 
 // =====================================================
 // ACTIVE OFFER CHECK
@@ -1876,6 +2542,7 @@ const isOfferCurrentlyActive = (offer) => {
 
   return true;
 };
+
 
 // =====================================================
 // CALCULATE OFFER PRICE
@@ -1944,6 +2611,7 @@ const calculateOfferPrice = (
   };
 };
 
+
 // =====================================================
 // EXTRACT PRODUCTS
 // =====================================================
@@ -1986,6 +2654,7 @@ const extractProducts = (response) => {
   return [];
 };
 
+
 // =====================================================
 // EXTRACT OFFERS
 // =====================================================
@@ -2020,6 +2689,58 @@ const extractOffers = (response) => {
   return [];
 };
 
+
+// =====================================================
+// ⭐ EXTRACT INVENTORY
+// =====================================================
+
+const extractInventory = (response) => {
+  if (!response) {
+    return [];
+  }
+
+  if (
+    Array.isArray(
+      response?.data?.data
+    )
+  ) {
+    return response.data.data;
+  }
+
+  if (
+    Array.isArray(
+      response?.data?.inventory
+    )
+  ) {
+    return response.data.inventory;
+  }
+
+  if (
+    Array.isArray(
+      response?.data?.data?.inventory
+    )
+  ) {
+    return response.data.data.inventory;
+  }
+
+  if (
+    Array.isArray(
+      response?.data?.items
+    )
+  ) {
+    return response.data.items;
+  }
+
+  if (
+    Array.isArray(response?.data)
+  ) {
+    return response.data;
+  }
+
+  return [];
+};
+
+
 // =====================================================
 // REMOVE DUPLICATE PRODUCTS
 // =====================================================
@@ -2038,7 +2759,6 @@ const removeDuplicateProducts = (
       const id =
         getProductId(product);
 
-      // If no ID, keep product.
       if (!id) {
         return true;
       }
@@ -2072,6 +2792,73 @@ const removeDuplicateProducts = (
   return uniqueProducts;
 };
 
+
+// =====================================================
+// ⭐ STOCK STATUS
+//
+// 0       = OUT OF STOCK
+// 1 - 5   = LOW STOCK
+// 6+      = IN STOCK
+//
+// CUSTOMER KO QUANTITY SHOW NAHI HOGI.
+// =====================================================
+
+const getStockStatus = (inventory) => {
+  if (!inventory) {
+    return "OUT_OF_STOCK";
+  }
+
+  const currentStock =
+    Number(
+      inventory.currentStock ?? 0
+    );
+
+  const reservedStock =
+    Number(
+      inventory.reservedStock ?? 0
+    );
+
+  const availableStock = Math.max(
+    currentStock - reservedStock,
+    0
+  );
+
+  if (availableStock <= 0) {
+    return "OUT_OF_STOCK";
+  }
+
+  if (
+    availableStock >= 1 &&
+    availableStock <= 5
+  ) {
+    return "LOW_STOCK";
+  }
+
+  return "IN_STOCK";
+};
+
+
+// =====================================================
+// ⭐ STOCK LABEL
+// =====================================================
+
+const getStockLabel = (status) => {
+  switch (status) {
+    case "IN_STOCK":
+      return "In Stock";
+
+    case "LOW_STOCK":
+      return "Low Stock";
+
+    case "OUT_OF_STOCK":
+      return "Out Of Stock";
+
+    default:
+      return "Out Of Stock";
+  }
+};
+
+
 // =====================================================
 // SHOP
 // =====================================================
@@ -2092,6 +2879,13 @@ const Shop = () => {
   ] = useState([]);
 
   const [offers, setOffers] =
+    useState([]);
+
+  // ===================================================
+  // ⭐ INVENTORY STATE
+  // ===================================================
+
+  const [inventoryList, setInventoryList] =
     useState([]);
 
   const [loading, setLoading] =
@@ -2115,6 +2909,7 @@ const Shop = () => {
   const [sort, setSort] =
     useState("");
 
+
   // ===================================================
   // LOAD
   // ===================================================
@@ -2122,6 +2917,88 @@ const Shop = () => {
   useEffect(() => {
     loadProductsAndOffers();
   }, []);
+
+
+  // ===================================================
+  // ⭐ LOAD INVENTORY
+  // ===================================================
+
+  const loadInventory = async () => {
+    try {
+      const response =
+        await getInventory();
+
+      console.log(
+        "SHOP INVENTORY RESPONSE:",
+        response?.data
+      );
+
+      const inventoryData =
+        extractInventory(response);
+
+      console.log(
+        "SHOP INVENTORY LIST:",
+        inventoryData
+      );
+
+      setInventoryList(
+        inventoryData
+      );
+
+    } catch (error) {
+      console.error(
+        "SHOP INVENTORY ERROR:",
+        error
+      );
+
+      /*
+        IMPORTANT:
+
+        Inventory fail hone par
+        products ko remove nahi karenge.
+
+        Existing shop normally work karega.
+      */
+
+      setInventoryList([]);
+    }
+  };
+
+
+  // ===================================================
+  // ⭐ FIND INVENTORY FOR PRODUCT
+  // ===================================================
+
+  const findInventoryForProduct = (
+    productId,
+    inventories
+  ) => {
+    if (
+      !productId ||
+      !Array.isArray(inventories)
+    ) {
+      return null;
+    }
+
+    return (
+      inventories.find(
+        (inventory) => {
+          const inventoryProductId =
+            getInventoryProductId(
+              inventory
+            );
+
+          return (
+            String(
+              inventoryProductId
+            ) ===
+            String(productId)
+          );
+        }
+      ) || null
+    );
+  };
+
 
   // ===================================================
   // LOAD PRODUCTS + OFFERS
@@ -2132,13 +3009,24 @@ const Shop = () => {
       try {
         setLoading(true);
 
+        /*
+          Existing APIs are still used.
+          Inventory is added separately.
+        */
+
         const [
           productsResponse,
           offersResponse,
         ] = await Promise.all([
           getShopProducts(),
           getActiveOffers(),
-        ]);
+          loadInventory(),
+        ]).then(
+          (results) => [
+            results[0],
+            results[1],
+          ]
+        );
 
         console.log(
           "SHOP PRODUCTS RESPONSE:",
@@ -2160,7 +3048,7 @@ const Shop = () => {
         );
 
         // ---------------------------------------------
-        // REMOVE REAL DUPLICATES ONLY
+        // REMOVE DUPLICATES
         // ---------------------------------------------
 
         const productList =
@@ -2171,47 +3059,6 @@ const Shop = () => {
         console.log(
           "UNIQUE SHOP PRODUCT LIST:",
           productList
-        );
-
-        // ---------------------------------------------
-        // DEBUG CONDITION
-        // ---------------------------------------------
-
-        productList.forEach(
-          (product, index) => {
-            console.log(
-              `PRODUCT ${index + 1}:`,
-              {
-                id:
-                  getProductId(
-                    product
-                  ),
-
-                name:
-                  product?.name,
-
-                productType:
-                  product?.productType,
-
-                condition:
-                  product?.condition,
-
-                isRefurbished:
-                  product?.isRefurbished,
-
-                refurbished:
-                  product?.refurbished,
-
-                refurbishedDetails:
-                  product?.refurbishedDetails,
-
-                detectedCondition:
-                  getProductCondition(
-                    product
-                  ),
-              }
-            );
-          }
         );
 
         // ---------------------------------------------
@@ -2235,14 +3082,39 @@ const Shop = () => {
         const productsWithOffers =
           productList.map(
             (product) => {
+
               const productId =
                 getProductId(
                   product
                 );
 
+              /*
+                ⭐ STOCK
+
+                Inventory list se current
+                product ka inventory find karenge.
+              */
+
+              const inventory =
+                findInventoryForProduct(
+                  productId,
+                  inventoryList
+                );
+
+              const stockStatus =
+                getStockStatus(
+                  inventory
+                );
+
+              const stockLabel =
+                getStockLabel(
+                  stockStatus
+                );
+
               const productOffers =
                 activeOffers.filter(
                   (offer) => {
+
                     if (
                       !Array.isArray(
                         offer?.products
@@ -2255,6 +3127,7 @@ const Shop = () => {
                       (
                         offerProduct
                       ) => {
+
                         const offerProductId =
                           getProductId(
                             offerProduct
@@ -2281,6 +3154,7 @@ const Shop = () => {
                 productOffers.length ===
                 0
               ) {
+
                 const price =
                   getProductPrice(
                     product
@@ -2307,6 +3181,26 @@ const Shop = () => {
                     null,
 
                   offerDiscountValue: 0,
+
+                  // ⭐ STOCK
+                  stockStatus,
+
+                  stockLabel,
+
+                  stockAvailable:
+                    inventory
+                      ? Math.max(
+                          Number(
+                            inventory.currentStock ??
+                              0
+                          ) -
+                            Number(
+                              inventory.reservedStock ??
+                                0
+                            ),
+                          0
+                        )
+                      : 0,
                 };
               }
 
@@ -2332,6 +3226,7 @@ const Shop = () => {
                 calculatedOffers.length ===
                 0
               ) {
+
                 const price =
                   getProductPrice(
                     product
@@ -2358,6 +3253,26 @@ const Shop = () => {
                     null,
 
                   offerDiscountValue: 0,
+
+                  // ⭐ STOCK
+                  stockStatus,
+
+                  stockLabel,
+
+                  stockAvailable:
+                    inventory
+                      ? Math.max(
+                          Number(
+                            inventory.currentStock ??
+                              0
+                          ) -
+                            Number(
+                              inventory.reservedStock ??
+                                0
+                            ),
+                          0
+                        )
+                      : 0,
                 };
               }
 
@@ -2371,6 +3286,7 @@ const Shop = () => {
                     best,
                     current
                   ) => {
+
                     if (!best) {
                       return current;
                     }
@@ -2413,6 +3329,26 @@ const Shop = () => {
                   bestOffer.offer
                     ?.discountValue ??
                   0,
+
+                // ⭐ STOCK
+                stockStatus,
+
+                stockLabel,
+
+                stockAvailable:
+                  inventory
+                    ? Math.max(
+                        Number(
+                          inventory.currentStock ??
+                            0
+                        ) -
+                          Number(
+                            inventory.reservedStock ??
+                              0
+                          ),
+                        0
+                      )
+                    : 0,
               };
             }
           );
@@ -2428,7 +3364,9 @@ const Shop = () => {
         setOffers(
           activeOffers
         );
+
       } catch (error) {
+
         console.error(
           "SHOP PRODUCTS/OFFERS ERROR:",
           error
@@ -2444,6 +3382,7 @@ const Shop = () => {
         // ---------------------------------------------
 
         try {
+
           const productsResponse =
             await getShopProducts();
 
@@ -2460,9 +3399,34 @@ const Shop = () => {
           const productsWithoutOffers =
             productList.map(
               (product) => {
+
                 const price =
                   getProductPrice(
                     product
+                  );
+
+                /*
+                  ⭐ Fallback stock
+
+                  Inventory fail hone par
+                  existing shop products
+                  normal load honge.
+                */
+
+                const productId =
+                  getProductId(
+                    product
+                  );
+
+                const inventory =
+                  findInventoryForProduct(
+                    productId,
+                    inventoryList
+                  );
+
+                const stockStatus =
+                  getStockStatus(
+                    inventory
                   );
 
                 return {
@@ -2486,6 +3450,29 @@ const Shop = () => {
                     null,
 
                   offerDiscountValue: 0,
+
+                  // ⭐ STOCK
+                  stockStatus,
+
+                  stockLabel:
+                    getStockLabel(
+                      stockStatus
+                    ),
+
+                  stockAvailable:
+                    inventory
+                      ? Math.max(
+                          Number(
+                            inventory.currentStock ??
+                              0
+                          ) -
+                            Number(
+                              inventory.reservedStock ??
+                                0
+                            ),
+                          0
+                        )
+                      : 0,
                 };
               }
             );
@@ -2499,7 +3486,9 @@ const Shop = () => {
           );
 
           setOffers([]);
+
         } catch (productError) {
+
           console.error(
             "SHOP PRODUCTS ERROR:",
             productError
@@ -2518,10 +3507,14 @@ const Shop = () => {
 
           setOffers([]);
         }
+
       } finally {
+
         setLoading(false);
+
       }
     };
+
 
   // ===================================================
   // CATEGORIES
@@ -2529,6 +3522,7 @@ const Shop = () => {
 
   const categoriesList =
     useMemo(() => {
+
       return Array.from(
         new Set(
           products
@@ -2540,7 +3534,9 @@ const Shop = () => {
       ).sort((a, b) =>
         a.localeCompare(b)
       );
+
     }, [products]);
+
 
   // ===================================================
   // SUBCATEGORIES
@@ -2548,15 +3544,18 @@ const Shop = () => {
 
   const subcategoriesList =
     useMemo(() => {
+
       let source = products;
 
       if (category) {
+
         source = source.filter(
           (product) =>
             getCategoryName(
               product
             ) === category
         );
+
       }
 
       return Array.from(
@@ -2570,7 +3569,9 @@ const Shop = () => {
       ).sort((a, b) =>
         a.localeCompare(b)
       );
+
     }, [products, category]);
+
 
   // ===================================================
   // BRANDS
@@ -2578,6 +3579,7 @@ const Shop = () => {
 
   const brandsList =
     useMemo(() => {
+
       return Array.from(
         new Set(
           products
@@ -2587,13 +3589,16 @@ const Shop = () => {
       ).sort((a, b) =>
         a.localeCompare(b)
       );
+
     }, [products]);
+
 
   // ===================================================
   // FILTER PRODUCTS
   // ===================================================
 
   useEffect(() => {
+
     let data = Array.isArray(
       products
     )
@@ -2605,6 +3610,7 @@ const Shop = () => {
     // =================================================
 
     if (search.trim()) {
+
       const searchValue =
         search
           .toLowerCase()
@@ -2612,6 +3618,7 @@ const Shop = () => {
 
       data = data.filter(
         (product) => {
+
           const productName =
             String(
               product?.name || ""
@@ -2658,57 +3665,70 @@ const Shop = () => {
       );
     }
 
+
     // =================================================
     // CATEGORY
     // =================================================
 
     if (category) {
+
       data = data.filter(
         (product) =>
           getCategoryName(
             product
           ) === category
       );
+
     }
+
 
     // =================================================
     // SUBCATEGORY
     // =================================================
 
     if (subcategory) {
+
       data = data.filter(
         (product) =>
           getSubcategoryName(
             product
           ) === subcategory
       );
+
     }
+
 
     // =================================================
     // BRAND
     // =================================================
 
     if (brand) {
+
       data = data.filter(
         (product) =>
           getBrandName(
             product
           ) === brand
       );
+
     }
+
 
     // =================================================
     // CONDITION - NEW
     // =================================================
 
     if (condition === "new") {
+
       data = data.filter(
         (product) =>
           !isProductRefurbished(
             product
           )
       );
+
     }
+
 
     // =================================================
     // CONDITION - REFURBISHED
@@ -2718,19 +3738,23 @@ const Shop = () => {
       condition ===
       "refurbished"
     ) {
+
       data = data.filter(
         (product) =>
           isProductRefurbished(
             product
           )
       );
+
     }
+
 
     // =================================================
     // SORT LOW -> HIGH
     // =================================================
 
     if (sort === "low") {
+
       data.sort(
         (a, b) =>
           Number(
@@ -2742,13 +3766,16 @@ const Shop = () => {
               getProductPrice(b)
           )
       );
+
     }
+
 
     // =================================================
     // SORT HIGH -> LOW
     // =================================================
 
     if (sort === "high") {
+
       data.sort(
         (a, b) =>
           Number(
@@ -2760,11 +3787,14 @@ const Shop = () => {
               getProductPrice(a)
           )
       );
+
     }
+
 
     setFilteredProducts(
       data
     );
+
   }, [
     products,
     search,
@@ -2775,18 +3805,22 @@ const Shop = () => {
     sort,
   ]);
 
+
   // ===================================================
   // CLEAR FILTERS
   // ===================================================
 
   const clearFilters = () => {
+
     setSearch("");
     setCategory("");
     setSubcategory("");
     setBrand("");
     setCondition("");
     setSort("");
+
   };
+
 
   const hasActiveFilters =
     Boolean(
@@ -2798,18 +3832,21 @@ const Shop = () => {
         sort
     );
 
+
   // ===================================================
   // CART
   // ===================================================
 
   const handleAddToCart =
     async (product) => {
+
       const token =
         localStorage.getItem(
           "token"
         );
 
       if (!token) {
+
         toast.error(
           "Please Login First"
         );
@@ -2823,6 +3860,7 @@ const Shop = () => {
         getProductId(product);
 
       if (!productId) {
+
         toast.error(
           "Product ID not found"
         );
@@ -2830,7 +3868,27 @@ const Shop = () => {
         return;
       }
 
+      /*
+        ⭐ OPTIONAL SAFETY
+
+        Out of stock product ko cart
+        mein add nahi hone denge.
+      */
+
+      if (
+        product?.stockStatus ===
+        "OUT_OF_STOCK"
+      ) {
+
+        toast.error(
+          "Product is currently out of stock"
+        );
+
+        return;
+      }
+
       try {
+
         await addToCart({
           product: productId,
           quantity: 1,
@@ -2841,14 +3899,18 @@ const Shop = () => {
         );
 
         navigate("/cart");
+
       } catch (error) {
+
         toast.error(
           error?.response?.data
             ?.message ||
             "Failed to add to cart"
         );
+
       }
     };
+
 
   // ===================================================
   // WISHLIST
@@ -2856,12 +3918,14 @@ const Shop = () => {
 
   const handleWishlist =
     async (product) => {
+
       const token =
         localStorage.getItem(
           "token"
         );
 
       if (!token) {
+
         toast.error(
           "Please Login First"
         );
@@ -2875,6 +3939,7 @@ const Shop = () => {
         getProductId(product);
 
       if (!productId) {
+
         toast.error(
           "Product ID not found"
         );
@@ -2883,6 +3948,7 @@ const Shop = () => {
       }
 
       try {
+
         await addToWishlist(
           productId
         );
@@ -2890,7 +3956,9 @@ const Shop = () => {
         toast.success(
           "Added To Wishlist"
         );
+
       } catch (error) {
+
         const message =
           error?.response?.data
             ?.message ||
@@ -2903,6 +3971,7 @@ const Shop = () => {
             .toLowerCase()
             .includes("already")
         ) {
+
           toast.info(
             "Product is already in Wishlist"
           );
@@ -2911,15 +3980,13 @@ const Shop = () => {
         }
 
         toast.error(message);
+
       }
     };
 
+
   // ===================================================
   // SECTION DATA
-  //
-  // IMPORTANT:
-  // Refurbished products are EXCLUDED from all normal
-  // sections.
   // ===================================================
 
   const gamingProducts =
@@ -2933,6 +4000,7 @@ const Shop = () => {
           .includes("gaming")
     );
 
+
   const businessProducts =
     filteredProducts.filter(
       (product) =>
@@ -2944,6 +4012,7 @@ const Shop = () => {
           .includes("business")
     );
 
+
   const chromebookProducts =
     filteredProducts.filter(
       (product) =>
@@ -2954,6 +4023,7 @@ const Shop = () => {
           .toLowerCase()
           .includes("chromebook")
     );
+
 
   // ===================================================
   // REFURBISHED
@@ -2967,19 +4037,14 @@ const Shop = () => {
         )
     );
 
+
   // ===================================================
   // OTHER
-  //
-  // IMPORTANT:
-  // Refurbished products are NOT included here.
   // ===================================================
 
   const specialCategoryProducts =
     filteredProducts.filter(
       (product) => {
-        // ---------------------------------------------
-        // NEVER put refurbished in Other
-        // ---------------------------------------------
 
         if (
           isProductRefurbished(
@@ -3003,15 +4068,19 @@ const Shop = () => {
             key
           )
         );
+
       }
     );
 
+
   // ===================================================
-  // DEBUG SECTION COUNTS
+  // DEBUG
   // ===================================================
 
   useEffect(() => {
+
     if (!loading) {
+
       console.log(
         "SHOP SECTION COUNTS:",
         {
@@ -3042,7 +4111,9 @@ const Shop = () => {
             specialCategoryProducts.length,
         }
       );
+
     }
+
   }, [
     loading,
     filteredProducts,
@@ -3053,11 +4124,13 @@ const Shop = () => {
     specialCategoryProducts.length,
   ]);
 
+
   // ===================================================
   // RENDER
   // ===================================================
 
   return (
+
     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
 
       <main className="flex-grow py-8 px-4 sm:px-8 lg:px-12 max-w-[1400px] mx-auto w-full space-y-8">
@@ -3067,6 +4140,7 @@ const Shop = () => {
         ================================================= */}
 
         <div className="overflow-hidden py-1">
+
           <motion.h1
             initial={{
               fontWeight: 300,
@@ -3095,24 +4169,30 @@ const Shop = () => {
           >
             Laptops
           </motion.h1>
+
         </div>
+
 
         {/* =================================================
             OFFERS
         ================================================= */}
 
         {offers.length > 0 && (
+
           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900">
+
             <span className="text-xl">
               🎁
             </span>
 
             <div>
+
               <p className="text-sm font-bold text-indigo-700 dark:text-indigo-300">
                 Special Offers Available
               </p>
 
               <p className="text-xs text-indigo-600 dark:text-indigo-400">
+
                 {offers.length} active
                 offer
                 {offers.length !==
@@ -3121,10 +4201,15 @@ const Shop = () => {
                   : ""}{" "}
                 available on selected
                 products.
+
               </p>
+
             </div>
+
           </div>
+
         )}
+
 
         {/* =================================================
             FILTER BAR
@@ -3137,6 +4222,7 @@ const Shop = () => {
             {/* SEARCH */}
 
             <div className="relative">
+
               <input
                 type="text"
                 placeholder="Search..."
@@ -3150,6 +4236,7 @@ const Shop = () => {
               />
 
               <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500">
+
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -3158,57 +4245,73 @@ const Shop = () => {
                   stroke="currentColor"
                   className="w-3.5 h-3.5"
                 >
+
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                   />
+
                 </svg>
+
               </div>
+
             </div>
+
 
             <span className="text-sm font-semibold text-gray-900 dark:text-slate-200 ml-1">
               Filters:
             </span>
 
+
             {/* CATEGORY */}
 
             <div className="relative">
+
               <select
                 value={category}
                 onChange={(e) => {
+
                   setCategory(
                     e.target.value
                   );
 
                   setSubcategory("");
+
                 }}
                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
               >
+
                 <option value="">
                   Category
                 </option>
 
                 {categoriesList.map(
                   (cat) => (
+
                     <option
                       key={cat}
                       value={cat}
                     >
                       {cat}
                     </option>
+
                   )
                 )}
+
               </select>
 
               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
                 ▼
               </div>
+
             </div>
+
 
             {/* SUBCATEGORY */}
 
             <div className="relative">
+
               <select
                 value={subcategory}
                 onChange={(e) =>
@@ -3218,30 +4321,37 @@ const Shop = () => {
                 }
                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
               >
+
                 <option value="">
                   Subcategory
                 </option>
 
                 {subcategoriesList.map(
                   (subcat) => (
+
                     <option
                       key={subcat}
                       value={subcat}
                     >
                       {subcat}
                     </option>
+
                   )
                 )}
+
               </select>
 
               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
                 ▼
               </div>
+
             </div>
+
 
             {/* BRAND */}
 
             <div className="relative">
+
               <select
                 value={brand}
                 onChange={(e) =>
@@ -3251,30 +4361,37 @@ const Shop = () => {
                 }
                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
               >
+
                 <option value="">
                   Brand
                 </option>
 
                 {brandsList.map(
                   (b) => (
+
                     <option
                       key={b}
                       value={b}
                     >
                       {b}
                     </option>
+
                   )
                 )}
+
               </select>
 
               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
                 ▼
               </div>
+
             </div>
+
 
             {/* CONDITION */}
 
             <div className="relative">
+
               <select
                 value={condition}
                 onChange={(e) =>
@@ -3284,6 +4401,7 @@ const Shop = () => {
                 }
                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
               >
+
                 <option value="">
                   Condition
                 </option>
@@ -3295,16 +4413,20 @@ const Shop = () => {
                 <option value="refurbished">
                   Refurbished
                 </option>
+
               </select>
 
               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
                 ▼
               </div>
+
             </div>
+
 
             {/* CLEAR */}
 
             {hasActiveFilters && (
+
               <button
                 type="button"
                 onClick={
@@ -3314,12 +4436,16 @@ const Shop = () => {
               >
                 Clear
               </button>
+
             )}
+
           </div>
+
 
           {/* SORT */}
 
           <div className="relative">
+
             <select
               value={sort}
               onChange={(e) =>
@@ -3329,6 +4455,7 @@ const Shop = () => {
               }
               className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pl-8 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
             >
+
               <option value="">
                 Sort by: Recommended
               </option>
@@ -3340,51 +4467,72 @@ const Shop = () => {
               <option value="high">
                 Price: High to Low
               </option>
+
             </select>
 
             <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
               ▼
             </div>
+
           </div>
+
         </div>
+
 
         {/* =================================================
             RESULT INFO
         ================================================= */}
 
         {!loading && (
+
           <div className="flex justify-between items-center">
+
             <p className="text-xs font-semibold text-gray-500 dark:text-slate-400">
+
               Showing{" "}
+
               <span className="text-gray-900 dark:text-white">
+
                 {
                   filteredProducts.length
                 }
+
               </span>{" "}
+
               product
               {filteredProducts.length !==
               1
                 ? "s"
                 : ""}
+
             </p>
+
           </div>
+
         )}
+
 
         {/* =================================================
             LOADING
         ================================================= */}
 
         {loading ? (
+
           <div className="flex flex-col justify-center items-center py-28">
+
             <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 dark:border-slate-100 border-t-transparent" />
 
             <span className="mt-3 text-gray-500 dark:text-slate-400 font-medium text-xs">
               Loading laptops...
             </span>
+
           </div>
+
         ) : filteredProducts.length ===
           0 ? (
+
           <div className="text-center py-20 bg-gray-50/50 dark:bg-slate-900/50 border border-transparent dark:border-slate-800 rounded-3xl space-y-2">
+
             <div className="text-2xl">
               🔍
             </div>
@@ -3399,6 +4547,7 @@ const Shop = () => {
             </p>
 
             {hasActiveFilters && (
+
               <button
                 type="button"
                 onClick={
@@ -3408,10 +4557,15 @@ const Shop = () => {
               >
                 Clear Filters
               </button>
+
             )}
+
           </div>
+
         ) : (
+
           <div className="space-y-10">
+
 
             {/* =================================================
                 REFURBISHED
@@ -3421,6 +4575,7 @@ const Shop = () => {
               "refurbished" &&
               refurbishedProducts.length >
                 0 && (
+
                 <LaptopSection
                   icon="♻️"
                   title="Refurbished Laptops"
@@ -3437,7 +4592,9 @@ const Shop = () => {
                     handleWishlist
                   }
                 />
+
               )}
+
 
             {/* =================================================
                 GAMING
@@ -3447,6 +4604,7 @@ const Shop = () => {
               "refurbished" &&
               gamingProducts.length >
                 0 && (
+
                 <LaptopSection
                   icon="🎮"
                   title="Gaming Laptops"
@@ -3463,7 +4621,9 @@ const Shop = () => {
                     handleWishlist
                   }
                 />
+
               )}
+
 
             {/* =================================================
                 BUSINESS
@@ -3473,6 +4633,7 @@ const Shop = () => {
               "refurbished" &&
               businessProducts.length >
                 0 && (
+
                 <LaptopSection
                   icon="💼"
                   title="Business Laptops"
@@ -3489,7 +4650,9 @@ const Shop = () => {
                     handleWishlist
                   }
                 />
+
               )}
+
 
             {/* =================================================
                 CHROMEBOOK
@@ -3499,6 +4662,7 @@ const Shop = () => {
               "refurbished" &&
               chromebookProducts.length >
                 0 && (
+
                 <LaptopSection
                   icon="💻"
                   title="Chromebook Laptops"
@@ -3515,7 +4679,9 @@ const Shop = () => {
                     handleWishlist
                   }
                 />
+
               )}
+
 
             {/* =================================================
                 OTHER
@@ -3525,6 +4691,7 @@ const Shop = () => {
               "refurbished" &&
               specialCategoryProducts.length >
                 0 && (
+
                 <LaptopSection
                   icon="📦"
                   title="Other Laptops & Products"
@@ -3541,20 +4708,18 @@ const Shop = () => {
                     handleWishlist
                   }
                 />
+
               )}
 
+
             {/* =================================================
-                REFURBISHED SECTION WHEN NO FILTER
-                =================================================
-                
-                If you want refurbished products to ALWAYS
-                show in Shop, even without selecting the
-                Refurbished filter, this section shows them.
+                REFURBISHED WHEN NO FILTER
             ================================================= */}
 
             {condition === "" &&
               refurbishedProducts.length >
                 0 && (
+
                 <LaptopSection
                   icon="♻️"
                   title="Refurbished Laptops"
@@ -3571,15 +4736,20 @@ const Shop = () => {
                     handleWishlist
                   }
                 />
+
               )}
 
           </div>
+
         )}
+
       </main>
 
       <Footer />
+
     </div>
   );
 };
+
 
 export default Shop;

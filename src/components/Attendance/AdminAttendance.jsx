@@ -1,75 +1,154 @@
-
 // import React, { useState, useEffect } from "react";
 // import axios from "axios";
 // import "./AttendanceManagement.css";
+// import "react-toastify/dist/ReactToastify.css";
 
-// const BASE_URL = "http://localhost:5000/api";
+// const BASE_URL = import.meta.env.VITE_API_URL;
 
 // const AdminAttendance = () => {
+//   // ==========================================
+//   // STATES
+//   // ==========================================
+
 //   const [employees, setEmployees] = useState([]);
 //   const [attendanceList, setAttendanceList] = useState([]);
+
 //   const [loading, setLoading] = useState(false);
 //   const [loadingEmployees, setLoadingEmployees] = useState(false);
+
+//   // ==========================================
+//   // MANUAL ATTENDANCE FORM
+//   // ==========================================
 
 //   const [manualData, setManualData] = useState({
 //     user: "",
 //     employeeId: "",
 //     date: new Date().toISOString().split("T")[0],
 //     status: "PRESENT",
-//     remark: ""
+//     remark: "",
 //   });
+
+//   // ==========================================
+//   // BIOMETRIC FORM
+//   // ==========================================
 
 //   const [bioPunchData, setBioPunchData] = useState({
 //     employeeId: "",
-//     biometricId: ""
+//     biometricId: "",
 //   });
+
+//   // ==========================================
+//   // AUTH HEADER
+//   // ==========================================
+
+//   const getAuthHeader = () => {
+//     const token = localStorage.getItem("token");
+
+//     return {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     };
+//   };
+
+//   // ==========================================
+//   // FETCH EMPLOYEES
+//   // ==========================================
+
+//   const fetchEmployees = async () => {
+//     setLoadingEmployees(true);
+
+//     try {
+//       const res = await axios.get(
+//         `${BASE_URL}/users/employees`,
+//         getAuthHeader()
+//       );
+
+//       console.log("Employees Response:", res.data);
+
+//       const list =
+//         res.data?.data?.records ||
+//         res.data?.data ||
+//         res.data ||
+//         [];
+
+//       setEmployees(Array.isArray(list) ? list : []);
+//     } catch (err) {
+//       console.error("Failed to load employees:", err);
+
+//       console.error(
+//         "Employee API Error:",
+//         err.response?.data || err.message
+//       );
+//     } finally {
+//       setLoadingEmployees(false);
+//     }
+//   };
+
+//   // ==========================================
+//   // FETCH ATTENDANCE
+//   // ==========================================
+
+//   const fetchAttendance = async () => {
+//     setLoading(true);
+
+//     try {
+//       const res = await axios.get(
+//         `${BASE_URL}/newAttendance`,
+//         getAuthHeader()
+//       );
+
+//       console.log("Attendance Response:", res.data);
+
+//       const list =
+//         res.data?.data ||
+//         res.data ||
+//         [];
+
+//       setAttendanceList(
+//         Array.isArray(list) ? list : []
+//       );
+//     } catch (err) {
+//       console.error(
+//         "Failed to load attendance:",
+//         err.response?.data || err.message
+//       );
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // ==========================================
+//   // INITIAL LOAD
+//   // ==========================================
 
 //   useEffect(() => {
 //     fetchEmployees();
 //     fetchAttendance();
 //   }, []);
 
-//   const getAuthHeader = () => ({
-//     headers: {
-//       Authorization: `Bearer ${localStorage.getItem("token")}`
-//     }
-//   });
-
-//   const fetchEmployees = async () => {
-//     setLoadingEmployees(true);
-//     try {
-//       const res = await axios.get(`${BASE_URL}/users/employees`, getAuthHeader());
-//       const list = res.data?.data?.records || res.data?.data || res.data || [];
-//       setEmployees(list);
-//     } catch (err) {
-//       console.error("Failed to load employees", err);
-//     } finally {
-//       setLoadingEmployees(false);
-//     }
-//   };
-
-//   const fetchAttendance = async () => {
-//     setLoading(true);
-//     try {
-//       const res = await axios.get(`${BASE_URL}/newAttendance`, getAuthHeader());
-//       setAttendanceList(res.data?.data || []);
-//     } catch (err) {
-//       console.error("Failed to load attendance list", err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+//   // ==========================================
+//   // EMPLOYEE SELECT
+//   // ==========================================
 
 //   const handleEmployeeSelect = (e) => {
 //     const selectedUserId = e.target.value;
-//     const selectedEmp = employees.find((emp) => emp._id === selectedUserId);
 
-//     setManualData({
-//       ...manualData,
+//     const selectedEmp = employees.find(
+//       (emp) => emp._id === selectedUserId
+//     );
+
+//     setManualData((prev) => ({
+//       ...prev,
 //       user: selectedUserId,
-//       employeeId: selectedEmp ? selectedEmp.employeeId || "EMP001" : ""
-//     });
+//       employeeId:
+//         selectedEmp?.employeeId || "",
+//     }));
 //   };
+
+//   // ==========================================
+//   // MANUAL ATTENDANCE SUBMIT
+//   // ==========================================
 
 //   const handleManualSubmit = async (e) => {
 //     e.preventDefault();
@@ -79,16 +158,33 @@
 //       return;
 //     }
 
-//     const selectedEmp = employees.find((emp) => emp._id === manualData.user);
+//     const selectedEmp = employees.find(
+//       (emp) => emp._id === manualData.user
+//     );
 
 //     const payload = {
 //       user: manualData.user,
-//       employeeId: selectedEmp?.employeeId || manualData.employeeId || "EMP001",
-//       date: new Date(manualData.date).toISOString(),
+
+//       employeeId:
+//         selectedEmp?.employeeId ||
+//         manualData.employeeId ||
+//         "EMP001",
+
+//       date: new Date(
+//         manualData.date
+//       ).toISOString(),
+
 //       status: manualData.status,
+
 //       attendanceMode: "MANUAL",
-//       remark: manualData.remark || ""
+
+//       remark: manualData.remark || "",
 //     };
+
+//     console.log(
+//       "MANUAL ATTENDANCE PAYLOAD:",
+//       payload
+//     );
 
 //     try {
 //       await axios.post(
@@ -96,262 +192,695 @@
 //         payload,
 //         getAuthHeader()
 //       );
-//       alert("Manual attendance marked successfully!");
-//       fetchAttendance();
 
+//       alert(
+//         "Manual attendance marked successfully!"
+//       );
+
+//       await fetchAttendance();
+
+//       // Reset form
 //       setManualData({
 //         user: "",
 //         employeeId: "",
-//         date: new Date().toISOString().split("T")[0],
+//         date: new Date()
+//           .toISOString()
+//           .split("T")[0],
 //         status: "PRESENT",
-//         remark: ""
+//         remark: "",
 //       });
 //     } catch (err) {
-//       alert(err.response?.data?.message || err.response?.data?.error || "Error submitting attendance");
+//       console.error(
+//         "Manual attendance error:",
+//         err.response?.data || err.message
+//       );
+
+//       alert(
+//         err.response?.data?.message ||
+//           err.response?.data?.error ||
+//           "Error submitting attendance"
+//       );
 //     }
 //   };
+
+//   // ==========================================
+//   // BIOMETRIC PUNCH
+//   // ==========================================
 
 //   const handleBiometricPunch = async (e) => {
 //     e.preventDefault();
+
+//     if (!bioPunchData.employeeId) {
+//       alert("Please enter Employee ID.");
+//       return;
+//     }
+
+//     const payload = {
+//       employeeId:
+//         bioPunchData.employeeId,
+
+//       biometricId:
+//         bioPunchData.biometricId ||
+//         bioPunchData.employeeId,
+
+//       punchTime:
+//         new Date().toISOString(),
+//     };
+
+//     console.log(
+//       "BIOMETRIC PAYLOAD:",
+//       payload
+//     );
+
 //     try {
 //       await axios.post(
 //         `${BASE_URL}/newAttendance/biometric`,
-//         {
-//           employeeId: bioPunchData.employeeId,
-//           biometricId: bioPunchData.biometricId || bioPunchData.employeeId,
-//           punchTime: new Date().toISOString()
-//         },
+//         payload,
 //         getAuthHeader()
 //       );
-//       alert("Biometric punch successful!");
-//       fetchAttendance();
-//       setBioPunchData({ employeeId: "", biometricId: "" });
+
+//       alert(
+//         "Biometric punch successful!"
+//       );
+
+//       await fetchAttendance();
+
+//       setBioPunchData({
+//         employeeId: "",
+//         biometricId: "",
+//       });
 //     } catch (err) {
-//       alert(err.response?.data?.message || "Error processing biometric punch");
+//       console.error(
+//         "Biometric error:",
+//         err.response?.data || err.message
+//       );
+
+//       alert(
+//         err.response?.data?.message ||
+//           err.response?.data?.error ||
+//           "Error processing biometric punch"
+//       );
 //     }
 //   };
 
-//   // const handleCheckout = async (userId) => {
-//   //   try {
-//   //     await axios.put(
-//   //       `${BASE_URL}/newAttendance/checkout`,
-//   //       {
-//   //         user: userId,
-//   //         checkoutTime: new Date().toISOString()
-//   //       },
-//   //       getAuthHeader()
-//   //     );
-//   //     alert("Checkout successful!");
-//   //     fetchAttendance();
-//   //   } catch (err) {
-//   //     alert(err.response?.data?.message || "Error marking checkout");
-//   //   }
-//   // };
+//   // ==========================================
+//   // CHECKOUT
+//   // ==========================================
 
 //   const handleCheckout = async (attendance) => {
-//   try {
-//     const payload = {
-//       user: attendance.user?._id || attendance.user,
-//       employeeId: attendance.employeeId,
-//       date: attendance.date,
-//       checkoutTime: new Date().toISOString()
-//     };
+//     try {
+//       const payload = {
+//         user:
+//           attendance.user?._id ||
+//           attendance.user,
 
-//     console.log("CHECKOUT PAYLOAD =", payload);
+//         employeeId:
+//           attendance.employeeId,
 
-//     await axios.put(
-//       `${BASE_URL}/newAttendance/checkout`,
-//       payload,
-//       getAuthHeader()
-//     );
+//         date:
+//           attendance.date,
 
-//     alert("Checkout successful!");
+//         checkoutTime:
+//           new Date().toISOString(),
+//       };
 
-//     fetchAttendance();
+//       console.log(
+//         "CHECKOUT PAYLOAD:",
+//         payload
+//       );
 
-//   } catch (err) {
-//     console.error(
-//       "CHECKOUT ERROR =",
-//       err.response?.data || err
-//     );
+//       await axios.put(
+//         `${BASE_URL}/newAttendance/checkout`,
+//         payload,
+//         getAuthHeader()
+//       );
 
-//     alert(
-//       err.response?.data?.message ||
-//       err.response?.data?.error ||
-//       "Error marking checkout"
-//     );
-//   }
-// };
+//       alert("Checkout successful!");
+
+//       await fetchAttendance();
+//     } catch (err) {
+//       console.error(
+//         "CHECKOUT ERROR:",
+//         err.response?.data || err.message
+//       );
+
+//       alert(
+//         err.response?.data?.message ||
+//           err.response?.data?.error ||
+//           "Error marking checkout"
+//       );
+//     }
+//   };
+
+//   // ==========================================
+//   // FORMAT TIME
+//   // ==========================================
+
+//   const formatTime = (date) => {
+//     if (!date) {
+//       return "-";
+//     }
+
+//     try {
+//       return new Date(
+//         date
+//       ).toLocaleTimeString("en-IN", {
+//         hour: "2-digit",
+//         minute: "2-digit",
+//         second: "2-digit",
+//       });
+//     } catch {
+//       return "-";
+//     }
+//   };
+
+//   // ==========================================
+//   // FORMAT DATE
+//   // ==========================================
+
+//   const formatDate = (date) => {
+//     if (!date) {
+//       return "N/A";
+//     }
+
+//     try {
+//       return new Date(
+//         date
+//       ).toLocaleDateString("en-IN");
+//     } catch {
+//       return "N/A";
+//     }
+//   };
+
+//   // ==========================================
+//   // EMPLOYEE NAME
+//   // ==========================================
+
+//   const getEmployeeName = (user) => {
+//     if (!user) {
+//       return "N/A";
+//     }
+
+//     if (
+//       user.firstName ||
+//       user.lastName
+//     ) {
+//       return `${user.firstName || ""} ${
+//         user.lastName || ""
+//       }`.trim();
+//     }
+
+//     if (user.name) {
+//       return user.name;
+//     }
+
+//     return "N/A";
+//   };
+
+//   // ==========================================
+//   // RENDER
+//   // ==========================================
 
 //   return (
 //     <div className="attendance-container">
-//       <h2 className="attendance-title">Admin Attendance Dashboard</h2>
+
+//       {/* ======================================
+//           PAGE TITLE
+//       ====================================== */}
+
+//       <h2 className="attendance-title">
+//         Admin Attendance Dashboard
+//       </h2>
+
+//       {/* ======================================
+//           FORMS
+//       ====================================== */}
 
 //       <div className="attendance-forms-wrapper">
+
+//         {/* ====================================
+//             MANUAL ATTENDANCE
+//         ==================================== */}
+
 //         <div className="attendance-card">
-//           <h3>Mark Manual Attendance</h3>
-//           <form onSubmit={handleManualSubmit}>
-//             <div className="form-group">
-//               <label>Choose Employee:</label>
-//               <select
-//                 className="form-control"
-//                 value={manualData.user}
-//                 onChange={handleEmployeeSelect}
-//                 required
-//               >
-//                 <option value="">
-//                   {loadingEmployees ? "Loading employees..." : "-- Choose Employee --"}
-//                 </option>
-//                 {employees.map((emp) => (
-//                   <option key={emp._id} value={emp._id}>
-//                     {emp.firstName} {emp.lastName} ({emp.employeeId || "No ID"})
-//                   </option>
-//                 ))}
-//               </select>
-//             </div>
+
+//           <h3>
+//             Mark Manual Attendance
+//           </h3>
+
+//           <form
+//             onSubmit={
+//               handleManualSubmit
+//             }
+//           >
+
+//             {/* EMPLOYEE */}
 
 //             <div className="form-group">
-//               <label>Date:</label>
+
+//               <label>
+//                 Choose Employee:
+//               </label>
+
+//               <select
+//                 className="form-control"
+//                 value={
+//                   manualData.user
+//                 }
+//                 onChange={
+//                   handleEmployeeSelect
+//                 }
+//                 required
+//               >
+
+//                 <option value="">
+//                   {loadingEmployees
+//                     ? "Loading employees..."
+//                     : "-- Choose Employee --"}
+//                 </option>
+
+//                 {employees.map(
+//                   (emp) => (
+//                     <option
+//                       key={emp._id}
+//                       value={emp._id}
+//                     >
+//                       {emp.firstName}{" "}
+//                       {emp.lastName}{" "}
+//                       (
+//                       {emp.employeeId ||
+//                         "No ID"}
+//                       )
+//                     </option>
+//                   )
+//                 )}
+
+//               </select>
+
+//             </div>
+
+//             {/* DATE */}
+
+//             <div className="form-group">
+
+//               <label>
+//                 Date:
+//               </label>
+
 //               <input
 //                 type="date"
 //                 className="form-control"
-//                 value={manualData.date}
-//                 onChange={(e) => setManualData({ ...manualData, date: e.target.value })}
+//                 value={
+//                   manualData.date
+//                 }
+//                 onChange={(e) =>
+//                   setManualData(
+//                     (prev) => ({
+//                       ...prev,
+//                       date:
+//                         e.target.value,
+//                     })
+//                   )
+//                 }
 //                 required
 //               />
+
 //             </div>
 
+//             {/* STATUS */}
+
 //             <div className="form-group">
-//               <label>Status:</label>
+
+//               <label>
+//                 Status:
+//               </label>
+
 //               <select
 //                 className="form-control"
-//                 value={manualData.status}
-//                 onChange={(e) => setManualData({ ...manualData, status: e.target.value })}
+//                 value={
+//                   manualData.status
+//                 }
+//                 onChange={(e) =>
+//                   setManualData(
+//                     (prev) => ({
+//                       ...prev,
+//                       status:
+//                         e.target.value,
+//                     })
+//                   )
+//                 }
 //               >
-//                 <option value="PRESENT">PRESENT</option>
-//                 <option value="ABSENT">ABSENT</option>
-//                 <option value="HALF_DAY">HALF_DAY</option>
-//                 <option value="LEAVE">LEAVE</option>
-//                 <option value="LATE">LATE</option>
+
+//                 <option value="PRESENT">
+//                   PRESENT
+//                 </option>
+
+//                 <option value="ABSENT">
+//                   ABSENT
+//                 </option>
+
+//                 <option value="HALF_DAY">
+//                   HALF_DAY
+//                 </option>
+
+//                 <option value="LEAVE">
+//                   LEAVE
+//                 </option>
+
+//                 <option value="LATE">
+//                   LATE
+//                 </option>
+
 //               </select>
+
 //             </div>
 
+//             {/* REMARK */}
+
 //             <div className="form-group">
-//               <label>Remark:</label>
+
+//               <label>
+//                 Remark:
+//               </label>
+
 //               <input
 //                 type="text"
 //                 className="form-control"
 //                 placeholder="Optional remark"
-//                 value={manualData.remark}
-//                 onChange={(e) => setManualData({ ...manualData, remark: e.target.value })}
+//                 value={
+//                   manualData.remark
+//                 }
+//                 onChange={(e) =>
+//                   setManualData(
+//                     (prev) => ({
+//                       ...prev,
+//                       remark:
+//                         e.target.value,
+//                     })
+//                   )
+//                 }
 //               />
+
 //             </div>
 
-//             <button type="submit" className="btn-primary-green">
+//             <button
+//               type="submit"
+//               className="btn-primary-green"
+//             >
 //               Submit Manual Attendance
 //             </button>
+
 //           </form>
+
 //         </div>
 
+//         {/* ====================================
+//             BIOMETRIC
+//         ==================================== */}
+
 //         <div className="attendance-card">
-//           <h3>Virtual Biometric Machine Punch</h3>
-//           <p>Simulates machine scan without hardware.</p>
-//           <form onSubmit={handleBiometricPunch}>
+
+//           <h3>
+//             Virtual Biometric Machine Punch
+//           </h3>
+
+//           <p>
+//             Simulates machine scan
+//             without hardware.
+//           </p>
+
+//           <form
+//             onSubmit={
+//               handleBiometricPunch
+//             }
+//           >
+
+//             {/* EMPLOYEE ID */}
+
 //             <div className="form-group">
-//               <label>Employee ID:</label>
+
+//               <label>
+//                 Employee ID:
+//               </label>
+
 //               <input
 //                 type="text"
 //                 className="form-control"
 //                 placeholder="e.g. EMP001"
-//                 value={bioPunchData.employeeId}
-//                 onChange={(e) => setBioPunchData({ ...bioPunchData, employeeId: e.target.value })}
+//                 value={
+//                   bioPunchData.employeeId
+//                 }
+//                 onChange={(e) =>
+//                   setBioPunchData(
+//                     (prev) => ({
+//                       ...prev,
+//                       employeeId:
+//                         e.target.value,
+//                     })
+//                   )
+//                 }
 //                 required
 //               />
+
 //             </div>
 
+//             {/* BIOMETRIC ID */}
+
 //             <div className="form-group">
-//               <label>Biometric ID / Key:</label>
+
+//               <label>
+//                 Biometric ID / Key:
+//               </label>
+
 //               <input
 //                 type="text"
 //                 className="form-control"
 //                 placeholder="e.g. BIO123"
-//                 value={bioPunchData.biometricId}
-//                 onChange={(e) => setBioPunchData({ ...bioPunchData, biometricId: e.target.value })}
+//                 value={
+//                   bioPunchData.biometricId
+//                 }
+//                 onChange={(e) =>
+//                   setBioPunchData(
+//                     (prev) => ({
+//                       ...prev,
+//                       biometricId:
+//                         e.target.value,
+//                     })
+//                   )
+//                 }
 //               />
+
 //             </div>
 
-//             <button type="submit" className="btn-accent-green">
+//             <button
+//               type="submit"
+//               className="btn-accent-green"
+//             >
 //               Simulate Biometric Scan
 //             </button>
+
 //           </form>
+
 //         </div>
+
 //       </div>
 
-//       <h3>Attendance Records List</h3>
+//       {/* ======================================
+//           ATTENDANCE RECORDS
+//       ====================================== */}
+
+//       <h3 className="records-title">
+//         Attendance Records List
+//       </h3>
+
 //       <div className="table-wrapper">
+
 //         {loading ? (
-//           <p className="no-data">Loading attendance records...</p>
+
+//           <p className="no-data">
+//             Loading attendance records...
+//           </p>
+
 //         ) : (
+
 //           <table className="attendance-table">
+
 //             <thead>
+
 //               <tr>
-//                 <th>User / Name</th>
-//                 <th>Employee ID</th>
-//                 <th>Date</th>
-//                 <th>Mode</th>
-//                 <th>Status</th>
-//                 <th>Check-In</th>
-//                 <th>Check-Out</th>
-//                 <th>Working Hours</th>
-//                 <th>Action</th>
+
+//                 <th>
+//                   User / Name
+//                 </th>
+
+//                 <th>
+//                   Employee ID
+//                 </th>
+
+//                 <th>
+//                   Date
+//                 </th>
+
+//                 <th>
+//                   Mode
+//                 </th>
+
+//                 <th>
+//                   Status
+//                 </th>
+
+//                 <th>
+//                   Check-In
+//                 </th>
+
+//                 <th>
+//                   Check-Out
+//                 </th>
+
+//                 <th>
+//                   Working Hours
+//                 </th>
+
+//                 <th>
+//                   Action
+//                 </th>
+
 //               </tr>
+
 //             </thead>
+
 //             <tbody>
-//               {attendanceList.length > 0 ? (
-//                 attendanceList.map((item) => (
-//                   <tr key={item._id}>
-//                     <td>
-//                       {item.user?.firstName
-//                         ? `${item.user.firstName} ${item.user.lastName || ""}`
-//                         : item.user?.name || "N/A"}
-//                     </td>
-//                     <td>{item.employeeId || "N/A"}</td>
-//                     <td>{item.date ? new Date(item.date).toLocaleDateString() : "N/A"}</td>
-//                     <td>
-//                       <span className="badge-mode">{item.attendanceMode || "MANUAL"}</span>
-//                     </td>
-//                     <td>{item.status}</td>
-//                     <td>
-//                       {item.checkIn ? new Date(item.checkIn).toLocaleTimeString() : "-"}
-//                     </td>
-//                     <td>
-//                       {item.checkOut ? new Date(item.checkOut).toLocaleTimeString() : "-"}
-//                     </td>
-//                     <td>{item.workingHours || 0} hrs</td>
-//                     <td>
-//                       {!item.checkOut && (
-//                         <button
-//                           className="btn-danger"
-//                           // onClick={() => handleCheckout(item.user?._id || item.user)}
-//                            onClick={() => handleCheckout(item)}
-//                         >
-//                           Check-Out
-//                         </button>
-//                       )}
-//                     </td>
-//                   </tr>
-//                 ))
+
+//               {attendanceList.length >
+//               0 ? (
+
+//                 attendanceList.map(
+//                   (item) => (
+
+//                     <tr
+//                       key={item._id}
+//                     >
+
+//                       {/* NAME */}
+
+//                       <td>
+//                         {getEmployeeName(
+//                           item.user
+//                         )}
+//                       </td>
+
+//                       {/* EMPLOYEE ID */}
+
+//                       <td>
+//                         {item.employeeId ||
+//                           "N/A"}
+//                       </td>
+
+//                       {/* DATE */}
+
+//                       <td>
+//                         {formatDate(
+//                           item.date
+//                         )}
+//                       </td>
+
+//                       {/* MODE */}
+
+//                       <td>
+
+//                         <span className="badge-mode">
+//                           {item.attendanceMode ||
+//                             "MANUAL"}
+//                         </span>
+
+//                       </td>
+
+//                       {/* STATUS */}
+
+//                       <td>
+//                         {item.status ||
+//                           "N/A"}
+//                       </td>
+
+//                       {/* CHECK IN */}
+
+//                       <td>
+//                         {formatTime(
+//                           item.checkIn
+//                         )}
+//                       </td>
+
+//                       {/* CHECK OUT */}
+
+//                       <td>
+//                         {formatTime(
+//                           item.checkOut
+//                         )}
+//                       </td>
+
+//                       {/* WORKING HOURS */}
+
+//                       <td>
+//                         {item.workingHours ||
+//                           0}{" "}
+//                         hrs
+//                       </td>
+
+//                       {/* ACTION */}
+
+//                       <td>
+
+//                         {!item.checkOut && (
+//                           <button
+//                             type="button"
+//                             className="btn-danger"
+//                             onClick={() =>
+//                               handleCheckout(
+//                                 item
+//                               )
+//                             }
+//                           >
+//                             Check-Out
+//                           </button>
+//                         )}
+
+//                         {item.checkOut && (
+//                           <span className="checkout-done">
+//                             Completed
+//                           </span>
+//                         )}
+
+//                       </td>
+
+//                     </tr>
+
+//                   )
+//                 )
+
 //               ) : (
+
 //                 <tr>
-//                   <td colSpan="9" className="no-data">
-//                     No attendance records found.
+
+//                   <td
+//                     colSpan="9"
+//                     className="no-data"
+//                   >
+//                     No attendance
+//                     records found.
 //                   </td>
+
 //                 </tr>
+
 //               )}
+
 //             </tbody>
+
 //           </table>
+
 //         )}
+
 //       </div>
+
 //     </div>
 //   );
 // };
@@ -360,27 +889,30 @@
 
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import "./AttendanceManagement.css";
 import "react-toastify/dist/ReactToastify.css";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 const AdminAttendance = () => {
   // ==========================================
-  // STATES
+  // STATES & FILTERS
   // ==========================================
-
   const [employees, setEmployees] = useState([]);
   const [attendanceList, setAttendanceList] = useState([]);
-
   const [loading, setLoading] = useState(false);
   const [loadingEmployees, setLoadingEmployees] = useState(false);
 
-  // ==========================================
-  // MANUAL ATTENDANCE FORM
-  // ==========================================
+  const currentDate = new Date();
+  const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
+  const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
 
   const [manualData, setManualData] = useState({
     user: "",
@@ -390,323 +922,39 @@ const AdminAttendance = () => {
     remark: "",
   });
 
-  // ==========================================
-  // BIOMETRIC FORM
-  // ==========================================
-
   const [bioPunchData, setBioPunchData] = useState({
     employeeId: "",
     biometricId: "",
   });
 
   // ==========================================
-  // AUTH HEADER
+  // HELPERS & AUTH
   // ==========================================
+  const getAuthHeader = () => ({
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  });
 
-  const getAuthHeader = () => {
-    const token = localStorage.getItem("token");
-
-    return {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
+  const getEmployeeName = (user) => {
+    if (!user) return "N/A";
+    if (user.firstName || user.lastName) {
+      return `${user.firstName || ""} ${user.lastName || ""}`.trim();
+    }
+    return user.name || "N/A";
   };
 
-  // ==========================================
-  // FETCH EMPLOYEES
-  // ==========================================
-
-  const fetchEmployees = async () => {
-    setLoadingEmployees(true);
-
+  const formatDate = (date) => {
+    if (!date) return "N/A";
     try {
-      const res = await axios.get(
-        `${BASE_URL}/users/employees`,
-        getAuthHeader()
-      );
-
-      console.log("Employees Response:", res.data);
-
-      const list =
-        res.data?.data?.records ||
-        res.data?.data ||
-        res.data ||
-        [];
-
-      setEmployees(Array.isArray(list) ? list : []);
-    } catch (err) {
-      console.error("Failed to load employees:", err);
-
-      console.error(
-        "Employee API Error:",
-        err.response?.data || err.message
-      );
-    } finally {
-      setLoadingEmployees(false);
+      return new Date(date).toLocaleDateString("en-IN");
+    } catch {
+      return "N/A";
     }
   };
-
-  // ==========================================
-  // FETCH ATTENDANCE
-  // ==========================================
-
-  const fetchAttendance = async () => {
-    setLoading(true);
-
-    try {
-      const res = await axios.get(
-        `${BASE_URL}/newAttendance`,
-        getAuthHeader()
-      );
-
-      console.log("Attendance Response:", res.data);
-
-      const list =
-        res.data?.data ||
-        res.data ||
-        [];
-
-      setAttendanceList(
-        Array.isArray(list) ? list : []
-      );
-    } catch (err) {
-      console.error(
-        "Failed to load attendance:",
-        err.response?.data || err.message
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ==========================================
-  // INITIAL LOAD
-  // ==========================================
-
-  useEffect(() => {
-    fetchEmployees();
-    fetchAttendance();
-  }, []);
-
-  // ==========================================
-  // EMPLOYEE SELECT
-  // ==========================================
-
-  const handleEmployeeSelect = (e) => {
-    const selectedUserId = e.target.value;
-
-    const selectedEmp = employees.find(
-      (emp) => emp._id === selectedUserId
-    );
-
-    setManualData((prev) => ({
-      ...prev,
-      user: selectedUserId,
-      employeeId:
-        selectedEmp?.employeeId || "",
-    }));
-  };
-
-  // ==========================================
-  // MANUAL ATTENDANCE SUBMIT
-  // ==========================================
-
-  const handleManualSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!manualData.user) {
-      alert("Please select an employee.");
-      return;
-    }
-
-    const selectedEmp = employees.find(
-      (emp) => emp._id === manualData.user
-    );
-
-    const payload = {
-      user: manualData.user,
-
-      employeeId:
-        selectedEmp?.employeeId ||
-        manualData.employeeId ||
-        "EMP001",
-
-      date: new Date(
-        manualData.date
-      ).toISOString(),
-
-      status: manualData.status,
-
-      attendanceMode: "MANUAL",
-
-      remark: manualData.remark || "",
-    };
-
-    console.log(
-      "MANUAL ATTENDANCE PAYLOAD:",
-      payload
-    );
-
-    try {
-      await axios.post(
-        `${BASE_URL}/newAttendance/manual`,
-        payload,
-        getAuthHeader()
-      );
-
-      alert(
-        "Manual attendance marked successfully!"
-      );
-
-      await fetchAttendance();
-
-      // Reset form
-      setManualData({
-        user: "",
-        employeeId: "",
-        date: new Date()
-          .toISOString()
-          .split("T")[0],
-        status: "PRESENT",
-        remark: "",
-      });
-    } catch (err) {
-      console.error(
-        "Manual attendance error:",
-        err.response?.data || err.message
-      );
-
-      alert(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Error submitting attendance"
-      );
-    }
-  };
-
-  // ==========================================
-  // BIOMETRIC PUNCH
-  // ==========================================
-
-  const handleBiometricPunch = async (e) => {
-    e.preventDefault();
-
-    if (!bioPunchData.employeeId) {
-      alert("Please enter Employee ID.");
-      return;
-    }
-
-    const payload = {
-      employeeId:
-        bioPunchData.employeeId,
-
-      biometricId:
-        bioPunchData.biometricId ||
-        bioPunchData.employeeId,
-
-      punchTime:
-        new Date().toISOString(),
-    };
-
-    console.log(
-      "BIOMETRIC PAYLOAD:",
-      payload
-    );
-
-    try {
-      await axios.post(
-        `${BASE_URL}/newAttendance/biometric`,
-        payload,
-        getAuthHeader()
-      );
-
-      alert(
-        "Biometric punch successful!"
-      );
-
-      await fetchAttendance();
-
-      setBioPunchData({
-        employeeId: "",
-        biometricId: "",
-      });
-    } catch (err) {
-      console.error(
-        "Biometric error:",
-        err.response?.data || err.message
-      );
-
-      alert(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Error processing biometric punch"
-      );
-    }
-  };
-
-  // ==========================================
-  // CHECKOUT
-  // ==========================================
-
-  const handleCheckout = async (attendance) => {
-    try {
-      const payload = {
-        user:
-          attendance.user?._id ||
-          attendance.user,
-
-        employeeId:
-          attendance.employeeId,
-
-        date:
-          attendance.date,
-
-        checkoutTime:
-          new Date().toISOString(),
-      };
-
-      console.log(
-        "CHECKOUT PAYLOAD:",
-        payload
-      );
-
-      await axios.put(
-        `${BASE_URL}/newAttendance/checkout`,
-        payload,
-        getAuthHeader()
-      );
-
-      alert("Checkout successful!");
-
-      await fetchAttendance();
-    } catch (err) {
-      console.error(
-        "CHECKOUT ERROR:",
-        err.response?.data || err.message
-      );
-
-      alert(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Error marking checkout"
-      );
-    }
-  };
-
-  // ==========================================
-  // FORMAT TIME
-  // ==========================================
 
   const formatTime = (date) => {
-    if (!date) {
-      return "-";
-    }
-
+    if (!date) return "-";
     try {
-      return new Date(
-        date
-      ).toLocaleTimeString("en-IN", {
+      return new Date(date).toLocaleTimeString("en-IN", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
@@ -716,533 +964,520 @@ const AdminAttendance = () => {
     }
   };
 
-  // ==========================================
-  // FORMAT DATE
-  // ==========================================
+  const availableYears = useMemo(() => {
+    const curr = new Date().getFullYear();
+    return Array.from({ length: 5 }, (_, i) => curr - 3 + i);
+  }, []);
 
-  const formatDate = (date) => {
-    if (!date) {
-      return "N/A";
-    }
-
+  // ==========================================
+  // DATA FETCHING
+  // ==========================================
+  const fetchEmployees = async () => {
+    setLoadingEmployees(true);
     try {
-      return new Date(
-        date
-      ).toLocaleDateString("en-IN");
-    } catch {
-      return "N/A";
+      const res = await axios.get(`${BASE_URL}/users/employees`, getAuthHeader());
+      const list = res.data?.data?.records || res.data?.data || res.data || [];
+      setEmployees(Array.isArray(list) ? list : []);
+    } catch (err) {
+      console.error("Employee fetch error:", err.response?.data || err.message);
+    } finally {
+      setLoadingEmployees(false);
     }
   };
 
+  const fetchAttendance = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${BASE_URL}/newAttendance`, getAuthHeader());
+      const list = res.data?.data || res.data || [];
+      setAttendanceList(Array.isArray(list) ? list : []);
+    } catch (err) {
+      console.error("Attendance fetch error:", err.response?.data || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+    fetchAttendance();
+  }, []);
+
   // ==========================================
-  // EMPLOYEE NAME
+  // FILTERING & AGGREGATION
   // ==========================================
+  const filteredAttendance = useMemo(() => {
+    return attendanceList.filter((item) => {
+      if (!item.date) return false;
+      const recDate = new Date(item.date);
+      return (
+        recDate.getMonth() === Number(selectedMonth) &&
+        recDate.getFullYear() === Number(selectedYear)
+      );
+    });
+  }, [attendanceList, selectedMonth, selectedYear]);
 
-  const getEmployeeName = (user) => {
-    if (!user) {
-      return "N/A";
+  const employeeStats = useMemo(() => {
+    const statsMap = {};
+
+    filteredAttendance.forEach((record) => {
+      const empKey =
+        record.employeeId ||
+        (record.user && (record.user._id || record.user)) ||
+        "UNKNOWN";
+
+      if (!statsMap[empKey]) {
+        statsMap[empKey] = {
+          name: getEmployeeName(record.user),
+          employeeId: record.employeeId || "N/A",
+          present: 0,
+          absent: 0,
+          leave: 0,
+          halfDay: 0,
+          late: 0,
+          totalWorkingHours: 0,
+        };
+      }
+
+      const status = (record.status || "").toUpperCase();
+      statsMap[empKey].totalWorkingHours += record.workingHours || 0;
+
+      if (status === "PRESENT") statsMap[empKey].present += 1;
+      else if (status === "ABSENT") statsMap[empKey].absent += 1;
+      else if (status === "LEAVE") statsMap[empKey].leave += 1;
+      else if (status === "HALF_DAY") statsMap[empKey].halfDay += 1;
+      else if (status === "LATE") {
+        statsMap[empKey].late += 1;
+        statsMap[empKey].present += 1;
+      }
+    });
+
+    return Object.values(statsMap);
+  }, [filteredAttendance]);
+
+  const overallStats = useMemo(() => {
+    return employeeStats.reduce(
+      (acc, curr) => ({
+        present: acc.present + curr.present,
+        absent: acc.absent + curr.absent,
+        leave: acc.leave + curr.leave,
+        halfDay: acc.halfDay + curr.halfDay,
+      }),
+      { present: 0, absent: 0, leave: 0, halfDay: 0 }
+    );
+  }, [employeeStats]);
+
+  // ==========================================
+  // HANDLERS
+  // ==========================================
+  const handleEmployeeSelect = (e) => {
+    const selectedUserId = e.target.value;
+    const selectedEmp = employees.find((emp) => emp._id === selectedUserId);
+    setManualData((prev) => ({
+      ...prev,
+      user: selectedUserId,
+      employeeId: selectedEmp?.employeeId || "",
+    }));
+  };
+
+  const handleManualSubmit = async (e) => {
+    e.preventDefault();
+    if (!manualData.user) {
+      alert("Please select an employee.");
+      return;
     }
 
-    if (
-      user.firstName ||
-      user.lastName
-    ) {
-      return `${user.firstName || ""} ${
-        user.lastName || ""
-      }`.trim();
+    const selectedEmp = employees.find((emp) => emp._id === manualData.user);
+
+    // Normalize date to prevent timezone index conflicts
+    const normalizedDate = new Date(`${manualData.date}T00:00:00.000Z`).toISOString();
+
+    const payload = {
+      user: manualData.user,
+      employeeId: selectedEmp?.employeeId || manualData.employeeId,
+      date: normalizedDate,
+      status: manualData.status,
+      attendanceMode: "MANUAL",
+      remark: manualData.remark || "",
+      // If status is not ABSENT or LEAVE, populate checkIn timestamp
+      checkIn:
+        manualData.status === "ABSENT" || manualData.status === "LEAVE"
+          ? null
+          : new Date().toISOString(),
+      checkOut: null,
+    };
+
+    try {
+      await axios.post(`${BASE_URL}/newAttendance/manual`, payload, getAuthHeader());
+      alert("Manual attendance marked successfully!");
+      await fetchAttendance();
+
+      setManualData({
+        user: "",
+        employeeId: "",
+        date: new Date().toISOString().split("T")[0],
+        status: "PRESENT",
+        remark: "",
+      });
+    } catch (err) {
+      console.error("Backend Error Response:", err.response?.data);
+      const serverMessage =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        (typeof err.response?.data === "string" ? err.response?.data : null) ||
+        "Error submitting manual attendance (400 Bad Request)";
+
+      alert(serverMessage);
+    }
+  };
+
+  const handleBiometricPunch = async (e) => {
+    e.preventDefault();
+    if (!bioPunchData.employeeId) {
+      alert("Please enter Employee ID.");
+      return;
     }
 
-    if (user.name) {
-      return user.name;
+    const payload = {
+      employeeId: bioPunchData.employeeId,
+      biometricId: bioPunchData.biometricId || bioPunchData.employeeId,
+      punchTime: new Date().toISOString(),
+    };
+
+    try {
+      await axios.post(`${BASE_URL}/newAttendance/biometric`, payload, getAuthHeader());
+      alert("Biometric punch successful!");
+      await fetchAttendance();
+      setBioPunchData({ employeeId: "", biometricId: "" });
+    } catch (err) {
+      alert(err.response?.data?.message || "Error processing punch");
+    }
+  };
+
+  const handleCheckout = async (attendance) => {
+    // Guard against checking out absent or leave records
+    if (attendance.status === "ABSENT" || attendance.status === "LEAVE") {
+      alert("Cannot check out an employee marked as Absent or on Leave.");
+      return;
     }
 
-    return "N/A";
+    try {
+      const payload = {
+        user: attendance.user?._id || attendance.user,
+        employeeId: attendance.employeeId,
+        date: attendance.date,
+        checkoutTime: new Date().toISOString(),
+      };
+
+      await axios.put(`${BASE_URL}/newAttendance/checkout`, payload, getAuthHeader());
+      alert("Checkout successful!");
+      await fetchAttendance();
+    } catch (err) {
+      alert(err.response?.data?.message || "Error marking checkout");
+    }
   };
 
   // ==========================================
   // RENDER
   // ==========================================
-
   return (
     <div className="attendance-container">
+      <h2 className="attendance-title">Admin Attendance Dashboard</h2>
 
-      {/* ======================================
-          PAGE TITLE
-      ====================================== */}
-
-      <h2 className="attendance-title">
-        Admin Attendance Dashboard
-      </h2>
-
-      {/* ======================================
-          FORMS
-      ====================================== */}
-
+      {/* FORMS */}
       <div className="attendance-forms-wrapper">
-
-        {/* ====================================
-            MANUAL ATTENDANCE
-        ==================================== */}
-
         <div className="attendance-card">
-
-          <h3>
-            Mark Manual Attendance
-          </h3>
-
-          <form
-            onSubmit={
-              handleManualSubmit
-            }
-          >
-
-            {/* EMPLOYEE */}
-
+          <h3>Mark Manual Attendance</h3>
+          <form onSubmit={handleManualSubmit}>
             <div className="form-group">
-
-              <label>
-                Choose Employee:
-              </label>
-
+              <label>Choose Employee:</label>
               <select
                 className="form-control"
-                value={
-                  manualData.user
-                }
-                onChange={
-                  handleEmployeeSelect
-                }
+                value={manualData.user}
+                onChange={handleEmployeeSelect}
                 required
               >
-
                 <option value="">
-                  {loadingEmployees
-                    ? "Loading employees..."
-                    : "-- Choose Employee --"}
+                  {loadingEmployees ? "Loading..." : "-- Select Employee --"}
                 </option>
-
-                {employees.map(
-                  (emp) => (
-                    <option
-                      key={emp._id}
-                      value={emp._id}
-                    >
-                      {emp.firstName}{" "}
-                      {emp.lastName}{" "}
-                      (
-                      {emp.employeeId ||
-                        "No ID"}
-                      )
-                    </option>
-                  )
-                )}
-
+                {employees.map((emp) => (
+                  <option key={emp._id} value={emp._id}>
+                    {emp.firstName} {emp.lastName} ({emp.employeeId || "No ID"})
+                  </option>
+                ))}
               </select>
-
             </div>
 
-            {/* DATE */}
-
             <div className="form-group">
-
-              <label>
-                Date:
-              </label>
-
+              <label>Date:</label>
               <input
                 type="date"
                 className="form-control"
-                value={
-                  manualData.date
-                }
+                value={manualData.date}
                 onChange={(e) =>
-                  setManualData(
-                    (prev) => ({
-                      ...prev,
-                      date:
-                        e.target.value,
-                    })
-                  )
+                  setManualData((prev) => ({ ...prev, date: e.target.value }))
                 }
                 required
               />
-
             </div>
 
-            {/* STATUS */}
-
             <div className="form-group">
-
-              <label>
-                Status:
-              </label>
-
+              <label>Status:</label>
               <select
                 className="form-control"
-                value={
-                  manualData.status
-                }
+                value={manualData.status}
                 onChange={(e) =>
-                  setManualData(
-                    (prev) => ({
-                      ...prev,
-                      status:
-                        e.target.value,
-                    })
-                  )
+                  setManualData((prev) => ({ ...prev, status: e.target.value }))
                 }
               >
-
-                <option value="PRESENT">
-                  PRESENT
-                </option>
-
-                <option value="ABSENT">
-                  ABSENT
-                </option>
-
-                <option value="HALF_DAY">
-                  HALF_DAY
-                </option>
-
-                <option value="LEAVE">
-                  LEAVE
-                </option>
-
-                <option value="LATE">
-                  LATE
-                </option>
-
+                <option value="PRESENT">PRESENT</option>
+                <option value="ABSENT">ABSENT</option>
+                <option value="HALF_DAY">HALF DAY</option>
+                <option value="LEAVE">LEAVE</option>
+                <option value="LATE">LATE</option>
               </select>
-
             </div>
 
-            {/* REMARK */}
-
             <div className="form-group">
-
-              <label>
-                Remark:
-              </label>
-
+              <label>Remark:</label>
               <input
                 type="text"
                 className="form-control"
                 placeholder="Optional remark"
-                value={
-                  manualData.remark
-                }
+                value={manualData.remark}
                 onChange={(e) =>
-                  setManualData(
-                    (prev) => ({
-                      ...prev,
-                      remark:
-                        e.target.value,
-                    })
-                  )
+                  setManualData((prev) => ({ ...prev, remark: e.target.value }))
                 }
               />
-
             </div>
 
-            <button
-              type="submit"
-              className="btn-primary-green"
-            >
+            <button type="submit" className="btn-primary-green">
               Submit Manual Attendance
             </button>
-
           </form>
-
         </div>
 
-        {/* ====================================
-            BIOMETRIC
-        ==================================== */}
-
         <div className="attendance-card">
-
-          <h3>
-            Virtual Biometric Machine Punch
-          </h3>
-
-          <p>
-            Simulates machine scan
-            without hardware.
-          </p>
-
-          <form
-            onSubmit={
-              handleBiometricPunch
-            }
-          >
-
-            {/* EMPLOYEE ID */}
-
+          <h3>Virtual Biometric Machine Punch</h3>
+          <p className="card-subtitle">Simulate check-in punch using Biometric ID</p>
+          <form onSubmit={handleBiometricPunch}>
             <div className="form-group">
-
-              <label>
-                Employee ID:
-              </label>
-
+              <label>Employee ID:</label>
               <input
                 type="text"
                 className="form-control"
                 placeholder="e.g. EMP001"
-                value={
-                  bioPunchData.employeeId
-                }
+                value={bioPunchData.employeeId}
                 onChange={(e) =>
-                  setBioPunchData(
-                    (prev) => ({
-                      ...prev,
-                      employeeId:
-                        e.target.value,
-                    })
-                  )
+                  setBioPunchData((prev) => ({ ...prev, employeeId: e.target.value }))
                 }
                 required
               />
-
             </div>
 
-            {/* BIOMETRIC ID */}
-
             <div className="form-group">
-
-              <label>
-                Biometric ID / Key:
-              </label>
-
+              <label>Biometric ID / Key:</label>
               <input
                 type="text"
                 className="form-control"
-                placeholder="e.g. BIO123"
-                value={
-                  bioPunchData.biometricId
-                }
+                placeholder="e.g. BIO123 (Optional)"
+                value={bioPunchData.biometricId}
                 onChange={(e) =>
-                  setBioPunchData(
-                    (prev) => ({
-                      ...prev,
-                      biometricId:
-                        e.target.value,
-                    })
-                  )
+                  setBioPunchData((prev) => ({ ...prev, biometricId: e.target.value }))
                 }
               />
-
             </div>
 
-            <button
-              type="submit"
-              className="btn-accent-green"
-            >
+            <button type="submit" className="btn-accent-green">
               Simulate Biometric Scan
             </button>
-
           </form>
-
         </div>
-
       </div>
 
-      {/* ======================================
-          ATTENDANCE RECORDS
-      ====================================== */}
+      {/* FILTER BAR */}
+      <div className="filter-card">
+        <div className="filter-title">
+          <h4>Summary & Records Filter</h4>
+          <span>Select date range to update summary metrics and tables</span>
+        </div>
+        <div className="filter-controls">
+          <div className="filter-item">
+            <label>Month:</label>
+            <select
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(Number(e.target.value))}
+            >
+              {MONTH_NAMES.map((name, idx) => (
+                <option key={idx} value={idx}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="filter-item">
+            <label>Year:</label>
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(Number(e.target.value))}
+            >
+              {availableYears.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
 
-      <h3 className="records-title">
-        Attendance Records List
-      </h3>
+      {/* KPI STATS CARDS */}
+      <div className="stats-grid">
+        <div className="stat-card stat-present">
+          <h4>Total Present</h4>
+          <span>{overallStats.present}</span>
+        </div>
+        <div className="stat-card stat-absent">
+          <h4>Total Absent</h4>
+          <span>{overallStats.absent}</span>
+        </div>
+        <div className="stat-card stat-leave">
+          <h4>Total On Leave</h4>
+          <span>{overallStats.leave}</span>
+        </div>
+        <div className="stat-card stat-halfday">
+          <h4>Total Half Days</h4>
+          <span>{overallStats.halfDay}</span>
+        </div>
+      </div>
 
+      {/* MONTHLY SUMMARY TABLE */}
+      <div className="section-header">
+        <h3 className="records-title">
+          Monthly Attendance Summary ({MONTH_NAMES[selectedMonth]} {selectedYear})
+        </h3>
+      </div>
       <div className="table-wrapper">
-
-        {loading ? (
-
-          <p className="no-data">
-            Loading attendance records...
-          </p>
-
-        ) : (
-
-          <table className="attendance-table">
-
-            <thead>
-
+        <table className="attendance-table">
+          <thead>
+            <tr>
+              <th>Employee Name</th>
+              <th>Employee ID</th>
+              <th>Present Days</th>
+              <th>Absent Days</th>
+              <th>Leaves</th>
+              <th>Half Days</th>
+              <th>Late Entries</th>
+              <th>Total Hours</th>
+            </tr>
+          </thead>
+          <tbody>
+            {employeeStats.length > 0 ? (
+              employeeStats.map((emp) => (
+                <tr key={emp.employeeId}>
+                  <td><strong>{emp.name}</strong></td>
+                  <td>{emp.employeeId}</td>
+                  <td className="text-success">{emp.present}</td>
+                  <td className="text-danger">{emp.absent}</td>
+                  <td className="text-warning">{emp.leave}</td>
+                  <td>{emp.halfDay}</td>
+                  <td>{emp.late}</td>
+                  <td>{emp.totalWorkingHours.toFixed(1)} hrs</td>
+                </tr>
+              ))
+            ) : (
               <tr>
-
-                <th>
-                  User / Name
-                </th>
-
-                <th>
-                  Employee ID
-                </th>
-
-                <th>
-                  Date
-                </th>
-
-                <th>
-                  Mode
-                </th>
-
-                <th>
-                  Status
-                </th>
-
-                <th>
-                  Check-In
-                </th>
-
-                <th>
-                  Check-Out
-                </th>
-
-                <th>
-                  Working Hours
-                </th>
-
-                <th>
-                  Action
-                </th>
-
+                <td colSpan="8" className="no-data">
+                  No attendance logged for {MONTH_NAMES[selectedMonth]} {selectedYear}.
+                </td>
               </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
+      {/* DAILY DETAILED PUNCH LOGS */}
+      <div className="section-header" style={{ marginTop: "2rem" }}>
+        <h3 className="records-title">Daily Punch Logs</h3>
+      </div>
+      <div className="table-wrapper">
+        {loading ? (
+          <p className="no-data">Loading attendance logs...</p>
+        ) : (
+          <table className="attendance-table">
+            <thead>
+              <tr>
+                <th>User / Name</th>
+                <th>Employee ID</th>
+                <th>Date</th>
+                <th>Mode</th>
+                <th>Status</th>
+                <th>Check-In</th>
+                <th>Check-Out</th>
+                <th>Working Hours</th>
+                <th>Action</th>
+              </tr>
             </thead>
-
             <tbody>
+              {filteredAttendance.length > 0 ? (
+                filteredAttendance.map((item) => {
+                  const isAbsentOrLeave =
+                    item.status === "ABSENT" || item.status === "LEAVE";
 
-              {attendanceList.length >
-              0 ? (
-
-                attendanceList.map(
-                  (item) => (
-
-                    <tr
-                      key={item._id}
-                    >
-
-                      {/* NAME */}
-
+                  return (
+                    <tr key={item._id}>
+                      <td>{getEmployeeName(item.user)}</td>
+                      <td>{item.employeeId || "N/A"}</td>
+                      <td>{formatDate(item.date)}</td>
                       <td>
-                        {getEmployeeName(
-                          item.user
-                        )}
+                        <span className="badge-mode">{item.attendanceMode || "MANUAL"}</span>
                       </td>
-
-                      {/* EMPLOYEE ID */}
-
                       <td>
-                        {item.employeeId ||
-                          "N/A"}
-                      </td>
-
-                      {/* DATE */}
-
-                      <td>
-                        {formatDate(
-                          item.date
-                        )}
-                      </td>
-
-                      {/* MODE */}
-
-                      <td>
-
-                        <span className="badge-mode">
-                          {item.attendanceMode ||
-                            "MANUAL"}
+                        <span
+                          className={`badge-status status-${(item.status || "").toLowerCase()}`}
+                        >
+                          {item.status || "N/A"}
                         </span>
-
                       </td>
+                      
+                      {/* Check-In Time: Hide if Absent or Leave */}
+                      <td>{isAbsentOrLeave ? "-" : formatTime(item.checkIn)}</td>
 
-                      {/* STATUS */}
+                      {/* Check-Out Time: Hide if Absent or Leave */}
+                      <td>{isAbsentOrLeave ? "-" : formatTime(item.checkOut)}</td>
 
+                      <td>{item.workingHours || 0} hrs</td>
+
+                      {/* Action Column: No button if Absent or Leave */}
                       <td>
-                        {item.status ||
-                          "N/A"}
-                      </td>
-
-                      {/* CHECK IN */}
-
-                      <td>
-                        {formatTime(
-                          item.checkIn
-                        )}
-                      </td>
-
-                      {/* CHECK OUT */}
-
-                      <td>
-                        {formatTime(
-                          item.checkOut
-                        )}
-                      </td>
-
-                      {/* WORKING HOURS */}
-
-                      <td>
-                        {item.workingHours ||
-                          0}{" "}
-                        hrs
-                      </td>
-
-                      {/* ACTION */}
-
-                      <td>
-
-                        {!item.checkOut && (
+                        {isAbsentOrLeave ? (
+                          <span style={{ color: "#999", fontWeight: "bold" }}>-</span>
+                        ) : !item.checkOut ? (
                           <button
                             type="button"
                             className="btn-danger"
-                            onClick={() =>
-                              handleCheckout(
-                                item
-                              )
-                            }
+                            onClick={() => handleCheckout(item)}
                           >
                             Check-Out
                           </button>
+                        ) : (
+                          <span className="checkout-done">Completed</span>
                         )}
-
-                        {item.checkOut && (
-                          <span className="checkout-done">
-                            Completed
-                          </span>
-                        )}
-
                       </td>
-
                     </tr>
-
-                  )
-                )
-
+                  );
+                })
               ) : (
-
                 <tr>
-
-                  <td
-                    colSpan="9"
-                    className="no-data"
-                  >
-                    No attendance
-                    records found.
+                  <td colSpan="9" className="no-data">
+                    No punch records found for this period.
                   </td>
-
                 </tr>
-
               )}
-
             </tbody>
-
           </table>
-
         )}
-
       </div>
-
     </div>
   );
 };

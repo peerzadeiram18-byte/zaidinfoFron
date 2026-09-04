@@ -1,3 +1,1333 @@
+// import { useEffect, useState } from "react";
+
+// import "./StockHistory.css";
+
+// import {
+//     getInventory,
+//     getStockHistory
+// } from "../../services/inventoryService";
+// import { toast } from "react-toastify";
+
+// const API_URL = import.meta.env.VITE_API_URL;
+// const BASE_URL = API_URL.replace("/api", "");
+
+
+// function StockHistory() {
+
+
+//     // ============================================
+//     // STATES
+//     // ============================================
+
+//     const [products, setProducts] = useState([]);
+
+//     const [selected, setSelected] = useState("");
+
+//     const [selectedInventory, setSelectedInventory] =
+//         useState(null);
+
+//     const [history, setHistory] = useState([]);
+
+//     const [loading, setLoading] = useState(true);
+
+//     const [historyLoading, setHistoryLoading] =
+//         useState(false);
+
+
+//     // ============================================
+//     // LOAD INVENTORY
+//     // ============================================
+
+//     useEffect(() => {
+
+//         loadInventory();
+
+//     }, []);
+
+
+//     const loadInventory = async () => {
+
+//         try {
+
+//             setLoading(true);
+
+//             const response =
+//                 await getInventory();
+
+//             console.log(
+//                 "================================="
+//             );
+
+//             console.log(
+//                 "INVENTORY API RESPONSE:"
+//             );
+
+//             console.log(
+//                 response.data
+//             );
+
+//             console.log(
+//                 "================================="
+//             );
+
+
+//             const inventoryData =
+//                 response.data?.data;
+
+
+//             if (
+//                 Array.isArray(
+//                     inventoryData
+//                 )
+//             ) {
+
+//                 setProducts(
+//                     inventoryData
+//                 );
+
+//             }
+
+//             else {
+
+//                 console.log(
+//                     "Inventory data is not array:",
+//                     inventoryData
+//                 );
+
+//                 setProducts([]);
+
+//             }
+
+//         }
+
+//         catch (error) {
+
+//             console.error(
+//                 "INVENTORY LOAD ERROR:",
+//                 error
+//             );
+
+
+//             console.error(
+//                 "STATUS:",
+//                 error.response?.status
+//             );
+
+
+//             console.error(
+//                 "BACKEND RESPONSE:",
+//                 error.response?.data
+//             );
+
+
+//             setProducts([]);
+
+//         }
+
+//         finally {
+
+//             setLoading(false);
+
+//         }
+
+//     };
+
+
+//     // ============================================
+//     // PRODUCT CHANGE
+//     // ============================================
+
+//     const handleProductChange = async (e) => {
+
+//         const productId =
+//             e.target.value;
+
+
+//         console.log(
+//             "SELECTED PRODUCT ID:",
+//             productId
+//         );
+
+
+//         setSelected(
+//             productId
+//         );
+
+
+//         setHistory([]);
+
+
+//         if (!productId) {
+
+//             setSelectedInventory(
+//                 null
+//             );
+
+//             return;
+
+//         }
+
+
+//         // ========================================
+//         // FIND INVENTORY
+//         // ========================================
+
+//         const inventory =
+//             products.find(
+
+//                 (item) => {
+
+//                     return (
+//                         item.product?._id ===
+//                         productId
+//                     );
+
+//                 }
+
+//             );
+
+
+//         console.log(
+//             "SELECTED INVENTORY:",
+//             inventory
+//         );
+
+
+//         setSelectedInventory(
+//             inventory || null
+//         );
+
+
+//         // ========================================
+//         // LOAD HISTORY
+//         // ========================================
+
+//         await loadHistory(
+//             productId
+//         );
+
+//     };
+
+
+//     // ============================================
+//     // LOAD STOCK HISTORY
+//     // ============================================
+
+//     const loadHistory = async (
+//         productId
+//     ) => {
+
+//         try {
+
+//             setHistoryLoading(
+//                 true
+//             );
+
+
+//             console.log(
+//                 "GETTING STOCK HISTORY FOR:",
+//                 productId
+//             );
+
+
+//             const response =
+//                 await getStockHistory(
+//                     productId
+//                 );
+
+
+//             console.log(
+//                 "STOCK HISTORY RESPONSE:",
+//                 response.data
+//             );
+
+
+//             const historyData =
+//                 response.data?.data;
+
+
+//             if (
+//                 Array.isArray(
+//                     historyData
+//                 )
+//             ) {
+
+//                 setHistory(
+//                     historyData
+//                 );
+
+//             }
+
+//             else {
+
+//                 setHistory([]);
+
+//             }
+
+//         }
+
+//         catch (error) {
+
+//             console.error(
+//                 "STOCK HISTORY ERROR:",
+//                 error
+//             );
+
+
+//             console.error(
+//                 "STATUS:",
+//                 error.response?.status
+//             );
+
+
+//             console.error(
+//                 "BACKEND RESPONSE:",
+//                 error.response?.data
+//             );
+
+
+//             setHistory([]);
+
+//         }
+
+//         finally {
+
+//             setHistoryLoading(
+//                 false
+//             );
+
+//         }
+
+//     };
+
+
+//     // ============================================
+//     // AVAILABLE STOCK
+//     // ============================================
+
+//     const getAvailableStock = (
+//         inventory
+//     ) => {
+
+//         if (!inventory) {
+
+//             return 0;
+
+//         }
+
+
+//         const current =
+//             Number(
+//                 inventory.currentStock || 0
+//             );
+
+
+//         const reserved =
+//             Number(
+//                 inventory.reservedStock || 0
+//             );
+
+
+//         return (
+//             current - reserved
+//         );
+
+//     };
+
+
+//     // ============================================
+//     // STATUS CLASS
+//     // ============================================
+
+//     const getStatusClass = (
+//         status
+//     ) => {
+
+//         switch (status) {
+
+//             case "IN_STOCK":
+
+//                 return "inventory-status in-stock";
+
+
+//             case "LOW_STOCK":
+
+//                 return "inventory-status low-stock";
+
+
+//             case "OUT_OF_STOCK":
+
+//                 return "inventory-status out-of-stock";
+
+
+//             default:
+
+//                 return "inventory-status";
+
+//         }
+
+//     };
+
+
+//     // ============================================
+//     // TRANSACTION CLASS
+//     // ============================================
+
+//     const getTransactionClass = (
+//         type
+//     ) => {
+
+//         switch (type) {
+
+//             case "STOCK_IN":
+
+//                 return "transaction stock-in";
+
+
+//             case "STOCK_OUT":
+
+//                 return "transaction stock-out";
+
+
+//             case "ORDER":
+
+//                 return "transaction order";
+
+
+//             case "RETURN":
+
+//                 return "transaction return";
+
+
+//             case "REPAIR_USAGE":
+
+//                 return "transaction repair";
+
+
+//             case "RENTAL_OUT":
+
+//                 return "transaction rental";
+
+
+//             default:
+
+//                 return "transaction";
+
+//         }
+
+//     };
+
+
+//     // ============================================
+//     // TRANSACTION LABEL
+//     // ============================================
+
+//     const getTransactionLabel = (
+//         type
+//     ) => {
+
+//         switch (type) {
+
+//             case "STOCK_IN":
+
+//                 return "Stock In";
+
+
+//             case "STOCK_OUT":
+
+//                 return "Stock Out";
+
+
+//             case "ORDER":
+
+//                 return "Order";
+
+
+//             case "RETURN":
+
+//                 return "Return";
+
+
+//             case "REPAIR_USAGE":
+
+//                 return "Repair Usage";
+
+
+//             case "RENTAL_OUT":
+
+//                 return "Rental Out";
+
+
+//             default:
+
+//                 return type || "-";
+
+//         }
+
+//     };
+
+
+//     // ============================================
+//     // FORMAT DATE
+//     // ============================================
+
+//     const formatDate = (
+//         date
+//     ) => {
+
+//         if (!date) {
+
+//             return "-";
+
+//         }
+
+
+//         try {
+
+//             return new Date(
+//                 date
+//             ).toLocaleString();
+
+//         }
+
+//         catch {
+
+//             return "-";
+
+//         }
+
+//     };
+
+
+//     // ============================================
+//     // LOADING
+//     // ============================================
+
+//     if (loading) {
+
+//         return (
+
+//             <div className="stock-history">
+
+//                 <div className="inventory-loading">
+
+//                     Loading inventory...
+
+//                 </div>
+
+//             </div>
+
+//         );
+
+//     }
+
+
+//     // ============================================
+//     // UI
+//     // ============================================
+
+//     return (
+
+//         <div className="stock-history">
+
+
+//             {/* ====================================
+//                 HEADER
+//             ==================================== */}
+
+//             <div className="stock-header">
+
+//                 <div>
+
+//                     <h1>
+//                         Stock History
+//                     </h1>
+
+//                     <p>
+//                         View product inventory and stock movement history.
+//                     </p>
+
+//                 </div>
+
+
+//                 {/* ==================================
+//                     PRODUCT SELECT
+//                 ================================== */}
+
+//                 <div className="product-select-wrapper">
+
+//                     <label>
+//                         Select Product
+//                     </label>
+
+
+//                     <select
+
+//                         value={selected}
+
+//                         onChange={
+//                             handleProductChange
+//                         }
+
+//                     >
+
+//                         <option value="">
+
+//                             Select Product
+
+//                         </option>
+
+
+//                         {
+
+//                             products.length > 0
+
+//                                 ?
+
+//                                 products.map(
+//                                     (item) => {
+
+//                                         if (
+//                                             !item.product
+//                                         ) {
+
+//                                             return null;
+
+//                                         }
+
+
+//                                         return (
+
+//                                             <option
+
+//                                                 key={
+//                                                     item.product._id
+//                                                 }
+
+//                                                 value={
+//                                                     item.product._id
+//                                                 }
+
+//                                             >
+
+//                                                 {
+//                                                     item.product.name
+//                                                 }
+
+//                                                 {" - Stock: "}
+
+//                                                 {
+//                                                     item.currentStock ??
+//                                                     0
+//                                                 }
+
+//                                             </option>
+
+//                                         );
+
+//                                     }
+
+//                                 )
+
+//                                 :
+
+//                                 (
+
+//                                     <option
+//                                         disabled
+//                                     >
+
+//                                         No Products Found
+
+//                                     </option>
+
+//                                 )
+
+//                         }
+
+//                     </select>
+
+//                 </div>
+
+//             </div>
+
+
+//             {/* ====================================
+//                 DEBUG INFO
+//             ==================================== */}
+
+//             {/*
+//             Temporary debugging.
+//             Agar products nahi aa rahe to
+//             browser console check karo.
+//             */}
+
+
+//             {/* ====================================
+//                 SELECTED PRODUCT
+//             ==================================== */}
+
+//             {
+
+//                 selectedInventory && (
+
+//                     <div className="product-inventory-card">
+
+
+//                         {/* ==================================
+//                             PRODUCT INFO
+//                         ================================== */}
+
+//                         <div className="product-info">
+
+
+//                             <div className="product-image">
+
+//                                 {
+
+//                                     selectedInventory
+//                                         .product
+//                                         ?.images
+//                                         ?.length > 0
+
+//                                         ?
+
+//                                         (
+
+//                                             <img
+
+//                                                 src={
+//                                                     selectedInventory
+//                                                         .product
+//                                                         .images[0]
+//                                                         ?.url
+//                                                         ?.startsWith("http")
+
+//                                                         ?
+
+//                                                         selectedInventory
+//                                                             .product
+//                                                             .images[0]
+//                                                             .url
+
+//                                                         :
+
+//                                                       `${BASE_URL}${selectedInventory.product.images[0].url}`
+//                                                 }
+
+//                                                 alt={
+//                                                     selectedInventory
+//                                                         .product
+//                                                         ?.name ||
+//                                                     "Product"
+//                                                 }
+
+//                                             />
+
+//                                         )
+
+//                                         :
+
+//                                         (
+
+//                                             <div className="no-image">
+
+//                                                 No Image
+
+//                                             </div>
+
+//                                         )
+
+//                                 }
+
+//                             </div>
+
+
+//                             {/* PRODUCT DETAILS */}
+
+//                             <div className="product-details">
+
+//                                 <h2>
+
+//                                     {
+//                                         selectedInventory
+//                                             .product
+//                                             ?.name ||
+//                                         "-"
+//                                     }
+
+//                                 </h2>
+
+
+//                                 <div className="product-meta">
+
+
+//                                     <span>
+
+//                                         SKU:
+
+//                                         {" "}
+
+//                                         {
+//                                             selectedInventory
+//                                                 .product
+//                                                 ?.sku ||
+//                                             "-"
+//                                         }
+
+//                                     </span>
+
+
+//                                     <span>
+
+//                                         Brand:
+
+//                                         {" "}
+
+//                                         {
+//                                             selectedInventory
+//                                                 .product
+//                                                 ?.brand
+//                                                 ?.name ||
+//                                             "-"
+//                                         }
+
+//                                     </span>
+
+
+//                                     <span>
+
+//                                         Category:
+
+//                                         {" "}
+
+//                                         {
+//                                             selectedInventory
+//                                                 .product
+//                                                 ?.category
+//                                                 ?.name ||
+//                                             "-"
+//                                         }
+
+//                                     </span>
+
+
+//                                 </div>
+
+//                             </div>
+
+
+//                             {/* STATUS */}
+
+//                             <div>
+
+//                                 <span
+
+//                                     className={
+//                                         getStatusClass(
+//                                             selectedInventory.status
+//                                         )
+//                                     }
+
+//                                 >
+
+//                                     {
+//                                         selectedInventory.status ||
+//                                         "-"
+//                                     }
+
+//                                 </span>
+
+//                             </div>
+
+//                         </div>
+
+
+//                         {/* ==================================
+//                             STOCK SUMMARY
+//                         ================================== */}
+
+//                         <div className="stock-summary">
+
+
+//                             <div className="stock-box">
+
+//                                 <span>
+//                                     Current Stock
+//                                 </span>
+
+//                                 <strong>
+
+//                                     {
+//                                         selectedInventory
+//                                             .currentStock ??
+//                                         0
+//                                     }
+
+//                                 </strong>
+
+//                                 <small>
+
+//                                     {
+//                                         selectedInventory.unit ||
+//                                         "piece"
+//                                     }
+
+//                                 </small>
+
+//                             </div>
+
+
+//                             <div className="stock-box">
+
+//                                 <span>
+//                                     Reserved Stock
+//                                 </span>
+
+//                                 <strong>
+
+//                                     {
+//                                         selectedInventory
+//                                             .reservedStock ??
+//                                         0
+//                                     }
+
+//                                 </strong>
+
+//                                 <small>
+//                                     Pending orders
+//                                 </small>
+
+//                             </div>
+
+
+//                             <div className="stock-box">
+
+//                                 <span>
+//                                     Available Stock
+//                                 </span>
+
+//                                 <strong>
+
+//                                     {
+//                                         getAvailableStock(
+//                                             selectedInventory
+//                                         )
+//                                     }
+
+//                                 </strong>
+
+//                                 <small>
+//                                     Available for sale
+//                                 </small>
+
+//                             </div>
+
+
+//                             <div className="stock-box">
+
+//                                 <span>
+//                                     Minimum Stock
+//                                 </span>
+
+//                                 <strong>
+
+//                                     {
+//                                         selectedInventory
+//                                             .minimumStock ??
+//                                         0
+//                                     }
+
+//                                 </strong>
+
+//                                 <small>
+//                                     Alert level
+//                                 </small>
+
+//                             </div>
+
+
+//                             <div className="stock-box">
+
+//                                 <span>
+//                                     Maximum Stock
+//                                 </span>
+
+//                                 <strong>
+
+//                                     {
+//                                         selectedInventory
+//                                             .maximumStock ??
+//                                         0
+//                                     }
+
+//                                 </strong>
+
+//                                 <small>
+//                                     Capacity
+//                                 </small>
+
+//                             </div>
+
+
+//                         </div>
+
+//                     </div>
+
+//                 )
+
+//             }
+
+
+//             {/* ====================================
+//                 HISTORY SECTION
+//             ==================================== */}
+
+//             <div className="history-section">
+
+
+//                 <div className="history-title">
+
+//                     <h2>
+//                         Stock Movement History
+//                     </h2>
+
+
+//                     {
+
+//                         selectedInventory && (
+
+//                             <span>
+
+//                                 Product:
+
+//                                 {" "}
+
+//                                 {
+//                                     selectedInventory
+//                                         .product
+//                                         ?.name ||
+//                                     "-"
+//                                 }
+
+//                             </span>
+
+//                         )
+
+//                     }
+
+//                 </div>
+
+
+//                 <div className="table-container">
+
+//                     <table>
+
+//                         <thead>
+
+//                             <tr>
+
+//                                 <th>
+//                                     Date
+//                                 </th>
+
+//                                 <th>
+//                                     Product
+//                                 </th>
+
+//                                 <th>
+//                                     Brand
+//                                 </th>
+
+//                                 <th>
+//                                     Category
+//                                 </th>
+
+//                                 <th>
+//                                     Type
+//                                 </th>
+
+//                                 <th>
+//                                     Qty
+//                                 </th>
+
+//                                 <th>
+//                                     Previous Stock
+//                                 </th>
+
+//                                 <th>
+//                                     Updated Stock
+//                                 </th>
+
+//                                 <th>
+//                                     Description
+//                                 </th>
+
+//                                 <th>
+//                                     Updated By
+//                                 </th>
+
+//                             </tr>
+
+//                         </thead>
+
+
+//                         <tbody>
+
+
+//                             {/* HISTORY LOADING */}
+
+//                             {
+
+//                                 historyLoading && (
+
+//                                     <tr>
+
+//                                         <td
+//                                             colSpan="10"
+//                                         >
+
+//                                             Loading stock history...
+
+//                                         </td>
+
+//                                     </tr>
+
+//                                 )
+
+//                             }
+
+
+//                             {/* HISTORY DATA */}
+
+//                             {
+
+//                                 !historyLoading &&
+//                                 history.length > 0 &&
+
+//                                 history.map(
+//                                     (item) => (
+
+//                                         <tr
+//                                             key={
+//                                                 item._id
+//                                             }
+//                                         >
+
+
+//                                             <td>
+
+//                                                 {
+//                                                     formatDate(
+//                                                         item.createdAt
+//                                                     )
+//                                                 }
+
+//                                             </td>
+
+
+//                                             <td>
+
+//                                                 {
+//                                                     item.product
+//                                                         ?.name ||
+
+//                                                     selectedInventory
+//                                                         ?.product
+//                                                         ?.name ||
+
+//                                                     "-"
+//                                                 }
+
+//                                             </td>
+
+
+//                                             <td>
+
+//                                                 {
+//                                                     item.product
+//                                                         ?.brand
+//                                                         ?.name ||
+
+//                                                     selectedInventory
+//                                                         ?.product
+//                                                         ?.brand
+//                                                         ?.name ||
+
+//                                                     "-"
+//                                                 }
+
+//                                             </td>
+
+
+//                                             <td>
+
+//                                                 {
+//                                                     item.product
+//                                                         ?.category
+//                                                         ?.name ||
+
+//                                                     selectedInventory
+//                                                         ?.product
+//                                                         ?.category
+//                                                         ?.name ||
+
+//                                                     "-"
+//                                                 }
+
+//                                             </td>
+
+
+//                                             <td>
+
+//                                                 <span
+
+//                                                     className={
+//                                                         getTransactionClass(
+//                                                             item.type
+//                                                         )
+//                                                     }
+
+//                                                 >
+
+//                                                     {
+//                                                         getTransactionLabel(
+//                                                             item.type
+//                                                         )
+//                                                     }
+
+//                                                 </span>
+
+//                                             </td>
+
+
+//                                             <td>
+
+//                                                 {
+//                                                     item.quantity ??
+//                                                     0
+//                                                 }
+
+//                                             </td>
+
+
+//                                             <td>
+
+//                                                 {
+//                                                     item.previousStock ??
+//                                                     0
+//                                                 }
+
+//                                             </td>
+
+
+//                                             <td>
+
+//                                                 {
+//                                                     item.updatedStock ??
+//                                                     0
+//                                                 }
+
+//                                             </td>
+
+
+//                                             <td>
+
+//                                                 {
+//                                                     item.description ||
+//                                                     "-"
+//                                                 }
+
+//                                             </td>
+
+
+//                                             <td>
+
+//                                                 {
+//                                                     item.createdBy
+//                                                         ?.name ||
+
+//                                                     item.createdBy
+//                                                         ?.firstName ||
+
+//                                                     item.createdBy
+//                                                         ?.email ||
+
+//                                                     "-"
+//                                                 }
+
+//                                             </td>
+
+
+//                                         </tr>
+
+//                                     )
+
+//                                 )
+
+//                             }
+
+
+//                             {/* NO HISTORY */}
+
+//                             {
+
+//                                 !historyLoading &&
+//                                 history.length === 0 &&
+
+//                                 (
+
+//                                     <tr>
+
+//                                         <td
+
+//                                             colSpan="10"
+
+//                                             className="no-data"
+
+//                                         >
+
+//                                             {
+
+//                                                 selected
+
+//                                                     ?
+
+//                                                     "No Stock History Found"
+
+//                                                     :
+
+//                                                     "Select a product to view stock history"
+
+//                                             }
+
+//                                         </td>
+
+//                                     </tr>
+
+//                                 )
+
+//                             }
+
+
+//                         </tbody>
+
+//                     </table>
+
+//                 </div>
+
+//             </div>
+
+
+//         </div>
+
+//     );
+
+// }
+
+
+// export default StockHistory;
+
 import { useEffect, useState } from "react";
 
 import "./StockHistory.css";
@@ -6,29 +1336,45 @@ import {
     getInventory,
     getStockHistory
 } from "../../services/inventoryService";
+
 import { toast } from "react-toastify";
 
-const API_URL = import.meta.env.VITE_API_URL;
-const BASE_URL = API_URL.replace("/api", "");
 
+// ======================================================
+// API URL
+// ======================================================
+
+const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+const BASE_URL =
+    API_URL.replace(/\/api\/?$/, "");
+
+
+// ======================================================
+// COMPONENT
+// ======================================================
 
 function StockHistory() {
-
 
     // ============================================
     // STATES
     // ============================================
 
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] =
+        useState([]);
 
-    const [selected, setSelected] = useState("");
+    const [selected, setSelected] =
+        useState("");
 
     const [selectedInventory, setSelectedInventory] =
         useState(null);
 
-    const [history, setHistory] = useState([]);
+    const [history, setHistory] =
+        useState([]);
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] =
+        useState(true);
 
     const [historyLoading, setHistoryLoading] =
         useState(false);
@@ -54,6 +1400,7 @@ function StockHistory() {
             const response =
                 await getInventory();
 
+
             console.log(
                 "================================="
             );
@@ -63,7 +1410,7 @@ function StockHistory() {
             );
 
             console.log(
-                response.data
+                response?.data
             );
 
             console.log(
@@ -71,8 +1418,15 @@ function StockHistory() {
             );
 
 
+            // ========================================
+            // SUPPORT DIFFERENT API RESPONSE FORMATS
+            // ========================================
+
             const inventoryData =
-                response.data?.data;
+                response?.data?.data ||
+                response?.data?.inventory ||
+                response?.data?.data?.inventory ||
+                [];
 
 
             if (
@@ -86,7 +1440,6 @@ function StockHistory() {
                 );
 
             }
-
             else {
 
                 console.log(
@@ -117,6 +1470,12 @@ function StockHistory() {
             console.error(
                 "BACKEND RESPONSE:",
                 error.response?.data
+            );
+
+
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to load inventory"
             );
 
 
@@ -178,8 +1537,11 @@ function StockHistory() {
                 (item) => {
 
                     return (
-                        item.product?._id ===
-                        productId
+                        String(
+                            item.product?._id
+                        ) === String(
+                            productId
+                        )
                     );
 
                 }
@@ -238,12 +1600,19 @@ function StockHistory() {
 
             console.log(
                 "STOCK HISTORY RESPONSE:",
-                response.data
+                response?.data
             );
 
 
+            // ========================================
+            // SUPPORT DIFFERENT RESPONSE FORMATS
+            // ========================================
+
             const historyData =
-                response.data?.data;
+                response?.data?.data ||
+                response?.data?.history ||
+                response?.data?.data?.history ||
+                [];
 
 
             if (
@@ -283,6 +1652,12 @@ function StockHistory() {
             console.error(
                 "BACKEND RESPONSE:",
                 error.response?.data
+            );
+
+
+            toast.error(
+                error.response?.data?.message ||
+                "Failed to load stock history"
             );
 
 
@@ -328,15 +1703,130 @@ function StockHistory() {
             );
 
 
-        return (
-            current - reserved
+        return Math.max(
+            current - reserved,
+            0
         );
 
     };
 
 
     // ============================================
-    // STATUS CLASS
+    // STOCK STATUS
+    // ============================================
+
+    /*
+        0       = OUT OF STOCK
+        1 - 5   = LOW STOCK
+        6+      = IN STOCK
+
+        Backend status par depend nahi karna.
+        Current + Reserved stock se calculate hoga.
+    */
+
+    const getStockStatus = (
+        inventory
+    ) => {
+
+        if (!inventory) {
+
+            return "OUT_OF_STOCK";
+
+        }
+
+
+        const currentStock =
+            Number(
+                inventory.currentStock || 0
+            );
+
+
+        const reservedStock =
+            Number(
+                inventory.reservedStock || 0
+            );
+
+
+        const availableStock =
+            Math.max(
+                currentStock -
+                reservedStock,
+                0
+            );
+
+
+        // ========================================
+        // OUT OF STOCK
+        // ========================================
+
+        if (
+            availableStock <= 0
+        ) {
+
+            return "OUT_OF_STOCK";
+
+        }
+
+
+        // ========================================
+        // LOW STOCK
+        // ========================================
+
+        if (
+            availableStock >= 1 &&
+            availableStock <= 5
+        ) {
+
+            return "LOW_STOCK";
+
+        }
+
+
+        // ========================================
+        // IN STOCK
+        // ========================================
+
+        return "IN_STOCK";
+
+    };
+
+
+    // ============================================
+    // STATUS TEXT
+    // ============================================
+
+    const getStatusText = (
+        status
+    ) => {
+
+        switch (status) {
+
+            case "IN_STOCK":
+
+                return "In Stock";
+
+
+            case "LOW_STOCK":
+
+                return "Low Stock";
+
+
+            case "OUT_OF_STOCK":
+
+                return "Out Of Stock";
+
+
+            default:
+
+                return "-";
+
+        }
+
+    };
+
+
+    // ============================================
+    // UNIQUE STATUS CLASS
     // ============================================
 
     const getStatusClass = (
@@ -347,22 +1837,22 @@ function StockHistory() {
 
             case "IN_STOCK":
 
-                return "inventory-status in-stock";
+                return "zaid-stock-history-status zaid-stock-history-status-in";
 
 
             case "LOW_STOCK":
 
-                return "inventory-status low-stock";
+                return "zaid-stock-history-status zaid-stock-history-status-low";
 
 
             case "OUT_OF_STOCK":
 
-                return "inventory-status out-of-stock";
+                return "zaid-stock-history-status zaid-stock-history-status-out";
 
 
             default:
 
-                return "inventory-status";
+                return "zaid-stock-history-status";
 
         }
 
@@ -370,7 +1860,7 @@ function StockHistory() {
 
 
     // ============================================
-    // TRANSACTION CLASS
+    // UNIQUE TRANSACTION CLASS
     // ============================================
 
     const getTransactionClass = (
@@ -381,37 +1871,37 @@ function StockHistory() {
 
             case "STOCK_IN":
 
-                return "transaction stock-in";
+                return "zaid-stock-history-transaction zaid-stock-history-transaction-in";
 
 
             case "STOCK_OUT":
 
-                return "transaction stock-out";
+                return "zaid-stock-history-transaction zaid-stock-history-transaction-out";
 
 
             case "ORDER":
 
-                return "transaction order";
+                return "zaid-stock-history-transaction zaid-stock-history-transaction-order";
 
 
             case "RETURN":
 
-                return "transaction return";
+                return "zaid-stock-history-transaction zaid-stock-history-transaction-return";
 
 
             case "REPAIR_USAGE":
 
-                return "transaction repair";
+                return "zaid-stock-history-transaction zaid-stock-history-transaction-repair";
 
 
             case "RENTAL_OUT":
 
-                return "transaction rental";
+                return "zaid-stock-history-transaction zaid-stock-history-transaction-rental";
 
 
             default:
 
-                return "transaction";
+                return "zaid-stock-history-transaction";
 
         }
 
@@ -500,6 +1990,146 @@ function StockHistory() {
 
 
     // ============================================
+    // IMAGE URL
+    // ============================================
+
+    const getImageUrl = (
+        image
+    ) => {
+
+        if (!image) {
+
+            return "";
+
+        }
+
+
+        // ========================================
+        // STRING IMAGE
+        // ========================================
+
+        if (
+            typeof image === "string"
+        ) {
+
+            if (
+                image.startsWith("http://") ||
+                image.startsWith("https://")
+            ) {
+
+                return image;
+
+            }
+
+
+            const cleanImage =
+                image.startsWith("/")
+                    ? image
+                    : `/${image}`;
+
+
+            return `${BASE_URL}${cleanImage}`;
+
+        }
+
+
+        // ========================================
+        // OBJECT IMAGE
+        // ========================================
+
+        if (
+            typeof image === "object"
+        ) {
+
+            const imageUrl =
+                image.url ||
+                image.path ||
+                image.image ||
+                image.src ||
+                "";
+
+
+            if (!imageUrl) {
+
+                return "";
+
+            }
+
+
+            if (
+                imageUrl.startsWith("http://") ||
+                imageUrl.startsWith("https://")
+            ) {
+
+                return imageUrl;
+
+            }
+
+
+            const cleanImage =
+                imageUrl.startsWith("/")
+                    ? imageUrl
+                    : `/${imageUrl}`;
+
+
+            return `${BASE_URL}${cleanImage}`;
+
+        }
+
+
+        return "";
+
+    };
+
+
+    // ============================================
+    // GET PRODUCT IMAGE
+    // ============================================
+
+    const getProductImage = (
+        product
+    ) => {
+
+        if (!product) {
+
+            return "";
+
+        }
+
+
+        // ========================================
+        // IMAGES ARRAY
+        // ========================================
+
+        if (
+            Array.isArray(
+                product.images
+            ) &&
+            product.images.length > 0
+        ) {
+
+            return getImageUrl(
+                product.images[0]
+            );
+
+        }
+
+
+        // ========================================
+        // SINGLE IMAGE FIELDS
+        // ========================================
+
+        return getImageUrl(
+            product.image ||
+            product.primaryImage ||
+            product.thumbnail ||
+            product.imageUrl
+        );
+
+    };
+
+
+    // ============================================
     // LOADING
     // ============================================
 
@@ -507,9 +2137,9 @@ function StockHistory() {
 
         return (
 
-            <div className="stock-history">
+            <div className="zaid-stock-history-page">
 
-                <div className="inventory-loading">
+                <div className="zaid-stock-history-loading">
 
                     Loading inventory...
 
@@ -528,14 +2158,14 @@ function StockHistory() {
 
     return (
 
-        <div className="stock-history">
+        <div className="zaid-stock-history-page">
 
 
             {/* ====================================
                 HEADER
             ==================================== */}
 
-            <div className="stock-header">
+            <div className="zaid-stock-history-header">
 
                 <div>
 
@@ -554,7 +2184,7 @@ function StockHistory() {
                     PRODUCT SELECT
                 ================================== */}
 
-                <div className="product-select-wrapper">
+                <div className="zaid-stock-history-select-wrapper">
 
                     <label>
                         Select Product
@@ -596,16 +2226,32 @@ function StockHistory() {
                                         }
 
 
+                                        const productId =
+                                            item.product._id;
+
+
+                                        const availableStock =
+                                            getAvailableStock(
+                                                item
+                                            );
+
+
+                                        const stockStatus =
+                                            getStockStatus(
+                                                item
+                                            );
+
+
                                         return (
 
                                             <option
 
                                                 key={
-                                                    item.product._id
+                                                    productId
                                                 }
 
                                                 value={
-                                                    item.product._id
+                                                    productId
                                                 }
 
                                             >
@@ -617,8 +2263,15 @@ function StockHistory() {
                                                 {" - Stock: "}
 
                                                 {
-                                                    item.currentStock ??
-                                                    0
+                                                    availableStock
+                                                }
+
+                                                {" - "}
+
+                                                {
+                                                    getStatusText(
+                                                        stockStatus
+                                                    )
                                                 }
 
                                             </option>
@@ -653,17 +2306,6 @@ function StockHistory() {
 
 
             {/* ====================================
-                DEBUG INFO
-            ==================================== */}
-
-            {/*
-            Temporary debugging.
-            Agar products nahi aa rahe to
-            browser console check karo.
-            */}
-
-
-            {/* ====================================
                 SELECTED PRODUCT
             ==================================== */}
 
@@ -671,24 +2313,25 @@ function StockHistory() {
 
                 selectedInventory && (
 
-                    <div className="product-inventory-card">
+                    <div className="zaid-stock-history-product-card">
 
 
                         {/* ==================================
                             PRODUCT INFO
                         ================================== */}
 
-                        <div className="product-info">
+                        <div className="zaid-stock-history-product-info">
 
 
-                            <div className="product-image">
+                            {/* PRODUCT IMAGE */}
+
+                            <div className="zaid-stock-history-product-image">
 
                                 {
 
-                                    selectedInventory
-                                        .product
-                                        ?.images
-                                        ?.length > 0
+                                    getProductImage(
+                                        selectedInventory.product
+                                    )
 
                                         ?
 
@@ -697,22 +2340,9 @@ function StockHistory() {
                                             <img
 
                                                 src={
-                                                    selectedInventory
-                                                        .product
-                                                        .images[0]
-                                                        ?.url
-                                                        ?.startsWith("http")
-
-                                                        ?
-
-                                                        selectedInventory
-                                                            .product
-                                                            .images[0]
-                                                            .url
-
-                                                        :
-
-                                                      `${BASE_URL}${selectedInventory.product.images[0].url}`
+                                                    getProductImage(
+                                                        selectedInventory.product
+                                                    )
                                                 }
 
                                                 alt={
@@ -730,7 +2360,7 @@ function StockHistory() {
 
                                         (
 
-                                            <div className="no-image">
+                                            <div className="zaid-stock-history-no-image">
 
                                                 No Image
 
@@ -743,9 +2373,11 @@ function StockHistory() {
                             </div>
 
 
-                            {/* PRODUCT DETAILS */}
+                            {/* ==================================
+                                PRODUCT DETAILS
+                            ================================== */}
 
-                            <div className="product-details">
+                            <div className="zaid-stock-history-product-details">
 
                                 <h2>
 
@@ -759,7 +2391,7 @@ function StockHistory() {
                                 </h2>
 
 
-                                <div className="product-meta">
+                                <div className="zaid-stock-history-product-meta">
 
 
                                     <span>
@@ -817,23 +2449,30 @@ function StockHistory() {
                             </div>
 
 
-                            {/* STATUS */}
+                            {/* ==================================
+                                STATUS
+                            ================================== */}
 
-                            <div>
+                            <div className="zaid-stock-history-status-wrapper">
 
                                 <span
 
                                     className={
                                         getStatusClass(
-                                            selectedInventory.status
+                                            getStockStatus(
+                                                selectedInventory
+                                            )
                                         )
                                     }
 
                                 >
 
                                     {
-                                        selectedInventory.status ||
-                                        "-"
+                                        getStatusText(
+                                            getStockStatus(
+                                                selectedInventory
+                                            )
+                                        )
                                     }
 
                                 </span>
@@ -847,10 +2486,12 @@ function StockHistory() {
                             STOCK SUMMARY
                         ================================== */}
 
-                        <div className="stock-summary">
+                        <div className="zaid-stock-history-summary">
 
 
-                            <div className="stock-box">
+                            {/* CURRENT */}
+
+                            <div className="zaid-stock-history-summary-box">
 
                                 <span>
                                     Current Stock
@@ -878,7 +2519,9 @@ function StockHistory() {
                             </div>
 
 
-                            <div className="stock-box">
+                            {/* RESERVED */}
+
+                            <div className="zaid-stock-history-summary-box">
 
                                 <span>
                                     Reserved Stock
@@ -901,7 +2544,9 @@ function StockHistory() {
                             </div>
 
 
-                            <div className="stock-box">
+                            {/* AVAILABLE */}
+
+                            <div className="zaid-stock-history-summary-box">
 
                                 <span>
                                     Available Stock
@@ -924,7 +2569,9 @@ function StockHistory() {
                             </div>
 
 
-                            <div className="stock-box">
+                            {/* MINIMUM */}
+
+                            <div className="zaid-stock-history-summary-box">
 
                                 <span>
                                     Minimum Stock
@@ -947,7 +2594,9 @@ function StockHistory() {
                             </div>
 
 
-                            <div className="stock-box">
+                            {/* MAXIMUM */}
+
+                            <div className="zaid-stock-history-summary-box">
 
                                 <span>
                                     Maximum Stock
@@ -972,6 +2621,7 @@ function StockHistory() {
 
                         </div>
 
+
                     </div>
 
                 )
@@ -983,10 +2633,10 @@ function StockHistory() {
                 HISTORY SECTION
             ==================================== */}
 
-            <div className="history-section">
+            <div className="zaid-stock-history-section">
 
 
-                <div className="history-title">
+                <div className="zaid-stock-history-title">
 
                     <h2>
                         Stock Movement History
@@ -1019,7 +2669,7 @@ function StockHistory() {
                 </div>
 
 
-                <div className="table-container">
+                <div className="zaid-stock-history-table-container">
 
                     <table>
 
@@ -1075,7 +2725,9 @@ function StockHistory() {
                         <tbody>
 
 
-                            {/* HISTORY LOADING */}
+                            {/* ==================================
+                                HISTORY LOADING
+                            ================================== */}
 
                             {
 
@@ -1085,6 +2737,7 @@ function StockHistory() {
 
                                         <td
                                             colSpan="10"
+                                            className="zaid-stock-history-message-cell"
                                         >
 
                                             Loading stock history...
@@ -1098,7 +2751,9 @@ function StockHistory() {
                             }
 
 
-                            {/* HISTORY DATA */}
+                            {/* ==================================
+                                HISTORY DATA
+                            ================================== */}
 
                             {
 
@@ -1115,6 +2770,8 @@ function StockHistory() {
                                         >
 
 
+                                            {/* DATE */}
+
                                             <td>
 
                                                 {
@@ -1126,6 +2783,8 @@ function StockHistory() {
                                             </td>
 
 
+                                            {/* PRODUCT */}
+
                                             <td>
 
                                                 {
@@ -1141,6 +2800,8 @@ function StockHistory() {
 
                                             </td>
 
+
+                                            {/* BRAND */}
 
                                             <td>
 
@@ -1160,6 +2821,8 @@ function StockHistory() {
                                             </td>
 
 
+                                            {/* CATEGORY */}
+
                                             <td>
 
                                                 {
@@ -1177,6 +2840,8 @@ function StockHistory() {
 
                                             </td>
 
+
+                                            {/* TYPE */}
 
                                             <td>
 
@@ -1201,6 +2866,8 @@ function StockHistory() {
                                             </td>
 
 
+                                            {/* QUANTITY */}
+
                                             <td>
 
                                                 {
@@ -1210,6 +2877,8 @@ function StockHistory() {
 
                                             </td>
 
+
+                                            {/* PREVIOUS STOCK */}
 
                                             <td>
 
@@ -1221,6 +2890,8 @@ function StockHistory() {
                                             </td>
 
 
+                                            {/* UPDATED STOCK */}
+
                                             <td>
 
                                                 {
@@ -1231,6 +2902,8 @@ function StockHistory() {
                                             </td>
 
 
+                                            {/* DESCRIPTION */}
+
                                             <td>
 
                                                 {
@@ -1240,6 +2913,8 @@ function StockHistory() {
 
                                             </td>
 
+
+                                            {/* UPDATED BY */}
 
                                             <td>
 
@@ -1268,7 +2943,9 @@ function StockHistory() {
                             }
 
 
-                            {/* NO HISTORY */}
+                            {/* ==================================
+                                NO HISTORY
+                            ================================== */}
 
                             {
 
@@ -1283,7 +2960,7 @@ function StockHistory() {
 
                                             colSpan="10"
 
-                                            className="no-data"
+                                            className="zaid-stock-history-no-data"
 
                                         >
 

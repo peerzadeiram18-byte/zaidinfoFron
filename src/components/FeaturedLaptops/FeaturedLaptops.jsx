@@ -805,7 +805,7 @@ const FeaturedLaptops = () => {
           PRODUCTS
       ================================================= */}
 
-      {!loading &&
+      {/* {!loading &&
         filteredProducts.length > 0 && (
           <div
             className="
@@ -828,7 +828,40 @@ const FeaturedLaptops = () => {
               )
             )}
           </div>
-        )}
+        )} */}
+
+
+        {!loading &&
+  filteredProducts.length > 0 && (
+    <div
+      className="
+        flex
+        flex-nowrap
+        gap-6
+        overflow-x-auto
+        overflow-y-hidden
+        scrollbar-hide
+        pb-2
+      "
+    >
+      {filteredProducts.map((product) => (
+        <div
+          key={product.id}
+          className="
+            flex-none
+            w-[280px]
+            sm:w-[300px]
+            lg:w-[310px]
+          "
+        >
+          <LaptopCard
+            product={product}
+            onImageError={handleImageError}
+          />
+        </div>
+      ))}
+    </div>
+  )}
 
       {/* =================================================
           EMPTY STATE

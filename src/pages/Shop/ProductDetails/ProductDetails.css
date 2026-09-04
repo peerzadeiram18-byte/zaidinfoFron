@@ -1443,3 +1443,25 @@
     }
 
 }
+
+
+/* =====================================================
+   LOW STOCK
+===================================================== */
+
+.low-stock3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 700;
+  color: orange;
+}
+
+.low-stock3 > span {
+  font-size: 12px;
+}
+
+.low-stock3 small {
+  font-size: 13px;
+  font-weight: 600;
+}
