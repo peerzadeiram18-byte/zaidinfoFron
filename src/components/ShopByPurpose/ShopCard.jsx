@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const ShopCard = ({ image, title, description, badge }) => {
+const ShopCard = ({ image, title, description, badge, onButtonClick }) => {
   return (
     <motion.div
       initial={{ scale: 0.1, opacity: 0 }}
@@ -14,7 +14,9 @@ const ShopCard = ({ image, title, description, badge }) => {
       className="relative flex flex-col h-full bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-800 overflow-hidden hover:shadow-md transition-all duration-300 w-full"
     >
       {/* Fixed Aspect Ratio Image Container */}
-      <div className="relative w-full aspect-[4/3] bg-gray-50 dark:bg-slate-800/50 overflow-hidden flex-shrink-0 flex items-center justify-center">
+      <div onClick={()=>{
+        onButtonClick()
+      }} className="relative w-full aspect-[4/3] bg-gray-50 dark:bg-slate-800/50 overflow-hidden flex-shrink-0 flex items-center justify-center">
         <img
           src={image}
           alt={title}

@@ -6,11 +6,13 @@ import rentlaptop from '../../assets/images/rentlaptop.jpg';
 import laptoprepair from '../../assets/images/laptoprepair.jpg';
 import coorporatesolutions from '../../assets/images/coorporatesolutions.jpg';
 import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 const refurbishedLaptopUrl =
   'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1000&auto=format&fit=crop';
 
 const ServicesSection = () => {
+  const navigate=useNavigate()
   const services = [
     {
       id: 1,
@@ -26,6 +28,8 @@ const ServicesSection = () => {
       buttonText: 'Explore Rentals',
       bgImage: rentlaptop,
       bgPosition: 'center',
+      url:"rental"
+      
     },
     {
       id: 2,
@@ -41,6 +45,7 @@ const ServicesSection = () => {
       buttonText: 'Book a Repair',
       bgImage: laptoprepair,
       bgPosition: '75% 15%',
+      url:"/repair"
     },
     {
       id: 3,
@@ -56,6 +61,7 @@ const ServicesSection = () => {
       buttonText: 'View Collection',
       bgImage: refurbishedLaptopUrl,
       bgPosition: 'center',
+      url:"/shop?condition=refurbished"
     },
     {
       id: 4,
@@ -71,6 +77,7 @@ const ServicesSection = () => {
       buttonText: 'Get a Quote',
       bgImage: coorporatesolutions,
       bgPosition: 'center',
+      url:'https://api.whatsapp.com/send/?phone=919876543210&text=Hi+Zaid+Infotech%2C+I+have+a+query%21&type=phone_number&app_absent=0'
     },
   ];
 
@@ -102,7 +109,7 @@ const ServicesSection = () => {
             buttonText={service.buttonText}
             bgImage={service.bgImage}
             bgPosition={service.bgPosition}
-            onButtonClick={() => toast.error(`Clicked: ${service.buttonText}`)}
+            onButtonClick={() => navigate(service.url)}
           />
         ))}
       </motion.div>

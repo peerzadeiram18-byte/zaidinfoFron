@@ -1,4 +1,3 @@
-// ShopByPurpose.jsx
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -11,44 +10,52 @@ import studentlaptop from '../../assets/images/studentlaptop.jpg';
 import refurbishedlaptop from '../../assets/images/refurbishedlaptop.jpg';
 import Macbook from '../../assets/images/Macbook.jpg';
 import accessories from '../../assets/images/accessoriess.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const ShopByPurpose = () => {
+  const navigate=useNavigate()
   const categories = [
     {
       id: 1,
       title: 'Business Laptops',
       description: 'Powerful. Reliable. Secure.',
       image: buisnesslaptop,
+      url:"/shop?category=Business Laptops"
     },
     {
       id: 2,
       title: 'Gaming Laptops',
       description: 'High Performance. No Limits.',
       image: gaminglaptop,
+      url:"/shop?category=Gaming Laptops"
     },
     {
       id: 3,
       title: 'Student Laptops',
       description: 'Study. Learn. Achieve.',
       image: studentlaptop,
+      url:"/shop?category=Business Laptops"
     },
     {
       id: 4,
       title: 'Refurbished Laptops',
       description: 'Certified. Tested. Trusted.',
       image: refurbishedlaptop,
+      url:"/shop?category=Refurbished Laptops"
     },
     {
       id: 5,
       title: 'MacBooks',
       description: 'Power. Performance. Style.',
       image: Macbook,
+      url:"/shop?category=Macbooks"
     },
     {
       id: 6,
       title: 'Accessories',
       description: 'Enhance Your Experience.',
       image: accessories,
+      category:"/shop?category=Accessories"
     },
   ];
 
@@ -99,6 +106,9 @@ const ShopByPurpose = () => {
             description={category.description}
             image={category.image}
             badge={category.badge}
+           onButtonClick={() => {
+           navigate(category.url)
+            }}
           />
         ))}
       </div>
@@ -106,7 +116,7 @@ const ShopByPurpose = () => {
       {/* View All Categories Link */}
       <div className="flex justify-center mt-5">
         <a
-          href="#categories"
+          href="/shop"
           className="inline-flex items-center text-sm font-semibold text-[#16a34a] dark:text-emerald-400 hover:text-[#15803d] dark:hover:text-emerald-300 transition-colors"
         >
           <span>View All Categories</span>

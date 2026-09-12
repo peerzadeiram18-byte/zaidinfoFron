@@ -68,7 +68,7 @@ const OrderSuccess = () => {
 
                 <div className="order-details">
 
-                    <p>
+                    {/* <p>
 
                         <strong>
 
@@ -82,7 +82,7 @@ const OrderSuccess = () => {
 
                         {order._id}
 
-                    </span>
+                    </span> */}
 
                     <p>
 

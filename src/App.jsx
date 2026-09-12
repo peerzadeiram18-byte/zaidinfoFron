@@ -1207,7 +1207,7 @@
 
 
 import { Routes, Route, useLocation } from "react-router-dom";
-
+import { useState, useEffect, useRef } from "react";
 import TopBar from "./components/TopBar/TopBar";
 import Header from "./components/Header/Header";
 import WhatsAppWidget from "./components/WhatsAppWidget/WhatsAppWidget";
@@ -1472,7 +1472,13 @@ import WalkInRentalDetails from "./pages/rental/WalkInRentalDetails.jsx";
 // =====================================================
 
 function App() {
+
+      const fixedHeaderRef = useRef(null);
+const [headerHeight, setHeaderHeight] = useState(150);
     const location = useLocation();
+
+
+
 
     // =====================================================
     // ADMIN ROUTES
@@ -1792,7 +1798,8 @@ function App() {
                         TOPBAR + HEADER
                     ========================================= */}
 
-                    <div
+               <div
+                    ref={fixedHeaderRef}  
                         className="
                             fixed
                             top-0
@@ -1810,7 +1817,7 @@ function App() {
                         HEADER + TOPBAR SPACE
                     ========================================= */}
 
-                    <div className="h-[150px] w-full flex-shrink-0"></div>
+                    <div style={{ height: headerHeight }}  className=" w-full flex-shrink-0"></div>
                 </>
             )}
 

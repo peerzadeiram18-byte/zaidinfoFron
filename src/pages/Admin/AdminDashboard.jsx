@@ -4,6 +4,7 @@
 
 // import DashboardCard from "../../components/Admin/DashboardCard/DashboardCard";
 // import DashboardTable from "../../components/Admin/DashboardTable/DashboardTable";
+// import { getUsers } from "../../services/userService";
 
 // import "./AdminDashboard.css";
 
@@ -32,6 +33,8 @@
 
 //   const [customers] = useState(initialCustomers);
 
+//   const [customerCount,setCustomerCount]=useState(0)
+
 //   const [counts, setCounts] = useState({
 //     orderCount: 0,
 //     employeeCount: 0,
@@ -40,7 +43,35 @@
 //   useEffect(() => {
 //     getOrders();
 //     getEmployees();
+//     getCustomers()
 //   }, []);
+
+// const getCustomers = async () => {
+//   const token = localStorage.getItem("token");
+
+//   if (!token) {
+//     setCustomerCount(0);
+//     return;
+//   }
+
+//   try {
+//     const res = await axios.get(`${API_URL}/users`, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     });
+
+//     const users = Array.isArray(res.data?.users) ? res.data.users : [];
+
+//     const customers = users.filter((user) => user.role === "CUSTOMER");
+
+//     setCustomerCount(customers.length);
+//   } catch (error) {
+//     console.error("Failed to fetch customers:", error);
+//     setCustomerCount(0);
+//   }
+// };
+
 
 //   const getOrders = async () => {
 //     try {
@@ -77,6 +108,8 @@
 //           Authorization: `Bearer ${token}`,
 //         },
 //       });
+
+      
       
 
 //       const employeeLength =
@@ -111,6 +144,11 @@
 //               </p>
 //             </div>
 //           </div>
+
+          
+
+
+
 //           {/* ==============================
 //               STATS
 //           ============================== */}
@@ -118,7 +156,7 @@
 
 //             <DashboardCard
 //               title="Customers"
-//               total="250"
+//               total={customerCount}
 //               delta="8.2%"
 //               up={true}
 //               accent="accent"
@@ -399,14 +437,26 @@
 // }
 
 
-
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaHome, FaBell } from "react-icons/fa";
+
+import {
+  FiHome,
+  FiBell,
+  FiCheckCircle,
+  FiX,
+  FiRefreshCw,
+} from "react-icons/fi";
 
 import DashboardCard from "../../components/Admin/DashboardCard/DashboardCard";
 import DashboardTable from "../../components/Admin/DashboardTable/DashboardTable";
+import { getUsers } from "../../services/userService";
+import {
+  getMyNotifications,
+  markNotificationAsRead,
+  markAllNotificationsAsRead,
+} from "../../services/notificationService";
 
 import "./AdminDashboard.css";
 
@@ -433,26 +483,94 @@ const initialCustomers = [
 export default function AdminDashboard() {
   const navigate = useNavigate();
 
+  // =========================================================
+  // EXISTING CUSTOMER DATA
+  // =========================================================
+
   const [customers] = useState(initialCustomers);
+
+  const [customerCount, setCustomerCount] = useState(0);
+
+  // =========================================================
+  // EXISTING COUNTS
+  // =========================================================
 
   const [counts, setCounts] = useState({
     orderCount: 0,
     employeeCount: 0,
   });
 
-  // =====================================================
-  // NOTIFICATION STATE
-  // =====================================================
+  // =========================================================
+  // NOTIFICATIONS
+  // =========================================================
 
-  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [notifications, setNotifications] = useState([]);
 
-  // =====================================================
-  // GET ORDERS
-  // =====================================================
+  const [notificationLoading, setNotificationLoading] =
+    useState(false);
+
+  const [showNotificationPanel, setShowNotificationPanel] =
+    useState(false);
+
+  // =========================================================
+  // GET AUTH TOKEN
+  // =========================================================
+
+  const getToken = () => {
+    return localStorage.getItem("token");
+  };
+
+  // =========================================================
+  // LOAD CUSTOMERS
+  // EXISTING LOGIC PRESERVED
+  // =========================================================
+
+  const getCustomers = async () => {
+    const token = getToken();
+
+    if (!token) {
+      setCustomerCount(0);
+      return;
+    }
+
+    try {
+      const res = await axios.get(`${API_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const users = Array.isArray(res.data?.users)
+        ? res.data.users
+        : [];
+
+      const customers = users.filter(
+        (user) => user.role === "CUSTOMER"
+      );
+
+      setCustomerCount(customers.length);
+    } catch (error) {
+      console.error(
+        "Failed to fetch customers:",
+        error
+      );
+
+      setCustomerCount(0);
+    }
+  };
+
+  // =========================================================
+  // LOAD ORDERS
+  // EXISTING LOGIC PRESERVED
+  // =========================================================
 
   const getOrders = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
+
+      if (!token) {
+        return;
+      }
 
       const res = await axios.get(`${API_URL}/orders`, {
         headers: {
@@ -471,51 +589,28 @@ export default function AdminDashboard() {
         orderCount: ordersLength,
       }));
     } catch (error) {
-      console.error("Dashboard orders error:", error);
+      console.error(
+        "Dashboard orders error:",
+        error
+      );
     }
   };
 
-  // =====================================================
-  // GET EMPLOYEES
-  // =====================================================
+  // =========================================================
+  // LOAD EMPLOYEES
+  // EXISTING LOGIC PRESERVED
+  // =========================================================
 
   const getEmployees = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      const res = await axios.get(`${API_URL}/users/employees`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const employeeLength =
-        res?.data?.data?.length ||
-        0;
-
-      setCounts((prev) => ({
-        ...prev,
-        employeeCount: employeeLength,
-      }));
-    } catch (error) {
-      console.error("Cant get the employees :", error);
-    }
-  };
-
-  // =====================================================
-  // GET ADMIN NOTIFICATIONS
-  // =====================================================
-
-  const getAdminNotifications = useCallback(async () => {
-    try {
-      const token = localStorage.getItem("token");
+      const token = getToken();
 
       if (!token) {
         return;
       }
 
       const res = await axios.get(
-        `${API_URL}/notifications/my`,
+        `${API_URL}/users/employees`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -523,106 +618,326 @@ export default function AdminDashboard() {
         }
       );
 
-      // -------------------------------------------------
-      // Handle different backend response structures
-      // -------------------------------------------------
+      const employeeLength =
+        res?.data?.data?.length || 0;
 
-      const notifications =
-        res?.data?.notifications ||
-        res?.data?.data?.notifications ||
-        res?.data?.data ||
-        [];
-
-      // -------------------------------------------------
-      // If backend directly gives unreadCount
-      // -------------------------------------------------
-
-      if (
-        typeof res?.data?.unreadCount === "number"
-      ) {
-        setUnreadNotifications(res.data.unreadCount);
-        return;
-      }
-
-      if (
-        typeof res?.data?.data?.unreadCount === "number"
-      ) {
-        setUnreadNotifications(
-          res.data.data.unreadCount
-        );
-        return;
-      }
-
-      // -------------------------------------------------
-      // Otherwise calculate unread notifications
-      // -------------------------------------------------
-
-      if (Array.isArray(notifications)) {
-        const unread = notifications.filter(
-          (notification) =>
-            notification?.isRead === false ||
-            notification?.read === false ||
-            notification?.status === "UNREAD"
-        ).length;
-
-        setUnreadNotifications(unread);
-      } else {
-        setUnreadNotifications(0);
-      }
+      setCounts((prev) => ({
+        ...prev,
+        employeeCount: employeeLength,
+      }));
     } catch (error) {
       console.error(
-        "Dashboard notifications error:",
+        "Cant get the employees :",
         error
       );
     }
-  }, []);
+  };
 
-  // =====================================================
-  // INITIAL API CALLS
-  // =====================================================
+  // =========================================================
+  // NORMALIZE NOTIFICATION RESPONSE
+  // =========================================================
+
+  const normalizeNotifications = (response) => {
+    const notificationList =
+      response?.notifications ||
+      response?.data?.notifications ||
+      response?.data?.data ||
+      response?.data ||
+      [];
+
+    if (!Array.isArray(notificationList)) {
+      return [];
+    }
+
+    return notificationList;
+  };
+
+  // =========================================================
+  // GET UNREAD STATUS
+  // =========================================================
+
+  const isNotificationRead = (notification) => {
+    return (
+      notification?.isRead === true ||
+      notification?.read === true ||
+      notification?.status === "READ"
+    );
+  };
+
+  // =========================================================
+  // LOAD NOTIFICATIONS
+  // =========================================================
+
+  const loadNotifications = useCallback(
+    async (silent = false) => {
+      const token = getToken();
+
+      if (!token) {
+        setNotifications([]);
+        return;
+      }
+
+      try {
+        if (!silent) {
+          setNotificationLoading(true);
+        }
+
+        const response =
+          await getMyNotifications();
+
+        const list =
+          normalizeNotifications(response);
+
+        setNotifications(list);
+      } catch (error) {
+        console.error(
+          "DASHBOARD NOTIFICATIONS ERROR:",
+          error
+        );
+
+        /*
+         * Important:
+         * Notification API fail hone par dashboard
+         * crash nahi hoga.
+         */
+        setNotifications([]);
+      } finally {
+        if (!silent) {
+          setNotificationLoading(false);
+        }
+      }
+    },
+    []
+  );
+
+  // =========================================================
+  // UNREAD COUNT
+  // =========================================================
+
+  const unreadNotifications =
+    notifications.filter(
+      (notification) =>
+        !isNotificationRead(notification)
+    );
+
+  const unreadCount =
+    unreadNotifications.length;
+
+  // =========================================================
+  // OPEN NOTIFICATION
+  // =========================================================
+
+  const handleNotificationClick = async (
+    notification
+  ) => {
+    if (!notification) {
+      return;
+    }
+
+    try {
+      if (
+        !isNotificationRead(notification) &&
+        notification?._id
+      ) {
+        await markNotificationAsRead(
+          notification._id
+        );
+
+        setNotifications((prev) =>
+          prev.map((item) =>
+            item._id === notification._id
+              ? {
+                  ...item,
+                  isRead: true,
+                  read: true,
+                  status: "READ",
+                }
+              : item
+          )
+        );
+      }
+    } catch (error) {
+      console.error(
+        "MARK NOTIFICATION READ ERROR:",
+        error
+      );
+    }
+
+    // =====================================================
+    // SAME NAVIGATION STYLE AS EXISTING SIDEBAR
+    // =====================================================
+
+    const relatedId =
+      notification?.relatedId ||
+      notification?.orderId ||
+      notification?.relatedOrderId;
+
+    const type = String(
+      notification?.type ||
+        notification?.notificationType ||
+        ""
+    ).toUpperCase();
+
+    setShowNotificationPanel(false);
+
+    if (
+      type.includes("ORDER") &&
+      relatedId
+    ) {
+      navigate(
+        `/admin/orders/${relatedId}`
+      );
+
+      return;
+    }
+
+    if (
+      type.includes("STOCK") ||
+      type.includes("INVENTORY")
+    ) {
+      navigate(
+        `/inventory-dashboard?product=${
+          notification?.productId || ""
+        }`
+      );
+
+      return;
+    }
+
+    navigate("/notifications");
+  };
+
+  // =========================================================
+  // MARK ALL AS READ
+  // =========================================================
+
+  const handleMarkAllRead = async () => {
+    if (unreadCount === 0) {
+      return;
+    }
+
+    try {
+      await markAllNotificationsAsRead();
+
+      setNotifications((prev) =>
+        prev.map((notification) => ({
+          ...notification,
+          isRead: true,
+          read: true,
+          status: "READ",
+        }))
+      );
+    } catch (error) {
+      console.error(
+        "MARK ALL NOTIFICATIONS ERROR:",
+        error
+      );
+    }
+  };
+
+  // =========================================================
+  // FORMAT NOTIFICATION DATE
+  // =========================================================
+
+  const formatNotificationDate = (value) => {
+    if (!value) {
+      return "";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return "";
+    }
+
+    return date.toLocaleString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  // =========================================================
+  // NOTIFICATION TITLE
+  // =========================================================
+
+  const getNotificationTitle = (
+    notification
+  ) => {
+    return (
+      notification?.title ||
+      notification?.subject ||
+      notification?.notificationTitle ||
+      notification?.type ||
+      "Notification"
+    );
+  };
+
+  // =========================================================
+  // NOTIFICATION MESSAGE
+  // =========================================================
+
+  const getNotificationMessage = (
+    notification
+  ) => {
+    return (
+      notification?.message ||
+      notification?.description ||
+      notification?.body ||
+      "You have a new notification."
+    );
+  };
+
+  // =========================================================
+  // INITIAL LOAD
+  // =========================================================
 
   useEffect(() => {
     getOrders();
     getEmployees();
-    getAdminNotifications();
-  }, [getAdminNotifications]);
+    getCustomers();
 
-  // =====================================================
-  // NOTIFICATION AUTO REFRESH
-  // Same idea as your Admin Sidebar
-  // =====================================================
+    loadNotifications();
+  }, [loadNotifications]);
+
+  // =========================================================
+  // AUTO REFRESH NOTIFICATIONS
+  // EVERY 15 SECONDS
+  // =========================================================
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getToken();
 
     if (!token) {
-      return;
+      return undefined;
     }
 
     const interval = setInterval(() => {
-      getAdminNotifications();
+      loadNotifications(true);
     }, 15000);
 
     return () => {
       clearInterval(interval);
     };
-  }, [getAdminNotifications]);
+  }, [loadNotifications]);
 
-  // =====================================================
-  // GO TO HOME
-  // =====================================================
+  // =========================================================
+  // REFRESH ALL
+  // =========================================================
 
-  const handleHomeClick = () => {
-    navigate("/");
+  const handleRefreshDashboard = async () => {
+    await Promise.all([
+      getOrders(),
+      getEmployees(),
+      getCustomers(),
+      loadNotifications(),
+    ]);
   };
 
-  // =====================================================
-  // GO TO NOTIFICATIONS
-  // =====================================================
-
-  const handleNotificationClick = () => {
-    navigate("/notifications");
-  };
+  // =========================================================
+  // UI
+  // =========================================================
 
   return (
     <div className="app admin-app">
@@ -634,6 +949,10 @@ export default function AdminDashboard() {
           ================================================= */}
 
           <div className="dashboard-header">
+
+            {/* ===============================================
+                LEFT SIDE
+            =============================================== */}
 
             <div className="dashboard-header-left">
 
@@ -647,42 +966,276 @@ export default function AdminDashboard() {
 
             </div>
 
-            {/* =================================================
-                HEADER ACTIONS
-            ================================================= */}
+            {/* ===============================================
+                RIGHT SIDE ICONS
+            =============================================== */}
 
             <div className="dashboard-header-actions">
 
-              {/* HOME BUTTON */}
+              {/* =============================================
+                  HOME BUTTON
+              ============================================= */}
 
               <button
                 type="button"
-                className="dashboard-home-btn"
-                onClick={handleHomeClick}
+                className="dashboard-header-icon dashboard-home-button"
+                onClick={() => navigate("/")}
                 title="Go to Home"
                 aria-label="Go to Home"
               >
-                <FaHome />
+                <FiHome size={21} />
               </button>
 
-              {/* NOTIFICATION BUTTON */}
+              {/* =============================================
+                  NOTIFICATION WRAPPER
+              ============================================= */}
+
+              <div className="dashboard-notification-wrapper">
+
+                <button
+                  type="button"
+                  className={`dashboard-header-icon dashboard-bell-button ${
+                    unreadCount > 0
+                      ? "dashboard-bell-has-notification"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setShowNotificationPanel(
+                      (prev) => !prev
+                    )
+                  }
+                  title="Notifications"
+                  aria-label="Notifications"
+                >
+
+                  <FiBell size={21} />
+
+                  {/* =========================================
+                      UNREAD BADGE
+                  ========================================= */}
+
+                  {unreadCount > 0 && (
+                    <span className="dashboard-notification-badge">
+                      {unreadCount > 99
+                        ? "99+"
+                        : unreadCount}
+                    </span>
+                  )}
+
+                </button>
+
+                {/* =========================================
+                    NOTIFICATION DROPDOWN
+                ========================================= */}
+
+                {showNotificationPanel && (
+                  <div className="dashboard-notification-panel">
+
+                    {/* =======================================
+                        PANEL HEADER
+                    ======================================= */}
+
+                    <div className="dashboard-notification-panel-header">
+
+                      <div>
+                        <h3>
+                          Notifications
+                        </h3>
+
+                        <span>
+                          {unreadCount > 0
+                            ? `${unreadCount} unread`
+                            : "All caught up"}
+                        </span>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="dashboard-notification-close"
+                        onClick={() =>
+                          setShowNotificationPanel(
+                            false
+                          )
+                        }
+                        aria-label="Close notifications"
+                      >
+                        <FiX size={18} />
+                      </button>
+
+                    </div>
+
+                    {/* =======================================
+                        MARK ALL READ
+                    ======================================= */}
+
+                    {unreadCount > 0 && (
+                      <button
+                        type="button"
+                        className="dashboard-mark-all-read"
+                        onClick={handleMarkAllRead}
+                      >
+                        <FiCheckCircle size={15} />
+                        Mark all as read
+                      </button>
+                    )}
+
+                    {/* =======================================
+                        LOADING
+                    ======================================= */}
+
+                    {notificationLoading ? (
+                      <div className="dashboard-notification-empty">
+
+                        <FiRefreshCw
+                          className="dashboard-notification-loading-icon"
+                          size={22}
+                        />
+
+                        <span>
+                          Loading notifications...
+                        </span>
+
+                      </div>
+                    ) : notifications.length === 0 ? (
+                      /* =====================================
+                         EMPTY
+                      ===================================== */
+
+                      <div className="dashboard-notification-empty">
+
+                        <FiBell size={26} />
+
+                        <strong>
+                          No notifications
+                        </strong>
+
+                        <span>
+                          You're all caught up.
+                        </span>
+
+                      </div>
+                    ) : (
+                      /* =====================================
+                         NOTIFICATION LIST
+                      ===================================== */
+
+                      <div className="dashboard-notification-list">
+
+                        {notifications
+                          .slice(0, 10)
+                          .map(
+                            (
+                              notification,
+                              index
+                            ) => {
+
+                              const unread =
+                                !isNotificationRead(
+                                  notification
+                                );
+
+                              return (
+                                <button
+                                  type="button"
+                                  key={
+                                    notification?._id ||
+                                    notification?.id ||
+                                    index
+                                  }
+                                  className={`dashboard-notification-item ${
+                                    unread
+                                      ? "dashboard-notification-unread"
+                                      : ""
+                                  }`}
+                                  onClick={() =>
+                                    handleNotificationClick(
+                                      notification
+                                    )
+                                  }
+                                >
+
+                                  <div className="dashboard-notification-dot-wrapper">
+
+                                    <span
+                                      className={`dashboard-notification-dot ${
+                                        unread
+                                          ? "dashboard-notification-dot-unread"
+                                          : ""
+                                      }`}
+                                    />
+
+                                  </div>
+
+                                  <div className="dashboard-notification-content">
+
+                                    <strong>
+                                      {getNotificationTitle(
+                                        notification
+                                      )}
+                                    </strong>
+
+                                    <p>
+                                      {getNotificationMessage(
+                                        notification
+                                      )}
+                                    </p>
+
+                                    <small>
+                                      {formatNotificationDate(
+                                        notification?.createdAt ||
+                                          notification?.updatedAt
+                                      )}
+                                    </small>
+
+                                  </div>
+
+                                </button>
+                              );
+                            }
+                          )}
+
+                      </div>
+                    )}
+
+                    {/* =======================================
+                        VIEW ALL
+                    ======================================= */}
+
+                    {notifications.length > 0 && (
+                      <button
+                        type="button"
+                        className="dashboard-view-all-notifications"
+                        onClick={() => {
+                          setShowNotificationPanel(
+                            false
+                          );
+
+                          navigate(
+                            "/notifications"
+                          );
+                        }}
+                      >
+                        View all notifications
+                      </button>
+                    )}
+
+                  </div>
+                )}
+
+              </div>
+
+              {/* =============================================
+                  REFRESH BUTTON
+              ============================================= */}
 
               <button
                 type="button"
-                className="dashboard-notification-btn"
-                onClick={handleNotificationClick}
-                title="Notifications"
-                aria-label="Notifications"
+                className="dashboard-header-icon dashboard-refresh-button"
+                onClick={handleRefreshDashboard}
+                title="Refresh Dashboard"
+                aria-label="Refresh Dashboard"
               >
-                <FaBell />
-
-                {unreadNotifications > 0 && (
-                  <span className="dashboard-notification-badge">
-                    {unreadNotifications > 99
-                      ? "99+"
-                      : unreadNotifications}
-                  </span>
-                )}
+                <FiRefreshCw size={19} />
               </button>
 
             </div>
@@ -697,13 +1250,15 @@ export default function AdminDashboard() {
 
             <DashboardCard
               title="Customers"
-              total="250"
+              total={customerCount}
               delta="8.2%"
               up={true}
               accent="accent"
               iconType="customers"
               sparkPoints="0,22 10,18 20,20 30,15 40,17 50,10 60,12"
-              onClick={() => navigate("/customers")}
+              onClick={() =>
+                navigate("/customers")
+              }
             />
 
             <DashboardCard
@@ -714,7 +1269,9 @@ export default function AdminDashboard() {
               accent="accent"
               iconType="employees"
               sparkPoints="0,22 10,18 20,20 30,15 40,17 50,10 60,12"
-              onClick={() => navigate("/employees")}
+              onClick={() =>
+                navigate("/employees")
+              }
             />
 
             <DashboardCard
@@ -755,7 +1312,9 @@ export default function AdminDashboard() {
 
           <div className="grid-2">
 
-            {/* Revenue */}
+            {/* ===============================================
+                REVENUE
+            =============================================== */}
 
             <div className="panel panel-pad">
 
@@ -915,7 +1474,9 @@ export default function AdminDashboard() {
 
             </div>
 
-            {/* Product Mix */}
+            {/* ===============================================
+                PRODUCT MIX
+            =============================================== */}
 
             <div className="panel panel-pad">
 
@@ -934,59 +1495,43 @@ export default function AdminDashboard() {
                 <div className="donut-legend">
 
                   <div className="donut-row">
-
                     <span className="donut-dot donut-accent" />
-
                     <span className="donut-label">
                       Ultrabooks
                     </span>
-
                     <span className="donut-val">
                       42%
                     </span>
-
                   </div>
 
                   <div className="donut-row">
-
                     <span className="donut-dot donut-blue" />
-
                     <span className="donut-label">
                       Business
                     </span>
-
                     <span className="donut-val">
                       26%
                     </span>
-
                   </div>
 
                   <div className="donut-row">
-
                     <span className="donut-dot donut-violet" />
-
                     <span className="donut-label">
                       2-in-1
                     </span>
-
                     <span className="donut-val">
                       18%
                     </span>
-
                   </div>
 
                   <div className="donut-row">
-
                     <span className="donut-dot donut-warning" />
-
                     <span className="donut-label">
                       Gaming
                     </span>
-
                     <span className="donut-val">
                       14%
                     </span>
-
                   </div>
 
                 </div>

@@ -1,33 +1,13 @@
-// import "./TopBar.css";
 
-// function TopBar() {
-//   return (
-//     <div className="topbar">
-
-//       <div className="topbar-left">
-//         ENGINEERING LIVES THROUGH TECHNOLOGY
-//       </div>
-
-//       <div className="topbar-center">
-//         GET A FREE CONSULTATION
-//       </div>
-
-//       <div className="topbar-right">
-//         ZAID INFOTECH
-//       </div>
-
-//     </div>
-//   );
-// }
-
-// export default TopBar;
-
-
-// TopBar.jsx
 import React from "react";
 import { FaArrowRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function TopBar() {
+
+  const navigate=useNavigate()
+  const phoneNumber = '919876543210';
+  const message = encodeURIComponent('Hi Zaid Infotech, I have a query!');
   return (
     <div className="hidden xl:block bg-[#111827] text-white border-b border-white/10">
       <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-6">
@@ -53,7 +33,10 @@ export default function TopBar() {
         </div>
 
         {/* Right */}
-        <button className="flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-black transition hover:bg-emerald-400">
+        <button onClick={()=>{
+          navigate(`https://wa.me/${phoneNumber}?text=${message}`)
+          
+        }} className="flex items-center gap-2 rounded-full bg-emerald-500 px-5 py-2 text-sm font-semibold text-black transition hover:bg-emerald-400">
           Get Consultation
           <FaArrowRight size={12} />
         </button>

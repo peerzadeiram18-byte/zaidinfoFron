@@ -1,6 +1,7 @@
 // import React, {
 //     useEffect,
 //     useMemo,
+//     useRef,
 //     useState,
 // } from "react";
 
@@ -30,6 +31,7 @@
 // import {
 //     getRentalProducts,
 //     createWalkInRentalRequest,
+//     uploadRentalDocument,
 // } from "../../../services/rentalApi";
 
 // import "./WalkInRental.css";
@@ -60,6 +62,69 @@
 //     email: "",
 //     officeAddress: "",
 //     gstNumber: "",
+// };
+
+
+// /* =========================================================
+//    DOCUMENT CONFIG
+// ========================================================= */
+
+// const DOCUMENT_CONFIG = {
+//     INDIVIDUAL: [
+//         {
+//             key: "PASSPORT_PHOTO",
+//             label: "Passport Size Photograph",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp",
+//         },
+//         {
+//             key: "PAN_CARD",
+//             label: "PAN Card",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+//         },
+//         {
+//             key: "AADHAAR_CARD",
+//             label: "Aadhaar Card",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+//         },
+//         {
+//             key: "HOUSE_RENTAL_AGREEMENT",
+//             label: "House Rental Agreement",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+//         },
+//         {
+//             key: "COLLEGE_ID",
+//             label: "College ID",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+//         },
+//     ],
+
+//     COMPANY: [
+//         {
+//             key: "PAN_CARD",
+//             label: "PAN Card",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+//         },
+//         {
+//             key: "AADHAAR_CARD",
+//             label: "Aadhaar Card (Authorized Person)",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+//         },
+//         {
+//             key: "GST_REGISTRATION",
+//             label: "GST Registration Copy",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+//         },
+//         {
+//             key: "OFFICE_ID",
+//             label: "Office ID",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+//         },
+//         {
+//             key: "AUTHORIZATION_LETTER",
+//             label: "Authorization Letter",
+//             accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+//         },
+//     ],
 // };
 
 
@@ -552,10 +617,290 @@
 
 
 //     /* =======================================================
+//        DOCUMENT UPLOADS
+//     ======================================================= */
+
+//     const [documents, setDocuments] = useState({});
+
+//     /*
+//      * We keep refs for file inputs so when a document is
+//      * removed, the browser input is also cleared.
+//      */
+//     const documentInputRefs = useRef({});
+
+
+//     const currentDocuments =
+//         DOCUMENT_CONFIG[customerType] ||
+//         DOCUMENT_CONFIG.INDIVIDUAL;
+
+
+//     /* =======================================================
+//        DOCUMENT CHANGE
+//     ======================================================= */
+
+//     const handleDocumentChange = (
+//         documentType,
+//         event
+//     ) => {
+
+//         const file =
+//             event.target.files?.[0];
+
+//         if (!file) {
+//             return;
+//         }
+
+//         const maxSize =
+//             10 * 1024 * 1024;
+
+//         const allowedTypes = [
+//             "image/jpeg",
+//             "image/jpg",
+//             "image/png",
+//             "image/webp",
+//             "application/pdf",
+//         ];
+
+//         if (
+//             !allowedTypes.includes(
+//                 file.type
+//             )
+//         ) {
+
+//             toast.error(
+//                 "Only JPG, PNG, WEBP or PDF files are allowed."
+//             );
+
+//             event.target.value = "";
+
+//             return;
+//         }
+
+//         if (file.size > maxSize) {
+
+//             toast.error(
+//                 "Document size must be less than 10 MB."
+//             );
+
+//             event.target.value = "";
+
+//             return;
+//         }
+
+//         console.log(
+//             "DOCUMENT SELECTED:",
+//             {
+//                 documentType,
+//                 name: file.name,
+//                 type: file.type,
+//                 size: file.size,
+//             }
+//         );
+
+//         setDocuments((previous) => ({
+//             ...previous,
+//             [documentType]: file,
+//         }));
+//     };
+
+
+//     /* =======================================================
+//        REMOVE DOCUMENT
+//     ======================================================= */
+
+//     const removeDocument = (
+//         documentType
+//     ) => {
+
+//         setDocuments((previous) => {
+
+//             const next = {
+//                 ...previous,
+//             };
+
+//             delete next[documentType];
+
+//             return next;
+//         });
+
+//         const input =
+//             documentInputRefs.current[
+//                 documentType
+//             ];
+
+//         if (input) {
+//             input.value = "";
+//         }
+//     };
+
+
+//     /* =======================================================
+//        VALIDATE DOCUMENTS
+//     ======================================================= */
+
+//     const validateDocuments = () => {
+
+//         for (
+//             const documentConfig
+//             of currentDocuments
+//         ) {
+
+//             if (
+//                 !documents[
+//                     documentConfig.key
+//                 ]
+//             ) {
+
+//                 toast.error(
+//                     `Please upload ${documentConfig.label}.`
+//                 );
+
+//                 return false;
+//             }
+//         }
+
+//         return true;
+//     };
+
+
+//     /* =======================================================
+//        UPLOAD ALL DOCUMENTS
+//     ======================================================= */
+
+//     const uploadAllDocuments = async (
+//         rentalId
+//     ) => {
+
+//         if (!rentalId) {
+
+//             throw new Error(
+//                 "Rental ID was not returned by the server."
+//             );
+//         }
+
+//         const uploadResults = [];
+
+//         for (
+//             const documentConfig
+//             of currentDocuments
+//         ) {
+
+//             const file =
+//                 documents[
+//                     documentConfig.key
+//                 ];
+
+//             if (!file) {
+//                 continue;
+//             }
+
+//             console.log(
+//                 "================================"
+//             );
+
+//             console.log(
+//                 "UPLOADING RENTAL DOCUMENT"
+//             );
+
+//             console.log(
+//                 "Rental ID:",
+//                 rentalId
+//             );
+
+//             console.log(
+//                 "Document Type:",
+//                 documentConfig.key
+//             );
+
+//             console.log(
+//                 "File:",
+//                 file.name
+//             );
+
+//             console.log(
+//                 "File Type:",
+//                 file.type
+//             );
+
+//             console.log(
+//                 "File Size:",
+//                 file.size
+//             );
+
+//             console.log(
+//                 "================================"
+//             );
+
+
+//             try {
+
+//                 const response =
+//                     await uploadRentalDocument(
+//                         rentalId,
+//                         documentConfig.key,
+//                         file
+//                     );
+
+//                 uploadResults.push({
+//                     type:
+//                         documentConfig.key,
+
+//                     fileName:
+//                         file.name,
+
+//                     success: true,
+
+//                     response,
+//                 });
+
+//             } catch (error) {
+
+//                 console.error(
+//                     `DOCUMENT UPLOAD FAILED: ${documentConfig.key}`,
+//                     error
+//                 );
+
+//                 /*
+//                  * Very important:
+//                  * Rental is already created.
+//                  *
+//                  * We attach document information to the
+//                  * error so handleSubmit knows that this is
+//                  * an upload problem, NOT a rental creation
+//                  * problem.
+//                  */
+
+//                 const uploadError =
+//                     new Error(
+//                         error?.message ||
+//                         error?.error ||
+//                         `Failed to upload ${documentConfig.label}`
+//                     );
+
+//                 uploadError.isDocumentUploadError = true;
+//                 uploadError.rentalId = rentalId;
+//                 uploadError.documentType =
+//                     documentConfig.key;
+//                 uploadError.documentLabel =
+//                     documentConfig.label;
+//                 uploadError.originalError =
+//                     error;
+
+//                 throw uploadError;
+//             }
+//         }
+
+//         return uploadResults;
+//     };
+
+
+//     /* =======================================================
 //        LOAD PRODUCTS
 //     ======================================================= */
 
-//     const loadProducts = async (showRefresh = false) => {
+//     const loadProducts = async (
+//         showRefresh = false
+//     ) => {
 
 //         try {
 
@@ -582,32 +927,44 @@
 //             );
 
 //             const rentalOnly =
-//                 list.filter(isRentalProduct);
+//                 list.filter(
+//                     isRentalProduct
+//                 );
 
 //             console.log(
 //                 "ONLY RENTAL PRODUCTS:",
 //                 rentalOnly
 //             );
 
-//             setProducts(rentalOnly);
+//             setProducts(
+//                 rentalOnly
+//             );
 
-//             setSelectedProduct((previous) => {
+//             setSelectedProduct(
+//                 (previous) => {
 
-//                 if (!previous) {
-//                     return null;
+//                     if (!previous) {
+//                         return null;
+//                     }
+
+//                     const oldId =
+//                         getRentalProductId(
+//                             previous
+//                         );
+
+//                     const exists =
+//                         rentalOnly.some(
+//                             (item) =>
+//                                 getRentalProductId(
+//                                     item
+//                                 ) === oldId
+//                         );
+
+//                     return exists
+//                         ? previous
+//                         : null;
 //                 }
-
-//                 const oldId =
-//                     getRentalProductId(previous);
-
-//                 const exists =
-//                     rentalOnly.some(
-//                         (item) =>
-//                             getRentalProductId(item) === oldId
-//                     );
-
-//                 return exists ? previous : null;
-//             });
+//             );
 
 //         } catch (error) {
 
@@ -623,6 +980,7 @@
 //             toast.error(
 //                 error?.response?.data?.message ||
 //                 error?.message ||
+//                 error?.error ||
 //                 "Failed to load rental products"
 //             );
 
@@ -639,7 +997,9 @@
 //     ======================================================= */
 
 //     useEffect(() => {
+
 //         loadProducts();
+
 //     }, []);
 
 
@@ -647,49 +1007,75 @@
 //        SEARCH
 //     ======================================================= */
 
-//     const filteredProducts = useMemo(() => {
+//     const filteredProducts =
+//         useMemo(() => {
 
-//         const keyword =
-//             search.trim().toLowerCase();
+//             const keyword =
+//                 search
+//                     .trim()
+//                     .toLowerCase();
 
-//         if (!keyword) {
-//             return products;
-//         }
+//             if (!keyword) {
+//                 return products;
+//             }
 
-//         return products.filter((item) => {
+//             return products.filter(
+//                 (item) => {
 
-//             const name =
-//                 String(
-//                     getProductName(item)
-//                 ).toLowerCase();
+//                     const name =
+//                         String(
+//                             getProductName(
+//                                 item
+//                             )
+//                         ).toLowerCase();
 
-//             const brand =
-//                 String(
-//                     getBrand(item)
-//                 ).toLowerCase();
+//                     const brand =
+//                         String(
+//                             getBrand(
+//                                 item
+//                             )
+//                         ).toLowerCase();
 
-//             const sku =
-//                 String(
-//                     getSku(item)
-//                 ).toLowerCase();
+//                     const sku =
+//                         String(
+//                             getSku(
+//                                 item
+//                             )
+//                         ).toLowerCase();
 
-//             return (
-//                 name.includes(keyword) ||
-//                 brand.includes(keyword) ||
-//                 sku.includes(keyword)
+//                     return (
+//                         name.includes(
+//                             keyword
+//                         ) ||
+//                         brand.includes(
+//                             keyword
+//                         ) ||
+//                         sku.includes(
+//                             keyword
+//                         )
+//                     );
+//                 }
 //             );
-//         });
 
-//     }, [products, search]);
+//         }, [
+//             products,
+//             search,
+//         ]);
 
 
 //     /* =======================================================
 //        SELECT PRODUCT
 //     ======================================================= */
 
-//     const selectProduct = (item) => {
+//     const selectProduct = (
+//         item
+//     ) => {
 
-//         if (!isRentalProduct(item)) {
+//         if (
+//             !isRentalProduct(
+//                 item
+//             )
+//         ) {
 
 //             toast.error(
 //                 "Only rental products can be selected."
@@ -699,7 +1085,9 @@
 //         }
 
 //         const available =
-//             getAvailableQuantity(item);
+//             getAvailableQuantity(
+//                 item
+//             );
 
 //         if (available <= 0) {
 
@@ -710,13 +1098,24 @@
 //             return;
 //         }
 
-//         setSelectedProduct(item);
+//         setSelectedProduct(
+//             item
+//         );
 
 //         setRentalMonths(
-//             getMinimumMonths(item)
+//             getMinimumMonths(
+//                 item
+//             )
 //         );
 
 //         setHandoverDescription("");
+
+//         setDocuments({});
+
+//         /*
+//          * Clear old file inputs as well.
+//          */
+//         documentInputRefs.current = {};
 
 //         window.scrollTo({
 //             top: 0,
@@ -731,11 +1130,21 @@
 
 //     const clearProduct = () => {
 
-//         setSelectedProduct(null);
+//         setSelectedProduct(
+//             null
+//         );
 
-//         setRentalMonths(3);
+//         setRentalMonths(
+//             3
+//         );
 
-//         setHandoverDescription("");
+//         setHandoverDescription(
+//             ""
+//         );
+
+//         setDocuments({});
+
+//         documentInputRefs.current = {};
 //     };
 
 
@@ -743,23 +1152,21 @@
 //        INDIVIDUAL CHANGE
 //     ======================================================= */
 
-//     const handleIndividualChange = (event) => {
+//     const handleIndividualChange = (
+//         event
+//     ) => {
 
 //         const {
 //             name,
 //             value,
 //         } = event.target;
 
-//         console.log(
-//             "INDIVIDUAL FIELD:",
-//             name,
-//             value
+//         setIndividualDetails(
+//             (previous) => ({
+//                 ...previous,
+//                 [name]: value,
+//             })
 //         );
-
-//         setIndividualDetails((previous) => ({
-//             ...previous,
-//             [name]: value,
-//         }));
 //     };
 
 
@@ -767,23 +1174,21 @@
 //        COMPANY CHANGE
 //     ======================================================= */
 
-//     const handleCompanyChange = (event) => {
+//     const handleCompanyChange = (
+//         event
+//     ) => {
 
 //         const {
 //             name,
 //             value,
 //         } = event.target;
 
-//         console.log(
-//             "COMPANY FIELD:",
-//             name,
-//             value
+//         setCompanyDetails(
+//             (previous) => ({
+//                 ...previous,
+//                 [name]: value,
+//             })
 //         );
-
-//         setCompanyDetails((previous) => ({
-//             ...previous,
-//             [name]: value,
-//         }));
 //     };
 
 
@@ -791,14 +1196,23 @@
 //        CUSTOMER TYPE CHANGE
 //     ======================================================= */
 
-//     const handleCustomerTypeChange = (type) => {
+//     const handleCustomerTypeChange = (
+//         type
+//     ) => {
 
-//         console.log(
-//             "CUSTOMER TYPE:",
+//         setCustomerType(
 //             type
 //         );
 
-//         setCustomerType(type);
+//         /*
+//          * Documents belong to customer type.
+//          * Therefore switching Individual/Company clears
+//          * previous document selections so wrong documents
+//          * are never uploaded.
+//          */
+//         setDocuments({});
+
+//         documentInputRefs.current = {};
 //     };
 
 
@@ -808,7 +1222,9 @@
 
 //     const minimumMonths =
 //         selectedProduct
-//             ? getMinimumMonths(selectedProduct)
+//             ? getMinimumMonths(
+//                 selectedProduct
+//             )
 //             : 3;
 
 
@@ -818,11 +1234,12 @@
 
 //     const decreaseMonths = () => {
 
-//         setRentalMonths((previous) =>
-//             Math.max(
-//                 minimumMonths,
-//                 previous - 1
-//             )
+//         setRentalMonths(
+//             (previous) =>
+//                 Math.max(
+//                     minimumMonths,
+//                     previous - 1
+//                 )
 //         );
 //     };
 
@@ -833,8 +1250,9 @@
 
 //     const increaseMonths = () => {
 
-//         setRentalMonths((previous) =>
-//             previous + 1
+//         setRentalMonths(
+//             (previous) =>
+//                 previous + 1
 //         );
 //     };
 
@@ -843,55 +1261,67 @@
 //        PRICING
 //     ======================================================= */
 
-//     const pricing = useMemo(() => {
+//     const pricing =
+//         useMemo(() => {
 
-//         if (!selectedProduct) {
+//             if (!selectedProduct) {
+
+//                 return {
+//                     monthlyRent: 0,
+//                     months: rentalMonths,
+//                     rentSubtotal: 0,
+//                     gstPercentage: 0,
+//                     gstAmount: 0,
+//                     securityDeposit: 0,
+//                     totalAmount: 0,
+//                 };
+//             }
+
+//             const monthlyRent =
+//                 getMonthlyRent(
+//                     selectedProduct
+//                 );
+
+//             const securityDeposit =
+//                 getSecurityDeposit(
+//                     selectedProduct
+//                 );
+
+//             const gstPercentage =
+//                 getGST(
+//                     selectedProduct
+//                 );
+
+//             const rentSubtotal =
+//                 monthlyRent *
+//                 rentalMonths;
+
+//             const gstAmount =
+//                 (
+//                     rentSubtotal *
+//                     gstPercentage
+//                 ) / 100;
+
+//             const totalAmount =
+//                 rentSubtotal +
+//                 gstAmount +
+//                 securityDeposit;
 
 //             return {
-//                 monthlyRent: 0,
-//                 months: rentalMonths,
-//                 rentSubtotal: 0,
-//                 gstPercentage: 0,
-//                 gstAmount: 0,
-//                 securityDeposit: 0,
-//                 totalAmount: 0,
+//                 monthlyRent,
+//                 months:
+//                     rentalMonths,
+//                 rentSubtotal,
+//                 gstPercentage,
+//                 gstAmount,
+//                 securityDeposit,
+//                 totalAmount,
 //             };
-//         }
 
-//         const monthlyRent =
-//             getMonthlyRent(selectedProduct);
-
-//         const securityDeposit =
-//             getSecurityDeposit(selectedProduct);
-
-//         const gstPercentage =
-//             getGST(selectedProduct);
-
-//         const rentSubtotal =
-//             monthlyRent * rentalMonths;
-
-//         const gstAmount =
-//             (rentSubtotal * gstPercentage) / 100;
-
-//         const totalAmount =
-//             rentSubtotal +
-//             gstAmount +
-//             securityDeposit;
-
-//         return {
-//             monthlyRent,
-//             months: rentalMonths,
-//             rentSubtotal,
-//             gstPercentage,
-//             gstAmount,
-//             securityDeposit,
-//             totalAmount,
-//         };
-
-//     }, [
-//         selectedProduct,
-//         rentalMonths,
-//     ]);
+//         }, [
+//             selectedProduct,
+//             rentalMonths,
+//         ]);
 
 
 //     /* =======================================================
@@ -909,8 +1339,11 @@
 //             return false;
 //         }
 
+
 //         const rentalProductId =
-//             getRentalProductId(selectedProduct);
+//             getRentalProductId(
+//                 selectedProduct
+//             );
 
 //         if (!rentalProductId) {
 
@@ -926,8 +1359,31 @@
 //             return false;
 //         }
 
+
+//         const productId =
+//             getProductId(
+//                 selectedProduct
+//             );
+
+//         if (!productId) {
+
+//             toast.error(
+//                 "Product ID not found."
+//             );
+
+//             console.error(
+//                 "INVALID PRODUCT:",
+//                 selectedProduct
+//             );
+
+//             return false;
+//         }
+
+
 //         if (
-//             getAvailableQuantity(selectedProduct) <= 0
+//             getAvailableQuantity(
+//                 selectedProduct
+//             ) <= 0
 //         ) {
 
 //             toast.error(
@@ -937,8 +1393,10 @@
 //             return false;
 //         }
 
+
 //         if (
-//             rentalMonths < minimumMonths
+//             rentalMonths <
+//             minimumMonths
 //         ) {
 
 //             toast.error(
@@ -948,8 +1406,11 @@
 //             return false;
 //         }
 
+
 //         if (
-//             Number(pricing.monthlyRent) <= 0
+//             Number(
+//                 pricing.monthlyRent
+//             ) <= 0
 //         ) {
 
 //             toast.error(
@@ -960,9 +1421,14 @@
 //         }
 
 
-//         /* INDIVIDUAL */
+//         /* =================================================
+//            INDIVIDUAL
+//         ================================================= */
 
-//         if (customerType === "INDIVIDUAL") {
+//         if (
+//             customerType ===
+//             "INDIVIDUAL"
+//         ) {
 
 //             if (
 //                 !individualDetails.fullName.trim()
@@ -988,9 +1454,14 @@
 //         }
 
 
-//         /* COMPANY */
+//         /* =================================================
+//            COMPANY
+//         ================================================= */
 
-//         if (customerType === "COMPANY") {
+//         if (
+//             customerType ===
+//             "COMPANY"
+//         ) {
 
 //             if (
 //                 !companyDetails.companyName.trim()
@@ -1026,6 +1497,7 @@
 //             }
 //         }
 
+
 //         return true;
 //     };
 
@@ -1036,11 +1508,19 @@
 
 //     const resetForm = () => {
 
-//         setSelectedProduct(null);
+//         if (submitting) {
+//             return;
+//         }
+
+//         setSelectedProduct(
+//             null
+//         );
 
 //         setSearch("");
 
-//         setCustomerType("INDIVIDUAL");
+//         setCustomerType(
+//             "INDIVIDUAL"
+//         );
 
 //         setIndividualDetails({
 //             ...EMPTY_INDIVIDUAL,
@@ -1050,9 +1530,30 @@
 //             ...EMPTY_COMPANY,
 //         });
 
-//         setRentalMonths(3);
+//         setRentalMonths(
+//             3
+//         );
 
-//         setHandoverDescription("");
+//         setHandoverDescription(
+//             ""
+//         );
+
+//         setDocuments({});
+
+//         documentInputRefs.current = {};
+
+//         /*
+//          * Clear browser file inputs.
+//          */
+//         Object.values(
+//             documentInputRefs.current
+//         ).forEach(
+//             (input) => {
+//                 if (input) {
+//                     input.value = "";
+//                 }
+//             }
+//         );
 //     };
 
 
@@ -1060,7 +1561,9 @@
 //        SUBMIT
 //     ======================================================= */
 
-//     const handleSubmit = async (event) => {
+//     const handleSubmit = async (
+//         event
+//     ) => {
 
 //         event.preventDefault();
 
@@ -1068,28 +1571,56 @@
 //             return;
 //         }
 
+
+//         /* =================================================
+//            FORM VALIDATION
+//         ================================================= */
+
 //         if (!validateForm()) {
 //             return;
 //         }
 
+
+//         /* =================================================
+//            DOCUMENT VALIDATION
+//         ================================================= */
+
+//         if (!validateDocuments()) {
+//             return;
+//         }
+
+
 //         try {
 
-//             setSubmitting(true);
+//             setSubmitting(
+//                 true
+//             );
+
+
+//             /* =============================================
+//                IDs
+//             ============================================= */
 
 //             const rentalProductId =
-//                 getRentalProductId(selectedProduct);
+//                 getRentalProductId(
+//                     selectedProduct
+//                 );
 
 //             const productId =
-//                 getProductId(selectedProduct);
+//                 getProductId(
+//                     selectedProduct
+//                 );
 
 
-//             /* ============================================
+//             /* =============================================
 //                PAYLOAD
-//             ============================================ */
+//                KEEPING EXISTING RENTAL CREATE PAYLOAD
+//             ============================================= */
 
 //             const payload = {
 
-//                 rentalSource: "WALK_IN",
+//                 rentalSource:
+//                     "WALK_IN",
 
 //                 rentalProductId,
 
@@ -1098,7 +1629,8 @@
 //                 customerType,
 
 //                 individualDetails:
-//                     customerType === "INDIVIDUAL"
+//                     customerType ===
+//                     "INDIVIDUAL"
 //                         ? {
 //                             fullName:
 //                                 individualDetails.fullName.trim(),
@@ -1115,7 +1647,8 @@
 //                         : undefined,
 
 //                 companyDetails:
-//                     customerType === "COMPANY"
+//                     customerType ===
+//                     "COMPANY"
 //                         ? {
 //                             companyName:
 //                                 companyDetails.companyName.trim(),
@@ -1138,16 +1671,24 @@
 //                         : undefined,
 
 //                 monthlyRent:
-//                     Number(pricing.monthlyRent),
+//                     Number(
+//                         pricing.monthlyRent
+//                     ),
 
 //                 gstPercentage:
-//                     Number(pricing.gstPercentage),
+//                     Number(
+//                         pricing.gstPercentage
+//                     ),
 
 //                 securityDeposit:
-//                     Number(pricing.securityDeposit),
+//                     Number(
+//                         pricing.securityDeposit
+//                     ),
 
 //                 rentalMonths:
-//                     Number(rentalMonths),
+//                     Number(
+//                         rentalMonths
+//                     ),
 
 //                 notes:
 //                     handoverDescription.trim(),
@@ -1174,9 +1715,15 @@
 //             );
 
 
-//             /* ============================================
-//                API
-//             ============================================ */
+//             /* =============================================
+//                STEP 1
+//                CREATE RENTAL
+//             ============================================= */
+
+//             toast.info(
+//                 "Creating walk-in rental..."
+//             );
+
 
 //             const response =
 //                 await createWalkInRentalRequest(
@@ -1190,9 +1737,9 @@
 //             );
 
 
-//             /* ============================================
-//                RESPONSE
-//             ============================================ */
+//             /* =============================================
+//                EXTRACT CREATED RENTAL
+//             ============================================= */
 
 //             const rental =
 //                 response?.rental ||
@@ -1207,53 +1754,151 @@
 //                 rental?.id;
 
 
-//             /* ============================================
-//                SUCCESS
-//             ============================================ */
+//             /* =============================================
+//                IMPORTANT
+//                RENTAL MUST HAVE ID
+//             ============================================= */
 
-//             toast.success(
-//                 rental?.rentalNumber
-//                     ? `Rental ${rental.rentalNumber} created successfully.`
-//                     : "Walk-in rental created successfully."
+//             if (!rentalId) {
+
+//                 console.error(
+//                     "RENTAL CREATED BUT ID NOT FOUND:",
+//                     response
+//                 );
+
+//                 throw new Error(
+//                     "Rental was created but rental ID was not returned by the server."
+//                 );
+//             }
+
+
+//             console.log(
+//                 "CREATED RENTAL ID:",
+//                 rentalId
 //             );
 
 
-//             /* ============================================
-//                REFRESH STOCK
-//             ============================================ */
+//             /* =============================================
+//                STEP 2
+//                UPLOAD DOCUMENTS
+//             ============================================= */
 
-//             await loadProducts(true);
+//             toast.info(
+//                 "Rental created. Uploading customer documents..."
+//             );
 
 
-//             /* ============================================
-//                NEXT PAGE
-//             ============================================ */
+//             let uploadedDocuments = [];
 
-//             if (rentalId) {
+//             try {
 
-//                 console.log(
-//                     "GOING TO WALK-IN ORDERS:",
-//                     rentalId
+//                 uploadedDocuments =
+//                     await uploadAllDocuments(
+//                         rentalId
+//                     );
+
+//             } catch (documentError) {
+
+//                 /*
+//                  * VERY IMPORTANT:
+//                  *
+//                  * Rental already exists here.
+//                  *
+//                  * We DO NOT call createWalkInRentalRequest
+//                  * again.
+//                  *
+//                  * This prevents duplicate rental creation
+//                  * and duplicate stock deduction.
+//                  */
+
+//                 console.error(
+//                     "DOCUMENT UPLOAD ERROR:",
+//                     documentError
 //                 );
 
+
+//                 toast.error(
+//                     documentError?.message ||
+//                     "Rental created, but one or more documents could not be uploaded."
+//                 );
+
+
+//                 /*
+//                  * Go to rental details/orders instead of
+//                  * creating the rental again.
+//                  *
+//                  * This preserves the already-created rental.
+//                  */
+
 //                 navigate(
-//                     "/receptionist-dashboard/rental/orders",
+//                     `/receptionist-dashboard/rental/orders/${rentalId}`,
 //                     {
 //                         state: {
 //                             rental,
 //                             rentalId,
+//                             documentUploadFailed: true,
+//                             failedDocumentType:
+//                                 documentError?.documentType ||
+//                                 null,
 //                         },
 //                     }
 //                 );
 
-//             } else {
-
-//                 console.warn(
-//                     "Rental ID not returned by backend."
-//                 );
-
-//                 resetForm();
+//                 return;
 //             }
+
+
+//             /* =============================================
+//                DOCUMENT SUCCESS
+//             ============================================= */
+
+//             console.log(
+//                 "ALL RENTAL DOCUMENTS UPLOADED:",
+//                 uploadedDocuments
+//             );
+
+
+//             /* =============================================
+//                SUCCESS
+//             ============================================= */
+
+//             toast.success(
+//                 rental?.rentalNumber
+//                     ? `Rental ${rental.rentalNumber} and all documents saved successfully.`
+//                     : "Rental and all documents saved successfully."
+//             );
+
+
+//             /* =============================================
+//                REFRESH STOCK
+//             ============================================= */
+
+//             await loadProducts(
+//                 true
+//             );
+
+
+//             /* =============================================
+//                NEXT PAGE
+//             ============================================= */
+
+//             console.log(
+//                 "GOING TO WALK-IN ORDERS:",
+//                 rentalId
+//             );
+
+
+//             navigate(
+//                 "/receptionist-dashboard/rental/orders",
+//                 {
+//                     state: {
+//                         rental,
+//                         rentalId,
+//                         documentsUploaded:
+//                             uploadedDocuments,
+//                     },
+//                 }
+//             );
 
 //         } catch (error) {
 
@@ -1270,17 +1915,35 @@
 //                 "================================"
 //             );
 
+
+//             /*
+//              * This catch is mainly for:
+//              *
+//              * - Rental API failure
+//              * - validation/server failure
+//              * - missing rental ID
+//              *
+//              * Document-upload failure is handled separately
+//              * above so we don't falsely say rental creation failed.
+//              */
+
 //             const message =
 //                 error?.response?.data?.message ||
 //                 error?.response?.data?.error ||
 //                 error?.message ||
+//                 error?.error ||
 //                 "Failed to create walk-in rental.";
 
-//             toast.error(message);
+
+//             toast.error(
+//                 message
+//             );
 
 //         } finally {
 
-//             setSubmitting(false);
+//             setSubmitting(
+//                 false
+//             );
 //         }
 //     };
 
@@ -1290,6 +1953,10 @@
 //     ======================================================= */
 
 //     const handleBack = () => {
+
+//         if (submitting) {
+//             return;
+//         }
 
 //         navigate(
 //             "/receptionist-dashboard"
@@ -1329,7 +1996,147 @@
 
 //         <div className="walkin-rental-page">
 
-//             {/* HEADER */}
+//             <style>{`
+
+//                 .document-upload-grid {
+//                     display: grid;
+//                     grid-template-columns: repeat(
+//                         2,
+//                         minmax(0, 1fr)
+//                     );
+//                     gap: 18px;
+//                     margin-top: 20px;
+//                 }
+
+//                 .document-upload-card {
+//                     border: 1px solid #e5e7eb;
+//                     border-radius: 14px;
+//                     padding: 18px;
+//                     background: #ffffff;
+//                 }
+
+//                 .document-upload-header {
+//                     display: flex;
+//                     justify-content: space-between;
+//                     gap: 12px;
+//                     align-items: flex-start;
+//                     margin-bottom: 12px;
+//                 }
+
+//                 .document-upload-header strong {
+//                     color: #111827;
+//                     font-size: 15px;
+//                     line-height: 1.4;
+//                 }
+
+//                 .document-upload-header span {
+//                     color: #dc2626;
+//                     font-size: 12px;
+//                     font-weight: 700;
+//                     white-space: nowrap;
+//                 }
+
+//                 .document-file-label {
+//                     display: block;
+//                     border: 1px dashed #cbd5e1;
+//                     border-radius: 10px;
+//                     padding: 12px;
+//                     cursor: pointer;
+//                     background: #f8fafc;
+//                 }
+
+//                 .document-file-label:hover {
+//                     border-color: #94a3b8;
+//                     background: #f1f5f9;
+//                 }
+
+//                 .document-file-label input {
+//                     width: 100%;
+//                     cursor: pointer;
+//                 }
+
+//                 .document-file-label span {
+//                     display: block;
+//                     margin-top: 8px;
+//                     color: #475569;
+//                     font-size: 13px;
+//                     overflow-wrap: anywhere;
+//                 }
+
+//                 .document-upload-card small {
+//                     display: block;
+//                     margin-top: 8px;
+//                     color: #64748b;
+//                     font-size: 11px;
+//                     line-height: 1.4;
+//                 }
+
+//                 .document-selected {
+//                     display: flex;
+//                     align-items: center;
+//                     gap: 8px;
+//                     margin-top: 10px;
+//                     padding: 9px 10px;
+//                     border-radius: 8px;
+//                     background: #f0fdf4;
+//                     border: 1px solid #bbf7d0;
+//                     color: #166534;
+//                     font-size: 12px;
+//                 }
+
+//                 .document-selected span {
+//                     flex: 1;
+//                     min-width: 0;
+//                     overflow-wrap: anywhere;
+//                 }
+
+//                 .document-remove-btn {
+//                     border: 0;
+//                     background: transparent;
+//                     cursor: pointer;
+//                     color: #dc2626;
+//                     padding: 4px;
+//                     display: inline-flex;
+//                     align-items: center;
+//                     justify-content: center;
+//                 }
+
+//                 .document-remove-btn:hover {
+//                     color: #991b1b;
+//                 }
+
+//                 .document-upload-note {
+//                     display: flex;
+//                     align-items: flex-start;
+//                     gap: 10px;
+//                     margin-top: 18px;
+//                     padding: 12px 14px;
+//                     border-radius: 10px;
+//                     background: #eff6ff;
+//                     color: #1e40af;
+//                     font-size: 13px;
+//                     line-height: 1.5;
+//                 }
+
+//                 .document-upload-note svg {
+//                     flex-shrink: 0;
+//                     margin-top: 2px;
+//                 }
+
+//                 @media (max-width: 768px) {
+
+//                     .document-upload-grid {
+//                         grid-template-columns: 1fr;
+//                     }
+
+//                 }
+
+//             `}</style>
+
+
+//             {/* =====================================================
+//                 HEADER
+//             ===================================================== */}
 
 //             <header className="walkin-header">
 
@@ -1339,12 +2146,18 @@
 //                         type="button"
 //                         className="walkin-back-btn"
 //                         onClick={handleBack}
+//                         disabled={submitting}
 //                     >
+
 //                         <FaArrowLeft />
+
 //                         Back
+
 //                     </button>
 
+
 //                     <div>
+
 //                         <h1>
 //                             Walk-In Rental
 //                         </h1>
@@ -1352,9 +2165,11 @@
 //                         <p>
 //                             Create rental for walk-in customer
 //                         </p>
+
 //                     </div>
 
 //                 </div>
+
 
 //                 <div className="walkin-source-badge">
 
@@ -1367,7 +2182,9 @@
 //             </header>
 
 
-//             {/* FORM */}
+//             {/* =====================================================
+//                 FORM
+//             ===================================================== */}
 
 //             <form
 //                 className="walkin-form"
@@ -1379,7 +2196,9 @@
 //                     CUSTOMER TYPE
 //                 ===================================================== */}
 
-//                 <section className="walkin-card customer-type-section">
+//                 <section
+//                     className="walkin-card customer-type-section"
+//                 >
 
 //                     <div className="section-title">
 
@@ -1405,11 +2224,14 @@
 //                         <button
 //                             type="button"
 //                             className={
-//                                 customerType === "INDIVIDUAL"
+//                                 customerType ===
+//                                 "INDIVIDUAL"
 //                                     ? "type-card active"
 //                                     : "type-card"
 //                             }
-//                             onClick={(event) => {
+//                             onClick={(
+//                                 event
+//                             ) => {
 
 //                                 event.preventDefault();
 //                                 event.stopPropagation();
@@ -1418,9 +2240,12 @@
 //                                     "INDIVIDUAL"
 //                                 );
 //                             }}
+//                             disabled={submitting}
 //                         >
 
-//                             <FaUser size={26} />
+//                             <FaUser
+//                                 size={26}
+//                             />
 
 //                             <strong>
 //                                 Individual
@@ -1436,11 +2261,14 @@
 //                         <button
 //                             type="button"
 //                             className={
-//                                 customerType === "COMPANY"
+//                                 customerType ===
+//                                 "COMPANY"
 //                                     ? "type-card active"
 //                                     : "type-card"
 //                             }
-//                             onClick={(event) => {
+//                             onClick={(
+//                                 event
+//                             ) => {
 
 //                                 event.preventDefault();
 //                                 event.stopPropagation();
@@ -1449,9 +2277,12 @@
 //                                     "COMPANY"
 //                                 );
 //                             }}
+//                             disabled={submitting}
 //                         >
 
-//                             <FaBuilding size={26} />
+//                             <FaBuilding
+//                                 size={26}
+//                             />
 
 //                             <strong>
 //                                 Company
@@ -1472,7 +2303,9 @@
 //                     RENTAL PRODUCT
 //                 ===================================================== */}
 
-//                 <section className="walkin-card">
+//                 <section
+//                     className="walkin-card"
+//                 >
 
 //                     <div className="section-title">
 
@@ -1502,11 +2335,17 @@
 //                         <input
 //                             type="text"
 //                             value={search}
-//                             onChange={(event) =>
-//                                 setSearch(event.target.value)
+//                             onChange={(
+//                                 event
+//                             ) =>
+//                                 setSearch(
+//                                     event.target.value
+//                                 )
 //                             }
 //                             placeholder="Search laptop, brand or SKU..."
+//                             disabled={submitting}
 //                         />
+
 
 //                         {search && (
 
@@ -1515,8 +2354,11 @@
 //                                 onClick={() =>
 //                                     setSearch("")
 //                                 }
+//                                 disabled={submitting}
 //                             >
+
 //                                 <FaTimes />
+
 //                             </button>
 
 //                         )}
@@ -1526,7 +2368,9 @@
 
 //                     {/* REFRESH */}
 
-//                     <div className="refresh-stock-row">
+//                     <div
+//                         className="refresh-stock-row"
+//                     >
 
 //                         <button
 //                             type="button"
@@ -1534,7 +2378,10 @@
 //                             onClick={() =>
 //                                 loadProducts(true)
 //                             }
-//                             disabled={refreshing}
+//                             disabled={
+//                                 refreshing ||
+//                                 submitting
+//                             }
 //                         >
 
 //                             <FaRedo
@@ -1559,191 +2406,257 @@
 
 //                     {filteredProducts.length === 0 ? (
 
-//                         <div className="empty-products">
+//                         <div
+//                             className="empty-products"
+//                         >
 
-//                             <FaLaptop size={42} />
+//                             <FaLaptop
+//                                 size={42}
+//                             />
 
 //                             <h3>
+
 //                                 {search
 //                                     ? "No rental laptop found"
 //                                     : "No rental laptops available"
 //                                 }
+
 //                             </h3>
 
 //                             <p>
+
 //                                 {search
 //                                     ? "Try another laptop name, brand or SKU."
 //                                     : "Please add rental products from admin panel."
 //                                 }
+
 //                             </p>
 
 //                         </div>
 
 //                     ) : (
 
-//                         <div className="rental-product-grid">
+//                         <div
+//                             className="rental-product-grid"
+//                         >
 
-//                             {filteredProducts.map((item) => {
+//                             {filteredProducts.map(
+//                                 (item) => {
 
-//                                 const rentalId =
-//                                     getRentalProductId(item);
+//                                     const rentalId =
+//                                         getRentalProductId(
+//                                             item
+//                                         );
 
-//                                 const image =
-//                                     getImageUrl(item);
+//                                     const image =
+//                                         getImageUrl(
+//                                             item
+//                                         );
 
-//                                 const name =
-//                                     getProductName(item);
+//                                     const name =
+//                                         getProductName(
+//                                             item
+//                                         );
 
-//                                 const brand =
-//                                     getBrand(item);
+//                                     const brand =
+//                                         getBrand(
+//                                             item
+//                                         );
 
-//                                 const sku =
-//                                     getSku(item);
+//                                     const sku =
+//                                         getSku(
+//                                             item
+//                                         );
 
-//                                 const rent =
-//                                     getMonthlyRent(item);
+//                                     const rent =
+//                                         getMonthlyRent(
+//                                             item
+//                                         );
 
-//                                 const deposit =
-//                                     getSecurityDeposit(item);
+//                                     const deposit =
+//                                         getSecurityDeposit(
+//                                             item
+//                                         );
 
-//                                 const available =
-//                                     getAvailableQuantity(item);
+//                                     const available =
+//                                         getAvailableQuantity(
+//                                             item
+//                                         );
 
-//                                 const minimum =
-//                                     getMinimumMonths(item);
+//                                     const minimum =
+//                                         getMinimumMonths(
+//                                             item
+//                                         );
 
-//                                 const selected =
-//                                     selectedProduct &&
-//                                     getRentalProductId(
-//                                         selectedProduct
-//                                     ) === rentalId;
-
-
-//                                 return (
-
-//                                     <article
-//                                         key={rentalId}
-//                                         className={
-//                                             selected
-//                                                 ? "rental-product-card selected"
-//                                                 : "rental-product-card"
-//                                         }
-//                                     >
-
-//                                         <div className="product-image">
-
-//                                             {image ? (
-
-//                                                 <img
-//                                                     src={image}
-//                                                     alt={name}
-//                                                     onError={(event) => {
-//                                                         event.currentTarget.style.display =
-//                                                             "none";
-//                                                     }}
-//                                                 />
-
-//                                             ) : (
-
-//                                                 <FaLaptop size={30} />
-
-//                                             )}
-
-//                                         </div>
+//                                     const selected =
+//                                         selectedProduct &&
+//                                         getRentalProductId(
+//                                             selectedProduct
+//                                         ) === rentalId;
 
 
-//                                         <div className="product-info">
+//                                     return (
 
-//                                             <span className="brand">
-//                                                 {brand || "Laptop"}
-//                                             </span>
+//                                         <article
+//                                             key={rentalId}
+//                                             className={
+//                                                 selected
+//                                                     ? "rental-product-card selected"
+//                                                     : "rental-product-card"
+//                                             }
+//                                         >
 
-//                                             <h3>
-//                                                 {name}
-//                                             </h3>
-
-//                                             <span className="sku">
-//                                                 SKU: {sku}
-//                                             </span>
-
-//                                             <div className="product-prices">
-
-//                                                 <span>
-//                                                     Rent: {money(rent)} / month
-//                                                 </span>
-
-//                                                 <span>
-//                                                     Deposit: {money(deposit)}
-//                                                 </span>
-
-//                                                 <span>
-//                                                     Minimum: {minimum} months
-//                                                 </span>
-
-//                                             </div>
-
-//                                             <span
-//                                                 className={
-//                                                     available > 0
-//                                                         ? "stock available"
-//                                                         : "stock unavailable"
-//                                                 }
-//                                             >
-//                                                 {available > 0
-//                                                     ? `${available} Available`
-//                                                     : "Out of Stock"
-//                                                 }
-//                                             </span>
-
-
-//                                             <button
-//                                                 type="button"
-//                                                 className="submit-btn product-select-btn"
-//                                                 onClick={(event) => {
-
-//                                                     event.preventDefault();
-//                                                     event.stopPropagation();
-
-//                                                     selectProduct(item);
-//                                                 }}
-//                                                 disabled={
-//                                                     available <= 0
-//                                                 }
+//                                             <div
+//                                                 className="product-image"
 //                                             >
 
-//                                                 {selected ? (
+//                                                 {image ? (
 
-//                                                     <>
-//                                                         <FaCheckCircle />
-//                                                         Selected
-//                                                     </>
+//                                                     <img
+//                                                         src={image}
+//                                                         alt={name}
+//                                                         onError={(
+//                                                             event
+//                                                         ) => {
+//                                                             event.currentTarget.style.display =
+//                                                                 "none";
+//                                                         }}
+//                                                     />
 
 //                                                 ) : (
 
-//                                                     <>
-//                                                         <FaLaptop />
-//                                                         Select Laptop
-//                                                     </>
+//                                                     <FaLaptop
+//                                                         size={30}
+//                                                     />
 
 //                                                 )}
 
-//                                             </button>
-
-//                                         </div>
+//                                             </div>
 
 
-//                                         {selected && (
+//                                             <div
+//                                                 className="product-info"
+//                                             >
 
-//                                             <FaCheckCircle
-//                                                 className="selected-check"
-//                                             />
+//                                                 <span
+//                                                     className="brand"
+//                                                 >
+//                                                     {brand ||
+//                                                         "Laptop"}
+//                                                 </span>
 
-//                                         )}
 
-//                                     </article>
+//                                                 <h3>
+//                                                     {name}
+//                                                 </h3>
 
-//                                 );
-//                             })}
+
+//                                                 <span
+//                                                     className="sku"
+//                                                 >
+//                                                     SKU: {sku}
+//                                                 </span>
+
+
+//                                                 <div
+//                                                     className="product-prices"
+//                                                 >
+
+//                                                     <span>
+//                                                         Rent:{" "}
+//                                                         {money(
+//                                                             rent
+//                                                         )}{" "}
+//                                                         / month
+//                                                     </span>
+
+//                                                     <span>
+//                                                         Deposit:{" "}
+//                                                         {money(
+//                                                             deposit
+//                                                         )}
+//                                                     </span>
+
+//                                                     <span>
+//                                                         Minimum:{" "}
+//                                                         {minimum}{" "}
+//                                                         months
+//                                                     </span>
+
+//                                                 </div>
+
+
+//                                                 <span
+//                                                     className={
+//                                                         available > 0
+//                                                             ? "stock available"
+//                                                             : "stock unavailable"
+//                                                     }
+//                                                 >
+
+//                                                     {available > 0
+//                                                         ? `${available} Available`
+//                                                         : "Out of Stock"
+//                                                     }
+
+//                                                 </span>
+
+
+//                                                 <button
+//                                                     type="button"
+//                                                     className="submit-btn product-select-btn"
+//                                                     onClick={(
+//                                                         event
+//                                                     ) => {
+
+//                                                         event.preventDefault();
+//                                                         event.stopPropagation();
+
+//                                                         selectProduct(
+//                                                             item
+//                                                         );
+//                                                     }}
+//                                                     disabled={
+//                                                         available <=
+//                                                         0 ||
+//                                                         submitting
+//                                                     }
+//                                                 >
+
+//                                                     {selected ? (
+
+//                                                         <>
+//                                                             <FaCheckCircle />
+//                                                             Selected
+//                                                         </>
+
+//                                                     ) : (
+
+//                                                         <>
+//                                                             <FaLaptop />
+//                                                             Select Laptop
+//                                                         </>
+
+//                                                     )}
+
+//                                                 </button>
+
+//                                             </div>
+
+
+//                                             {selected && (
+
+//                                                 <FaCheckCircle
+//                                                     className="selected-check"
+//                                                 />
+
+//                                             )}
+
+//                                         </article>
+
+//                                     );
+//                                 }
+//                             )}
 
 //                         </div>
 
@@ -1761,9 +2674,13 @@
 //                     <>
 
 
-//                         {/* SELECTED LAPTOP */}
+//                         {/* =================================================
+//                             SELECTED LAPTOP
+//                         ================================================= */}
 
-//                         <section className="walkin-card">
+//                         <section
+//                             className="walkin-card"
+//                         >
 
 //                             <div className="section-title">
 
@@ -1784,11 +2701,17 @@
 //                             </div>
 
 
-//                             <div className="summary-product">
+//                             <div
+//                                 className="summary-product"
+//                             >
 
-//                                 <div className="summary-icon">
+//                                 <div
+//                                     className="summary-icon"
+//                                 >
 
-//                                     <FaLaptop size={25} />
+//                                     <FaLaptop
+//                                         size={25}
+//                                     />
 
 //                                 </div>
 
@@ -1824,7 +2747,10 @@
 //                                 <button
 //                                     type="button"
 //                                     className="cancel-btn"
-//                                     onClick={clearProduct}
+//                                     onClick={
+//                                         clearProduct
+//                                     }
+//                                     disabled={submitting}
 //                                 >
 
 //                                     <FaTimes />
@@ -1838,9 +2764,9 @@
 //                         </section>
 
 
-//                         {/* =====================================================
+//                         {/* =================================================
 //                             CUSTOMER DETAILS
-//                         ===================================================== */}
+//                         ================================================= */}
 
 //                         <section
 //                             className="walkin-card customer-details-section"
@@ -1848,7 +2774,8 @@
 
 //                             <div className="section-title">
 
-//                                 {customerType === "INDIVIDUAL"
+//                                 {customerType ===
+//                                 "INDIVIDUAL"
 //                                     ? <FaUser />
 //                                     : <FaBuilding />
 //                                 }
@@ -1868,23 +2795,28 @@
 //                             </div>
 
 
-//                             {/* =================================================
+//                             {/* =============================================
 //                                 INDIVIDUAL
-//                             ================================================= */}
+//                             ============================================= */}
 
-//                             {customerType === "INDIVIDUAL" && (
+//                             {customerType ===
+//                             "INDIVIDUAL" && (
 
 //                                 <div
 //                                     className="form-grid customer-form-grid"
 //                                 >
 
-//                                     <div className="form-group">
+//                                     <div
+//                                         className="form-group"
+//                                     >
 
 //                                         <label>
 //                                             Full Name *
 //                                         </label>
 
-//                                         <div className="input-icon">
+//                                         <div
+//                                             className="input-icon"
+//                                         >
 
 //                                             <FaUser />
 
@@ -1900,6 +2832,7 @@
 //                                                 placeholder="Enter customer full name"
 //                                                 autoComplete="name"
 //                                                 autoFocus
+//                                                 disabled={submitting}
 //                                             />
 
 //                                         </div>
@@ -1907,13 +2840,17 @@
 //                                     </div>
 
 
-//                                     <div className="form-group">
+//                                     <div
+//                                         className="form-group"
+//                                     >
 
 //                                         <label>
 //                                             Phone *
 //                                         </label>
 
-//                                         <div className="input-icon">
+//                                         <div
+//                                             className="input-icon"
+//                                         >
 
 //                                             <FaPhone />
 
@@ -1928,6 +2865,7 @@
 //                                                 }
 //                                                 placeholder="Enter phone number"
 //                                                 autoComplete="tel"
+//                                                 disabled={submitting}
 //                                             />
 
 //                                         </div>
@@ -1935,13 +2873,17 @@
 //                                     </div>
 
 
-//                                     <div className="form-group">
+//                                     <div
+//                                         className="form-group"
+//                                     >
 
 //                                         <label>
 //                                             Email
 //                                         </label>
 
-//                                         <div className="input-icon">
+//                                         <div
+//                                             className="input-icon"
+//                                         >
 
 //                                             <FaEnvelope />
 
@@ -1956,6 +2898,7 @@
 //                                                 }
 //                                                 placeholder="customer@email.com"
 //                                                 autoComplete="email"
+//                                                 disabled={submitting}
 //                                             />
 
 //                                         </div>
@@ -1963,13 +2906,17 @@
 //                                     </div>
 
 
-//                                     <div className="form-group full">
+//                                     <div
+//                                         className="form-group full"
+//                                     >
 
 //                                         <label>
 //                                             Address
 //                                         </label>
 
-//                                         <div className="input-icon textarea-icon">
+//                                         <div
+//                                             className="input-icon textarea-icon"
+//                                         >
 
 //                                             <FaMapMarkerAlt />
 
@@ -1983,6 +2930,7 @@
 //                                                 }
 //                                                 placeholder="Enter customer address"
 //                                                 rows={4}
+//                                                 disabled={submitting}
 //                                             />
 
 //                                         </div>
@@ -1994,23 +2942,28 @@
 //                             )}
 
 
-//                             {/* =================================================
+//                             {/* =============================================
 //                                 COMPANY
-//                             ================================================= */}
+//                             ============================================= */}
 
-//                             {customerType === "COMPANY" && (
+//                             {customerType ===
+//                             "COMPANY" && (
 
 //                                 <div
 //                                     className="form-grid customer-form-grid"
 //                                 >
 
-//                                     <div className="form-group">
+//                                     <div
+//                                         className="form-group"
+//                                     >
 
 //                                         <label>
 //                                             Company Name *
 //                                         </label>
 
-//                                         <div className="input-icon">
+//                                         <div
+//                                             className="input-icon"
+//                                         >
 
 //                                             <FaBuilding />
 
@@ -2025,6 +2978,7 @@
 //                                                 }
 //                                                 placeholder="Enter company name"
 //                                                 autoFocus
+//                                                 disabled={submitting}
 //                                             />
 
 //                                         </div>
@@ -2032,13 +2986,17 @@
 //                                     </div>
 
 
-//                                     <div className="form-group">
+//                                     <div
+//                                         className="form-group"
+//                                     >
 
 //                                         <label>
 //                                             Contact Person *
 //                                         </label>
 
-//                                         <div className="input-icon">
+//                                         <div
+//                                             className="input-icon"
+//                                         >
 
 //                                             <FaUser />
 
@@ -2052,6 +3010,7 @@
 //                                                     handleCompanyChange
 //                                                 }
 //                                                 placeholder="Enter contact person"
+//                                                 disabled={submitting}
 //                                             />
 
 //                                         </div>
@@ -2059,13 +3018,17 @@
 //                                     </div>
 
 
-//                                     <div className="form-group">
+//                                     <div
+//                                         className="form-group"
+//                                     >
 
 //                                         <label>
 //                                             Phone *
 //                                         </label>
 
-//                                         <div className="input-icon">
+//                                         <div
+//                                             className="input-icon"
+//                                         >
 
 //                                             <FaPhone />
 
@@ -2079,6 +3042,7 @@
 //                                                     handleCompanyChange
 //                                                 }
 //                                                 placeholder="Enter company phone"
+//                                                 disabled={submitting}
 //                                             />
 
 //                                         </div>
@@ -2086,13 +3050,17 @@
 //                                     </div>
 
 
-//                                     <div className="form-group">
+//                                     <div
+//                                         className="form-group"
+//                                     >
 
 //                                         <label>
 //                                             Email
 //                                         </label>
 
-//                                         <div className="input-icon">
+//                                         <div
+//                                             className="input-icon"
+//                                         >
 
 //                                             <FaEnvelope />
 
@@ -2106,6 +3074,7 @@
 //                                                     handleCompanyChange
 //                                                 }
 //                                                 placeholder="company@email.com"
+//                                                 disabled={submitting}
 //                                             />
 
 //                                         </div>
@@ -2113,7 +3082,9 @@
 //                                     </div>
 
 
-//                                     <div className="form-group">
+//                                     <div
+//                                         className="form-group"
+//                                     >
 
 //                                         <label>
 //                                             GST Number
@@ -2129,18 +3100,23 @@
 //                                                 handleCompanyChange
 //                                             }
 //                                             placeholder="GST number"
+//                                             disabled={submitting}
 //                                         />
 
 //                                     </div>
 
 
-//                                     <div className="form-group full">
+//                                     <div
+//                                         className="form-group full"
+//                                     >
 
 //                                         <label>
 //                                             Office Address
 //                                         </label>
 
-//                                         <div className="input-icon textarea-icon">
+//                                         <div
+//                                             className="input-icon textarea-icon"
+//                                         >
 
 //                                             <FaMapMarkerAlt />
 
@@ -2154,6 +3130,7 @@
 //                                                 }
 //                                                 placeholder="Enter office address"
 //                                                 rows={4}
+//                                                 disabled={submitting}
 //                                             />
 
 //                                         </div>
@@ -2168,10 +3145,190 @@
 
 
 //                         {/* =====================================================
+//                             CUSTOMER DOCUMENTS
+//                         ===================================================== */}
+
+//                         <section
+//                             className="walkin-card customer-documents-section"
+//                         >
+
+//                             <div className="section-title">
+
+//                                 <FaShieldAlt />
+
+//                                 <div>
+
+//                                     <h2>
+//                                         Customer Documents
+//                                     </h2>
+
+//                                     <p>
+//                                         Upload required documents for this rental
+//                                     </p>
+
+//                                 </div>
+
+//                             </div>
+
+
+//                             <div
+//                                 className="document-upload-grid"
+//                             >
+
+//                                 {currentDocuments.map(
+//                                     (
+//                                         documentConfig
+//                                     ) => {
+
+//                                         const selectedFile =
+//                                             documents[
+//                                                 documentConfig.key
+//                                             ];
+
+
+//                                         return (
+
+//                                             <div
+//                                                 key={
+//                                                     documentConfig.key
+//                                                 }
+//                                                 className="document-upload-card"
+//                                             >
+
+//                                                 <div
+//                                                     className="document-upload-header"
+//                                                 >
+
+//                                                     <strong>
+//                                                         {
+//                                                             documentConfig.label
+//                                                         }
+//                                                     </strong>
+
+//                                                     <span>
+//                                                         Required *
+//                                                     </span>
+
+//                                                 </div>
+
+
+//                                                 <label
+//                                                     className="document-file-label"
+//                                                 >
+
+//                                                     <input
+//                                                         ref={(
+//                                                             element
+//                                                         ) => {
+
+//                                                             documentInputRefs.current[
+//                                                                 documentConfig.key
+//                                                             ] =
+//                                                                 element;
+
+//                                                         }}
+//                                                         type="file"
+//                                                         accept={
+//                                                             documentConfig.accept
+//                                                         }
+//                                                         onChange={(
+//                                                             event
+//                                                         ) =>
+//                                                             handleDocumentChange(
+//                                                                 documentConfig.key,
+//                                                                 event
+//                                                             )
+//                                                         }
+//                                                         disabled={
+//                                                             submitting
+//                                                         }
+//                                                     />
+
+//                                                     <span>
+
+//                                                         {selectedFile
+//                                                             ? selectedFile.name
+//                                                             : "Choose document"}
+
+//                                                     </span>
+
+//                                                 </label>
+
+
+//                                                 {selectedFile && (
+
+//                                                     <div
+//                                                         className="document-selected"
+//                                                     >
+
+//                                                         <FaCheckCircle />
+
+//                                                         <span>
+//                                                             {
+//                                                                 selectedFile.name
+//                                                             }
+//                                                         </span>
+
+
+//                                                         <button
+//                                                             type="button"
+//                                                             className="document-remove-btn"
+//                                                             onClick={() =>
+//                                                                 removeDocument(
+//                                                                     documentConfig.key
+//                                                                 )
+//                                                             }
+//                                                             disabled={
+//                                                                 submitting
+//                                                             }
+//                                                         >
+
+//                                                             <FaTimes />
+
+//                                                         </button>
+
+//                                                     </div>
+
+//                                                 )}
+
+
+//                                                 <small>
+//                                                     JPG, PNG, WEBP or PDF • Max 10 MB
+//                                                 </small>
+
+//                                             </div>
+
+//                                         );
+//                                     }
+//                                 )}
+
+//                             </div>
+
+
+//                             <div
+//                                 className="document-upload-note"
+//                             >
+
+//                                 <FaShieldAlt />
+
+//                                 <span>
+//                                     Documents are uploaded automatically after
+//                                     the rental is created. You do not need to
+//                                     leave this form or upload them again.
+//                                 </span>
+
+//                             </div>
+
+//                         </section>
+
+
+//                         {/* =====================================================
 //                             RENTAL PERIOD
 //                         ===================================================== */}
 
-//                         <section className="walkin-card">
+//                         <section
+//                             className="walkin-card"
+//                         >
 
 //                             <div className="section-title">
 
@@ -2194,7 +3351,9 @@
 
 //                             <div className="form-grid">
 
-//                                 <div className="form-group">
+//                                 <div
+//                                     className="form-group"
+//                                 >
 
 //                                     <label>
 //                                         Minimum Rental
@@ -2209,27 +3368,39 @@
 //                                 </div>
 
 
-//                                 <div className="form-group">
+//                                 <div
+//                                     className="form-group"
+//                                 >
 
 //                                     <label>
 //                                         Rental Duration
 //                                     </label>
 
-//                                     <div className="month-control">
+
+//                                     <div
+//                                         className="month-control"
+//                                     >
 
 //                                         <button
 //                                             type="button"
-//                                             onClick={decreaseMonths}
+//                                             onClick={
+//                                                 decreaseMonths
+//                                             }
 //                                             disabled={
 //                                                 rentalMonths <=
-//                                                 minimumMonths
+//                                                 minimumMonths ||
+//                                                 submitting
 //                                             }
 //                                         >
+
 //                                             <FaMinus />
+
 //                                         </button>
 
 
-//                                         <div className="month-value">
+//                                         <div
+//                                             className="month-value"
+//                                         >
 
 //                                             <strong>
 //                                                 {rentalMonths}
@@ -2244,9 +3415,16 @@
 
 //                                         <button
 //                                             type="button"
-//                                             onClick={increaseMonths}
+//                                             onClick={
+//                                                 increaseMonths
+//                                             }
+//                                             disabled={
+//                                                 submitting
+//                                             }
 //                                         >
+
 //                                             <FaPlus />
+
 //                                         </button>
 
 //                                     </div>
@@ -2254,7 +3432,9 @@
 //                                 </div>
 
 
-//                                 <div className="form-group full">
+//                                 <div
+//                                     className="form-group full"
+//                                 >
 
 //                                     <label>
 //                                         Handover / Notes
@@ -2264,13 +3444,16 @@
 //                                         value={
 //                                             handoverDescription
 //                                         }
-//                                         onChange={(event) =>
+//                                         onChange={(
+//                                             event
+//                                         ) =>
 //                                             setHandoverDescription(
 //                                                 event.target.value
 //                                             )
 //                                         }
 //                                         placeholder="Enter laptop condition, accessories, charger, bag or other handover notes..."
 //                                         rows={4}
+//                                         disabled={submitting}
 //                                     />
 
 //                                     <small>
@@ -2288,7 +3471,9 @@
 //                             SUMMARY
 //                         ===================================================== */}
 
-//                         <section className="walkin-card summary-card">
+//                         <section
+//                             className="walkin-card summary-card"
+//                         >
 
 //                             <div className="section-title">
 
@@ -2309,7 +3494,9 @@
 //                             </div>
 
 
-//                             <div className="summary-lines">
+//                             <div
+//                                 className="summary-lines"
+//                             >
 
 //                                 <div>
 
@@ -2384,7 +3571,9 @@
 //                                 </div>
 
 
-//                                 <div className="summary-total">
+//                                 <div
+//                                     className="summary-total"
+//                                 >
 
 //                                     <span>
 //                                         Total Payable
@@ -2401,7 +3590,9 @@
 //                             </div>
 
 
-//                             <div className="submit-help">
+//                             <div
+//                                 className="submit-help"
+//                             >
 
 //                                 <FaShieldAlt />
 
@@ -2411,13 +3602,19 @@
 //                             </div>
 
 
-//                             <div className="submit-row">
+//                             <div
+//                                 className="submit-row"
+//                             >
 
 //                                 <button
 //                                     type="button"
 //                                     className="cancel-btn"
-//                                     onClick={resetForm}
-//                                     disabled={submitting}
+//                                     onClick={
+//                                         resetForm
+//                                     }
+//                                     disabled={
+//                                         submitting
+//                                     }
 //                                 >
 
 //                                     <FaTimes />
@@ -2439,15 +3636,23 @@
 //                                     {submitting ? (
 
 //                                         <>
-//                                             <FaSpinner className="spin" />
-//                                             Creating Rental...
+
+//                                             <FaSpinner
+//                                                 className="spin"
+//                                             />
+
+//                                             Creating Rental & Uploading...
+
 //                                         </>
 
 //                                     ) : (
 
 //                                         <>
+
 //                                             <FaCheckCircle />
+
 //                                             Create Walk-In Rental
+
 //                                         </>
 
 //                                     )}
@@ -2471,7 +3676,6 @@
 import React, {
     useEffect,
     useMemo,
-    useRef,
     useState,
 } from "react";
 
@@ -2511,7 +3715,8 @@ import "./WalkInRental.css";
    API
 ========================================================= */
 
-const API = import.meta.env.VITE_API_URL || "";
+const API =
+    import.meta.env.VITE_API_URL || "";
 
 
 /* =========================================================
@@ -2536,73 +3741,11 @@ const EMPTY_COMPANY = {
 
 
 /* =========================================================
-   DOCUMENT CONFIG
-========================================================= */
-
-const DOCUMENT_CONFIG = {
-    INDIVIDUAL: [
-        {
-            key: "PASSPORT_PHOTO",
-            label: "Passport Size Photograph",
-            accept: "image/jpeg,image/jpg,image/png,image/webp",
-        },
-        {
-            key: "PAN_CARD",
-            label: "PAN Card",
-            accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
-        },
-        {
-            key: "AADHAAR_CARD",
-            label: "Aadhaar Card",
-            accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
-        },
-        {
-            key: "HOUSE_RENTAL_AGREEMENT",
-            label: "House Rental Agreement",
-            accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
-        },
-        {
-            key: "COLLEGE_ID",
-            label: "College ID",
-            accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
-        },
-    ],
-
-    COMPANY: [
-        {
-            key: "PAN_CARD",
-            label: "PAN Card",
-            accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
-        },
-        {
-            key: "AADHAAR_CARD",
-            label: "Aadhaar Card (Authorized Person)",
-            accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
-        },
-        {
-            key: "GST_REGISTRATION",
-            label: "GST Registration Copy",
-            accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
-        },
-        {
-            key: "OFFICE_ID",
-            label: "Office ID",
-            accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
-        },
-        {
-            key: "AUTHORIZATION_LETTER",
-            label: "Authorization Letter",
-            accept: "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
-        },
-    ],
-};
-
-
-/* =========================================================
    ARRAY HELPER
 ========================================================= */
 
 const getFirstArray = (response) => {
+
     const candidates = [
         response,
         response?.data,
@@ -2613,9 +3756,11 @@ const getFirstArray = (response) => {
     ];
 
     for (const item of candidates) {
+
         if (Array.isArray(item)) {
             return item;
         }
+
     }
 
     return [];
@@ -2627,6 +3772,7 @@ const getFirstArray = (response) => {
 ========================================================= */
 
 const getProductObject = (item) => {
+
     if (!item) {
         return {};
     }
@@ -2654,11 +3800,13 @@ const getProductObject = (item) => {
 ========================================================= */
 
 const getProductId = (item) => {
+
     if (!item) {
         return "";
     }
 
-    const product = getProductObject(item);
+    const product =
+        getProductObject(item);
 
     return String(
         product?._id ||
@@ -2680,6 +3828,7 @@ const getProductId = (item) => {
 ========================================================= */
 
 const getRentalProductId = (item) => {
+
     if (!item) {
         return "";
     }
@@ -2688,6 +3837,7 @@ const getRentalProductId = (item) => {
         item?.rentalProductId &&
         typeof item.rentalProductId === "object"
     ) {
+
         return String(
             item.rentalProductId?._id ||
             item.rentalProductId?.id ||
@@ -2703,6 +3853,7 @@ const getRentalProductId = (item) => {
         item?.rentalProduct &&
         typeof item.rentalProduct === "object"
     ) {
+
         return String(
             item.rentalProduct?._id ||
             item.rentalProduct?.id ||
@@ -2723,7 +3874,9 @@ const getRentalProductId = (item) => {
 ========================================================= */
 
 const getProductName = (item) => {
-    const product = getProductObject(item);
+
+    const product =
+        getProductObject(item);
 
     return (
         product?.name ||
@@ -2741,12 +3894,15 @@ const getProductName = (item) => {
 ========================================================= */
 
 const getBrand = (item) => {
-    const product = getProductObject(item);
+
+    const product =
+        getProductObject(item);
 
     if (
         product?.brand &&
         typeof product.brand === "object"
     ) {
+
         return (
             product.brand?.name ||
             product.brand?.title ||
@@ -2758,6 +3914,7 @@ const getBrand = (item) => {
         item?.brand &&
         typeof item.brand === "object"
     ) {
+
         return (
             item.brand?.name ||
             item.brand?.title ||
@@ -2778,7 +3935,9 @@ const getBrand = (item) => {
 ========================================================= */
 
 const getSku = (item) => {
-    const product = getProductObject(item);
+
+    const product =
+        getProductObject(item);
 
     return (
         product?.sku ||
@@ -2795,7 +3954,9 @@ const getSku = (item) => {
 ========================================================= */
 
 const getMonthlyRent = (item) => {
-    const product = getProductObject(item);
+
+    const product =
+        getProductObject(item);
 
     return Number(
         item?.monthlyRent ??
@@ -2816,7 +3977,9 @@ const getMonthlyRent = (item) => {
 ========================================================= */
 
 const getSecurityDeposit = (item) => {
-    const product = getProductObject(item);
+
+    const product =
+        getProductObject(item);
 
     return Number(
         item?.securityDeposit ??
@@ -2837,7 +4000,9 @@ const getSecurityDeposit = (item) => {
 ========================================================= */
 
 const getMinimumMonths = (item) => {
-    const product = getProductObject(item);
+
+    const product =
+        getProductObject(item);
 
     const value =
         item?.minimumRentalMonths ??
@@ -2850,9 +4015,12 @@ const getMinimumMonths = (item) => {
         product?.rentalDetails?.minimumRentalMonths ??
         3;
 
-    const months = Number(value);
+    const months =
+        Number(value);
 
-    return months >= 1 ? months : 3;
+    return months >= 1
+        ? months
+        : 3;
 };
 
 
@@ -2861,7 +4029,9 @@ const getMinimumMonths = (item) => {
 ========================================================= */
 
 const getGST = (item) => {
-    const product = getProductObject(item);
+
+    const product =
+        getProductObject(item);
 
     return Number(
         item?.gstPercentage ??
@@ -2884,7 +4054,9 @@ const getGST = (item) => {
 ========================================================= */
 
 const getAvailableQuantity = (item) => {
-    const product = getProductObject(item);
+
+    const product =
+        getProductObject(item);
 
     return Number(
         item?.availableQuantity ??
@@ -2906,25 +4078,32 @@ const getAvailableQuantity = (item) => {
 ========================================================= */
 
 const isRentalProduct = (item) => {
+
     if (!item) {
         return false;
     }
 
-    const product = getProductObject(item);
+    const product =
+        getProductObject(item);
 
-    const productType = String(
-        item?.productType ??
-        product?.productType ??
-        ""
-    )
-        .trim()
-        .toUpperCase();
+    const productType =
+        String(
+            item?.productType ??
+            product?.productType ??
+            ""
+        )
+            .trim()
+            .toUpperCase();
 
-    if (productType === "RENTAL") {
+    if (
+        productType === "RENTAL"
+    ) {
         return true;
     }
 
-    if (item?.rentalProductId) {
+    if (
+        item?.rentalProductId
+    ) {
         return true;
     }
 
@@ -2953,7 +4132,9 @@ const isRentalProduct = (item) => {
 ========================================================= */
 
 const getImageUrl = (item) => {
-    const product = getProductObject(item);
+
+    const product =
+        getProductObject(item);
 
     let image =
         item?.primaryImage ||
@@ -2970,20 +4151,23 @@ const getImageUrl = (item) => {
         Array.isArray(product?.images) &&
         product.images.length > 0
     ) {
-        image = product.images[0];
+        image =
+            product.images[0];
     }
 
     if (
         Array.isArray(item?.images) &&
         item.images.length > 0
     ) {
-        image = item.images[0];
+        image =
+            item.images[0];
     }
 
     if (
         typeof image === "object" &&
         image !== null
     ) {
+
         image =
             image?.url ||
             image?.path ||
@@ -2996,7 +4180,8 @@ const getImageUrl = (item) => {
         return "";
     }
 
-    const imageString = String(image).trim();
+    const imageString =
+        String(image).trim();
 
     if (
         imageString.startsWith("http://") ||
@@ -3005,11 +4190,13 @@ const getImageUrl = (item) => {
         return imageString;
     }
 
-    const serverUrl = String(API)
-        .replace(/\/api\/?$/, "")
-        .replace(/\/$/, "");
+    const serverUrl =
+        String(API)
+            .replace(/\/api\/?$/, "")
+            .replace(/\/$/, "");
 
-    const cleanPath = imageString.replace(/^\/+/, "");
+    const cleanPath =
+        imageString.replace(/^\/+/, "");
 
     if (!serverUrl) {
         return `/${cleanPath}`;
@@ -3024,6 +4211,7 @@ const getImageUrl = (item) => {
 ========================================================= */
 
 const money = (value) => {
+
     return `₹${Number(
         value || 0
     ).toLocaleString("en-IN")}`;
@@ -3036,20 +4224,31 @@ const money = (value) => {
 
 export default function WalkInRental() {
 
-    const navigate = useNavigate();
+    const navigate =
+        useNavigate();
 
 
     /* =======================================================
        BASIC STATE
     ======================================================= */
 
-    const [loading, setLoading] = useState(true);
-    const [refreshing, setRefreshing] = useState(false);
-    const [submitting, setSubmitting] = useState(false);
+    const [loading, setLoading] =
+        useState(true);
 
-    const [products, setProducts] = useState([]);
-    const [search, setSearch] = useState("");
-    const [selectedProduct, setSelectedProduct] = useState(null);
+    const [refreshing, setRefreshing] =
+        useState(false);
+
+    const [submitting, setSubmitting] =
+        useState(false);
+
+    const [products, setProducts] =
+        useState([]);
+
+    const [search, setSearch] =
+        useState("");
+
+    const [selectedProduct, setSelectedProduct] =
+        useState(null);
 
 
     /* =======================================================
@@ -3076,27 +4275,114 @@ export default function WalkInRental() {
 
 
     /* =======================================================
-       RENTAL
+       RENTAL DURATION
+       BACKEND:
+       rentalDurationType = DAYS / MONTHS
+       rentalDuration = number
     ======================================================= */
 
-    const [rentalMonths, setRentalMonths] =
+    const [rentalDurationType, setRentalDurationType] =
+        useState("MONTHS");
+
+    const [rentalDuration, setRentalDuration] =
         useState(3);
+
+
+    /* =======================================================
+       HANDOVER NOTES
+    ======================================================= */
 
     const [handoverDescription, setHandoverDescription] =
         useState("");
 
 
     /* =======================================================
-       DOCUMENT UPLOADS
+       DOCUMENT CONFIG
+       
+       IMPORTANT:
+       These values MUST exactly match backend enum.
     ======================================================= */
 
-    const [documents, setDocuments] = useState({});
+    const DOCUMENT_CONFIG = {
 
-    /*
-     * We keep refs for file inputs so when a document is
-     * removed, the browser input is also cleared.
-     */
-    const documentInputRefs = useRef({});
+        INDIVIDUAL: [
+
+            {
+                key: "PASSPORT_PHOTO",
+                label: "Passport Size Photograph",
+                accept: "image/*",
+            },
+
+            {
+                key: "PAN_CARD",
+                label: "PAN Card",
+                accept: "image/*,.pdf",
+            },
+
+            {
+                key: "AADHAAR_CARD",
+                label: "Aadhaar Card",
+                accept: "image/*,.pdf",
+            },
+
+            {
+                key: "HOUSE_RENTAL_AGREEMENT",
+                label: "House Rental Agreement",
+                accept: "image/*,.pdf",
+            },
+
+            {
+                key: "COLLEGE_ID",
+                label: "College ID",
+                accept: "image/*,.pdf",
+            },
+
+            {
+                key: "OFFICE_ID",
+                label: "Office ID",
+                accept: "image/*,.pdf",
+            },
+
+        ],
+
+        COMPANY: [
+
+            {
+                key: "PAN_CARD",
+                label: "PAN Card",
+                accept: "image/*,.pdf",
+            },
+
+            {
+                key: "AADHAAR_CARD",
+                label: "Authorized Person Aadhaar Card",
+                accept: "image/*,.pdf",
+            },
+
+            {
+                key: "GST_REGISTRATION",
+                label: "GST Registration",
+                accept: "image/*,.pdf",
+            },
+
+            {
+                key: "OFFICE_ID",
+                label: "Office ID",
+                accept: "image/*,.pdf",
+            },
+
+            {
+                key: "AUTHORIZATION_LETTER",
+                label: "Authorization Letter",
+                accept: "image/*,.pdf",
+            },
+
+        ],
+    };
+
+
+    const [documents, setDocuments] =
+        useState({});
 
 
     const currentDocuments =
@@ -3146,7 +4432,9 @@ export default function WalkInRental() {
             return;
         }
 
-        if (file.size > maxSize) {
+        if (
+            file.size > maxSize
+        ) {
 
             toast.error(
                 "Document size must be less than 10 MB."
@@ -3157,50 +4445,12 @@ export default function WalkInRental() {
             return;
         }
 
-        console.log(
-            "DOCUMENT SELECTED:",
-            {
-                documentType,
-                name: file.name,
-                type: file.type,
-                size: file.size,
-            }
-        );
-
-        setDocuments((previous) => ({
-            ...previous,
-            [documentType]: file,
-        }));
-    };
-
-
-    /* =======================================================
-       REMOVE DOCUMENT
-    ======================================================= */
-
-    const removeDocument = (
-        documentType
-    ) => {
-
-        setDocuments((previous) => {
-
-            const next = {
+        setDocuments(
+            (previous) => ({
                 ...previous,
-            };
-
-            delete next[documentType];
-
-            return next;
-        });
-
-        const input =
-            documentInputRefs.current[
-                documentType
-            ];
-
-        if (input) {
-            input.value = "";
-        }
+                [documentType]: file,
+            })
+        );
     };
 
 
@@ -3235,6 +4485,14 @@ export default function WalkInRental() {
 
     /* =======================================================
        UPLOAD ALL DOCUMENTS
+       
+       IMPORTANT FIX:
+       rentalApi expects:
+       uploadRentalDocument(
+           rentalId,
+           documentType,
+           file
+       )
     ======================================================= */
 
     const uploadAllDocuments = async (
@@ -3288,12 +4546,12 @@ export default function WalkInRental() {
             );
 
             console.log(
-                "File Type:",
+                "Type:",
                 file.type
             );
 
             console.log(
-                "File Size:",
+                "Size:",
                 file.size
             );
 
@@ -3302,62 +4560,26 @@ export default function WalkInRental() {
             );
 
 
-            try {
+            /*
+             * DO NOT CREATE FORMDATA HERE.
+             *
+             * rentalApi.js already creates FormData.
+             */
 
-                const response =
-                    await uploadRentalDocument(
-                        rentalId,
-                        documentConfig.key,
-                        file
-                    );
-
-                uploadResults.push({
-                    type:
-                        documentConfig.key,
-
-                    fileName:
-                        file.name,
-
-                    success: true,
-
-                    response,
-                });
-
-            } catch (error) {
-
-                console.error(
-                    `DOCUMENT UPLOAD FAILED: ${documentConfig.key}`,
-                    error
+            const response =
+                await uploadRentalDocument(
+                    rentalId,
+                    documentConfig.key,
+                    file
                 );
 
-                /*
-                 * Very important:
-                 * Rental is already created.
-                 *
-                 * We attach document information to the
-                 * error so handleSubmit knows that this is
-                 * an upload problem, NOT a rental creation
-                 * problem.
-                 */
 
-                const uploadError =
-                    new Error(
-                        error?.message ||
-                        error?.error ||
-                        `Failed to upload ${documentConfig.label}`
-                    );
+            uploadResults.push({
+                type:
+                    documentConfig.key,
 
-                uploadError.isDocumentUploadError = true;
-                uploadError.rentalId = rentalId;
-                uploadError.documentType =
-                    documentConfig.key;
-                uploadError.documentLabel =
-                    documentConfig.label;
-                uploadError.originalError =
-                    error;
-
-                throw uploadError;
-            }
+                response,
+            });
         }
 
         return uploadResults;
@@ -3380,35 +4602,62 @@ export default function WalkInRental() {
                 setLoading(true);
             }
 
+
             const response =
                 await getRentalProducts();
+
+
+            console.log(
+                "================================"
+            );
 
             console.log(
                 "WALK-IN RENTAL PRODUCTS RESPONSE:",
                 response
             );
 
+            console.log(
+                "================================"
+            );
+
+
             const list =
                 getFirstArray(response);
+
 
             console.log(
                 "ALL RENTAL PRODUCTS:",
                 list
             );
 
+
+            /*
+             * Backend /rentals/products already returns
+             * only active rental products with quantity > 0.
+             *
+             * This extra frontend check keeps safety.
+             */
+
             const rentalOnly =
                 list.filter(
                     isRentalProduct
                 );
+
 
             console.log(
                 "ONLY RENTAL PRODUCTS:",
                 rentalOnly
             );
 
+
             setProducts(
                 rentalOnly
             );
+
+
+            /*
+             * Keep selected product if it still exists.
+             */
 
             setSelectedProduct(
                 (previous) => {
@@ -3443,14 +4692,15 @@ export default function WalkInRental() {
                 error
             );
 
+
             if (!showRefresh) {
                 setProducts([]);
             }
 
+
             toast.error(
                 error?.response?.data?.message ||
                 error?.message ||
-                error?.error ||
                 "Failed to load rental products"
             );
 
@@ -3474,7 +4724,7 @@ export default function WalkInRental() {
 
 
     /* =======================================================
-       SEARCH
+       SEARCH FILTER
     ======================================================= */
 
     const filteredProducts =
@@ -3501,28 +4751,18 @@ export default function WalkInRental() {
 
                     const brand =
                         String(
-                            getBrand(
-                                item
-                            )
+                            getBrand(item)
                         ).toLowerCase();
 
                     const sku =
                         String(
-                            getSku(
-                                item
-                            )
+                            getSku(item)
                         ).toLowerCase();
 
                     return (
-                        name.includes(
-                            keyword
-                        ) ||
-                        brand.includes(
-                            keyword
-                        ) ||
-                        sku.includes(
-                            keyword
-                        )
+                        name.includes(keyword) ||
+                        brand.includes(keyword) ||
+                        sku.includes(keyword)
                     );
                 }
             );
@@ -3537,15 +4777,9 @@ export default function WalkInRental() {
        SELECT PRODUCT
     ======================================================= */
 
-    const selectProduct = (
-        item
-    ) => {
+    const selectProduct = (item) => {
 
-        if (
-            !isRentalProduct(
-                item
-            )
-        ) {
+        if (!isRentalProduct(item)) {
 
             toast.error(
                 "Only rental products can be selected."
@@ -3554,10 +4788,10 @@ export default function WalkInRental() {
             return;
         }
 
+
         const available =
-            getAvailableQuantity(
-                item
-            );
+            getAvailableQuantity(item);
+
 
         if (available <= 0) {
 
@@ -3568,24 +4802,39 @@ export default function WalkInRental() {
             return;
         }
 
-        setSelectedProduct(
-            item
-        );
 
-        setRentalMonths(
-            getMinimumMonths(
-                item
+        setSelectedProduct(item);
+
+
+        const minimum =
+            getMinimumMonths(item);
+
+
+        /*
+         * Backend minimumRentalMonths
+         * has minimum 3.
+         */
+
+        setRentalDuration(
+            Math.max(
+                minimum,
+                3
             )
         );
 
-        setHandoverDescription("");
+
+        setRentalDurationType(
+            "MONTHS"
+        );
+
+
+        setHandoverDescription(
+            ""
+        );
+
 
         setDocuments({});
 
-        /*
-         * Clear old file inputs as well.
-         */
-        documentInputRefs.current = {};
 
         window.scrollTo({
             top: 0,
@@ -3600,21 +4849,17 @@ export default function WalkInRental() {
 
     const clearProduct = () => {
 
-        setSelectedProduct(
-            null
+        setSelectedProduct(null);
+
+        setRentalDurationType(
+            "MONTHS"
         );
 
-        setRentalMonths(
-            3
-        );
+        setRentalDuration(3);
 
-        setHandoverDescription(
-            ""
-        );
+        setHandoverDescription("");
 
         setDocuments({});
-
-        documentInputRefs.current = {};
     };
 
 
@@ -3670,19 +4915,14 @@ export default function WalkInRental() {
         type
     ) => {
 
-        setCustomerType(
-            type
-        );
+        setCustomerType(type);
 
         /*
-         * Documents belong to customer type.
-         * Therefore switching Individual/Company clears
-         * previous document selections so wrong documents
-         * are never uploaded.
+         * Documents belong to the selected
+         * customer type, so clear old files.
          */
-        setDocuments({});
 
-        documentInputRefs.current = {};
+        setDocuments({});
     };
 
 
@@ -3704,7 +4944,7 @@ export default function WalkInRental() {
 
     const decreaseMonths = () => {
 
-        setRentalMonths(
+        setRentalDuration(
             (previous) =>
                 Math.max(
                     minimumMonths,
@@ -3720,7 +4960,7 @@ export default function WalkInRental() {
 
     const increaseMonths = () => {
 
-        setRentalMonths(
+        setRentalDuration(
             (previous) =>
                 previous + 1
         );
@@ -3738,7 +4978,7 @@ export default function WalkInRental() {
 
                 return {
                     monthlyRent: 0,
-                    months: rentalMonths,
+                    months: rentalDuration,
                     rentSubtotal: 0,
                     gstPercentage: 0,
                     gstAmount: 0,
@@ -3747,24 +4987,29 @@ export default function WalkInRental() {
                 };
             }
 
+
             const monthlyRent =
                 getMonthlyRent(
                     selectedProduct
                 );
+
 
             const securityDeposit =
                 getSecurityDeposit(
                     selectedProduct
                 );
 
+
             const gstPercentage =
                 getGST(
                     selectedProduct
                 );
 
+
             const rentSubtotal =
                 monthlyRent *
-                rentalMonths;
+                rentalDuration;
+
 
             const gstAmount =
                 (
@@ -3772,25 +5017,35 @@ export default function WalkInRental() {
                     gstPercentage
                 ) / 100;
 
+
             const totalAmount =
                 rentSubtotal +
                 gstAmount +
                 securityDeposit;
 
+
             return {
+
                 monthlyRent,
+
                 months:
-                    rentalMonths,
+                    rentalDuration,
+
                 rentSubtotal,
+
                 gstPercentage,
+
                 gstAmount,
+
                 securityDeposit,
+
                 totalAmount,
+
             };
 
         }, [
             selectedProduct,
-            rentalMonths,
+            rentalDuration,
         ]);
 
 
@@ -3815,6 +5070,7 @@ export default function WalkInRental() {
                 selectedProduct
             );
 
+
         if (!rentalProductId) {
 
             toast.error(
@@ -3835,15 +5091,11 @@ export default function WalkInRental() {
                 selectedProduct
             );
 
+
         if (!productId) {
 
             toast.error(
                 "Product ID not found."
-            );
-
-            console.error(
-                "INVALID PRODUCT:",
-                selectedProduct
             );
 
             return false;
@@ -3864,8 +5116,69 @@ export default function WalkInRental() {
         }
 
 
+        /*
+         * Backend accepts DAYS / MONTHS.
+         */
+
         if (
-            rentalMonths <
+            ![
+                "DAYS",
+                "MONTHS",
+            ].includes(
+                rentalDurationType
+            )
+        ) {
+
+            toast.error(
+                "Please select a valid rental duration type."
+            );
+
+            return false;
+        }
+
+
+        if (
+            Number(rentalDuration) < 1
+        ) {
+
+            toast.error(
+                "Rental duration must be at least 1."
+            );
+
+            return false;
+        }
+
+
+        /*
+         * Company backend rule:
+         * minimum 3 MONTHS.
+         */
+
+        if (
+            customerType === "COMPANY" &&
+            (
+                rentalDurationType !==
+                "MONTHS" ||
+                Number(rentalDuration) < 3
+            )
+        ) {
+
+            toast.error(
+                "Company rental must be for a minimum of 3 months."
+            );
+
+            return false;
+        }
+
+
+        /*
+         * Product's configured minimum.
+         */
+
+        if (
+            rentalDurationType ===
+            "MONTHS" &&
+            Number(rentalDuration) <
             minimumMonths
         ) {
 
@@ -3891,9 +5204,7 @@ export default function WalkInRental() {
         }
 
 
-        /* =================================================
-           INDIVIDUAL
-        ================================================= */
+        /* INDIVIDUAL */
 
         if (
             customerType ===
@@ -3911,6 +5222,7 @@ export default function WalkInRental() {
                 return false;
             }
 
+
             if (
                 !individualDetails.phone.trim()
             ) {
@@ -3924,9 +5236,7 @@ export default function WalkInRental() {
         }
 
 
-        /* =================================================
-           COMPANY
-        ================================================= */
+        /* COMPANY */
 
         if (
             customerType ===
@@ -3944,6 +5254,7 @@ export default function WalkInRental() {
                 return false;
             }
 
+
             if (
                 !companyDetails.contactPerson.trim()
             ) {
@@ -3954,6 +5265,7 @@ export default function WalkInRental() {
 
                 return false;
             }
+
 
             if (
                 !companyDetails.phone.trim()
@@ -3978,13 +5290,7 @@ export default function WalkInRental() {
 
     const resetForm = () => {
 
-        if (submitting) {
-            return;
-        }
-
-        setSelectedProduct(
-            null
-        );
+        setSelectedProduct(null);
 
         setSearch("");
 
@@ -4000,30 +5306,15 @@ export default function WalkInRental() {
             ...EMPTY_COMPANY,
         });
 
-        setRentalMonths(
-            3
+        setRentalDurationType(
+            "MONTHS"
         );
 
-        setHandoverDescription(
-            ""
-        );
+        setRentalDuration(3);
+
+        setHandoverDescription("");
 
         setDocuments({});
-
-        documentInputRefs.current = {};
-
-        /*
-         * Clear browser file inputs.
-         */
-        Object.values(
-            documentInputRefs.current
-        ).forEach(
-            (input) => {
-                if (input) {
-                    input.value = "";
-                }
-            }
-        );
     };
 
 
@@ -4037,23 +5328,16 @@ export default function WalkInRental() {
 
         event.preventDefault();
 
+
         if (submitting) {
             return;
         }
 
 
-        /* =================================================
-           FORM VALIDATION
-        ================================================= */
-
         if (!validateForm()) {
             return;
         }
 
-
-        /* =================================================
-           DOCUMENT VALIDATION
-        ================================================= */
 
         if (!validateDocuments()) {
             return;
@@ -4062,19 +5346,14 @@ export default function WalkInRental() {
 
         try {
 
-            setSubmitting(
-                true
-            );
+            setSubmitting(true);
 
-
-            /* =============================================
-               IDs
-            ============================================= */
 
             const rentalProductId =
                 getRentalProductId(
                     selectedProduct
                 );
+
 
             const productId =
                 getProductId(
@@ -4082,10 +5361,9 @@ export default function WalkInRental() {
                 );
 
 
-            /* =============================================
-               PAYLOAD
-               KEEPING EXISTING RENTAL CREATE PAYLOAD
-            ============================================= */
+            /* =================================================
+               BACKEND-COMPATIBLE PAYLOAD
+            ================================================= */
 
             const payload = {
 
@@ -4098,76 +5376,119 @@ export default function WalkInRental() {
 
                 customerType,
 
+
                 individualDetails:
                     customerType ===
                     "INDIVIDUAL"
                         ? {
+
                             fullName:
-                                individualDetails.fullName.trim(),
+                                individualDetails
+                                    .fullName
+                                    .trim(),
 
                             phone:
-                                individualDetails.phone.trim(),
+                                individualDetails
+                                    .phone
+                                    .trim(),
 
                             email:
-                                individualDetails.email.trim(),
+                                individualDetails
+                                    .email
+                                    .trim(),
 
                             address:
-                                individualDetails.address.trim(),
+                                individualDetails
+                                    .address
+                                    .trim(),
+
                         }
                         : undefined,
+
 
                 companyDetails:
                     customerType ===
                     "COMPANY"
                         ? {
+
                             companyName:
-                                companyDetails.companyName.trim(),
+                                companyDetails
+                                    .companyName
+                                    .trim(),
 
                             contactPerson:
-                                companyDetails.contactPerson.trim(),
+                                companyDetails
+                                    .contactPerson
+                                    .trim(),
 
                             phone:
-                                companyDetails.phone.trim(),
+                                companyDetails
+                                    .phone
+                                    .trim(),
 
                             email:
-                                companyDetails.email.trim(),
+                                companyDetails
+                                    .email
+                                    .trim(),
 
                             officeAddress:
-                                companyDetails.officeAddress.trim(),
+                                companyDetails
+                                    .officeAddress
+                                    .trim(),
 
                             gstNumber:
-                                companyDetails.gstNumber.trim(),
+                                companyDetails
+                                    .gstNumber
+                                    .trim()
+                                    .toUpperCase(),
+
                         }
                         : undefined,
+
 
                 monthlyRent:
                     Number(
                         pricing.monthlyRent
                     ),
 
+
                 gstPercentage:
                     Number(
                         pricing.gstPercentage
                     ),
+
 
                 securityDeposit:
                     Number(
                         pricing.securityDeposit
                     ),
 
-                rentalMonths:
+
+                /*
+                 * IMPORTANT:
+                 * Backend expects these exact fields.
+                 */
+
+                rentalDurationType:
+                    rentalDurationType,
+
+                rentalDuration:
                     Number(
-                        rentalMonths
+                        rentalDuration
                     ),
 
+
                 notes:
-                    handoverDescription.trim(),
+                    handoverDescription
+                        .trim(),
 
                 handoverDescription:
-                    handoverDescription.trim(),
+                    handoverDescription
+                        .trim(),
 
                 handoverNotes:
-                    handoverDescription.trim(),
+                    handoverDescription
+                        .trim(),
             };
 
 
@@ -4185,15 +5506,9 @@ export default function WalkInRental() {
             );
 
 
-            /* =============================================
-               STEP 1
+            /* =================================================
                CREATE RENTAL
-            ============================================= */
-
-            toast.info(
-                "Creating walk-in rental..."
-            );
-
+            ================================================= */
 
             const response =
                 await createWalkInRentalRequest(
@@ -4207,9 +5522,9 @@ export default function WalkInRental() {
             );
 
 
-            /* =============================================
-               EXTRACT CREATED RENTAL
-            ============================================= */
+            /* =================================================
+               NORMALIZE RESPONSE
+            ================================================= */
 
             const rental =
                 response?.rental ||
@@ -4224,113 +5539,31 @@ export default function WalkInRental() {
                 rental?.id;
 
 
-            /* =============================================
-               IMPORTANT
-               RENTAL MUST HAVE ID
-            ============================================= */
-
             if (!rentalId) {
 
-                console.error(
-                    "RENTAL CREATED BUT ID NOT FOUND:",
-                    response
-                );
-
                 throw new Error(
-                    "Rental was created but rental ID was not returned by the server."
+                    "Rental was created but rental ID was not returned."
                 );
             }
 
 
-            console.log(
-                "CREATED RENTAL ID:",
-                rentalId
-            );
-
-
-            /* =============================================
-               STEP 2
+            /* =================================================
                UPLOAD DOCUMENTS
-            ============================================= */
+            ================================================= */
 
             toast.info(
                 "Rental created. Uploading customer documents..."
             );
 
 
-            let uploadedDocuments = [];
-
-            try {
-
-                uploadedDocuments =
-                    await uploadAllDocuments(
-                        rentalId
-                    );
-
-            } catch (documentError) {
-
-                /*
-                 * VERY IMPORTANT:
-                 *
-                 * Rental already exists here.
-                 *
-                 * We DO NOT call createWalkInRentalRequest
-                 * again.
-                 *
-                 * This prevents duplicate rental creation
-                 * and duplicate stock deduction.
-                 */
-
-                console.error(
-                    "DOCUMENT UPLOAD ERROR:",
-                    documentError
-                );
-
-
-                toast.error(
-                    documentError?.message ||
-                    "Rental created, but one or more documents could not be uploaded."
-                );
-
-
-                /*
-                 * Go to rental details/orders instead of
-                 * creating the rental again.
-                 *
-                 * This preserves the already-created rental.
-                 */
-
-                navigate(
-                    `/receptionist-dashboard/rental/orders/${rentalId}`,
-                    {
-                        state: {
-                            rental,
-                            rentalId,
-                            documentUploadFailed: true,
-                            failedDocumentType:
-                                documentError?.documentType ||
-                                null,
-                        },
-                    }
-                );
-
-                return;
-            }
-
-
-            /* =============================================
-               DOCUMENT SUCCESS
-            ============================================= */
-
-            console.log(
-                "ALL RENTAL DOCUMENTS UPLOADED:",
-                uploadedDocuments
+            await uploadAllDocuments(
+                rentalId
             );
 
 
-            /* =============================================
+            /* =================================================
                SUCCESS
-            ============================================= */
+            ================================================= */
 
             toast.success(
                 rental?.rentalNumber
@@ -4339,18 +5572,16 @@ export default function WalkInRental() {
             );
 
 
-            /* =============================================
+            /* =================================================
                REFRESH STOCK
-            ============================================= */
+            ================================================= */
 
-            await loadProducts(
-                true
-            );
+            await loadProducts(true);
 
 
-            /* =============================================
-               NEXT PAGE
-            ============================================= */
+            /* =================================================
+               GO TO RENTAL ORDERS
+            ================================================= */
 
             console.log(
                 "GOING TO WALK-IN ORDERS:",
@@ -4364,8 +5595,6 @@ export default function WalkInRental() {
                     state: {
                         rental,
                         rentalId,
-                        documentsUploaded:
-                            uploadedDocuments,
                     },
                 }
             );
@@ -4386,34 +5615,18 @@ export default function WalkInRental() {
             );
 
 
-            /*
-             * This catch is mainly for:
-             *
-             * - Rental API failure
-             * - validation/server failure
-             * - missing rental ID
-             *
-             * Document-upload failure is handled separately
-             * above so we don't falsely say rental creation failed.
-             */
-
             const message =
                 error?.response?.data?.message ||
                 error?.response?.data?.error ||
                 error?.message ||
-                error?.error ||
                 "Failed to create walk-in rental.";
 
 
-            toast.error(
-                message
-            );
+            toast.error(message);
 
         } finally {
 
-            setSubmitting(
-                false
-            );
+            setSubmitting(false);
         }
     };
 
@@ -4423,10 +5636,6 @@ export default function WalkInRental() {
     ======================================================= */
 
     const handleBack = () => {
-
-        if (submitting) {
-            return;
-        }
 
         navigate(
             "/receptionist-dashboard"
@@ -4441,6 +5650,7 @@ export default function WalkInRental() {
     if (loading) {
 
         return (
+
             <div className="walkin-loading-page">
 
                 <FaSpinner className="spin" />
@@ -4470,10 +5680,8 @@ export default function WalkInRental() {
 
                 .document-upload-grid {
                     display: grid;
-                    grid-template-columns: repeat(
-                        2,
-                        minmax(0, 1fr)
-                    );
+                    grid-template-columns:
+                        repeat(2, minmax(0, 1fr));
                     gap: 18px;
                     margin-top: 20px;
                 }
@@ -4496,7 +5704,6 @@ export default function WalkInRental() {
                 .document-upload-header strong {
                     color: #111827;
                     font-size: 15px;
-                    line-height: 1.4;
                 }
 
                 .document-upload-header span {
@@ -4513,11 +5720,6 @@ export default function WalkInRental() {
                     padding: 12px;
                     cursor: pointer;
                     background: #f8fafc;
-                }
-
-                .document-file-label:hover {
-                    border-color: #94a3b8;
-                    background: #f1f5f9;
                 }
 
                 .document-file-label input {
@@ -4538,7 +5740,6 @@ export default function WalkInRental() {
                     margin-top: 8px;
                     color: #64748b;
                     font-size: 11px;
-                    line-height: 1.4;
                 }
 
                 .document-selected {
@@ -4566,13 +5767,6 @@ export default function WalkInRental() {
                     cursor: pointer;
                     color: #dc2626;
                     padding: 4px;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .document-remove-btn:hover {
-                    color: #991b1b;
                 }
 
                 .document-upload-note {
@@ -4588,9 +5782,19 @@ export default function WalkInRental() {
                     line-height: 1.5;
                 }
 
-                .document-upload-note svg {
-                    flex-shrink: 0;
-                    margin-top: 2px;
+                .duration-type-select {
+                    width: 100%;
+                    min-height: 48px;
+                    padding: 0 14px;
+                    border: 1px solid #d1d5db;
+                    border-radius: 10px;
+                    background: #ffffff;
+                    font-size: 14px;
+                    outline: none;
+                }
+
+                .duration-type-select:focus {
+                    border-color: #2563eb;
                 }
 
                 @media (max-width: 768px) {
@@ -4604,9 +5808,9 @@ export default function WalkInRental() {
             `}</style>
 
 
-            {/* =====================================================
+            {/* =================================================
                 HEADER
-            ===================================================== */}
+            ================================================= */}
 
             <header className="walkin-header">
 
@@ -4616,15 +5820,10 @@ export default function WalkInRental() {
                         type="button"
                         className="walkin-back-btn"
                         onClick={handleBack}
-                        disabled={submitting}
                     >
-
                         <FaArrowLeft />
-
                         Back
-
                     </button>
-
 
                     <div>
 
@@ -4652,9 +5851,9 @@ export default function WalkInRental() {
             </header>
 
 
-            {/* =====================================================
+            {/* =================================================
                 FORM
-            ===================================================== */}
+            ================================================= */}
 
             <form
                 className="walkin-form"
@@ -4662,13 +5861,11 @@ export default function WalkInRental() {
             >
 
 
-                {/* =====================================================
+                {/* =================================================
                     CUSTOMER TYPE
-                ===================================================== */}
+                ================================================= */}
 
-                <section
-                    className="walkin-card customer-type-section"
-                >
+                <section className="walkin-card customer-type-section">
 
                     <div className="section-title">
 
@@ -4699,23 +5896,14 @@ export default function WalkInRental() {
                                     ? "type-card active"
                                     : "type-card"
                             }
-                            onClick={(
-                                event
-                            ) => {
-
-                                event.preventDefault();
-                                event.stopPropagation();
-
+                            onClick={() =>
                                 handleCustomerTypeChange(
                                     "INDIVIDUAL"
-                                );
-                            }}
-                            disabled={submitting}
+                                )
+                            }
                         >
 
-                            <FaUser
-                                size={26}
-                            />
+                            <FaUser size={26} />
 
                             <strong>
                                 Individual
@@ -4736,23 +5924,14 @@ export default function WalkInRental() {
                                     ? "type-card active"
                                     : "type-card"
                             }
-                            onClick={(
-                                event
-                            ) => {
-
-                                event.preventDefault();
-                                event.stopPropagation();
-
+                            onClick={() =>
                                 handleCustomerTypeChange(
                                     "COMPANY"
-                                );
-                            }}
-                            disabled={submitting}
+                                )
+                            }
                         >
 
-                            <FaBuilding
-                                size={26}
-                            />
+                            <FaBuilding size={26} />
 
                             <strong>
                                 Company
@@ -4769,13 +5948,11 @@ export default function WalkInRental() {
                 </section>
 
 
-                {/* =====================================================
+                {/* =================================================
                     RENTAL PRODUCT
-                ===================================================== */}
+                ================================================= */}
 
-                <section
-                    className="walkin-card"
-                >
+                <section className="walkin-card">
 
                     <div className="section-title">
 
@@ -4805,17 +5982,13 @@ export default function WalkInRental() {
                         <input
                             type="text"
                             value={search}
-                            onChange={(
-                                event
-                            ) =>
+                            onChange={(event) =>
                                 setSearch(
                                     event.target.value
                                 )
                             }
                             placeholder="Search laptop, brand or SKU..."
-                            disabled={submitting}
                         />
-
 
                         {search && (
 
@@ -4824,11 +5997,8 @@ export default function WalkInRental() {
                                 onClick={() =>
                                     setSearch("")
                                 }
-                                disabled={submitting}
                             >
-
                                 <FaTimes />
-
                             </button>
 
                         )}
@@ -4838,9 +6008,7 @@ export default function WalkInRental() {
 
                     {/* REFRESH */}
 
-                    <div
-                        className="refresh-stock-row"
-                    >
+                    <div className="refresh-stock-row">
 
                         <button
                             type="button"
@@ -4848,10 +6016,7 @@ export default function WalkInRental() {
                             onClick={() =>
                                 loadProducts(true)
                             }
-                            disabled={
-                                refreshing ||
-                                submitting
-                            }
+                            disabled={refreshing}
                         >
 
                             <FaRedo
@@ -4876,13 +6041,9 @@ export default function WalkInRental() {
 
                     {filteredProducts.length === 0 ? (
 
-                        <div
-                            className="empty-products"
-                        >
+                        <div className="empty-products">
 
-                            <FaLaptop
-                                size={42}
-                            />
+                            <FaLaptop size={42} />
 
                             <h3>
 
@@ -4906,9 +6067,7 @@ export default function WalkInRental() {
 
                     ) : (
 
-                        <div
-                            className="rental-product-grid"
-                        >
+                        <div className="rental-product-grid">
 
                             {filteredProducts.map(
                                 (item) => {
@@ -4976,9 +6135,7 @@ export default function WalkInRental() {
                                             }
                                         >
 
-                                            <div
-                                                className="product-image"
-                                            >
+                                            <div className="product-image">
 
                                                 {image ? (
 
@@ -4988,8 +6145,10 @@ export default function WalkInRental() {
                                                         onError={(
                                                             event
                                                         ) => {
+
                                                             event.currentTarget.style.display =
                                                                 "none";
+
                                                         }}
                                                     />
 
@@ -5004,15 +6163,13 @@ export default function WalkInRental() {
                                             </div>
 
 
-                                            <div
-                                                className="product-info"
-                                            >
+                                            <div className="product-info">
 
-                                                <span
-                                                    className="brand"
-                                                >
+                                                <span className="brand">
+
                                                     {brand ||
                                                         "Laptop"}
+
                                                 </span>
 
 
@@ -5021,16 +6178,14 @@ export default function WalkInRental() {
                                                 </h3>
 
 
-                                                <span
-                                                    className="sku"
-                                                >
+                                                <span className="sku">
+
                                                     SKU: {sku}
+
                                                 </span>
 
 
-                                                <div
-                                                    className="product-prices"
-                                                >
+                                                <div className="product-prices">
 
                                                     <span>
                                                         Rent:{" "}
@@ -5075,21 +6230,13 @@ export default function WalkInRental() {
                                                 <button
                                                     type="button"
                                                     className="submit-btn product-select-btn"
-                                                    onClick={(
-                                                        event
-                                                    ) => {
-
-                                                        event.preventDefault();
-                                                        event.stopPropagation();
-
+                                                    onClick={() =>
                                                         selectProduct(
                                                             item
-                                                        );
-                                                    }}
+                                                        )
+                                                    }
                                                     disabled={
-                                                        available <=
-                                                        0 ||
-                                                        submitting
+                                                        available <= 0
                                                     }
                                                 >
 
@@ -5135,9 +6282,9 @@ export default function WalkInRental() {
                 </section>
 
 
-                {/* =====================================================
+                {/* =================================================
                     AFTER PRODUCT SELECT
-                ===================================================== */}
+                ================================================= */}
 
                 {selectedProduct && (
 
@@ -5148,9 +6295,7 @@ export default function WalkInRental() {
                             SELECTED LAPTOP
                         ================================================= */}
 
-                        <section
-                            className="walkin-card"
-                        >
+                        <section className="walkin-card">
 
                             <div className="section-title">
 
@@ -5171,18 +6316,10 @@ export default function WalkInRental() {
                             </div>
 
 
-                            <div
-                                className="summary-product"
-                            >
+                            <div className="summary-product">
 
-                                <div
-                                    className="summary-icon"
-                                >
-
-                                    <FaLaptop
-                                        size={25}
-                                    />
-
+                                <div className="summary-icon">
+                                    <FaLaptop size={25} />
                                 </div>
 
 
@@ -5195,20 +6332,27 @@ export default function WalkInRental() {
                                     </strong>
 
                                     <span>
+
                                         {getBrand(
                                             selectedProduct
                                         )}{" "}
+
                                         • SKU:{" "}
+
                                         {getSku(
                                             selectedProduct
                                         )}
+
                                     </span>
 
                                     <span>
+
                                         Available:{" "}
+
                                         {getAvailableQuantity(
                                             selectedProduct
                                         )}
+
                                     </span>
 
                                 </div>
@@ -5220,7 +6364,6 @@ export default function WalkInRental() {
                                     onClick={
                                         clearProduct
                                     }
-                                    disabled={submitting}
                                 >
 
                                     <FaTimes />
@@ -5238,9 +6381,7 @@ export default function WalkInRental() {
                             CUSTOMER DETAILS
                         ================================================= */}
 
-                        <section
-                            className="walkin-card customer-details-section"
-                        >
+                        <section className="walkin-card customer-details-section">
 
                             <div className="section-title">
 
@@ -5265,28 +6406,20 @@ export default function WalkInRental() {
                             </div>
 
 
-                            {/* =============================================
-                                INDIVIDUAL
-                            ============================================= */}
+                            {/* INDIVIDUAL */}
 
                             {customerType ===
                             "INDIVIDUAL" && (
 
-                                <div
-                                    className="form-grid customer-form-grid"
-                                >
+                                <div className="form-grid customer-form-grid">
 
-                                    <div
-                                        className="form-group"
-                                    >
+                                    <div className="form-group">
 
                                         <label>
                                             Full Name *
                                         </label>
 
-                                        <div
-                                            className="input-icon"
-                                        >
+                                        <div className="input-icon">
 
                                             <FaUser />
 
@@ -5301,8 +6434,6 @@ export default function WalkInRental() {
                                                 }
                                                 placeholder="Enter customer full name"
                                                 autoComplete="name"
-                                                autoFocus
-                                                disabled={submitting}
                                             />
 
                                         </div>
@@ -5310,17 +6441,13 @@ export default function WalkInRental() {
                                     </div>
 
 
-                                    <div
-                                        className="form-group"
-                                    >
+                                    <div className="form-group">
 
                                         <label>
                                             Phone *
                                         </label>
 
-                                        <div
-                                            className="input-icon"
-                                        >
+                                        <div className="input-icon">
 
                                             <FaPhone />
 
@@ -5335,7 +6462,6 @@ export default function WalkInRental() {
                                                 }
                                                 placeholder="Enter phone number"
                                                 autoComplete="tel"
-                                                disabled={submitting}
                                             />
 
                                         </div>
@@ -5343,17 +6469,13 @@ export default function WalkInRental() {
                                     </div>
 
 
-                                    <div
-                                        className="form-group"
-                                    >
+                                    <div className="form-group">
 
                                         <label>
                                             Email
                                         </label>
 
-                                        <div
-                                            className="input-icon"
-                                        >
+                                        <div className="input-icon">
 
                                             <FaEnvelope />
 
@@ -5368,7 +6490,6 @@ export default function WalkInRental() {
                                                 }
                                                 placeholder="customer@email.com"
                                                 autoComplete="email"
-                                                disabled={submitting}
                                             />
 
                                         </div>
@@ -5376,17 +6497,13 @@ export default function WalkInRental() {
                                     </div>
 
 
-                                    <div
-                                        className="form-group full"
-                                    >
+                                    <div className="form-group full">
 
                                         <label>
                                             Address
                                         </label>
 
-                                        <div
-                                            className="input-icon textarea-icon"
-                                        >
+                                        <div className="input-icon textarea-icon">
 
                                             <FaMapMarkerAlt />
 
@@ -5400,7 +6517,6 @@ export default function WalkInRental() {
                                                 }
                                                 placeholder="Enter customer address"
                                                 rows={4}
-                                                disabled={submitting}
                                             />
 
                                         </div>
@@ -5412,28 +6528,20 @@ export default function WalkInRental() {
                             )}
 
 
-                            {/* =============================================
-                                COMPANY
-                            ============================================= */}
+                            {/* COMPANY */}
 
                             {customerType ===
                             "COMPANY" && (
 
-                                <div
-                                    className="form-grid customer-form-grid"
-                                >
+                                <div className="form-grid customer-form-grid">
 
-                                    <div
-                                        className="form-group"
-                                    >
+                                    <div className="form-group">
 
                                         <label>
                                             Company Name *
                                         </label>
 
-                                        <div
-                                            className="input-icon"
-                                        >
+                                        <div className="input-icon">
 
                                             <FaBuilding />
 
@@ -5447,8 +6555,6 @@ export default function WalkInRental() {
                                                     handleCompanyChange
                                                 }
                                                 placeholder="Enter company name"
-                                                autoFocus
-                                                disabled={submitting}
                                             />
 
                                         </div>
@@ -5456,17 +6562,13 @@ export default function WalkInRental() {
                                     </div>
 
 
-                                    <div
-                                        className="form-group"
-                                    >
+                                    <div className="form-group">
 
                                         <label>
                                             Contact Person *
                                         </label>
 
-                                        <div
-                                            className="input-icon"
-                                        >
+                                        <div className="input-icon">
 
                                             <FaUser />
 
@@ -5480,7 +6582,6 @@ export default function WalkInRental() {
                                                     handleCompanyChange
                                                 }
                                                 placeholder="Enter contact person"
-                                                disabled={submitting}
                                             />
 
                                         </div>
@@ -5488,17 +6589,13 @@ export default function WalkInRental() {
                                     </div>
 
 
-                                    <div
-                                        className="form-group"
-                                    >
+                                    <div className="form-group">
 
                                         <label>
                                             Phone *
                                         </label>
 
-                                        <div
-                                            className="input-icon"
-                                        >
+                                        <div className="input-icon">
 
                                             <FaPhone />
 
@@ -5512,7 +6609,6 @@ export default function WalkInRental() {
                                                     handleCompanyChange
                                                 }
                                                 placeholder="Enter company phone"
-                                                disabled={submitting}
                                             />
 
                                         </div>
@@ -5520,17 +6616,13 @@ export default function WalkInRental() {
                                     </div>
 
 
-                                    <div
-                                        className="form-group"
-                                    >
+                                    <div className="form-group">
 
                                         <label>
                                             Email
                                         </label>
 
-                                        <div
-                                            className="input-icon"
-                                        >
+                                        <div className="input-icon">
 
                                             <FaEnvelope />
 
@@ -5544,7 +6636,6 @@ export default function WalkInRental() {
                                                     handleCompanyChange
                                                 }
                                                 placeholder="company@email.com"
-                                                disabled={submitting}
                                             />
 
                                         </div>
@@ -5552,9 +6643,7 @@ export default function WalkInRental() {
                                     </div>
 
 
-                                    <div
-                                        className="form-group"
-                                    >
+                                    <div className="form-group">
 
                                         <label>
                                             GST Number
@@ -5570,23 +6659,18 @@ export default function WalkInRental() {
                                                 handleCompanyChange
                                             }
                                             placeholder="GST number"
-                                            disabled={submitting}
                                         />
 
                                     </div>
 
 
-                                    <div
-                                        className="form-group full"
-                                    >
+                                    <div className="form-group full">
 
                                         <label>
                                             Office Address
                                         </label>
 
-                                        <div
-                                            className="input-icon textarea-icon"
-                                        >
+                                        <div className="input-icon textarea-icon">
 
                                             <FaMapMarkerAlt />
 
@@ -5600,7 +6684,6 @@ export default function WalkInRental() {
                                                 }
                                                 placeholder="Enter office address"
                                                 rows={4}
-                                                disabled={submitting}
                                             />
 
                                         </div>
@@ -5614,13 +6697,11 @@ export default function WalkInRental() {
                         </section>
 
 
-                        {/* =====================================================
-                            CUSTOMER DOCUMENTS
-                        ===================================================== */}
+                        {/* =================================================
+                            DOCUMENTS
+                        ================================================= */}
 
-                        <section
-                            className="walkin-card customer-documents-section"
-                        >
+                        <section className="walkin-card customer-documents-section">
 
                             <div className="section-title">
 
@@ -5641,14 +6722,10 @@ export default function WalkInRental() {
                             </div>
 
 
-                            <div
-                                className="document-upload-grid"
-                            >
+                            <div className="document-upload-grid">
 
                                 {currentDocuments.map(
-                                    (
-                                        documentConfig
-                                    ) => {
+                                    (documentConfig) => {
 
                                         const selectedFile =
                                             documents[
@@ -5665,9 +6742,7 @@ export default function WalkInRental() {
                                                 className="document-upload-card"
                                             >
 
-                                                <div
-                                                    className="document-upload-header"
-                                                >
+                                                <div className="document-upload-header">
 
                                                     <strong>
                                                         {
@@ -5682,21 +6757,9 @@ export default function WalkInRental() {
                                                 </div>
 
 
-                                                <label
-                                                    className="document-file-label"
-                                                >
+                                                <label className="document-file-label">
 
                                                     <input
-                                                        ref={(
-                                                            element
-                                                        ) => {
-
-                                                            documentInputRefs.current[
-                                                                documentConfig.key
-                                                            ] =
-                                                                element;
-
-                                                        }}
                                                         type="file"
                                                         accept={
                                                             documentConfig.accept
@@ -5709,16 +6772,15 @@ export default function WalkInRental() {
                                                                 event
                                                             )
                                                         }
-                                                        disabled={
-                                                            submitting
-                                                        }
                                                     />
+
 
                                                     <span>
 
                                                         {selectedFile
                                                             ? selectedFile.name
-                                                            : "Choose document"}
+                                                            : "Choose document"
+                                                        }
 
                                                     </span>
 
@@ -5727,9 +6789,7 @@ export default function WalkInRental() {
 
                                                 {selectedFile && (
 
-                                                    <div
-                                                        className="document-selected"
-                                                    >
+                                                    <div className="document-selected">
 
                                                         <FaCheckCircle />
 
@@ -5743,14 +6803,27 @@ export default function WalkInRental() {
                                                         <button
                                                             type="button"
                                                             className="document-remove-btn"
-                                                            onClick={() =>
-                                                                removeDocument(
-                                                                    documentConfig.key
-                                                                )
-                                                            }
-                                                            disabled={
-                                                                submitting
-                                                            }
+                                                            onClick={() => {
+
+                                                                setDocuments(
+                                                                    (
+                                                                        previous
+                                                                    ) => {
+
+                                                                        const next =
+                                                                            {
+                                                                                ...previous,
+                                                                            };
+
+                                                                        delete next[
+                                                                            documentConfig.key
+                                                                        ];
+
+                                                                        return next;
+                                                                    }
+                                                                );
+
+                                                            }}
                                                         >
 
                                                             <FaTimes />
@@ -5775,16 +6848,16 @@ export default function WalkInRental() {
                             </div>
 
 
-                            <div
-                                className="document-upload-note"
-                            >
+                            <div className="document-upload-note">
 
                                 <FaShieldAlt />
 
                                 <span>
-                                    Documents are uploaded automatically after
-                                    the rental is created. You do not need to
-                                    leave this form or upload them again.
+
+                                    Documents are selected in this form
+                                    and will be uploaded automatically
+                                    after the rental is created.
+
                                 </span>
 
                             </div>
@@ -5792,13 +6865,11 @@ export default function WalkInRental() {
                         </section>
 
 
-                        {/* =====================================================
+                        {/* =================================================
                             RENTAL PERIOD
-                        ===================================================== */}
+                        ================================================= */}
 
-                        <section
-                            className="walkin-card"
-                        >
+                        <section className="walkin-card">
 
                             <div className="section-title">
 
@@ -5821,9 +6892,70 @@ export default function WalkInRental() {
 
                             <div className="form-grid">
 
-                                <div
-                                    className="form-group"
-                                >
+
+                                {/* DURATION TYPE */}
+
+                                <div className="form-group">
+
+                                    <label>
+                                        Duration Type
+                                    </label>
+
+                                    <select
+                                        className="duration-type-select"
+                                        value={
+                                            rentalDurationType
+                                        }
+                                        onChange={(
+                                            event
+                                        ) => {
+
+                                            const type =
+                                                event.target.value;
+
+                                            setRentalDurationType(
+                                                type
+                                            );
+
+
+                                            if (
+                                                type ===
+                                                "MONTHS"
+                                            ) {
+
+                                                setRentalDuration(
+                                                    Math.max(
+                                                        3,
+                                                        minimumMonths
+                                                    )
+                                                );
+
+                                            } else {
+
+                                                setRentalDuration(
+                                                    1
+                                                );
+                                            }
+
+                                        }}
+                                    >
+
+                                        <option value="MONTHS">
+                                            Months
+                                        </option>
+
+                                        <option value="DAYS">
+                                            Days
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                {/* MINIMUM */}
+
+                                <div className="form-group">
 
                                     <label>
                                         Minimum Rental
@@ -5831,25 +6963,27 @@ export default function WalkInRental() {
 
                                     <input
                                         type="text"
-                                        value={`${minimumMonths} months`}
+                                        value={
+                                            rentalDurationType ===
+                                            "MONTHS"
+                                                ? `${minimumMonths} months`
+                                                : "1 day"
+                                        }
                                         readOnly
                                     />
 
                                 </div>
 
 
-                                <div
-                                    className="form-group"
-                                >
+                                {/* DURATION */}
+
+                                <div className="form-group">
 
                                     <label>
                                         Rental Duration
                                     </label>
 
-
-                                    <div
-                                        className="month-control"
-                                    >
+                                    <div className="month-control">
 
                                         <button
                                             type="button"
@@ -5857,9 +6991,11 @@ export default function WalkInRental() {
                                                 decreaseMonths
                                             }
                                             disabled={
-                                                rentalMonths <=
-                                                minimumMonths ||
-                                                submitting
+                                                rentalDurationType ===
+                                                "MONTHS"
+                                                    ? rentalDuration <=
+                                                      minimumMonths
+                                                    : rentalDuration <= 1
                                             }
                                         >
 
@@ -5868,16 +7004,22 @@ export default function WalkInRental() {
                                         </button>
 
 
-                                        <div
-                                            className="month-value"
-                                        >
+                                        <div className="month-value">
 
                                             <strong>
-                                                {rentalMonths}
+                                                {
+                                                    rentalDuration
+                                                }
                                             </strong>
 
                                             <span>
-                                                months
+
+                                                {rentalDurationType ===
+                                                "MONTHS"
+                                                    ? "months"
+                                                    : "days"
+                                                }
+
                                             </span>
 
                                         </div>
@@ -5887,9 +7029,6 @@ export default function WalkInRental() {
                                             type="button"
                                             onClick={
                                                 increaseMonths
-                                            }
-                                            disabled={
-                                                submitting
                                             }
                                         >
 
@@ -5902,9 +7041,9 @@ export default function WalkInRental() {
                                 </div>
 
 
-                                <div
-                                    className="form-group full"
-                                >
+                                {/* NOTES */}
+
+                                <div className="form-group full">
 
                                     <label>
                                         Handover / Notes
@@ -5923,7 +7062,6 @@ export default function WalkInRental() {
                                         }
                                         placeholder="Enter laptop condition, accessories, charger, bag or other handover notes..."
                                         rows={4}
-                                        disabled={submitting}
                                     />
 
                                     <small>
@@ -5937,13 +7075,11 @@ export default function WalkInRental() {
                         </section>
 
 
-                        {/* =====================================================
+                        {/* =================================================
                             SUMMARY
-                        ===================================================== */}
+                        ================================================= */}
 
-                        <section
-                            className="walkin-card summary-card"
-                        >
+                        <section className="walkin-card summary-card">
 
                             <div className="section-title">
 
@@ -5964,9 +7100,8 @@ export default function WalkInRental() {
                             </div>
 
 
-                            <div
-                                className="summary-lines"
-                            >
+                            <div className="summary-lines">
+
 
                                 <div>
 
@@ -5990,7 +7125,15 @@ export default function WalkInRental() {
                                     </span>
 
                                     <strong>
-                                        {pricing.months} months
+
+                                        {pricing.months}{" "}
+
+                                        {rentalDurationType ===
+                                        "MONTHS"
+                                            ? "months"
+                                            : "days"
+                                        }
+
                                     </strong>
 
                                 </div>
@@ -6014,7 +7157,10 @@ export default function WalkInRental() {
                                 <div>
 
                                     <span>
-                                        GST ({pricing.gstPercentage}%)
+                                        GST (
+                                        {
+                                            pricing.gstPercentage
+                                        }%)
                                     </span>
 
                                     <strong>
@@ -6041,9 +7187,7 @@ export default function WalkInRental() {
                                 </div>
 
 
-                                <div
-                                    className="summary-total"
-                                >
+                                <div className="summary-total">
 
                                     <span>
                                         Total Payable
@@ -6060,9 +7204,7 @@ export default function WalkInRental() {
                             </div>
 
 
-                            <div
-                                className="submit-help"
-                            >
+                            <div className="submit-help">
 
                                 <FaShieldAlt />
 
@@ -6072,9 +7214,7 @@ export default function WalkInRental() {
                             </div>
 
 
-                            <div
-                                className="submit-row"
-                            >
+                            <div className="submit-row">
 
                                 <button
                                     type="button"
@@ -6111,7 +7251,8 @@ export default function WalkInRental() {
                                                 className="spin"
                                             />
 
-                                            Creating Rental & Uploading...
+                                            Creating Rental
+                                            & Uploading...
 
                                         </>
 

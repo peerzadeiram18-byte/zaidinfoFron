@@ -144,9 +144,13 @@
 import React, { useEffect, useRef } from "react";
 import { Check } from "lucide-react";
 import zaidinfotechVideo from "../../assets/vedio/zaidinfotech.mp4";
+import {useNavigate} from "react-router-dom"
 
 const CompanyVideo = () => {
   const videoRef = useRef(null);
+  const navigate=useNavigate()
+  const phoneNumber = '919876543210';
+  const message = encodeURIComponent('Hi Zaid Infotech, I have a query!');
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -279,7 +283,10 @@ const CompanyVideo = () => {
 
             {/* Contact Button */}
             <div className="mt-8">
-              <button className="px-8 py-3.5 bg-orange-600 hover:bg-orange-700 text-white text-base font-semibold rounded-full shadow-lg transition-all duration-300">
+              <button onClick={()=>{
+                 navigate(`https://wa.me/${phoneNumber}?text=${message}`)
+                
+              }} className="px-8 py-3.5 bg-orange-600 hover:bg-orange-700 text-white text-base font-semibold rounded-full shadow-lg transition-all duration-300">
                 CONTACT NOW
               </button>
             </div>

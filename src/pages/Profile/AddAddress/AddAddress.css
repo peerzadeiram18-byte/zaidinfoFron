@@ -320,8 +320,19 @@
 
 /* Full-Width Grid Items */
 .address-form select[name="type"],
-.address-form textarea[name="addressLine"],
-.address-form button[type="submit"] {
+.address-form button[type="submit"],
+.address-form input[name="landmark"] {
+  grid-column: span 2;
+}
+
+/* Field Wrapper (input/textarea + its error message, kept together as one grid item) */
+.address-form .field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.address-form .field-wrap-full {
   grid-column: span 2;
 }
 
@@ -413,6 +424,15 @@
   box-shadow: 0 2px 8px rgba(82, 183, 136, 0.2);
 }
 
+/* Form Validation Error Message (sits under its own field now, not full-width) */
+.address-form .form-error {
+  color: #dc2626;
+  font-size: 0.72rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0 2px;
+}
+
 /* Responsive Fallback */
 @media (max-width: 480px) {
   .address-form {
@@ -421,8 +441,9 @@
   }
   
   .address-form select[name="type"],
-  .address-form textarea[name="addressLine"],
-  .address-form button[type="submit"] {
+  .address-form button[type="submit"],
+  .address-form input[name="landmark"],
+  .address-form .field-wrap-full {
     grid-column: span 1;
   }
 }

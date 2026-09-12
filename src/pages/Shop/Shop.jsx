@@ -4,7 +4,7 @@
 //   useState,
 // } from "react";
 
-// import { useNavigate } from "react-router-dom";
+// import { useNavigate, useSearchParams } from "react-router-dom";
 // import { motion } from "framer-motion";
 // import { toast } from "react-toastify";
 
@@ -15,6 +15,9 @@
 // import { getActiveOffers } from "../../services/offerService";
 // import { addToCart } from "../../services/cartService";
 // import { addToWishlist } from "../../services/wishlistService";
+
+// import {  getShopInventory } from "../../services/inventoryService";
+
 
 // // =====================================================
 // // THEMES
@@ -57,6 +60,7 @@
 //   },
 // };
 
+
 // // =====================================================
 // // GET PRODUCT ID
 // // =====================================================
@@ -78,6 +82,38 @@
 //   );
 // };
 
+
+// // =====================================================
+// // GET INVENTORY PRODUCT ID
+// // =====================================================
+
+// const getInventoryProductId = (inventory) => {
+//   if (!inventory) {
+//     return null;
+//   }
+
+//   const product =
+//     inventory.product ||
+//     inventory.productId ||
+//     inventory.productData ||
+//     null;
+
+//   if (typeof product === "string") {
+//     return product;
+//   }
+
+//   return (
+//     product?._id ||
+//     product?.id ||
+//     product?.productId ||
+//     inventory.product?._id ||
+//     inventory.productId ||
+//     inventory._id ||
+//     null
+//   );
+// };
+
+
 // // =====================================================
 // // GET PRODUCT PRICE
 // // =====================================================
@@ -91,6 +127,7 @@
 //       0
 //   );
 // };
+
 
 // // =====================================================
 // // GENERIC OBJECT NAME
@@ -116,6 +153,7 @@
 //   return String(value).trim();
 // };
 
+
 // // =====================================================
 // // CATEGORY
 // // =====================================================
@@ -131,6 +169,7 @@
 //       product.categoryData
 //   );
 // };
+
 
 // // =====================================================
 // // SUBCATEGORY
@@ -161,6 +200,7 @@
 //   return "";
 // };
 
+
 // // =====================================================
 // // BRAND
 // // =====================================================
@@ -177,27 +217,15 @@
 //   );
 // };
 
+
 // // =====================================================
 // // PRODUCT CONDITION
-// //
-// // IMPORTANT:
-// // productType is now the MAIN SOURCE.
-// //
-// // NEW          -> New
-// // REFURBISHED  -> Refurbished
-// //
-// // Old fallback fields are checked ONLY when
-// // productType is missing.
 // // =====================================================
 
 // const isProductRefurbished = (product) => {
 //   if (!product) {
 //     return false;
 //   }
-
-//   // =================================================
-//   // 1. PRODUCT TYPE - AUTHORITATIVE
-//   // =================================================
 
 //   const rawProductType =
 //     product.productType;
@@ -214,20 +242,12 @@
 //       .toUpperCase()
 //       .replace(/[\s-]+/g, "_");
 
-//     // -----------------------------------------------
-//     // NEW IS ALWAYS NEW
-//     // -----------------------------------------------
-
 //     if (
 //       productType === "NEW" ||
 //       productType === "NEW_PRODUCT"
 //     ) {
 //       return false;
 //     }
-
-//     // -----------------------------------------------
-//     // REFURBISHED IS ALWAYS REFURBISHED
-//     // -----------------------------------------------
 
 //     if (
 //       productType === "REFURBISHED" ||
@@ -239,19 +259,8 @@
 //       return true;
 //     }
 
-//     // -----------------------------------------------
-//     // If productType exists but is unknown,
-//     // DO NOT guess from refurbishedDetails.
-//     // -----------------------------------------------
-
 //     return false;
 //   }
-
-//   // =================================================
-//   // 2. OLD DATA FALLBACK
-//   //
-//   // Only used when productType does not exist.
-//   // =================================================
 
 //   if (product.isRefurbished === true) {
 //     return true;
@@ -260,10 +269,6 @@
 //   if (product.refurbished === true) {
 //     return true;
 //   }
-
-//   // =================================================
-//   // 3. STRING BOOLEAN
-//   // =================================================
 
 //   const isRefurbishedValue = String(
 //     product.isRefurbished ?? ""
@@ -301,10 +306,6 @@
 //     return true;
 //   }
 
-//   // =================================================
-//   // 4. OLD CONDITION FIELD
-//   // =================================================
-
 //   const conditionValue = String(
 //     product.condition ??
 //       product.productCondition ??
@@ -322,12 +323,6 @@
 //   ) {
 //     return true;
 //   }
-
-//   // =================================================
-//   // 5. OLD REFURBISHED DETAILS
-//   //
-//   // Only for products without productType.
-//   // =================================================
 
 //   if (
 //     product.refurbishedDetails &&
@@ -355,6 +350,7 @@
 //   return false;
 // };
 
+
 // // =====================================================
 // // PRODUCT CONDITION TEXT
 // // =====================================================
@@ -364,6 +360,7 @@
 //     ? "Refurbished"
 //     : "New";
 // };
+
 
 // // =====================================================
 // // ACTIVE OFFER CHECK
@@ -413,6 +410,7 @@
 
 //   return true;
 // };
+
 
 // // =====================================================
 // // CALCULATE OFFER PRICE
@@ -481,6 +479,7 @@
 //   };
 // };
 
+
 // // =====================================================
 // // EXTRACT PRODUCTS
 // // =====================================================
@@ -523,6 +522,7 @@
 //   return [];
 // };
 
+
 // // =====================================================
 // // EXTRACT OFFERS
 // // =====================================================
@@ -557,6 +557,58 @@
 //   return [];
 // };
 
+
+// // =====================================================
+// // EXTRACT INVENTORY
+// // =====================================================
+
+// const extractInventory = (response) => {
+//   if (!response) {
+//     return [];
+//   }
+
+//   if (
+//     Array.isArray(
+//       response?.data?.data
+//     )
+//   ) {
+//     return response.data.data;
+//   }
+
+//   if (
+//     Array.isArray(
+//       response?.data?.inventory
+//     )
+//   ) {
+//     return response.data.inventory;
+//   }
+
+//   if (
+//     Array.isArray(
+//       response?.data?.data?.inventory
+//     )
+//   ) {
+//     return response.data.data.inventory;
+//   }
+
+//   if (
+//     Array.isArray(
+//       response?.data?.items
+//     )
+//   ) {
+//     return response.data.items;
+//   }
+
+//   if (
+//     Array.isArray(response?.data)
+//   ) {
+//     return response.data;
+//   }
+
+//   return [];
+// };
+
+
 // // =====================================================
 // // REMOVE DUPLICATE PRODUCTS
 // // =====================================================
@@ -575,7 +627,6 @@
 //       const id =
 //         getProductId(product);
 
-//       // If no ID, keep product.
 //       if (!id) {
 //         return true;
 //       }
@@ -609,12 +660,80 @@
 //   return uniqueProducts;
 // };
 
+
+// // =====================================================
+// // STOCK STATUS
+// //
+// // 0       = OUT OF STOCK
+// // 1 - 5   = LOW STOCK
+// // 6+      = IN STOCK
+// //
+// // CUSTOMER KO QUANTITY SHOW NAHI HOGI.
+// // =====================================================
+
+// const getStockStatus = (inventory) => {
+//   if (!inventory) {
+//     return "OUT_OF_STOCK";
+//   }
+
+//   const currentStock =
+//     Number(
+//       inventory.currentStock ?? 0
+//     );
+
+//   const reservedStock =
+//     Number(
+//       inventory.reservedStock ?? 0
+//     );
+
+//   const availableStock = Math.max(
+//     currentStock - reservedStock,
+//     0
+//   );
+
+//   if (availableStock <= 0) {
+//     return "OUT_OF_STOCK";
+//   }
+
+//   if (
+//     availableStock >= 1 &&
+//     availableStock <= 5
+//   ) {
+//     return "LOW_STOCK";
+//   }
+
+//   return "IN_STOCK";
+// };
+
+
+// // =====================================================
+// // STOCK LABEL
+// // =====================================================
+
+// const getStockLabel = (status) => {
+//   switch (status) {
+//     case "IN_STOCK":
+//       return "In Stock";
+
+//     case "LOW_STOCK":
+//       return "Low Stock";
+
+//     case "OUT_OF_STOCK":
+//       return "Out Of Stock";
+
+//     default:
+//       return "Out Of Stock";
+//   }
+// };
+
+
 // // =====================================================
 // // SHOP
 // // =====================================================
 
 // const Shop = () => {
 //   const navigate = useNavigate();
+//   const [searchParams] = useSearchParams();
 
 //   // ===================================================
 //   // STATES
@@ -630,6 +749,11 @@
 
 //   const [offers, setOffers] =
 //     useState([]);
+
+//   // NOTE: inventoryList state removed —
+//   // inventory data is now passed as a local
+//   // variable (inventoryData) instead of relying
+//   // on state, which was stale at the point of use.
 
 //   const [loading, setLoading] =
 //     useState(true);
@@ -653,12 +777,153 @@
 //     useState("");
 
 //   // ===================================================
+//   // READ CONDITION FROM URL
+//   // ===================================================
+
+//   useEffect(() => {
+//     const conditionFromUrl = searchParams.get("condition");
+//     if (conditionFromUrl === "refurbished" || conditionFromUrl === "new") {
+//       setCondition(conditionFromUrl);
+//     }
+//   }, [searchParams]);
+
+
+//   // ===================================================
+// // READ SEARCH FROM URL
+// // ===================================================
+
+// useEffect(() => {
+//   const searchFromUrl = searchParams.get("search");
+
+//   setSearch(searchFromUrl || "");
+// }, [searchParams]);
+
+
+
+//   // ===================================================
+// // READ SEARCH FROM URL
+// // =====
+
+
+// useEffect(()=>{
+//   const brandFromUrl=searchParams.get("brand")
+//   setBrand(brandFromUrl || "")
+
+// },[searchParams])
+
+
+
+//   // ===================================================
+// // READ category from  FROM URL
+// // ===================================================
+
+// useEffect(()=>{
+//   const categoryFromUrl=searchParams.get("category")
+//   console.log("category name is written below")
+//   console.log(categoryFromUrl)
+//   setCategory(categoryFromUrl)
+
+ 
+// },[])
+
+
+
+
+//   // ===================================================
 //   // LOAD
 //   // ===================================================
 
 //   useEffect(() => {
 //     loadProductsAndOffers();
 //   }, []);
+
+
+//   // ===================================================
+//   // LOAD INVENTORY
+//   //
+//   // IMPORTANT:
+//   // This now RETURNS the fetched data directly,
+//   // instead of only storing it in state. State
+//   // updates are async and were not available in
+//   // time for the stock calculation below.
+//   // ===================================================
+
+//   const loadInventory = async () => {
+//     try {
+//       const response =
+//         await  getShopInventory();
+
+//       console.log("data received from the inventory and it is printed below");
+
+//       console.log(
+//         "SHOP INVENTORY RESPONSE:",
+//         response?.data
+//       );
+
+//       const inventoryData =
+//         extractInventory(response);
+
+//       console.log(
+//         "SHOP INVENTORY LIST:",
+//         inventoryData
+//       );
+
+//       return inventoryData;
+
+//     } catch (error) {
+//       console.error(
+//         "SHOP INVENTORY ERROR:",
+//         error
+//       );
+
+//       /*
+//         IMPORTANT:
+
+//         Inventory fail hone par
+//         products ko remove nahi karenge.
+
+//         Existing shop normally work karega.
+//       */
+
+//       return [];
+//     }
+//   };
+
+
+//   // ===================================================
+//   // FIND INVENTORY FOR PRODUCT
+//   // ===================================================
+
+//   const findInventoryForProduct = (
+//     productId,
+//     inventories
+//   ) => {
+//     if (
+//       !productId ||
+//       !Array.isArray(inventories)
+//     ) {
+//       return null;
+//     }
+
+//     return (
+//       inventories.find(
+//         (inventory) => {
+//           const inventoryProductId =
+//             getInventoryProductId(
+//               inventory
+//             );
+
+//           return (
+//             String(
+//               inventoryProductId
+//             ) ===
+//             String(productId)
+//           );
+//         }
+//       ) || null
+//     );
+//   };
+
 
 //   // ===================================================
 //   // LOAD PRODUCTS + OFFERS
@@ -669,12 +934,24 @@
 //       try {
 //         setLoading(true);
 
+//         /*
+//           Existing APIs are still used.
+//           Inventory is added separately.
+
+//           IMPORTANT:
+//           inventoryData is now captured directly
+//           from Promise.all, instead of being
+//           discarded via .then((results) => [results[0], results[1]]).
+//         */
+
 //         const [
 //           productsResponse,
 //           offersResponse,
+//           inventoryData,
 //         ] = await Promise.all([
 //           getShopProducts(),
 //           getActiveOffers(),
+//           loadInventory(),
 //         ]);
 
 //         console.log(
@@ -697,7 +974,7 @@
 //         );
 
 //         // ---------------------------------------------
-//         // REMOVE REAL DUPLICATES ONLY
+//         // REMOVE DUPLICATES
 //         // ---------------------------------------------
 
 //         const productList =
@@ -708,47 +985,6 @@
 //         console.log(
 //           "UNIQUE SHOP PRODUCT LIST:",
 //           productList
-//         );
-
-//         // ---------------------------------------------
-//         // DEBUG CONDITION
-//         // ---------------------------------------------
-
-//         productList.forEach(
-//           (product, index) => {
-//             console.log(
-//               `PRODUCT ${index + 1}:`,
-//               {
-//                 id:
-//                   getProductId(
-//                     product
-//                   ),
-
-//                 name:
-//                   product?.name,
-
-//                 productType:
-//                   product?.productType,
-
-//                 condition:
-//                   product?.condition,
-
-//                 isRefurbished:
-//                   product?.isRefurbished,
-
-//                 refurbished:
-//                   product?.refurbished,
-
-//                 refurbishedDetails:
-//                   product?.refurbishedDetails,
-
-//                 detectedCondition:
-//                   getProductCondition(
-//                     product
-//                   ),
-//               }
-//             );
-//           }
 //         );
 
 //         // ---------------------------------------------
@@ -772,14 +1008,45 @@
 //         const productsWithOffers =
 //           productList.map(
 //             (product) => {
+
 //               const productId =
 //                 getProductId(
 //                   product
 //                 );
 
+//               /*
+//                 STOCK
+
+//                 Inventory list se current
+//                 product ka inventory find karenge.
+
+//                 IMPORTANT:
+//                 Uses inventoryData (local variable,
+//                 freshly fetched) instead of
+//                 inventoryList (state, stale at this
+//                 point in execution).
+//               */
+
+//               const inventory =
+//                 findInventoryForProduct(
+//                   productId,
+//                   inventoryData
+//                 );
+
+//               const stockStatus =
+//                 getStockStatus(
+//                   inventory
+//                 );
+
+//               const stockLabel =
+//                 getStockLabel(
+//                   stockStatus
+//                 );
+
 //               const productOffers =
 //                 activeOffers.filter(
 //                   (offer) => {
+
 //                     if (
 //                       !Array.isArray(
 //                         offer?.products
@@ -792,6 +1059,7 @@
 //                       (
 //                         offerProduct
 //                       ) => {
+
 //                         const offerProductId =
 //                           getProductId(
 //                             offerProduct
@@ -818,6 +1086,7 @@
 //                 productOffers.length ===
 //                 0
 //               ) {
+
 //                 const price =
 //                   getProductPrice(
 //                     product
@@ -844,6 +1113,26 @@
 //                     null,
 
 //                   offerDiscountValue: 0,
+
+//                   // STOCK
+//                   stockStatus,
+
+//                   stockLabel,
+
+//                   stockAvailable:
+//                     inventory
+//                       ? Math.max(
+//                           Number(
+//                             inventory.currentStock ??
+//                               0
+//                           ) -
+//                             Number(
+//                               inventory.reservedStock ??
+//                                 0
+//                             ),
+//                           0
+//                         )
+//                       : 0,
 //                 };
 //               }
 
@@ -869,6 +1158,7 @@
 //                 calculatedOffers.length ===
 //                 0
 //               ) {
+
 //                 const price =
 //                   getProductPrice(
 //                     product
@@ -895,6 +1185,26 @@
 //                     null,
 
 //                   offerDiscountValue: 0,
+
+//                   // STOCK
+//                   stockStatus,
+
+//                   stockLabel,
+
+//                   stockAvailable:
+//                     inventory
+//                       ? Math.max(
+//                           Number(
+//                             inventory.currentStock ??
+//                               0
+//                           ) -
+//                             Number(
+//                               inventory.reservedStock ??
+//                                 0
+//                             ),
+//                           0
+//                         )
+//                       : 0,
 //                 };
 //               }
 
@@ -908,11 +1218,12 @@
 //                     best,
 //                     current
 //                   ) => {
+
 //                     if (!best) {
 //                       return current;
 //                     }
 
-//                     return current.finalPrice <
+//                     return current.finalPrice 
 //                       best.finalPrice
 //                       ? current
 //                       : best;
@@ -950,6 +1261,26 @@
 //                   bestOffer.offer
 //                     ?.discountValue ??
 //                   0,
+
+//                 // STOCK
+//                 stockStatus,
+
+//                 stockLabel,
+
+//                 stockAvailable:
+//                   inventory
+//                     ? Math.max(
+//                         Number(
+//                           inventory.currentStock ??
+//                             0
+//                         ) -
+//                           Number(
+//                             inventory.reservedStock ??
+//                               0
+//                           ),
+//                         0
+//                       )
+//                     : 0,
 //               };
 //             }
 //           );
@@ -965,7 +1296,9 @@
 //         setOffers(
 //           activeOffers
 //         );
+
 //       } catch (error) {
+
 //         console.error(
 //           "SHOP PRODUCTS/OFFERS ERROR:",
 //           error
@@ -981,6 +1314,7 @@
 //         // ---------------------------------------------
 
 //         try {
+
 //           const productsResponse =
 //             await getShopProducts();
 
@@ -994,12 +1328,50 @@
 //               rawProductList
 //             );
 
+//           /*
+//             IMPORTANT:
+//             This catch block is a separate scope
+//             from the try block above, so it has no
+//             access to that inventoryData variable.
+//             Re-fetch inventory here so stock is
+//             still calculated correctly on the
+//             fallback path.
+//           */
+
+//           const fallbackInventoryData =
+//             await loadInventory();
+
 //           const productsWithoutOffers =
 //             productList.map(
 //               (product) => {
+
 //                 const price =
 //                   getProductPrice(
 //                     product
+//                   );
+
+//                 /*
+//                   Fallback stock
+
+//                   Inventory fail hone par
+//                   existing shop products
+//                   normal load honge.
+//                 */
+
+//                 const productId =
+//                   getProductId(
+//                     product
+//                   );
+
+//                 const inventory =
+//                   findInventoryForProduct(
+//                     productId,
+//                     fallbackInventoryData
+//                   );
+
+//                 const stockStatus =
+//                   getStockStatus(
+//                     inventory
 //                   );
 
 //                 return {
@@ -1023,6 +1395,29 @@
 //                     null,
 
 //                   offerDiscountValue: 0,
+
+//                   // STOCK
+//                   stockStatus,
+
+//                   stockLabel:
+//                     getStockLabel(
+//                       stockStatus
+//                     ),
+
+//                   stockAvailable:
+//                     inventory
+//                       ? Math.max(
+//                           Number(
+//                             inventory.currentStock ??
+//                               0
+//                           ) -
+//                             Number(
+//                               inventory.reservedStock ??
+//                                 0
+//                             ),
+//                           0
+//                         )
+//                       : 0,
 //                 };
 //               }
 //             );
@@ -1036,7 +1431,9 @@
 //           );
 
 //           setOffers([]);
+
 //         } catch (productError) {
+
 //           console.error(
 //             "SHOP PRODUCTS ERROR:",
 //             productError
@@ -1055,10 +1452,14 @@
 
 //           setOffers([]);
 //         }
+
 //       } finally {
+
 //         setLoading(false);
+
 //       }
 //     };
+
 
 //   // ===================================================
 //   // CATEGORIES
@@ -1066,6 +1467,7 @@
 
 //   const categoriesList =
 //     useMemo(() => {
+
 //       return Array.from(
 //         new Set(
 //           products
@@ -1077,7 +1479,9 @@
 //       ).sort((a, b) =>
 //         a.localeCompare(b)
 //       );
+
 //     }, [products]);
+
 
 //   // ===================================================
 //   // SUBCATEGORIES
@@ -1085,15 +1489,18 @@
 
 //   const subcategoriesList =
 //     useMemo(() => {
+
 //       let source = products;
 
 //       if (category) {
+
 //         source = source.filter(
 //           (product) =>
 //             getCategoryName(
 //               product
 //             ) === category
 //         );
+
 //       }
 
 //       return Array.from(
@@ -1107,7 +1514,9 @@
 //       ).sort((a, b) =>
 //         a.localeCompare(b)
 //       );
+
 //     }, [products, category]);
+
 
 //   // ===================================================
 //   // BRANDS
@@ -1115,6 +1524,7 @@
 
 //   const brandsList =
 //     useMemo(() => {
+
 //       return Array.from(
 //         new Set(
 //           products
@@ -1124,13 +1534,16 @@
 //       ).sort((a, b) =>
 //         a.localeCompare(b)
 //       );
+
 //     }, [products]);
+
 
 //   // ===================================================
 //   // FILTER PRODUCTS
 //   // ===================================================
 
 //   useEffect(() => {
+
 //     let data = Array.isArray(
 //       products
 //     )
@@ -1142,6 +1555,7 @@
 //     // =================================================
 
 //     if (search.trim()) {
+
 //       const searchValue =
 //         search
 //           .toLowerCase()
@@ -1149,6 +1563,7 @@
 
 //       data = data.filter(
 //         (product) => {
+
 //           const productName =
 //             String(
 //               product?.name || ""
@@ -1195,57 +1610,70 @@
 //       );
 //     }
 
+
 //     // =================================================
 //     // CATEGORY
 //     // =================================================
 
 //     if (category) {
+
 //       data = data.filter(
 //         (product) =>
 //           getCategoryName(
 //             product
 //           ) === category
 //       );
+
 //     }
+
 
 //     // =================================================
 //     // SUBCATEGORY
 //     // =================================================
 
 //     if (subcategory) {
+
 //       data = data.filter(
 //         (product) =>
 //           getSubcategoryName(
 //             product
 //           ) === subcategory
 //       );
+
 //     }
+
 
 //     // =================================================
 //     // BRAND
 //     // =================================================
 
 //     if (brand) {
+
 //       data = data.filter(
 //         (product) =>
 //           getBrandName(
 //             product
 //           ) === brand
 //       );
+
 //     }
+
 
 //     // =================================================
 //     // CONDITION - NEW
 //     // =================================================
 
 //     if (condition === "new") {
+
 //       data = data.filter(
 //         (product) =>
 //           !isProductRefurbished(
 //             product
 //           )
 //       );
+
 //     }
+
 
 //     // =================================================
 //     // CONDITION - REFURBISHED
@@ -1255,19 +1683,23 @@
 //       condition ===
 //       "refurbished"
 //     ) {
+
 //       data = data.filter(
 //         (product) =>
 //           isProductRefurbished(
 //             product
 //           )
 //       );
+
 //     }
+
 
 //     // =================================================
 //     // SORT LOW -> HIGH
 //     // =================================================
 
 //     if (sort === "low") {
+
 //       data.sort(
 //         (a, b) =>
 //           Number(
@@ -1279,13 +1711,16 @@
 //               getProductPrice(b)
 //           )
 //       );
+
 //     }
+
 
 //     // =================================================
 //     // SORT HIGH -> LOW
 //     // =================================================
 
 //     if (sort === "high") {
+
 //       data.sort(
 //         (a, b) =>
 //           Number(
@@ -1297,11 +1732,14 @@
 //               getProductPrice(a)
 //           )
 //       );
+
 //     }
+
 
 //     setFilteredProducts(
 //       data
 //     );
+
 //   }, [
 //     products,
 //     search,
@@ -1312,18 +1750,22 @@
 //     sort,
 //   ]);
 
+
 //   // ===================================================
 //   // CLEAR FILTERS
 //   // ===================================================
 
 //   const clearFilters = () => {
+
 //     setSearch("");
 //     setCategory("");
 //     setSubcategory("");
 //     setBrand("");
 //     setCondition("");
 //     setSort("");
+
 //   };
+
 
 //   const hasActiveFilters =
 //     Boolean(
@@ -1335,18 +1777,23 @@
 //         sort
 //     );
 
+
 //   // ===================================================
 //   // CART
 //   // ===================================================
 
 //   const handleAddToCart =
 //     async (product) => {
+
+//       console.log(product);
+
 //       const token =
 //         localStorage.getItem(
 //           "token"
 //         );
 
 //       if (!token) {
+
 //         toast.error(
 //           "Please Login First"
 //         );
@@ -1360,6 +1807,7 @@
 //         getProductId(product);
 
 //       if (!productId) {
+
 //         toast.error(
 //           "Product ID not found"
 //         );
@@ -1367,7 +1815,29 @@
 //         return;
 //       }
 
+//       /*
+//         OPTIONAL SAFETY
+
+//         Out of stock product ko cart
+//         mein add nahi hone denge.
+//       */
+
+//       if (
+//         product?.stockStatus ===
+//         "OUT_OF_STOCK"
+
+//       ) {
+//         console.log("product is out of stock");
+
+//         toast.error(
+//           "Product is currently out of stock"
+//         );
+
+//         return;
+//       }
+
 //       try {
+
 //         await addToCart({
 //           product: productId,
 //           quantity: 1,
@@ -1377,15 +1847,22 @@
 //           "Added To Cart"
 //         );
 
+//         // dispatch here — cart item count may have changed
+//         window.dispatchEvent(new CustomEvent("cart-updated"));
+
 //         navigate("/cart");
+
 //       } catch (error) {
+
 //         toast.error(
 //           error?.response?.data
 //             ?.message ||
 //             "Failed to add to cart"
 //         );
+
 //       }
 //     };
+
 
 //   // ===================================================
 //   // WISHLIST
@@ -1393,12 +1870,14 @@
 
 //   const handleWishlist =
 //     async (product) => {
+
 //       const token =
 //         localStorage.getItem(
 //           "token"
 //         );
 
 //       if (!token) {
+
 //         toast.error(
 //           "Please Login First"
 //         );
@@ -1412,6 +1891,7 @@
 //         getProductId(product);
 
 //       if (!productId) {
+
 //         toast.error(
 //           "Product ID not found"
 //         );
@@ -1420,6 +1900,7 @@
 //       }
 
 //       try {
+
 //         await addToWishlist(
 //           productId
 //         );
@@ -1427,7 +1908,13 @@
 //         toast.success(
 //           "Added To Wishlist"
 //         );
+
+
+//         // dispatch here — wishlist actually changed
+//         window.dispatchEvent(new CustomEvent("wishlist-updated"));
+
 //       } catch (error) {
+
 //         const message =
 //           error?.response?.data
 //             ?.message ||
@@ -1440,6 +1927,7 @@
 //             .toLowerCase()
 //             .includes("already")
 //         ) {
+
 //           toast.info(
 //             "Product is already in Wishlist"
 //           );
@@ -1448,15 +1936,13 @@
 //         }
 
 //         toast.error(message);
+
 //       }
 //     };
 
+
 //   // ===================================================
 //   // SECTION DATA
-//   //
-//   // IMPORTANT:
-//   // Refurbished products are EXCLUDED from all normal
-//   // sections.
 //   // ===================================================
 
 //   const gamingProducts =
@@ -1470,6 +1956,7 @@
 //           .includes("gaming")
 //     );
 
+
 //   const businessProducts =
 //     filteredProducts.filter(
 //       (product) =>
@@ -1481,6 +1968,7 @@
 //           .includes("business")
 //     );
 
+
 //   const chromebookProducts =
 //     filteredProducts.filter(
 //       (product) =>
@@ -1491,6 +1979,7 @@
 //           .toLowerCase()
 //           .includes("chromebook")
 //     );
+
 
 //   // ===================================================
 //   // REFURBISHED
@@ -1504,19 +1993,14 @@
 //         )
 //     );
 
+
 //   // ===================================================
 //   // OTHER
-//   //
-//   // IMPORTANT:
-//   // Refurbished products are NOT included here.
 //   // ===================================================
 
 //   const specialCategoryProducts =
 //     filteredProducts.filter(
 //       (product) => {
-//         // ---------------------------------------------
-//         // NEVER put refurbished in Other
-//         // ---------------------------------------------
 
 //         if (
 //           isProductRefurbished(
@@ -1540,15 +2024,19 @@
 //             key
 //           )
 //         );
+
 //       }
 //     );
 
+
 //   // ===================================================
-//   // DEBUG SECTION COUNTS
+//   // DEBUG
 //   // ===================================================
 
 //   useEffect(() => {
+
 //     if (!loading) {
+
 //       console.log(
 //         "SHOP SECTION COUNTS:",
 //         {
@@ -1579,7 +2067,9 @@
 //             specialCategoryProducts.length,
 //         }
 //       );
+
 //     }
+
 //   }, [
 //     loading,
 //     filteredProducts,
@@ -1590,11 +2080,13 @@
 //     specialCategoryProducts.length,
 //   ]);
 
+
 //   // ===================================================
 //   // RENDER
 //   // ===================================================
 
 //   return (
+
 //     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
 
 //       <main className="flex-grow py-8 px-4 sm:px-8 lg:px-12 max-w-[1400px] mx-auto w-full space-y-8">
@@ -1604,6 +2096,7 @@
 //         ================================================= */}
 
 //         <div className="overflow-hidden py-1">
+
 //           <motion.h1
 //             initial={{
 //               fontWeight: 300,
@@ -1632,24 +2125,30 @@
 //           >
 //             Laptops
 //           </motion.h1>
+
 //         </div>
+
 
 //         {/* =================================================
 //             OFFERS
 //         ================================================= */}
 
 //         {offers.length > 0 && (
+
 //           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900">
+
 //             <span className="text-xl">
 //               🎁
 //             </span>
 
 //             <div>
+
 //               <p className="text-sm font-bold text-indigo-700 dark:text-indigo-300">
 //                 Special Offers Available
 //               </p>
 
 //               <p className="text-xs text-indigo-600 dark:text-indigo-400">
+
 //                 {offers.length} active
 //                 offer
 //                 {offers.length !==
@@ -1658,10 +2157,15 @@
 //                   : ""}{" "}
 //                 available on selected
 //                 products.
+
 //               </p>
+
 //             </div>
+
 //           </div>
+
 //         )}
+
 
 //         {/* =================================================
 //             FILTER BAR
@@ -1674,6 +2178,7 @@
 //             {/* SEARCH */}
 
 //             <div className="relative">
+
 //               <input
 //                 type="text"
 //                 placeholder="Search..."
@@ -1687,6 +2192,7 @@
 //               />
 
 //               <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500">
+
 //                 <svg
 //                   xmlns="http://www.w3.org/2000/svg"
 //                   fill="none"
@@ -1695,57 +2201,73 @@
 //                   stroke="currentColor"
 //                   className="w-3.5 h-3.5"
 //                 >
+
 //                   <path
 //                     strokeLinecap="round"
 //                     strokeLinejoin="round"
 //                     d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
 //                   />
+
 //                 </svg>
+
 //               </div>
+
 //             </div>
+
 
 //             <span className="text-sm font-semibold text-gray-900 dark:text-slate-200 ml-1">
 //               Filters:
 //             </span>
 
+
 //             {/* CATEGORY */}
 
 //             <div className="relative">
+
 //               <select
 //                 value={category}
 //                 onChange={(e) => {
+
 //                   setCategory(
 //                     e.target.value
 //                   );
 
 //                   setSubcategory("");
+
 //                 }}
 //                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //               >
+
 //                 <option value="">
 //                   Category
 //                 </option>
 
 //                 {categoriesList.map(
 //                   (cat) => (
+
 //                     <option
 //                       key={cat}
 //                       value={cat}
 //                     >
 //                       {cat}
 //                     </option>
+
 //                   )
 //                 )}
+
 //               </select>
 
 //               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //                 ▼
 //               </div>
+
 //             </div>
+
 
 //             {/* SUBCATEGORY */}
 
 //             <div className="relative">
+
 //               <select
 //                 value={subcategory}
 //                 onChange={(e) =>
@@ -1755,30 +2277,37 @@
 //                 }
 //                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //               >
+
 //                 <option value="">
 //                   Subcategory
 //                 </option>
 
 //                 {subcategoriesList.map(
 //                   (subcat) => (
+
 //                     <option
 //                       key={subcat}
 //                       value={subcat}
 //                     >
 //                       {subcat}
 //                     </option>
+
 //                   )
 //                 )}
+
 //               </select>
 
 //               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //                 ▼
 //               </div>
+
 //             </div>
+
 
 //             {/* BRAND */}
 
 //             <div className="relative">
+
 //               <select
 //                 value={brand}
 //                 onChange={(e) =>
@@ -1788,30 +2317,37 @@
 //                 }
 //                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //               >
+
 //                 <option value="">
 //                   Brand
 //                 </option>
 
 //                 {brandsList.map(
 //                   (b) => (
+
 //                     <option
 //                       key={b}
 //                       value={b}
 //                     >
 //                       {b}
 //                     </option>
+
 //                   )
 //                 )}
+
 //               </select>
 
 //               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //                 ▼
 //               </div>
+
 //             </div>
+
 
 //             {/* CONDITION */}
 
 //             <div className="relative">
+
 //               <select
 //                 value={condition}
 //                 onChange={(e) =>
@@ -1821,6 +2357,7 @@
 //                 }
 //                 className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //               >
+
 //                 <option value="">
 //                   Condition
 //                 </option>
@@ -1832,16 +2369,20 @@
 //                 <option value="refurbished">
 //                   Refurbished
 //                 </option>
+
 //               </select>
 
 //               <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //                 ▼
 //               </div>
+
 //             </div>
+
 
 //             {/* CLEAR */}
 
 //             {hasActiveFilters && (
+
 //               <button
 //                 type="button"
 //                 onClick={
@@ -1851,12 +2392,16 @@
 //               >
 //                 Clear
 //               </button>
+
 //             )}
+
 //           </div>
+
 
 //           {/* SORT */}
 
 //           <div className="relative">
+
 //             <select
 //               value={sort}
 //               onChange={(e) =>
@@ -1866,6 +2411,7 @@
 //               }
 //               className="appearance-none bg-[#e9ecef]/60 hover:bg-[#e2e6ea] dark:bg-slate-900 dark:hover:bg-slate-800 border border-transparent dark:border-slate-800 px-4 py-1.5 pl-8 pr-8 rounded-full text-xs font-semibold text-gray-800 dark:text-slate-200 cursor-pointer focus:outline-none transition-colors"
 //             >
+
 //               <option value="">
 //                 Sort by: Recommended
 //               </option>
@@ -1877,51 +2423,72 @@
 //               <option value="high">
 //                 Price: High to Low
 //               </option>
+
 //             </select>
 
 //             <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 text-[10px]">
 //               ▼
 //             </div>
+
 //           </div>
+
 //         </div>
+
 
 //         {/* =================================================
 //             RESULT INFO
 //         ================================================= */}
 
 //         {!loading && (
+
 //           <div className="flex justify-between items-center">
+
 //             <p className="text-xs font-semibold text-gray-500 dark:text-slate-400">
+
 //               Showing{" "}
+
 //               <span className="text-gray-900 dark:text-white">
+
 //                 {
 //                   filteredProducts.length
 //                 }
+
 //               </span>{" "}
+
 //               product
 //               {filteredProducts.length !==
 //               1
 //                 ? "s"
 //                 : ""}
+
 //             </p>
+
 //           </div>
+
 //         )}
+
 
 //         {/* =================================================
 //             LOADING
 //         ================================================= */}
 
 //         {loading ? (
+
 //           <div className="flex flex-col justify-center items-center py-28">
+
 //             <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-900 dark:border-slate-100 border-t-transparent" />
 
 //             <span className="mt-3 text-gray-500 dark:text-slate-400 font-medium text-xs">
 //               Loading laptops...
 //             </span>
+
 //           </div>
+
 //         ) : filteredProducts.length ===
 //           0 ? (
+
 //           <div className="text-center py-20 bg-gray-50/50 dark:bg-slate-900/50 border border-transparent dark:border-slate-800 rounded-3xl space-y-2">
+
 //             <div className="text-2xl">
 //               🔍
 //             </div>
@@ -1936,6 +2503,7 @@
 //             </p>
 
 //             {hasActiveFilters && (
+
 //               <button
 //                 type="button"
 //                 onClick={
@@ -1945,10 +2513,15 @@
 //               >
 //                 Clear Filters
 //               </button>
+
 //             )}
+
 //           </div>
+
 //         ) : (
+
 //           <div className="space-y-10">
+
 
 //             {/* =================================================
 //                 REFURBISHED
@@ -1958,6 +2531,7 @@
 //               "refurbished" &&
 //               refurbishedProducts.length >
 //                 0 && (
+
 //                 <LaptopSection
 //                   icon="♻️"
 //                   title="Refurbished Laptops"
@@ -1974,7 +2548,9 @@
 //                     handleWishlist
 //                   }
 //                 />
+
 //               )}
+
 
 //             {/* =================================================
 //                 GAMING
@@ -1984,6 +2560,7 @@
 //               "refurbished" &&
 //               gamingProducts.length >
 //                 0 && (
+
 //                 <LaptopSection
 //                   icon="🎮"
 //                   title="Gaming Laptops"
@@ -2000,7 +2577,9 @@
 //                     handleWishlist
 //                   }
 //                 />
+
 //               )}
+
 
 //             {/* =================================================
 //                 BUSINESS
@@ -2010,6 +2589,7 @@
 //               "refurbished" &&
 //               businessProducts.length >
 //                 0 && (
+
 //                 <LaptopSection
 //                   icon="💼"
 //                   title="Business Laptops"
@@ -2026,7 +2606,9 @@
 //                     handleWishlist
 //                   }
 //                 />
+
 //               )}
+
 
 //             {/* =================================================
 //                 CHROMEBOOK
@@ -2036,6 +2618,7 @@
 //               "refurbished" &&
 //               chromebookProducts.length >
 //                 0 && (
+
 //                 <LaptopSection
 //                   icon="💻"
 //                   title="Chromebook Laptops"
@@ -2052,7 +2635,9 @@
 //                     handleWishlist
 //                   }
 //                 />
+
 //               )}
+
 
 //             {/* =================================================
 //                 OTHER
@@ -2062,6 +2647,7 @@
 //               "refurbished" &&
 //               specialCategoryProducts.length >
 //                 0 && (
+
 //                 <LaptopSection
 //                   icon="📦"
 //                   title="Other Laptops & Products"
@@ -2078,20 +2664,18 @@
 //                     handleWishlist
 //                   }
 //                 />
+
 //               )}
 
+
 //             {/* =================================================
-//                 REFURBISHED SECTION WHEN NO FILTER
-//                 =================================================
-                
-//                 If you want refurbished products to ALWAYS
-//                 show in Shop, even without selecting the
-//                 Refurbished filter, this section shows them.
+//                 REFURBISHED WHEN NO FILTER
 //             ================================================= */}
 
 //             {condition === "" &&
 //               refurbishedProducts.length >
 //                 0 && (
+
 //                 <LaptopSection
 //                   icon="♻️"
 //                   title="Refurbished Laptops"
@@ -2108,21 +2692,23 @@
 //                     handleWishlist
 //                   }
 //                 />
+
 //               )}
 
 //           </div>
+
 //         )}
+
 //       </main>
 
 //       <Footer />
+
 //     </div>
 //   );
 // };
 
+
 // export default Shop;
-
-
-
 
 
 
@@ -2132,7 +2718,7 @@ import React, {
   useState,
 } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
@@ -2144,11 +2730,7 @@ import { getActiveOffers } from "../../services/offerService";
 import { addToCart } from "../../services/cartService";
 import { addToWishlist } from "../../services/wishlistService";
 
-// =====================================================
-// ⭐ ADD THIS
-// =====================================================
-
-import { getInventory } from "../../services/inventoryService";
+import { getShopInventory } from "../../services/inventoryService";
 
 
 // =====================================================
@@ -2216,7 +2798,7 @@ const getProductId = (product) => {
 
 
 // =====================================================
-// ⭐ GET INVENTORY PRODUCT ID
+// GET INVENTORY PRODUCT ID
 // =====================================================
 
 const getInventoryProductId = (inventory) => {
@@ -2347,6 +2929,139 @@ const getBrandName = (product) => {
       product.brandId ??
       product.brandData
   );
+};
+
+
+// =====================================================
+// PRODUCT TYPE VALUE
+//
+// IMPORTANT:
+// Shop mein sirf NEW + REFURBISHED products allowed.
+// Rental products yahan se completely block honge.
+//
+// Multiple possible backend field names supported:
+// productType
+// type
+// itemType
+// condition
+// productCondition
+// =====================================================
+
+const getShopProductType = (product) => {
+  if (!product) {
+    return "";
+  }
+
+  const possibleValues = [
+    product.productType,
+    product.itemType,
+    product.type,
+    product.condition,
+    product.productCondition,
+    product.product_kind,
+    product.productKind,
+  ];
+
+  for (const value of possibleValues) {
+    if (
+      value !== undefined &&
+      value !== null &&
+      String(value).trim() !== ""
+    ) {
+      return String(value)
+        .trim()
+        .toUpperCase()
+        .replace(/[\s_-]+/g, "");
+    }
+  }
+
+  return "";
+};
+
+
+// =====================================================
+// SHOP PRODUCT FILTER
+//
+// ONLY:
+// NEW
+// REFURBISHED / REFURB / RENEWED / RECONDITIONED
+//
+// NEVER:
+// RENTAL
+// RENT
+// RENTED
+// UNKNOWN
+// EMPTY
+// =====================================================
+
+const isShopProduct = (product) => {
+  if (!product) {
+    return false;
+  }
+
+  // -----------------------------------------------
+  // Explicit rental flags
+  // -----------------------------------------------
+
+  if (
+    product.isRental === true ||
+    product.rental === true ||
+    product.isRentable === true
+  ) {
+    return false;
+  }
+
+  // -----------------------------------------------
+  // Product type
+  // -----------------------------------------------
+
+  const productType =
+    getShopProductType(product);
+
+  // -----------------------------------------------
+  // Rental types
+  // -----------------------------------------------
+
+  if (
+    productType === "RENTAL" ||
+    productType === "RENT" ||
+    productType === "RENTED"
+  ) {
+    return false;
+  }
+
+  // -----------------------------------------------
+  // New
+  // -----------------------------------------------
+
+  if (
+    productType === "NEW" ||
+    productType === "NEWPRODUCT"
+  ) {
+    return true;
+  }
+
+  // -----------------------------------------------
+  // Refurbished
+  // -----------------------------------------------
+
+  if (
+    productType === "REFURBISHED" ||
+    productType === "REFURB" ||
+    productType === "RENEWED" ||
+    productType === "RECONDITIONED" ||
+    productType === "REFURBISHMENT" ||
+    productType === "REFURBISHEDPRODUCT"
+  ) {
+    return true;
+  }
+
+  // -----------------------------------------------
+  // If product type is missing/unknown,
+  // DO NOT show it.
+  // -----------------------------------------------
+
+  return false;
 };
 
 
@@ -2691,7 +3406,7 @@ const extractOffers = (response) => {
 
 
 // =====================================================
-// ⭐ EXTRACT INVENTORY
+// EXTRACT INVENTORY
 // =====================================================
 
 const extractInventory = (response) => {
@@ -2794,7 +3509,7 @@ const removeDuplicateProducts = (
 
 
 // =====================================================
-// ⭐ STOCK STATUS
+// STOCK STATUS
 //
 // 0       = OUT OF STOCK
 // 1 - 5   = LOW STOCK
@@ -2839,7 +3554,7 @@ const getStockStatus = (inventory) => {
 
 
 // =====================================================
-// ⭐ STOCK LABEL
+// STOCK LABEL
 // =====================================================
 
 const getStockLabel = (status) => {
@@ -2865,6 +3580,7 @@ const getStockLabel = (status) => {
 
 const Shop = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   // ===================================================
   // STATES
@@ -2879,13 +3595,6 @@ const Shop = () => {
   ] = useState([]);
 
   const [offers, setOffers] =
-    useState([]);
-
-  // ===================================================
-  // ⭐ INVENTORY STATE
-  // ===================================================
-
-  const [inventoryList, setInventoryList] =
     useState([]);
 
   const [loading, setLoading] =
@@ -2909,6 +3618,74 @@ const Shop = () => {
   const [sort, setSort] =
     useState("");
 
+  // ===================================================
+  // READ CONDITION FROM URL
+  // ===================================================
+
+  useEffect(() => {
+    const conditionFromUrl =
+      searchParams.get("condition");
+
+    if (
+      conditionFromUrl === "refurbished" ||
+      conditionFromUrl === "new"
+    ) {
+      setCondition(
+        conditionFromUrl
+      );
+    }
+  }, [searchParams]);
+
+
+  // ===================================================
+  // READ SEARCH FROM URL
+  // ===================================================
+
+  useEffect(() => {
+    const searchFromUrl =
+      searchParams.get("search");
+
+    setSearch(
+      searchFromUrl || ""
+    );
+  }, [searchParams]);
+
+
+  // ===================================================
+  // READ BRAND FROM URL
+  // ===================================================
+
+  useEffect(() => {
+    const brandFromUrl =
+      searchParams.get("brand");
+
+    setBrand(
+      brandFromUrl || ""
+    );
+  }, [searchParams]);
+
+
+  // ===================================================
+  // READ CATEGORY FROM URL
+  // ===================================================
+
+  useEffect(() => {
+    const categoryFromUrl =
+      searchParams.get("category");
+
+    console.log(
+      "category name is written below"
+    );
+
+    console.log(
+      categoryFromUrl
+    );
+
+    setCategory(
+      categoryFromUrl || ""
+    );
+  }, [searchParams]);
+
 
   // ===================================================
   // LOAD
@@ -2920,13 +3697,17 @@ const Shop = () => {
 
 
   // ===================================================
-  // ⭐ LOAD INVENTORY
+  // LOAD INVENTORY
   // ===================================================
 
   const loadInventory = async () => {
     try {
       const response =
-        await getInventory();
+        await getShopInventory();
+
+      console.log(
+        "data received from the inventory and it is printed below"
+      );
 
       console.log(
         "SHOP INVENTORY RESPONSE:",
@@ -2941,9 +3722,7 @@ const Shop = () => {
         inventoryData
       );
 
-      setInventoryList(
-        inventoryData
-      );
+      return inventoryData;
 
     } catch (error) {
       console.error(
@@ -2951,22 +3730,13 @@ const Shop = () => {
         error
       );
 
-      /*
-        IMPORTANT:
-
-        Inventory fail hone par
-        products ko remove nahi karenge.
-
-        Existing shop normally work karega.
-      */
-
-      setInventoryList([]);
+      return [];
     }
   };
 
 
   // ===================================================
-  // ⭐ FIND INVENTORY FOR PRODUCT
+  // FIND INVENTORY FOR PRODUCT
   // ===================================================
 
   const findInventoryForProduct = (
@@ -3009,24 +3779,15 @@ const Shop = () => {
       try {
         setLoading(true);
 
-        /*
-          Existing APIs are still used.
-          Inventory is added separately.
-        */
-
         const [
           productsResponse,
           offersResponse,
+          inventoryData,
         ] = await Promise.all([
           getShopProducts(),
           getActiveOffers(),
           loadInventory(),
-        ]).then(
-          (results) => [
-            results[0],
-            results[1],
-          ]
-        );
+        ]);
 
         console.log(
           "SHOP PRODUCTS RESPONSE:",
@@ -3047,13 +3808,45 @@ const Shop = () => {
           rawProductList
         );
 
+        // =================================================
+        // IMPORTANT PRODUCT TYPE FILTER
+        //
+        // ONLY NEW + REFURBISHED
+        // RENTAL PRODUCTS REMOVED HERE
+        // =================================================
+
+        const shopProductList =
+          rawProductList.filter(
+            isShopProduct
+          );
+
+        console.log(
+          "SHOP PRODUCT TYPE FILTER:",
+          {
+            totalFromAPI:
+              rawProductList.length,
+
+            allowedProducts:
+              shopProductList.length,
+
+            removedProducts:
+              rawProductList.length -
+              shopProductList.length,
+          }
+        );
+
+        console.log(
+          "ONLY NEW + REFURBISHED PRODUCTS:",
+          shopProductList
+        );
+
         // ---------------------------------------------
         // REMOVE DUPLICATES
         // ---------------------------------------------
 
         const productList =
           removeDuplicateProducts(
-            rawProductList
+            shopProductList
           );
 
         console.log(
@@ -3088,17 +3881,14 @@ const Shop = () => {
                   product
                 );
 
-              /*
-                ⭐ STOCK
-
-                Inventory list se current
-                product ka inventory find karenge.
-              */
+              // ---------------------------------------
+              // STOCK
+              // ---------------------------------------
 
               const inventory =
                 findInventoryForProduct(
                   productId,
-                  inventoryList
+                  inventoryData
                 );
 
               const stockStatus =
@@ -3110,6 +3900,10 @@ const Shop = () => {
                 getStockLabel(
                   stockStatus
                 );
+
+              // ---------------------------------------
+              // PRODUCT OFFERS
+              // ---------------------------------------
 
               const productOffers =
                 activeOffers.filter(
@@ -3182,7 +3976,6 @@ const Shop = () => {
 
                   offerDiscountValue: 0,
 
-                  // ⭐ STOCK
                   stockStatus,
 
                   stockLabel,
@@ -3254,7 +4047,6 @@ const Shop = () => {
 
                   offerDiscountValue: 0,
 
-                  // ⭐ STOCK
                   stockStatus,
 
                   stockLabel,
@@ -3330,7 +4122,6 @@ const Shop = () => {
                     ?.discountValue ??
                   0,
 
-                // ⭐ STOCK
                 stockStatus,
 
                 stockLabel,
@@ -3391,10 +4182,32 @@ const Shop = () => {
               productsResponse
             );
 
+          // =================================================
+          // IMPORTANT:
+          // FALLBACK ME BHI RENTAL PRODUCTS REMOVE
+          // =================================================
+
+          const shopProductList =
+            rawProductList.filter(
+              isShopProduct
+            );
+
+          console.log(
+            "FALLBACK ONLY NEW + REFURBISHED:",
+            shopProductList
+          );
+
           const productList =
             removeDuplicateProducts(
-              rawProductList
+              shopProductList
             );
+
+          // ---------------------------------------------
+          // INVENTORY
+          // ---------------------------------------------
+
+          const fallbackInventoryData =
+            await loadInventory();
 
           const productsWithoutOffers =
             productList.map(
@@ -3405,14 +4218,6 @@ const Shop = () => {
                     product
                   );
 
-                /*
-                  ⭐ Fallback stock
-
-                  Inventory fail hone par
-                  existing shop products
-                  normal load honge.
-                */
-
                 const productId =
                   getProductId(
                     product
@@ -3421,7 +4226,7 @@ const Shop = () => {
                 const inventory =
                   findInventoryForProduct(
                     productId,
-                    inventoryList
+                    fallbackInventoryData
                   );
 
                 const stockStatus =
@@ -3451,7 +4256,6 @@ const Shop = () => {
 
                   offerDiscountValue: 0,
 
-                  // ⭐ STOCK
                   stockStatus,
 
                   stockLabel:
@@ -3604,6 +4408,17 @@ const Shop = () => {
     )
       ? [...products]
       : [];
+
+    // =================================================
+    // EXTRA SAFETY
+    //
+    // Even if products state somehow receives
+    // a changed API result, rental won't render.
+    // =================================================
+
+    data = data.filter(
+      isShopProduct
+    );
 
     // =================================================
     // SEARCH
@@ -3840,6 +4655,8 @@ const Shop = () => {
   const handleAddToCart =
     async (product) => {
 
+      console.log(product);
+
       const token =
         localStorage.getItem(
           "token"
@@ -3868,8 +4685,24 @@ const Shop = () => {
         return;
       }
 
+      // =================================================
+      // EXTRA SAFETY:
+      // RENTAL PRODUCT CART ME BHI NAHI JA SAKTA
+      // =================================================
+
+      if (
+        !isShopProduct(product)
+      ) {
+
+        toast.error(
+          "This product is not available for purchase"
+        );
+
+        return;
+      }
+
       /*
-        ⭐ OPTIONAL SAFETY
+        OPTIONAL SAFETY
 
         Out of stock product ko cart
         mein add nahi hone denge.
@@ -3879,6 +4712,10 @@ const Shop = () => {
         product?.stockStatus ===
         "OUT_OF_STOCK"
       ) {
+
+        console.log(
+          "product is out of stock"
+        );
 
         toast.error(
           "Product is currently out of stock"
@@ -3896,6 +4733,12 @@ const Shop = () => {
 
         toast.success(
           "Added To Cart"
+        );
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "cart-updated"
+          )
         );
 
         navigate("/cart");
@@ -3947,6 +4790,22 @@ const Shop = () => {
         return;
       }
 
+      // =================================================
+      // EXTRA SAFETY:
+      // RENTAL PRODUCT WISHLIST ME NAHI JAYEGA
+      // =================================================
+
+      if (
+        !isShopProduct(product)
+      ) {
+
+        toast.error(
+          "This product is not available for purchase"
+        );
+
+        return;
+      }
+
       try {
 
         await addToWishlist(
@@ -3955,6 +4814,12 @@ const Shop = () => {
 
         toast.success(
           "Added To Wishlist"
+        );
+
+        window.dispatchEvent(
+          new CustomEvent(
+            "wishlist-updated"
+          )
         );
 
       } catch (error) {
@@ -4565,7 +5430,6 @@ const Shop = () => {
         ) : (
 
           <div className="space-y-10">
-
 
             {/* =================================================
                 REFURBISHED

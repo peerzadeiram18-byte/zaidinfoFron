@@ -1,2416 +1,155 @@
-// // import React, { useState } from "react";
-// // import "./NewWalkInOrder.css";
-
-// // const NewWalkInOrder = () => {
-// //     // =====================================
-// //     // CUSTOMER
-// //     // =====================================
-
-// //     const [customer, setCustomer] = useState({
-// //         name: "",
-// //         phone: "",
-// //         email: "",
-// //     });
-
-// //     // =====================================
-// //     // PRODUCT SEARCH
-// //     // =====================================
-
-// //     const [productSearch, setProductSearch] = useState("");
-
-// //     // =====================================
-// //     // CART
-// //     // =====================================
-
-// //     const [cart, setCart] = useState([]);
-
-// //     // =====================================
-// //     // PAYMENT
-// //     // =====================================
-
-// //     const [paymentMethod, setPaymentMethod] = useState("CASH");
-
-// //     // =====================================
-// //     // DISCOUNT
-// //     // =====================================
-
-// //     const [discount, setDiscount] = useState(0);
-
-// //     // =====================================
-// //     // DEMO PRODUCTS
-// //     // Later API se aayenge
-// //     // =====================================
-
-// //     const products = [
-// //         {
-// //             id: "1",
-// //             name: "Laptop",
-// //             sku: "LAP001",
-// //             price: 50000,
-// //             stock: 10,
-// //         },
-// //         {
-// //             id: "2",
-// //             name: "Keyboard",
-// //             sku: "KEY001",
-// //             price: 1500,
-// //             stock: 20,
-// //         },
-// //         {
-// //             id: "3",
-// //             name: "Mouse",
-// //             sku: "MOU001",
-// //             price: 800,
-// //             stock: 30,
-// //         },
-// //         {
-// //             id: "4",
-// //             name: "Monitor",
-// //             sku: "MON001",
-// //             price: 12000,
-// //             stock: 8,
-// //         },
-// //     ];
-
-// //     // =====================================
-// //     // FILTER PRODUCTS
-// //     // =====================================
-
-// //     const filteredProducts = products.filter((product) => {
-// //         const search = productSearch.toLowerCase().trim();
-
-// //         return (
-// //             product.name.toLowerCase().includes(search) ||
-// //             product.sku.toLowerCase().includes(search)
-// //         );
-// //     });
-
-// //     // =====================================
-// //     // ADD PRODUCT TO CART
-// //     // =====================================
-
-// //     const addToCart = (product) => {
-// //         const existingProduct = cart.find(
-// //             (item) => item.id === product.id
-// //         );
-
-// //         if (existingProduct) {
-// //             if (existingProduct.quantity >= product.stock) {
-// //                 alert("Product stock limit reached");
-// //                 return;
-// //             }
-
-// //             setCart(
-// //                 cart.map((item) =>
-// //                     item.id === product.id
-// //                         ? {
-// //                               ...item,
-// //                               quantity: item.quantity + 1,
-// //                           }
-// //                         : item
-// //                 )
-// //             );
-
-// //             return;
-// //         }
-
-// //         setCart([
-// //             ...cart,
-// //             {
-// //                 ...product,
-// //                 quantity: 1,
-// //             },
-// //         ]);
-// //     };
-
-// //     // =====================================
-// //     // INCREASE QUANTITY
-// //     // =====================================
-
-// //     const increaseQuantity = (id) => {
-// //         setCart(
-// //             cart.map((item) => {
-// //                 if (item.id === id) {
-// //                     if (item.quantity >= item.stock) {
-// //                         alert("Maximum available stock reached");
-// //                         return item;
-// //                     }
-
-// //                     return {
-// //                         ...item,
-// //                         quantity: item.quantity + 1,
-// //                     };
-// //                 }
-
-// //                 return item;
-// //             })
-// //         );
-// //     };
-
-// //     // =====================================
-// //     // DECREASE QUANTITY
-// //     // =====================================
-
-// //     const decreaseQuantity = (id) => {
-// //         setCart(
-// //             cart
-// //                 .map((item) => {
-// //                     if (item.id === id) {
-// //                         return {
-// //                             ...item,
-// //                             quantity: item.quantity - 1,
-// //                         };
-// //                     }
-
-// //                     return item;
-// //                 })
-// //                 .filter((item) => item.quantity > 0)
-// //         );
-// //     };
-
-// //     // =====================================
-// //     // REMOVE PRODUCT
-// //     // =====================================
-
-// //     const removeProduct = (id) => {
-// //         setCart(cart.filter((item) => item.id !== id));
-// //     };
-
-// //     // =====================================
-// //     // SUBTOTAL
-// //     // =====================================
-
-// //     const subtotal = cart.reduce((total, item) => {
-// //         return total + item.price * item.quantity;
-// //     }, 0);
-
-// //     // =====================================
-// //     // DISCOUNT VALUE
-// //     // =====================================
-
-// //     const discountAmount = Math.max(
-// //         Number(discount) || 0,
-// //         0
-// //     );
-
-// //     // =====================================
-// //     // FINAL TOTAL
-// //     // =====================================
-
-// //     const totalAmount = Math.max(
-// //         subtotal - discountAmount,
-// //         0
-// //     );
-
-// //     // =====================================
-// //     // RESET ORDER
-// //     // =====================================
-
-// //     const clearOrder = () => {
-// //         setCustomer({
-// //             name: "",
-// //             phone: "",
-// //             email: "",
-// //         });
-
-// //         setProductSearch("");
-// //         setCart([]);
-// //         setDiscount(0);
-// //         setPaymentMethod("CASH");
-// //     };
-
-// //     // =====================================
-// //     // CREATE WALK-IN ORDER
-// //     // =====================================
-
-// //     const handleCompleteOrder = () => {
-// //         if (!customer.name.trim()) {
-// //             alert("Please enter customer name");
-// //             return;
-// //         }
-
-// //         if (!customer.phone.trim()) {
-// //             alert("Please enter customer phone");
-// //             return;
-// //         }
-
-// //         if (cart.length === 0) {
-// //             alert("Please add at least one product");
-// //             return;
-// //         }
-
-// //         const orderData = {
-// //             customer,
-// //             items: cart,
-// //             subtotal,
-// //             discount: discountAmount,
-// //             totalAmount,
-// //             paymentMethod,
-// //             orderType: "WALK_IN",
-// //         };
-
-// //         console.log("WALK-IN ORDER:", orderData);
-
-// //         alert("Walk-in order created successfully!");
-
-// //         clearOrder();
-// //     };
-
-// //     return (
-// //         <div className="walkin-page">
-
-// //             {/* =================================
-// //                 HEADER
-// //             ================================= */}
-
-// //             <div className="walkin-header">
-
-// //                 <div>
-// //                     <h1>New Walk-in Order</h1>
-
-// //                     <p>Receptionist POS</p>
-// //                 </div>
-
-// //                 <div className="walkin-order-type">
-// //                     WALK-IN / POS
-// //                 </div>
-
-// //             </div>
-
-// //             {/* =================================
-// //                 MAIN CONTENT
-// //             ================================= */}
-
-// //             <div className="walkin-layout">
-
-// //                 {/* =================================
-// //                     LEFT SIDE
-// //                 ================================= */}
-
-// //                 <div className="walkin-left">
-
-// //                     {/* CUSTOMER SECTION */}
-
-// //                     <div className="walkin-card">
-
-// //                         <div className="walkin-card-title">
-
-// //                             <h2>Customer Details</h2>
-
-// //                         </div>
-
-// //                         <div className="customer-grid">
-
-// //                             {/* NAME */}
-
-// //                             <div className="walkin-input-group">
-
-// //                                 <label>
-// //                                     Customer Name
-// //                                 </label>
-
-// //                                 <input
-// //                                     type="text"
-// //                                     placeholder="Enter customer name"
-// //                                     value={customer.name}
-// //                                     onChange={(e) =>
-// //                                         setCustomer({
-// //                                             ...customer,
-// //                                             name: e.target.value,
-// //                                         })
-// //                                     }
-// //                                 />
-
-// //                             </div>
-
-// //                             {/* PHONE */}
-
-// //                             <div className="walkin-input-group">
-
-// //                                 <label>
-// //                                     Phone Number
-// //                                 </label>
-
-// //                                 <input
-// //                                     type="text"
-// //                                     placeholder="Enter phone number"
-// //                                     value={customer.phone}
-// //                                     onChange={(e) =>
-// //                                         setCustomer({
-// //                                             ...customer,
-// //                                             phone: e.target.value,
-// //                                         })
-// //                                     }
-// //                                 />
-
-// //                             </div>
-
-// //                             {/* EMAIL */}
-
-// //                             <div className="walkin-input-group">
-
-// //                                 <label>
-// //                                     Email
-// //                                 </label>
-
-// //                                 <input
-// //                                     type="email"
-// //                                     placeholder="Enter email"
-// //                                     value={customer.email}
-// //                                     onChange={(e) =>
-// //                                         setCustomer({
-// //                                             ...customer,
-// //                                             email: e.target.value,
-// //                                         })
-// //                                     }
-// //                                 />
-
-// //                             </div>
-
-// //                         </div>
-
-// //                         <button
-// //                             className="new-customer-btn"
-// //                             type="button"
-// //                             onClick={() =>
-// //                                 setCustomer({
-// //                                     name: "",
-// //                                     phone: "",
-// //                                     email: "",
-// //                                 })
-// //                             }
-// //                         >
-// //                             + New Customer
-// //                         </button>
-
-// //                     </div>
-
-// //                     {/* =================================
-// //                         PRODUCT SEARCH
-// //                     ================================= */}
-
-// //                     <div className="walkin-card">
-
-// //                         <div className="walkin-card-title">
-
-// //                             <h2>Product Search</h2>
-
-// //                         </div>
-
-// //                         <div className="product-search-box">
-
-// //                             <input
-// //                                 type="text"
-// //                                 placeholder="Search product by name or SKU..."
-// //                                 value={productSearch}
-// //                                 onChange={(e) =>
-// //                                     setProductSearch(
-// //                                         e.target.value
-// //                                     )
-// //                                 }
-// //                             />
-
-// //                         </div>
-
-// //                         <div className="product-list">
-
-// //                             {filteredProducts.length === 0 ? (
-
-// //                                 <div className="no-products">
-// //                                     No products found
-// //                                 </div>
-
-// //                             ) : (
-
-// //                                 filteredProducts.map(
-// //                                     (product) => (
-
-// //                                         <div
-// //                                             className="product-row"
-// //                                             key={product.id}
-// //                                         >
-
-// //                                             <div className="product-info">
-
-// //                                                 <h3>
-// //                                                     {product.name}
-// //                                                 </h3>
-
-// //                                                 <p>
-// //                                                     SKU: {product.sku}
-// //                                                 </p>
-
-// //                                             </div>
-
-// //                                             <div className="product-stock">
-
-// //                                                 Stock:{" "}
-// //                                                 {product.stock}
-
-// //                                             </div>
-
-// //                                             <div className="product-price">
-
-// //                                                 ₹{" "}
-// //                                                 {product.price.toLocaleString(
-// //                                                     "en-IN"
-// //                                                 )}
-
-// //                                             </div>
-
-// //                                             <button
-// //                                                 className="add-product-btn"
-// //                                                 type="button"
-// //                                                 onClick={() =>
-// //                                                     addToCart(product)
-// //                                                 }
-// //                                             >
-// //                                                 + Add
-// //                                             </button>
-
-// //                                         </div>
-
-// //                                     )
-// //                                 )
-
-// //                             )}
-
-// //                         </div>
-
-// //                     </div>
-
-// //                     {/* =================================
-// //                         CART
-// //                     ================================= */}
-
-// //                     <div className="walkin-card">
-
-// //                         <div className="walkin-card-title">
-
-// //                             <h2>Order Items</h2>
-
-// //                             <span>
-// //                                 {cart.length} Products
-// //                             </span>
-
-// //                         </div>
-
-// //                         {cart.length === 0 ? (
-
-// //                             <div className="empty-cart">
-
-// //                                 <h3>
-// //                                     Cart is empty
-// //                                 </h3>
-
-// //                                 <p>
-// //                                     Search and add products above
-// //                                 </p>
-
-// //                             </div>
-
-// //                         ) : (
-
-// //                             <div className="cart-table">
-
-// //                                 <div className="cart-header">
-
-// //                                     <span>Product</span>
-
-// //                                     <span>Price</span>
-
-// //                                     <span>Quantity</span>
-
-// //                                     <span>Total</span>
-
-// //                                     <span>Action</span>
-
-// //                                 </div>
-
-// //                                 {cart.map((item) => (
-
-// //                                     <div
-// //                                         className="cart-row"
-// //                                         key={item.id}
-// //                                     >
-
-// //                                         <div className="cart-product-name">
-
-// //                                             <strong>
-// //                                                 {item.name}
-// //                                             </strong>
-
-// //                                             <small>
-// //                                                 {item.sku}
-// //                                             </small>
-
-// //                                         </div>
-
-// //                                         <div>
-
-// //                                             ₹{" "}
-// //                                             {item.price.toLocaleString(
-// //                                                 "en-IN"
-// //                                             )}
-
-// //                                         </div>
-
-// //                                         <div className="quantity-control">
-
-// //                                             <button
-// //                                                 type="button"
-// //                                                 onClick={() =>
-// //                                                     decreaseQuantity(
-// //                                                         item.id
-// //                                                     )
-// //                                                 }
-// //                                             >
-// //                                                 -
-// //                                             </button>
-
-// //                                             <span>
-// //                                                 {item.quantity}
-// //                                             </span>
-
-// //                                             <button
-// //                                                 type="button"
-// //                                                 onClick={() =>
-// //                                                     increaseQuantity(
-// //                                                         item.id
-// //                                                     )
-// //                                                 }
-// //                                             >
-// //                                                 +
-// //                                             </button>
-
-// //                                         </div>
-
-// //                                         <div>
-
-// //                                             ₹{" "}
-// //                                             {(
-// //                                                 item.price *
-// //                                                 item.quantity
-// //                                             ).toLocaleString(
-// //                                                 "en-IN"
-// //                                             )}
-
-// //                                         </div>
-
-// //                                         <button
-// //                                             className="remove-btn"
-// //                                             type="button"
-// //                                             onClick={() =>
-// //                                                 removeProduct(
-// //                                                     item.id
-// //                                                 )
-// //                                             }
-// //                                         >
-// //                                             Remove
-// //                                         </button>
-
-// //                                     </div>
-
-// //                                 ))}
-
-// //                             </div>
-
-// //                         )}
-
-// //                     </div>
-
-// //                 </div>
-
-// //                 {/* =================================
-// //                     RIGHT SIDE
-// //                 ================================= */}
-
-// //                 <div className="walkin-right">
-
-// //                     {/* ORDER SUMMARY */}
-
-// //                     <div className="walkin-card summary-card">
-
-// //                         <h2>
-// //                             Order Summary
-// //                         </h2>
-
-// //                         <div className="summary-line">
-
-// //                             <span>
-// //                                 Subtotal
-// //                             </span>
-
-// //                             <strong>
-// //                                 ₹{" "}
-// //                                 {subtotal.toLocaleString(
-// //                                     "en-IN"
-// //                                 )}
-// //                             </strong>
-
-// //                         </div>
-
-// //                         <div className="discount-box">
-
-// //                             <label>
-// //                                 Discount
-// //                             </label>
-
-// //                             <input
-// //                                 type="number"
-// //                                 min="0"
-// //                                 max={subtotal}
-// //                                 value={discount}
-// //                                 onChange={(e) =>
-// //                                     setDiscount(
-// //                                         e.target.value
-// //                                     )
-// //                                 }
-// //                             />
-
-// //                         </div>
-
-// //                         <div className="summary-line">
-
-// //                             <span>
-// //                                 Discount
-// //                             </span>
-
-// //                             <strong>
-// //                                 - ₹{" "}
-// //                                 {discountAmount.toLocaleString(
-// //                                     "en-IN"
-// //                                 )}
-// //                             </strong>
-
-// //                         </div>
-
-// //                         <div className="summary-total">
-
-// //                             <span>
-// //                                 Total
-// //                             </span>
-
-// //                             <strong>
-// //                                 ₹{" "}
-// //                                 {totalAmount.toLocaleString(
-// //                                     "en-IN"
-// //                                 )}
-// //                             </strong>
-
-// //                         </div>
-
-// //                     </div>
-
-// //                     {/* PAYMENT METHOD */}
-
-// //                     <div className="walkin-card">
-
-// //                         <h2>
-// //                             Payment Method
-// //                         </h2>
-
-// //                         <div className="payment-methods">
-
-// //                             <button
-// //                                 type="button"
-// //                                 className={
-// //                                     paymentMethod === "CASH"
-// //                                         ? "payment-method active"
-// //                                         : "payment-method"
-// //                                 }
-// //                                 onClick={() =>
-// //                                     setPaymentMethod(
-// //                                         "CASH"
-// //                                     )
-// //                                 }
-// //                             >
-// //                                 💵 Cash
-// //                             </button>
-
-// //                             <button
-// //                                 type="button"
-// //                                 className={
-// //                                     paymentMethod === "UPI"
-// //                                         ? "payment-method active"
-// //                                         : "payment-method"
-// //                                 }
-// //                                 onClick={() =>
-// //                                     setPaymentMethod(
-// //                                         "UPI"
-// //                                     )
-// //                                 }
-// //                             >
-// //                                 📱 UPI
-// //                             </button>
-
-// //                             <button
-// //                                 type="button"
-// //                                 className={
-// //                                     paymentMethod === "CARD"
-// //                                         ? "payment-method active"
-// //                                         : "payment-method"
-// //                                 }
-// //                                 onClick={() =>
-// //                                     setPaymentMethod(
-// //                                         "CARD"
-// //                                     )
-// //                                 }
-// //                             >
-// //                                 💳 Card
-// //                             </button>
-
-// //                         </div>
-
-// //                     </div>
-
-// //                     {/* COMPLETE ORDER */}
-
-// //                     <div className="walkin-card complete-card">
-
-// //                         <button
-// //                             className="complete-order-btn"
-// //                             type="button"
-// //                             onClick={
-// //                                 handleCompleteOrder
-// //                             }
-// //                         >
-// //                             Complete Order
-// //                         </button>
-
-// //                         <button
-// //                             className="cancel-order-btn"
-// //                             type="button"
-// //                             onClick={clearOrder}
-// //                         >
-// //                             Clear Order
-// //                         </button>
-
-// //                     </div>
-
-// //                 </div>
-
-// //             </div>
-
-// //         </div>
-// //     );
-// // };
-
-// // export default NewWalkInOrder;
-
-
 // import { useEffect, useState } from "react";
-// import "./NewWalkInOrder.css";
-
 // import {
-//     getProducts,
-//     createWalkInOrder
-// } from "../../../../services/walkInOrderService";
-// import WalkInInvoice from "../WalkInInvoice/WalkInInvoice";
+//   useNavigate,
+// } from "react-router-dom";
+// import "./NewWalkInOrder.css";
 // import { toast } from "react-toastify";
 
+// import {
+//   getProducts,
+//   createWalkInOrder,
+// } from "../../../../services/walkInOrderService";
+
+// import WalkInInvoice from "../WalkInInvoice/WalkInInvoice";
+
+// import {
+//   createInvoice,
+// } from "../../../../services/invoiceService";
 
 // function NewWalkInOrder() {
 
-//     const [products, setProducts] = useState([]);
-//     const [filteredProducts, setFilteredProducts] = useState([]);
-//     const [cart, setCart] = useState([]);
-//     const [search, setSearch] = useState("");
+//     const navigate = useNavigate();
+
+//   const [products, setProducts] = useState([]);
+//   const [filteredProducts, setFilteredProducts] = useState([]);
 
-//     const [customer, setCustomer] = useState({
-//         fullName: "",
-//         phone: "",
-//         addressLine: "",
-//         city: "",
-//         state: "",
-//         pincode: "",
-//         country: "India",
-//         landmark: ""
-//     });
+//   const [cart, setCart] = useState([]);
+//   const [search, setSearch] = useState("");
 
-//     const [paymentMethod, setPaymentMethod] = useState("CASH");
-//     const [invoiceData, setInvoiceData] = useState(null);
-//     useEffect(() => {
-//         loadProducts();
-//     }, []);
+//   const [loading, setLoading] = useState(true);
+//   const [placingOrder, setPlacingOrder] = useState(false);
 
-//   const loadProducts = async () => {
+//   const [customer, setCustomer] = useState({
+//     fullName: "",
+//     phone: "",
+//     addressLine: "",
+//     city: "",
+//     state: "",
+//     pincode: "",
+//     country: "India",
+//     landmark: "",
+//   });
 
-//     try {
+//   const [paymentMethod, setPaymentMethod] = useState("CASH");
+//   const [invoiceData, setInvoiceData] = useState(null);
 
-//         const data = await getProducts();
+//   // ============================================
+//   // LOAD PRODUCTS
+//   // ============================================
 
-//         setProducts(data);
+// //   useEffect(() => {
+// //     loadProducts();
+// //   }, []);
 
-//         setFilteredProducts(data);
+// // useEffect(() => {
+// //     loadProducts();
+// // }, []);
 
-//     }
+// // const loadProducts = async () => {
 
-//     catch (err) {
+// //     try {
 
-//         console.log(err);
+// //         console.log(
+// //             "Loading products for Walk-In..."
+// //         );
 
-//     }
+// //         const data = await getProducts();
 
-// };
-//     useEffect(() => {
+// //         console.log(
+// //             "WALK-IN PRODUCTS:",
+// //             data
+// //         );
 
-//         if (!search) {
+// //         setProducts(
+// //             Array.isArray(data)
+// //                 ? data
+// //                 : []
+// //         );
 
-//             setFilteredProducts(products);
+// //         setFilteredProducts(
+// //             Array.isArray(data)
+// //                 ? data
+// //                 : []
+// //         );
 
-//             return;
+// //     } catch (err) {
 
-//         }
+// //         console.error(
+// //             "PRODUCT LOAD ERROR:",
+// //             err
+// //         );
 
-//         const value = search.toLowerCase();
+// //         setProducts([]);
+// //         setFilteredProducts([]);
 
-//         setFilteredProducts(
+// //     }
+// // };
 
-//             products.filter((p) =>
-//                 p.name.toLowerCase().includes(value) ||
-//                 p.sku.toLowerCase().includes(value)
-//             )
+// //   const loadProducts = async () => {
+// //     try {
+// //       setLoading(true);
 
-//         );
+// //       const data = await getProducts();
 
-//     }, [search, products]);
+// //       console.log("WALK-IN PRODUCTS:", data);
 
-//     const addProduct = (product) => {
+// //       const productList = Array.isArray(data)
+// //         ? data
+// //         : data?.products || data?.data || [];
 
-//         const exists = cart.find(
+// //       setProducts(productList);
+// //       setFilteredProducts(productList);
+// //     } catch (err) {
+// //       console.error("PRODUCT LOAD ERROR:", err);
 
-//             item => item.product === product._id
+// //       alert(
+// //         err.response?.data?.message ||
+// //           "Unable to load products"
+// //       );
+// //     } finally {
+// //       setLoading(false);
+// //     }
+// //   };
 
-//         );
 
-//         if (exists) {
 
-//             setCart(
 
-//                 cart.map(item =>
-//                     item.product === product._id
-//                         ? {
-//                             ...item,
-//                             quantity: item.quantity + 1
-//                         }
-//                         : item
-//                 )
-
-//             );
-
-//         } else {
-
-//             setCart([
-
-//                 ...cart,
-
-//                 {
-
-//                     product: product._id,
-
-//                     title: product.name,
-
-//                     quantity: 1,
-
-//                     originalPrice: product.pricing.sellingPrice,
-
-//                     price: product.pricing.sellingPrice,
-
-//                     discountAmount: 0,
-
-//                     imageUrl:
-//                         product.images?.[0]?.url || ""
-
-//                 }
-
-//             ]);
-
-//         }
-
-//     };
-
-//     const increaseQty = (id) => {
-
-//         setCart(
-
-//             cart.map(item =>
-//                 item.product === id
-//                     ? {
-//                         ...item,
-//                         quantity: item.quantity + 1
-//                     }
-//                     : item
-//             )
-
-//         );
-
-//     };
-
-//     const decreaseQty = (id) => {
-
-//         setCart(
-
-//             cart.map(item =>
-//                 item.product === id
-//                     ? {
-//                         ...item,
-//                         quantity: item.quantity - 1
-//                     }
-//                     : item
-//             ).filter(item => item.quantity > 0)
-
-//         );
-
-//     };
-
-//     const removeItem = (id) => {
-
-//         setCart(
-
-//             cart.filter(
-
-//                 item => item.product !== id
-
-//             )
-
-//         );
-
-//     };
-
-//     const total = cart.reduce(
-
-//         (sum, item) =>
-
-//             sum + item.price * item.quantity,
-
-//         0
-
-//     );
-
-//         // ============================================
-//     // CUSTOMER INPUT
-//     // ============================================
-
-//     const handleCustomerChange = (e) => {
-
-//         setCustomer({
-
-//             ...customer,
-
-//             [e.target.name]: e.target.value
-
-//         });
-
-//     };
-
-//     // ============================================
-//     // CREATE WALK-IN ORDER
-//     // ============================================
-
-//   const placeOrder = async () => {
-
-//     if (cart.length === 0) {
-
-//         toast.error("Please add at least one product");
-//         return;
-
-//     }
-
-
-//     if (!customer.fullName || !customer.phone) {
-
-//         toast.error("Customer Name and Phone are required");
-//         return;
-
-//     }
-
-
-//     const orderData = {
-
-
-//         orderItems: cart.map(item => ({
-
-//             product: item.product,
-
-//             title: item.title,
-
-//             quantity: Number(item.quantity),
-
-//             originalPrice: Number(item.originalPrice),
-
-//             price: Number(item.price),
-
-//             discountAmount: Number(item.discountAmount || 0),
-
-//             imageUrl: item.imageUrl || ""
-
-//         })),
-
-
-
-//         shippingAddress: {
-
-//             fullName: customer.fullName,
-
-//             phone: customer.phone,
-
-//             addressLine:
-//                 customer.addressLine || "Walk In Customer",
-
-//             city: customer.city,
-
-//             state: customer.state,
-
-//             pincode: customer.pincode,
-
-//             country: "India",
-
-//             landmark: customer.landmark || ""
-
-//         },
-
-
-//         totalAmount: Number(total),
-
-
-//         paymentMethod: paymentMethod,
-
-
-//         orderSource: "WALK_IN"
-
-
-//     };
-
-
-
-//     try {
-
-
-//         const res = await createWalkInOrder(orderData);
-
-
-//         setInvoiceData(res.order);
-
-
-
-//        toast.success(
-//             "Walk-In Order Created Successfully"
-//         );
-
-
-//         setCart([]);
-
-
-
-//         setCustomer({
-
-//             fullName: "",
-
-//             phone: "",
-
-//             addressLine: "",
-
-//             city: "",
-
-//             state: "",
-
-//             pincode: "",
-
-//             country: "India",
-
-//             landmark: ""
-
-//         });
-
-
-
-//     }
-
-//     catch(err){
-
-
-//         console.log(err);
-
-
-//         toast.error(
-
-//             err.response?.data?.message ||
-
-//             "Unable to create order"
-
-//         );
-
-
-//     }
-
-
-// };
-
-//     // ============================================
-//     // JSX
-//     // ============================================
-
-//     return (
-
-//         <div className="walkin-page">
-
-//             <div className="left-side">
-
-//                 <h2>
-
-//                     Product Search
-
-//                 </h2>
-
-//                 <input
-
-//                     type="text"
-
-//                     placeholder="Search product by Name or SKU..."
-
-//                     value={search}
-
-//                     onChange={(e)=>setSearch(e.target.value)}
-
-//                     className="search-box"
-
-//                 />
-
-//                 <div className="product-list">
-
-//                     {
-
-//                         filteredProducts.map(product=>(
-
-//                             <div
-
-//                                 key={product._id}
-
-//                                 className="product-card"
-
-//                             >
-
-//                                 <img
-
-//                                     src={
-
-//                                         product.images?.length
-
-//                                         ?
-
-//                                         product.images[0].url
-
-//                                         :
-
-//                                         "/no-image.png"
-
-//                                     }
-
-//                                     alt={product.name}
-
-//                                 />
-
-//                                 <h4>
-
-//                                     {product.name}
-
-//                                 </h4>
-
-//                                 <p>
-
-//                                     SKU :
-
-//                                     {product.sku}
-
-//                                 </p>
-
-//                                 <p>
-
-//                                     Stock :
-
-//                                     {
-
-//                                         product.inventory?.currentStock ??
-
-//                                         0
-
-//                                     }
-
-//                                 </p>
-
-//                                 <h3>
-
-//                                     ₹
-
-//                                     {
-
-//                                         product.pricing?.sellingPrice
-
-//                                     }
-
-//                                 </h3>
-
-//                                 <button
-
-//                                     onClick={()=>addProduct(product)}
-
-//                                 >
-
-//                                     + Add
-
-//                                 </button>
-
-//                             </div>
-
-//                         ))
-
-//                     }
-
-//                 </div>
-
-//             </div>
-
-//                         <div className="right-side">
-
-//                 <h2>Cart</h2>
-
-//                 {
-//                     cart.length === 0 ? (
-
-//                         <p>No Product Added</p>
-
-//                     ) : (
-
-//                         cart.map(item => (
-
-//                             <div
-//                                 className="cart-item"
-//                                 key={item.product}
-//                             >
-
-//                                 <div>
-
-//                                     <h4>{item.title}</h4>
-
-//                                     <p>
-
-//                                         ₹ {item.price}
-
-//                                     </p>
-
-//                                 </div>
-
-//                                 <div className="qty-box">
-
-//                                     <button
-
-//                                         onClick={() => decreaseQty(item.product)}
-
-//                                     >
-
-//                                         -
-
-//                                     </button>
-
-//                                     <span>
-
-//                                         {item.quantity}
-
-//                                     </span>
-
-//                                     <button
-
-//                                         onClick={() => increaseQty(item.product)}
-
-//                                     >
-
-//                                         +
-
-//                                     </button>
-
-//                                 </div>
-
-//                                 <button
-
-//                                     className="remove-btn"
-
-//                                     onClick={() => removeItem(item.product)}
-
-//                                 >
-
-//                                     Remove
-
-//                                 </button>
-
-//                             </div>
-
-//                         ))
-
-//                     )
-//                 }
-
-//                 <hr />
-
-//                 <h3>
-
-//                     Grand Total : ₹ {total}
-
-//                 </h3>
-
-//                 <hr />
-
-//                 <h2>
-
-//                     Customer Details
-
-//                 </h2>
-
-//                 <input
-
-//                     type="text"
-
-//                     name="fullName"
-
-//                     placeholder="Customer Name"
-
-//                     value={customer.fullName}
-
-//                     onChange={handleCustomerChange}
-
-//                 />
-
-//                 <input
-
-//                     type="text"
-
-//                     name="phone"
-
-//                     placeholder="Phone Number"
-
-//                     value={customer.phone}
-
-//                     onChange={handleCustomerChange}
-
-//                 />
-
-//                 <input
-
-//                     type="text"
-
-//                     name="addressLine"
-
-//                     placeholder="Address"
-
-//                     value={customer.addressLine}
-
-//                     onChange={handleCustomerChange}
-
-//                 />
-
-//                 <input
-
-//                     type="text"
-
-//                     name="city"
-
-//                     placeholder="City"
-
-//                     value={customer.city}
-
-//                     onChange={handleCustomerChange}
-
-//                 />
-
-//                 <input
-
-//                     type="text"
-
-//                     name="state"
-
-//                     placeholder="State"
-
-//                     value={customer.state}
-
-//                     onChange={handleCustomerChange}
-
-//                 />
-
-//                 <input
-
-//                     type="text"
-
-//                     name="pincode"
-
-//                     placeholder="Pincode"
-
-//                     value={customer.pincode}
-
-//                     onChange={handleCustomerChange}
-
-//                 />
-
-//                 <select
-
-//                     value={paymentMethod}
-
-//                     onChange={(e)=>setPaymentMethod(e.target.value)}
-
-//                 >
-
-//                     <option value="CASH">
-
-//                         Cash
-
-//                     </option>
-
-//                     <option value="CARD">
-
-//                         Card
-
-//                     </option>
-
-//                     <option value="UPI">
-
-//                         UPI
-
-//                     </option>
-
-//                 </select>
-
-//                 <button
-
-//                     className="place-order-btn"
-
-//                     onClick={placeOrder}
-
-//                 >
-
-//                     Create Walk-In Order
-
-//                 </button>
-
-//             </div>
-
-//         </div>
-
-//     );
-//  {invoiceData && (
-//             <WalkInInvoice
-//                 order={invoiceData}
-//                 onClose={() => setInvoiceData(null)}
-//             />
-//         )}
-    
-
-// }
-
-
-// export default NewWalkInOrder;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState } from "react";
-// import "./NewWalkInOrder.css";
-
-// const NewWalkInOrder = () => {
-//     // =====================================
-//     // CUSTOMER
-//     // =====================================
-
-//     const [customer, setCustomer] = useState({
-//         name: "",
-//         phone: "",
-//         email: "",
-//     });
-
-//     // =====================================
-//     // PRODUCT SEARCH
-//     // =====================================
-
-//     const [productSearch, setProductSearch] = useState("");
-
-//     // =====================================
-//     // CART
-//     // =====================================
-
-//     const [cart, setCart] = useState([]);
-
-//     // =====================================
-//     // PAYMENT
-//     // =====================================
-
-//     const [paymentMethod, setPaymentMethod] = useState("CASH");
-
-//     // =====================================
-//     // DISCOUNT
-//     // =====================================
-
-//     const [discount, setDiscount] = useState(0);
-
-//     // =====================================
-//     // DEMO PRODUCTS
-//     // Later API se aayenge
-//     // =====================================
-
-//     const products = [
-//         {
-//             id: "1",
-//             name: "Laptop",
-//             sku: "LAP001",
-//             price: 50000,
-//             stock: 10,
-//         },
-//         {
-//             id: "2",
-//             name: "Keyboard",
-//             sku: "KEY001",
-//             price: 1500,
-//             stock: 20,
-//         },
-//         {
-//             id: "3",
-//             name: "Mouse",
-//             sku: "MOU001",
-//             price: 800,
-//             stock: 30,
-//         },
-//         {
-//             id: "4",
-//             name: "Monitor",
-//             sku: "MON001",
-//             price: 12000,
-//             stock: 8,
-//         },
-//     ];
-
-//     // =====================================
-//     // FILTER PRODUCTS
-//     // =====================================
-
-//     const filteredProducts = products.filter((product) => {
-//         const search = productSearch.toLowerCase().trim();
-
-//         return (
-//             product.name.toLowerCase().includes(search) ||
-//             product.sku.toLowerCase().includes(search)
-//         );
-//     });
-
-//     // =====================================
-//     // ADD PRODUCT TO CART
-//     // =====================================
-
-//     const addToCart = (product) => {
-//         const existingProduct = cart.find(
-//             (item) => item.id === product.id
-//         );
-
-//         if (existingProduct) {
-//             if (existingProduct.quantity >= product.stock) {
-//                 alert("Product stock limit reached");
-//                 return;
-//             }
-
-//             setCart(
-//                 cart.map((item) =>
-//                     item.id === product.id
-//                         ? {
-//                               ...item,
-//                               quantity: item.quantity + 1,
-//                           }
-//                         : item
-//                 )
-//             );
-
-//             return;
-//         }
-
-//         setCart([
-//             ...cart,
-//             {
-//                 ...product,
-//                 quantity: 1,
-//             },
-//         ]);
-//     };
-
-//     // =====================================
-//     // INCREASE QUANTITY
-//     // =====================================
-
-//     const increaseQuantity = (id) => {
-//         setCart(
-//             cart.map((item) => {
-//                 if (item.id === id) {
-//                     if (item.quantity >= item.stock) {
-//                         alert("Maximum available stock reached");
-//                         return item;
-//                     }
-
-//                     return {
-//                         ...item,
-//                         quantity: item.quantity + 1,
-//                     };
-//                 }
-
-//                 return item;
-//             })
-//         );
-//     };
-
-//     // =====================================
-//     // DECREASE QUANTITY
-//     // =====================================
-
-//     const decreaseQuantity = (id) => {
-//         setCart(
-//             cart
-//                 .map((item) => {
-//                     if (item.id === id) {
-//                         return {
-//                             ...item,
-//                             quantity: item.quantity - 1,
-//                         };
-//                     }
-
-//                     return item;
-//                 })
-//                 .filter((item) => item.quantity > 0)
-//         );
-//     };
-
-//     // =====================================
-//     // REMOVE PRODUCT
-//     // =====================================
-
-//     const removeProduct = (id) => {
-//         setCart(cart.filter((item) => item.id !== id));
-//     };
-
-//     // =====================================
-//     // SUBTOTAL
-//     // =====================================
-
-//     const subtotal = cart.reduce((total, item) => {
-//         return total + item.price * item.quantity;
-//     }, 0);
-
-//     // =====================================
-//     // DISCOUNT VALUE
-//     // =====================================
-
-//     const discountAmount = Math.max(
-//         Number(discount) || 0,
-//         0
-//     );
-
-//     // =====================================
-//     // FINAL TOTAL
-//     // =====================================
-
-//     const totalAmount = Math.max(
-//         subtotal - discountAmount,
-//         0
-//     );
-
-//     // =====================================
-//     // RESET ORDER
-//     // =====================================
-
-//     const clearOrder = () => {
-//         setCustomer({
-//             name: "",
-//             phone: "",
-//             email: "",
-//         });
-
-//         setProductSearch("");
-//         setCart([]);
-//         setDiscount(0);
-//         setPaymentMethod("CASH");
-//     };
-
-//     // =====================================
-//     // CREATE WALK-IN ORDER
-//     // =====================================
-
-//     const handleCompleteOrder = () => {
-//         if (!customer.name.trim()) {
-//             alert("Please enter customer name");
-//             return;
-//         }
-
-//         if (!customer.phone.trim()) {
-//             alert("Please enter customer phone");
-//             return;
-//         }
-
-//         if (cart.length === 0) {
-//             alert("Please add at least one product");
-//             return;
-//         }
-
-//         const orderData = {
-//             customer,
-//             items: cart,
-//             subtotal,
-//             discount: discountAmount,
-//             totalAmount,
-//             paymentMethod,
-//             orderType: "WALK_IN",
-//         };
-
-//         console.log("WALK-IN ORDER:", orderData);
-
-//         alert("Walk-in order created successfully!");
-
-//         clearOrder();
-//     };
-
-//     return (
-//         <div className="walkin-page">
-
-//             {/* =================================
-//                 HEADER
-//             ================================= */}
-
-//             <div className="walkin-header">
-
-//                 <div>
-//                     <h1>New Walk-in Order</h1>
-
-//                     <p>Receptionist POS</p>
-//                 </div>
-
-//                 <div className="walkin-order-type">
-//                     WALK-IN / POS
-//                 </div>
-
-//             </div>
-
-//             {/* =================================
-//                 MAIN CONTENT
-//             ================================= */}
-
-//             <div className="walkin-layout">
-
-//                 {/* =================================
-//                     LEFT SIDE
-//                 ================================= */}
-
-//                 <div className="walkin-left">
-
-//                     {/* CUSTOMER SECTION */}
-
-//                     <div className="walkin-card">
-
-//                         <div className="walkin-card-title">
-
-//                             <h2>Customer Details</h2>
-
-//                         </div>
-
-//                         <div className="customer-grid">
-
-//                             {/* NAME */}
-
-//                             <div className="walkin-input-group">
-
-//                                 <label>
-//                                     Customer Name
-//                                 </label>
-
-//                                 <input
-//                                     type="text"
-//                                     placeholder="Enter customer name"
-//                                     value={customer.name}
-//                                     onChange={(e) =>
-//                                         setCustomer({
-//                                             ...customer,
-//                                             name: e.target.value,
-//                                         })
-//                                     }
-//                                 />
-
-//                             </div>
-
-//                             {/* PHONE */}
-
-//                             <div className="walkin-input-group">
-
-//                                 <label>
-//                                     Phone Number
-//                                 </label>
-
-//                                 <input
-//                                     type="text"
-//                                     placeholder="Enter phone number"
-//                                     value={customer.phone}
-//                                     onChange={(e) =>
-//                                         setCustomer({
-//                                             ...customer,
-//                                             phone: e.target.value,
-//                                         })
-//                                     }
-//                                 />
-
-//                             </div>
-
-//                             {/* EMAIL */}
-
-//                             <div className="walkin-input-group">
-
-//                                 <label>
-//                                     Email
-//                                 </label>
-
-//                                 <input
-//                                     type="email"
-//                                     placeholder="Enter email"
-//                                     value={customer.email}
-//                                     onChange={(e) =>
-//                                         setCustomer({
-//                                             ...customer,
-//                                             email: e.target.value,
-//                                         })
-//                                     }
-//                                 />
-
-//                             </div>
-
-//                         </div>
-
-//                         <button
-//                             className="new-customer-btn"
-//                             type="button"
-//                             onClick={() =>
-//                                 setCustomer({
-//                                     name: "",
-//                                     phone: "",
-//                                     email: "",
-//                                 })
-//                             }
-//                         >
-//                             + New Customer
-//                         </button>
-
-//                     </div>
-
-//                     {/* =================================
-//                         PRODUCT SEARCH
-//                     ================================= */}
-
-//                     <div className="walkin-card">
-
-//                         <div className="walkin-card-title">
-
-//                             <h2>Product Search</h2>
-
-//                         </div>
-
-//                         <div className="product-search-box">
-
-//                             <input
-//                                 type="text"
-//                                 placeholder="Search product by name or SKU..."
-//                                 value={productSearch}
-//                                 onChange={(e) =>
-//                                     setProductSearch(
-//                                         e.target.value
-//                                     )
-//                                 }
-//                             />
-
-//                         </div>
-
-//                         <div className="product-list">
-
-//                             {filteredProducts.length === 0 ? (
-
-//                                 <div className="no-products">
-//                                     No products found
-//                                 </div>
-
-//                             ) : (
-
-//                                 filteredProducts.map(
-//                                     (product) => (
-
-//                                         <div
-//                                             className="product-row"
-//                                             key={product.id}
-//                                         >
-
-//                                             <div className="product-info">
-
-//                                                 <h3>
-//                                                     {product.name}
-//                                                 </h3>
-
-//                                                 <p>
-//                                                     SKU: {product.sku}
-//                                                 </p>
-
-//                                             </div>
-
-//                                             <div className="product-stock">
-
-//                                                 Stock:{" "}
-//                                                 {product.stock}
-
-//                                             </div>
-
-//                                             <div className="product-price">
-
-//                                                 ₹{" "}
-//                                                 {product.price.toLocaleString(
-//                                                     "en-IN"
-//                                                 )}
-
-//                                             </div>
-
-//                                             <button
-//                                                 className="add-product-btn"
-//                                                 type="button"
-//                                                 onClick={() =>
-//                                                     addToCart(product)
-//                                                 }
-//                                             >
-//                                                 + Add
-//                                             </button>
-
-//                                         </div>
-
-//                                     )
-//                                 )
-
-//                             )}
-
-//                         </div>
-
-//                     </div>
-
-//                     {/* =================================
-//                         CART
-//                     ================================= */}
-
-//                     <div className="walkin-card">
-
-//                         <div className="walkin-card-title">
-
-//                             <h2>Order Items</h2>
-
-//                             <span>
-//                                 {cart.length} Products
-//                             </span>
-
-//                         </div>
-
-//                         {cart.length === 0 ? (
-
-//                             <div className="empty-cart">
-
-//                                 <h3>
-//                                     Cart is empty
-//                                 </h3>
-
-//                                 <p>
-//                                     Search and add products above
-//                                 </p>
-
-//                             </div>
-
-//                         ) : (
-
-//                             <div className="cart-table">
-
-//                                 <div className="cart-header">
-
-//                                     <span>Product</span>
-
-//                                     <span>Price</span>
-
-//                                     <span>Quantity</span>
-
-//                                     <span>Total</span>
-
-//                                     <span>Action</span>
-
-//                                 </div>
-
-//                                 {cart.map((item) => (
-
-//                                     <div
-//                                         className="cart-row"
-//                                         key={item.id}
-//                                     >
-
-//                                         <div className="cart-product-name">
-
-//                                             <strong>
-//                                                 {item.name}
-//                                             </strong>
-
-//                                             <small>
-//                                                 {item.sku}
-//                                             </small>
-
-//                                         </div>
-
-//                                         <div>
-
-//                                             ₹{" "}
-//                                             {item.price.toLocaleString(
-//                                                 "en-IN"
-//                                             )}
-
-//                                         </div>
-
-//                                         <div className="quantity-control">
-
-//                                             <button
-//                                                 type="button"
-//                                                 onClick={() =>
-//                                                     decreaseQuantity(
-//                                                         item.id
-//                                                     )
-//                                                 }
-//                                             >
-//                                                 -
-//                                             </button>
-
-//                                             <span>
-//                                                 {item.quantity}
-//                                             </span>
-
-//                                             <button
-//                                                 type="button"
-//                                                 onClick={() =>
-//                                                     increaseQuantity(
-//                                                         item.id
-//                                                     )
-//                                                 }
-//                                             >
-//                                                 +
-//                                             </button>
-
-//                                         </div>
-
-//                                         <div>
-
-//                                             ₹{" "}
-//                                             {(
-//                                                 item.price *
-//                                                 item.quantity
-//                                             ).toLocaleString(
-//                                                 "en-IN"
-//                                             )}
-
-//                                         </div>
-
-//                                         <button
-//                                             className="remove-btn"
-//                                             type="button"
-//                                             onClick={() =>
-//                                                 removeProduct(
-//                                                     item.id
-//                                                 )
-//                                             }
-//                                         >
-//                                             Remove
-//                                         </button>
-
-//                                     </div>
-
-//                                 ))}
-
-//                             </div>
-
-//                         )}
-
-//                     </div>
-
-//                 </div>
-
-//                 {/* =================================
-//                     RIGHT SIDE
-//                 ================================= */}
-
-//                 <div className="walkin-right">
-
-//                     {/* ORDER SUMMARY */}
-
-//                     <div className="walkin-card summary-card">
-
-//                         <h2>
-//                             Order Summary
-//                         </h2>
-
-//                         <div className="summary-line">
-
-//                             <span>
-//                                 Subtotal
-//                             </span>
-
-//                             <strong>
-//                                 ₹{" "}
-//                                 {subtotal.toLocaleString(
-//                                     "en-IN"
-//                                 )}
-//                             </strong>
-
-//                         </div>
-
-//                         <div className="discount-box">
-
-//                             <label>
-//                                 Discount
-//                             </label>
-
-//                             <input
-//                                 type="number"
-//                                 min="0"
-//                                 max={subtotal}
-//                                 value={discount}
-//                                 onChange={(e) =>
-//                                     setDiscount(
-//                                         e.target.value
-//                                     )
-//                                 }
-//                             />
-
-//                         </div>
-
-//                         <div className="summary-line">
-
-//                             <span>
-//                                 Discount
-//                             </span>
-
-//                             <strong>
-//                                 - ₹{" "}
-//                                 {discountAmount.toLocaleString(
-//                                     "en-IN"
-//                                 )}
-//                             </strong>
-
-//                         </div>
-
-//                         <div className="summary-total">
-
-//                             <span>
-//                                 Total
-//                             </span>
-
-//                             <strong>
-//                                 ₹{" "}
-//                                 {totalAmount.toLocaleString(
-//                                     "en-IN"
-//                                 )}
-//                             </strong>
-
-//                         </div>
-
-//                     </div>
-
-//                     {/* PAYMENT METHOD */}
-
-//                     <div className="walkin-card">
-
-//                         <h2>
-//                             Payment Method
-//                         </h2>
-
-//                         <div className="payment-methods">
-
-//                             <button
-//                                 type="button"
-//                                 className={
-//                                     paymentMethod === "CASH"
-//                                         ? "payment-method active"
-//                                         : "payment-method"
-//                                 }
-//                                 onClick={() =>
-//                                     setPaymentMethod(
-//                                         "CASH"
-//                                     )
-//                                 }
-//                             >
-//                                 💵 Cash
-//                             </button>
-
-//                             <button
-//                                 type="button"
-//                                 className={
-//                                     paymentMethod === "UPI"
-//                                         ? "payment-method active"
-//                                         : "payment-method"
-//                                 }
-//                                 onClick={() =>
-//                                     setPaymentMethod(
-//                                         "UPI"
-//                                     )
-//                                 }
-//                             >
-//                                 📱 UPI
-//                             </button>
-
-//                             <button
-//                                 type="button"
-//                                 className={
-//                                     paymentMethod === "CARD"
-//                                         ? "payment-method active"
-//                                         : "payment-method"
-//                                 }
-//                                 onClick={() =>
-//                                     setPaymentMethod(
-//                                         "CARD"
-//                                     )
-//                                 }
-//                             >
-//                                 💳 Card
-//                             </button>
-
-//                         </div>
-
-//                     </div>
-
-//                     {/* COMPLETE ORDER */}
-
-//                     <div className="walkin-card complete-card">
-
-//                         <button
-//                             className="complete-order-btn"
-//                             type="button"
-//                             onClick={
-//                                 handleCompleteOrder
-//                             }
-//                         >
-//                             Complete Order
-//                         </button>
-
-//                         <button
-//                             className="cancel-order-btn"
-//                             type="button"
-//                             onClick={clearOrder}
-//                         >
-//                             Clear Order
-//                         </button>
-
-//                     </div>
-
-//                 </div>
-
-//             </div>
-
-//         </div>
-//     );
-// };
-
-// export default NewWalkInOrder;
-
-
-
-
-
-
-
-import { useEffect, useState } from "react";
-import {
-  useNavigate,
-} from "react-router-dom";
-import "./NewWalkInOrder.css";
-import { toast } from "react-toastify";
-
-import {
-  getProducts,
-  createWalkInOrder,
-} from "../../../../services/walkInOrderService";
-
-import WalkInInvoice from "../WalkInInvoice/WalkInInvoice";
-
-import {
-  createInvoice,
-} from "../../../../services/invoiceService";
-
-function NewWalkInOrder() {
-
-    const navigate = useNavigate();
-
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-
-  const [cart, setCart] = useState([]);
-  const [search, setSearch] = useState("");
-
-  const [loading, setLoading] = useState(true);
-  const [placingOrder, setPlacingOrder] = useState(false);
-
-  const [customer, setCustomer] = useState({
-    fullName: "",
-    phone: "",
-    addressLine: "",
-    city: "",
-    state: "",
-    pincode: "",
-    country: "India",
-    landmark: "",
-  });
-
-  const [paymentMethod, setPaymentMethod] = useState("CASH");
-  const [invoiceData, setInvoiceData] = useState(null);
-
-  // ============================================
-  // LOAD PRODUCTS
-  // ============================================
-
-//   useEffect(() => {
-//     loadProducts();
-//   }, []);
+// // ============================================
+// // LOAD PRODUCTS
+// // ============================================
 
 // useEffect(() => {
 //     loadProducts();
 // }, []);
 
 // const loadProducts = async () => {
-
 //     try {
+//         setLoading(true);
 
-//         console.log(
-//             "Loading products for Walk-In..."
-//         );
+//         console.log("Loading products for Walk-In...");
 
 //         const data = await getProducts();
 
-//         console.log(
-//             "WALK-IN PRODUCTS:",
-//             data
-//         );
+//         console.log("WALK-IN PRODUCTS:", data);
 
-//         setProducts(
-//             Array.isArray(data)
-//                 ? data
-//                 : []
-//         );
+//         const productList = Array.isArray(data)
+//             ? data
+//             : data?.products ||
+//               data?.data ||
+//               [];
 
-//         setFilteredProducts(
-//             Array.isArray(data)
-//                 ? data
-//                 : []
-//         );
+//         setProducts(productList);
+//         setFilteredProducts(productList);
 
 //     } catch (err) {
 
@@ -2422,248 +161,288 @@ function NewWalkInOrder() {
 //         setProducts([]);
 //         setFilteredProducts([]);
 
+//         alert(
+//             err.response?.data?.message ||
+//             "Unable to load products"
+//         );
+
+//     } finally {
+
+//         setLoading(false);
+
 //     }
 // };
 
-//   const loadProducts = async () => {
-//     try {
-//       setLoading(true);
-
-//       const data = await getProducts();
-
-//       console.log("WALK-IN PRODUCTS:", data);
-
-//       const productList = Array.isArray(data)
-//         ? data
-//         : data?.products || data?.data || [];
-
-//       setProducts(productList);
-//       setFilteredProducts(productList);
-//     } catch (err) {
-//       console.error("PRODUCT LOAD ERROR:", err);
-
-//       alert(
-//         err.response?.data?.message ||
-//           "Unable to load products"
-//       );
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-
-
-
-// ============================================
-// LOAD PRODUCTS
-// ============================================
-
-useEffect(() => {
-    loadProducts();
-}, []);
-
-const loadProducts = async () => {
-    try {
-        setLoading(true);
-
-        console.log("Loading products for Walk-In...");
-
-        const data = await getProducts();
-
-        console.log("WALK-IN PRODUCTS:", data);
-
-        const productList = Array.isArray(data)
-            ? data
-            : data?.products ||
-              data?.data ||
-              [];
-
-        setProducts(productList);
-        setFilteredProducts(productList);
-
-    } catch (err) {
-
-        console.error(
-            "PRODUCT LOAD ERROR:",
-            err
-        );
-
-        setProducts([]);
-        setFilteredProducts([]);
-
-        alert(
-            err.response?.data?.message ||
-            "Unable to load products"
-        );
-
-    } finally {
-
-        setLoading(false);
-
-    }
-};
 
 
 
 
 
 
+//   // ============================================
+//   // GET STOCK
+//   // ============================================
 
-  // ============================================
-  // GET STOCK
-  // ============================================
-
-  const getStock = (product) => {
-    return Number(
-      product.inventory?.currentStock ??
-      product.stock ??
-      product.availableStock ??
-      0
-    );
-  };
-
-  // ============================================
-  // SEARCH PRODUCT
-  // ============================================
-
-  useEffect(() => {
-    const value = search.trim().toLowerCase();
-
-    if (!value) {
-      setFilteredProducts(products);
-      return;
-    }
-
-    const result = products.filter((product) => {
-      const name = String(product.name || "").toLowerCase();
-      const sku = String(product.sku || "").toLowerCase();
-
-      return (
-        name.includes(value) ||
-        sku.includes(value)
-      );
-    });
-
-    setFilteredProducts(result);
-  }, [search, products]);
-
-  // ============================================
-  // ADD PRODUCT
-  // ============================================
-
-//   const addProduct = (product) => {
-//     const stock = getStock(product);
-
-//     if (stock <= 0) {
-//       alert("This product is out of stock");
-//       return;
-//     }
-
-//     const exists = cart.find(
-//       (item) => item.product === product._id
+//   const getStock = (product) => {
+//     return Number(
+//       product.inventory?.currentStock ??
+//       product.stock ??
+//       product.availableStock ??
+//       0
 //     );
+//   };
 
-//     if (exists) {
-//       if (exists.quantity >= stock) {
-//         alert(`Only ${stock} quantity available`);
-//         return;
-//       }
+//   // ============================================
+//   // SEARCH PRODUCT
+//   // ============================================
 
-//       setCart(
-//         cart.map((item) =>
-//           item.product === product._id
-//             ? {
-//                 ...item,
-//                 quantity: item.quantity + 1,
-//               }
-//             : item
-//         )
-//       );
+//   useEffect(() => {
+//     const value = search.trim().toLowerCase();
 
+//     if (!value) {
+//       setFilteredProducts(products);
 //       return;
 //     }
 
-//     setCart([
-//       ...cart,
-//       {
-//         product: product._id,
+//     const result = products.filter((product) => {
+//       const name = String(product.name || "").toLowerCase();
+//       const sku = String(product.sku || "").toLowerCase();
 
-//         title: product.name,
+//       return (
+//         name.includes(value) ||
+//         sku.includes(value)
+//       );
+//     });
 
-//         sku: product.sku,
+//     setFilteredProducts(result);
+//   }, [search, products]);
 
-//         quantity: 1,
+//   // ============================================
+//   // ADD PRODUCT
+//   // ============================================
 
-//         stock: stock,
+// //   const addProduct = (product) => {
+// //     const stock = getStock(product);
 
-//         originalPrice: Number(
-//           product.pricing?.sellingPrice || 0
-//         ),
+// //     if (stock <= 0) {
+// //       alert("This product is out of stock");
+// //       return;
+// //     }
 
-//         price: Number(
-//           product.pricing?.sellingPrice || 0
-//         ),
+// //     const exists = cart.find(
+// //       (item) => item.product === product._id
+// //     );
 
-//         discountAmount: 0,
+// //     if (exists) {
+// //       if (exists.quantity >= stock) {
+// //         alert(`Only ${stock} quantity available`);
+// //         return;
+// //       }
 
-//         imageUrl:
-//           product.images?.[0]?.url || "",
-//       },
-//     ]);
-//   };
+// //       setCart(
+// //         cart.map((item) =>
+// //           item.product === product._id
+// //             ? {
+// //                 ...item,
+// //                 quantity: item.quantity + 1,
+// //               }
+// //             : item
+// //         )
+// //       );
+
+// //       return;
+// //     }
+
+// //     setCart([
+// //       ...cart,
+// //       {
+// //         product: product._id,
+
+// //         title: product.name,
+
+// //         sku: product.sku,
+
+// //         quantity: 1,
+
+// //         stock: stock,
+
+// //         originalPrice: Number(
+// //           product.pricing?.sellingPrice || 0
+// //         ),
+
+// //         price: Number(
+// //           product.pricing?.sellingPrice || 0
+// //         ),
+
+// //         discountAmount: 0,
+
+// //         imageUrl:
+// //           product.images?.[0]?.url || "",
+// //       },
+// //     ]);
+// //   };
+
+// // const addProduct = (product) => {
+
+// //     const currentStock = Number(
+// //         product.inventory?.currentStock ?? 0
+// //     );
+
+// //     const reservedStock = Number(
+// //         product.inventory?.reservedStock ?? 0
+// //     );
+
+// //     const availableStock = Math.max(
+// //         currentStock - reservedStock,
+// //         0
+// //     );
+
+// //     // ==============================
+// //     // OUT OF STOCK
+// //     // ==============================
+
+// //     if (availableStock <= 0) {
+
+// //         alert(
+// //             "This product is out of stock."
+// //         );
+
+// //         return;
+// //     }
+
+// //     // ==============================
+// //     // CHECK CART
+// //     // ==============================
+
+// //     const existingItem = cart.find(
+// //         item =>
+// //             item.product === product._id
+// //     );
+
+// //     // ==============================
+// //     // PRODUCT ALREADY IN CART
+// //     // ==============================
+
+// //     if (existingItem) {
+
+// //         if (
+// //             existingItem.quantity >=
+// //             availableStock
+// //         ) {
+
+// //             alert(
+// //                 `Only ${availableStock} item(s) available.`
+// //             );
+
+// //             return;
+// //         }
+
+// //         setCart(
+// //             cart.map(item =>
+// //                 item.product === product._id
+// //                     ? {
+// //                         ...item,
+// //                         quantity:
+// //                             item.quantity + 1
+// //                     }
+// //                     : item
+// //             )
+// //         );
+
+// //         return;
+// //     }
+
+// //     // ==============================
+// //     // ADD NEW PRODUCT
+// //     // ==============================
+
+// //     const sellingPrice = Number(
+// //         product.pricing?.sellingPrice ?? 0
+// //     );
+
+// //     setCart([
+// //         ...cart,
+
+// //         {
+// //             product: product._id,
+
+// //             title: product.name,
+
+// //             sku: product.sku,
+
+// //             quantity: 1,
+
+// //             originalPrice:
+// //                 sellingPrice,
+
+// //             price:
+// //                 sellingPrice,
+
+// //             discountAmount: 0,
+
+// //             imageUrl:
+// //                 product.images?.[0]?.url || "",
+
+// //             availableStock:
+// //                 availableStock
+// //         }
+// //     ]);
+// // };
+
 
 // const addProduct = (product) => {
 
+//     // const currentStock = Number(
+//     //     product.inventory?.currentStock ??
+//     //     product.currentStock ??
+//     //     product.availableStock ??
+//     //     product.stock ??
+//     //     0
+//     // );
+
+//     // const reservedStock = Number(
+//     //     product.inventory?.reservedStock ?? 0
+//     // );
+
+//     // const availableStock = Math.max(
+//     //     currentStock - reservedStock,
+//     //     0
+//     // );
+
+
 //     const currentStock = Number(
-//         product.inventory?.currentStock ?? 0
-//     );
+//     product.inventory?.currentStock ??
+//     product.currentStock ??
+//     product.availableStock ??
+//     product.stock ??
+//     0
+// );
 
-//     const reservedStock = Number(
-//         product.inventory?.reservedStock ?? 0
-//     );
+// const reservedStock = Number(
+//     product.inventory?.reservedStock ??
+//     product.reservedStock ??
+//     0
+// );
 
-//     const availableStock = Math.max(
-//         currentStock - reservedStock,
-//         0
-//     );
+// const availableStock = Math.max(
+//     currentStock - reservedStock,
+//     0
+// );
 
-//     // ==============================
-//     // OUT OF STOCK
-//     // ==============================
 
 //     if (availableStock <= 0) {
-
-//         alert(
-//             "This product is out of stock."
-//         );
-
+//         alert("This product is out of stock.");
 //         return;
 //     }
 
-//     // ==============================
-//     // CHECK CART
-//     // ==============================
-
 //     const existingItem = cart.find(
-//         item =>
-//             item.product === product._id
+//         item => item.product === product._id
 //     );
-
-//     // ==============================
-//     // PRODUCT ALREADY IN CART
-//     // ==============================
 
 //     if (existingItem) {
 
-//         if (
-//             existingItem.quantity >=
-//             availableStock
-//         ) {
-
-//             alert(
-//                 `Only ${availableStock} item(s) available.`
-//             );
-
+//         if (existingItem.quantity >= availableStock) {
+//             alert(`Only ${availableStock} item(s) available.`);
 //             return;
 //         }
 
@@ -2671,10 +450,9 @@ const loadProducts = async () => {
 //             cart.map(item =>
 //                 item.product === product._id
 //                     ? {
-//                         ...item,
-//                         quantity:
-//                             item.quantity + 1
-//                     }
+//                           ...item,
+//                           quantity: item.quantity + 1,
+//                       }
 //                     : item
 //             )
 //         );
@@ -2682,1265 +460,2472 @@ const loadProducts = async () => {
 //         return;
 //     }
 
-//     // ==============================
-//     // ADD NEW PRODUCT
-//     // ==============================
-
 //     const sellingPrice = Number(
 //         product.pricing?.sellingPrice ?? 0
 //     );
 
 //     setCart([
 //         ...cart,
-
 //         {
 //             product: product._id,
-
 //             title: product.name,
-
 //             sku: product.sku,
-
 //             quantity: 1,
-
-//             originalPrice:
-//                 sellingPrice,
-
-//             price:
-//                 sellingPrice,
-
+//             originalPrice: sellingPrice,
+//             price: sellingPrice,
 //             discountAmount: 0,
-
-//             imageUrl:
-//                 product.images?.[0]?.url || "",
-
-//             availableStock:
-//                 availableStock
-//         }
+//             imageUrl: product.images?.[0]?.url || "",
+//             availableStock: availableStock,
+//         },
 //     ]);
 // };
 
 
-const addProduct = (product) => {
 
-    // const currentStock = Number(
-    //     product.inventory?.currentStock ??
-    //     product.currentStock ??
-    //     product.availableStock ??
-    //     product.stock ??
-    //     0
-    // );
+//   // ============================================
+//   // INCREASE QUANTITY
+//   // ============================================
 
-    // const reservedStock = Number(
-    //     product.inventory?.reservedStock ?? 0
-    // );
+// //   const increaseQty = (id) => {
+// //     setCart((currentCart) =>
+// //       currentCart.map((item) => {
+// //         if (item.product !== id) {
+// //           return item;
+// //         }
 
-    // const availableStock = Math.max(
-    //     currentStock - reservedStock,
-    //     0
-    // );
+// //         if (item.quantity >= item.stock) {
+// //           alert(
+// //             `Only ${item.stock} quantity available`
+// //           );
 
+// //           return item;
+// //         }
 
-    const currentStock = Number(
-    product.inventory?.currentStock ??
-    product.currentStock ??
-    product.availableStock ??
-    product.stock ??
-    0
-);
-
-const reservedStock = Number(
-    product.inventory?.reservedStock ??
-    product.reservedStock ??
-    0
-);
-
-const availableStock = Math.max(
-    currentStock - reservedStock,
-    0
-);
+// //         return {
+// //           ...item,
+// //           quantity: item.quantity + 1,
+// //         };
+// //       })
+// //     );
+// //   };
 
 
-    if (availableStock <= 0) {
-        alert("This product is out of stock.");
-        return;
-    }
+// const increaseQty = (id) => {
 
-    const existingItem = cart.find(
-        item => item.product === product._id
-    );
+//     const cartItem = cart.find(
+//         item =>
+//             item.product === id
+//     );
 
-    if (existingItem) {
+//     if (!cartItem) {
+//         return;
+//     }
 
-        if (existingItem.quantity >= availableStock) {
-            alert(`Only ${availableStock} item(s) available.`);
+//     if (
+//         cartItem.quantity >=
+//         cartItem.availableStock
+//     ) {
+
+//         alert(
+//             `Only ${cartItem.availableStock} item(s) available.`
+//         );
+
+//         return;
+//     }
+
+//     setCart(
+//         cart.map(item =>
+//             item.product === id
+//                 ? {
+//                     ...item,
+//                     quantity:
+//                         item.quantity + 1
+//                 }
+//                 : item
+//         )
+//     );
+// };
+
+//   // ============================================
+//   // DECREASE QUANTITY
+//   // ============================================
+
+//   const decreaseQty = (id) => {
+//     setCart((currentCart) =>
+//       currentCart
+//         .map((item) =>
+//           item.product === id
+//             ? {
+//                 ...item,
+//                 quantity: item.quantity - 1,
+//               }
+//             : item
+//         )
+//         .filter(
+//           (item) => item.quantity > 0
+//         )
+//     );
+//   };
+
+//   // ============================================
+//   // REMOVE
+//   // ============================================
+
+//   const removeItem = (id) => {
+//     setCart((currentCart) =>
+//       currentCart.filter(
+//         (item) => item.product !== id
+//       )
+//     );
+//   };
+
+//   // ============================================
+//   // TOTAL
+//   // ============================================
+
+//   const total = cart.reduce(
+//     (sum, item) =>
+//       sum +
+//       Number(item.price) *
+//         Number(item.quantity),
+//     0
+//   );
+
+//   // ============================================
+//   // CUSTOMER INPUT
+//   // ============================================
+
+//   const handleCustomerChange = (e) => {
+//     setCustomer({
+//       ...customer,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   // ============================================
+//   // CREATE WALK-IN ORDER
+//   // ============================================
+
+// //   const placeOrder = async () => {
+// //     if (cart.length === 0) {
+// //       alert("Please add at least one product");
+// //       return;
+// //     }
+
+// //     if (
+// //       !customer.fullName ||
+// //       !customer.phone
+// //     ) {
+// //       alert(
+// //         "Customer Name and Phone are required"
+// //       );
+// //       return;
+// //     }
+
+// //     // Check cart quantity against stock
+// //     for (const item of cart) {
+// //     //   if (item.quantity > item.stock) 
+// //         if (item.quantity > item.availableStock)
+// //         {
+// //         alert(
+// //           `${item.title}: only ${item.stock} available`
+// //         );
+// //         return;
+// //       }
+// //     }
+
+// //     const orderData = {
+// //       orderItems: cart.map((item) => ({
+// //         product: item.product,
+
+// //         title: item.title,
+
+// //         quantity: Number(item.quantity),
+
+// //         originalPrice: Number(
+// //           item.originalPrice
+// //         ),
+
+// //         price: Number(item.price),
+
+// //         discountAmount: Number(
+// //           item.discountAmount || 0
+// //         ),
+
+// //         imageUrl: item.imageUrl || "",
+// //       })),
+
+// //       shippingAddress: {
+// //         fullName: customer.fullName,
+
+// //         phone: customer.phone,
+
+// //         addressLine:
+// //           customer.addressLine ||
+// //           "Walk In Customer",
+
+// //         city: customer.city,
+
+// //         state: customer.state,
+
+// //         pincode: customer.pincode,
+
+// //         country: "India",
+
+// //         landmark:
+// //           customer.landmark || "",
+// //       },
+
+// //       totalAmount: Number(total),
+
+// //       paymentMethod,
+
+// //       orderSource: "WALK_IN",
+// //     };
+
+// //     try {
+// //       setPlacingOrder(true);
+
+// //       console.log(
+// //         "WALK-IN ORDER DATA:",
+// //         orderData
+// //       );
+
+
+// //   //     const res =
+// //   // await createWalkInOrder(
+// //   //   orderData
+// //   // );
+
+// //   const res =
+// //   await createWalkInOrder(
+// //     orderData
+// //   );
+
+// // console.log(
+// //   "WALK-IN ORDER RESPONSE:",
+// //   res
+// // );
+
+
+// // // ============================================
+// // // GET CREATED ORDER
+// // // ============================================
+
+// // const createdOrder =
+// //   res?.order ||
+// //   res?.data?.order ||
+// //   res?.data;
+
+
+// // if (!createdOrder?._id) {
+
+// //   console.error(
+// //     "Created order not found:",
+// //     res
+// //   );
+
+// //   throw new Error(
+// //     "Order created but Order ID was not returned."
+// //   );
+// // }
+
+
+// // console.log(
+// //   "CREATED WALK-IN ORDER:",
+// //   createdOrder
+// // );
+
+
+// // // ============================================
+// // // CREATE INVOICE
+// // // ============================================
+
+// // let createdInvoice = null;
+
+// // try {
+
+// //   console.log(
+// //     "Creating invoice for order:",
+// //     createdOrder._id
+// //   );
+
+// //   const invoiceResponse =
+// //     await createInvoice(
+// //       createdOrder._id
+// //     );
+
+// //   console.log(
+// //     "INVOICE RESPONSE:",
+// //     invoiceResponse
+// //   );
+
+// //   createdInvoice =
+// //     invoiceResponse?.data ||
+// //     invoiceResponse?.invoice ||
+// //     invoiceResponse;
+
+// // } catch (invoiceError) {
+
+// //   console.error(
+// //     "INVOICE CREATION ERROR:",
+// //     invoiceError
+// //   );
+
+// //   alert(
+// //     invoiceError?.response?.data?.message ||
+// //     invoiceError?.message ||
+// //     "Order created successfully, but invoice could not be created."
+// //   );
+
+// //   // IMPORTANT:
+// //   // Order already created.
+// //   // We do NOT break the order flow.
+// // }
+
+
+// // // ============================================
+// // // SHOW INVOICE
+// // // ============================================
+
+// // if (createdInvoice) {
+
+// //   setInvoiceData(
+// //     createdInvoice
+// //   );
+
+// // } else {
+
+// //   // fallback:
+// //   // show order if invoice API failed
+// //   setInvoiceData(
+// //     createdOrder
+// //   );
+// // }
+
+
+// // alert(
+// //   "Walk-In Order Created Successfully"
+// // );
+
+// // console.log(
+// //   "WALK-IN ORDER RESPONSE:",
+// //   res
+// // );
+
+
+// // // ========================================
+// // // GET CREATED ORDER
+// // // ========================================
+
+// // const createdOrder =
+// //   res?.order ||
+// //   res?.data?.order ||
+// //   res?.data;
+
+
+// // console.log(
+// //   "CREATED WALK-IN ORDER:",
+// //   createdOrder
+// // );
+
+
+// // // ========================================
+// // // CHECK ORDER ID
+// // // ========================================
+
+// // const createdOrderId =
+// //   createdOrder?._id ||
+// //   createdOrder?.id;
+
+
+// // if (!createdOrderId) {
+
+// //   console.error(
+// //     "Order created but Order ID not found:",
+// //     createdOrder
+// //   );
+
+// //   alert(
+// //     "Order created, but invoice could not be opened."
+// //   );
+
+// //   return;
+
+// // }
+
+
+// // // ========================================
+// // // KEEP EXISTING INVOICE WORKING
+// // // ========================================
+
+// // setInvoiceData(
+// //   createdOrder
+// // );
+
+
+// // // ========================================
+// // // SUCCESS
+// // // ========================================
+
+// // alert(
+// //   "Walk-In Order Created Successfully"
+// // );
+// //       // const res =
+// //       //   await createWalkInOrder(
+// //       //     orderData
+// //       //   );
+
+// //       // console.log(
+// //       //   "WALK-IN ORDER RESPONSE:",
+// //       //   res
+// //       // );
+
+// //       // const createdOrder =
+// //       //   res?.order ||
+// //       //   res?.data?.order ||
+// //       //   res?.data;
+
+// //       // setInvoiceData(createdOrder);
+
+// //       // alert(
+// //       //   "Walk-In Order Created Successfully"
+// //       // );
+
+// //       // setCart([]);
+
+// //       setCustomer({
+// //         fullName: "",
+// //         phone: "",
+// //         addressLine: "",
+// //         city: "",
+// //         state: "",
+// //         pincode: "",
+// //         country: "India",
+// //         landmark: "",
+// //       });
+
+// //       // Refresh inventory/product stock
+// //       await loadProducts();
+// //     } catch (err) {
+// //       console.error(
+// //         "CREATE WALK-IN ORDER ERROR:",
+// //         err
+// //       );
+
+// //       alert(
+// //         err.response?.data?.message ||
+// //           "Unable to create order"
+// //       );
+// //     } finally {
+// //       setPlacingOrder(false);
+// //     }
+// //   };
+
+
+// // ============================================
+// // CREATE WALK-IN ORDER + INVOICE
+// // ============================================
+
+// const placeOrder = async () => {
+//     // ============================================
+//     // VALIDATE CART
+//     // ============================================
+
+//     if (cart.length === 0) {
+//         toast.error("Please add at least one product");
+//         return;
+//     }
+
+//     // ============================================
+//     // VALIDATE CUSTOMER
+//     // ============================================
+
+//     if (!customer.fullName || !customer.phone) {
+//         toast.error("Customer Name and Phone are required");
+//         return;
+//     }
+
+//     // ============================================
+//     // CHECK STOCK
+//     // ============================================
+
+//     for (const item of cart) {
+//         if (item.quantity > item.availableStock) {
+//             toast.error(
+//                 `${item.title}: only ${item.availableStock} item(s) available`
+//             );
+//             return;
+//         }
+//     }
+
+//     // ============================================
+//     // PREPARE ORDER DATA
+//     // ============================================
+
+//     const orderData = {
+//         orderItems: cart.map((item) => ({
+//             product: item.product,
+
+//             title: item.title,
+
+//             quantity: Number(item.quantity),
+
+//             originalPrice: Number(
+//                 item.originalPrice || item.price || 0
+//             ),
+
+//             price: Number(
+//                 item.price || 0
+//             ),
+
+//             discountAmount: Number(
+//                 item.discountAmount || 0
+//             ),
+
+//             imageUrl: item.imageUrl || "",
+//         })),
+
+//         shippingAddress: {
+//             fullName: customer.fullName,
+
+//             phone: customer.phone,
+
+//             addressLine:
+//                 customer.addressLine ||
+//                 "Walk In Customer",
+
+//             city: customer.city || "",
+
+//             state: customer.state || "",
+
+//             pincode: customer.pincode || "",
+
+//             country: customer.country || "India",
+
+//             landmark:
+//                 customer.landmark || "",
+//         },
+
+//         totalAmount: Number(total),
+
+//         paymentMethod,
+
+//         orderSource: "WALK_IN",
+//     };
+
+//     // ============================================
+//     // CREATE ORDER
+//     // ============================================
+
+//     try {
+//         setPlacingOrder(true);
+
+//         console.log(
+//             "WALK-IN ORDER DATA:",
+//             orderData
+//         );
+
+//         const res = await createWalkInOrder(
+//             orderData
+//         );
+
+//         console.log(
+//             "WALK-IN ORDER RESPONSE:",
+//             res
+//         );
+
+//         // ========================================
+//         // GET CREATED ORDER
+//         // ========================================
+
+//         const createdOrder =
+//             res?.order ||
+//             res?.data?.order ||
+//             res?.data;
+
+//         console.log(
+//             "CREATED WALK-IN ORDER:",
+//             createdOrder
+//         );
+
+//         // ========================================
+//         // CHECK ORDER ID
+//         // ========================================
+
+//         const createdOrderId =
+//             createdOrder?._id ||
+//             createdOrder?.id;
+
+//         if (!createdOrderId) {
+//             console.error(
+//                 "Created order response does not contain order ID:",
+//                 res
+//             );
+
+//             throw new Error(
+//                 "Order created but Order ID was not returned."
+//             );
+//         }
+
+//         // ========================================
+//         // CREATE INVOICE
+//         // ========================================
+
+//         let createdInvoice = null;
+
+//         try {
+//             console.log(
+//                 "CREATING INVOICE FOR ORDER:",
+//                 createdOrderId
+//             );
+
+//             const invoiceResponse =
+//                 await createInvoice(
+//                     createdOrderId
+//                 );
+
+//             console.log(
+//                 "INVOICE RESPONSE:",
+//                 invoiceResponse
+//             );
+
+//             createdInvoice =
+//                 invoiceResponse?.data ||
+//                 invoiceResponse?.invoice ||
+//                 invoiceResponse;
+
+//             console.log(
+//                 "CREATED INVOICE:",
+//                 createdInvoice
+//             );
+
+//         } catch (invoiceError) {
+//             // ====================================
+//             // IMPORTANT:
+//             // ORDER ALREADY CREATED.
+//             // DON'T BREAK WALK-IN FLOW.
+//             // ====================================
+
+//             console.error(
+//                 "INVOICE CREATION ERROR:",
+//                 invoiceError
+//             );
+
+//             toast.success(
+//                 invoiceError?.response?.data?.message ||
+//                 invoiceError?.message ||
+//                 "Order created successfully, but invoice could not be created."
+//             );
+//         }
+
+//         // ========================================
+//         // SHOW INVOICE
+//         // ========================================
+
+//         if (createdInvoice) {
+//             setInvoiceData(
+//                 createdInvoice
+//             );
+//         } else {
+//             // Fallback:
+//             // existing WalkInInvoice can still
+//             // display the created order.
+//             setInvoiceData(
+//                 createdOrder
+//             );
+//         }
+
+//         // ========================================
+//         // SUCCESS
+//         // ========================================
+
+//         toast.success(
+//             "Walk-In Order Created Successfully"
+//         );
+
+//         // ========================================
+//         // CLEAR CART
+//         // ========================================
+
+//         setCart([]);
+
+//         // ========================================
+//         // CLEAR CUSTOMER
+//         // ========================================
+
+//         setCustomer({
+//             fullName: "",
+//             phone: "",
+//             addressLine: "",
+//             city: "",
+//             state: "",
+//             pincode: "",
+//             country: "India",
+//             landmark: "",
+//         });
+
+//         // ========================================
+//         // REFRESH PRODUCTS / INVENTORY
+//         // ========================================
+
+//         await loadProducts();
+
+//     } catch (err) {
+
+//         console.error(
+//             "CREATE WALK-IN ORDER ERROR:",
+//             err
+//         );
+
+//         toast.error(
+//             err?.response?.data?.message ||
+//             err?.message ||
+//             "Unable to create order"
+//         );
+
+//     } finally {
+
+//         setPlacingOrder(false);
+
+//     }
+// };
+
+//   // ============================================
+//   // JSX
+//   // ============================================
+
+//   return (
+//     <div className="walkin-page">
+
+//       {/* ======================================
+//           LEFT SIDE
+//       ====================================== */}
+
+//       <div className="left-side">
+
+//         <h2>Product Search</h2>
+
+//         <input
+//           type="text"
+//           placeholder="Search product by Name or SKU..."
+//           value={search}
+//           onChange={(e) =>
+//             setSearch(e.target.value)
+//           }
+//           className="search-box"
+//         />
+
+//         {loading ? (
+//           <p>Loading products...</p>
+//         ) : filteredProducts.length === 0 ? (
+//           <p>No products found</p>
+//         ) : (
+//         //   <div className="product-list">
+
+//         //     {filteredProducts.map(
+//         //       (product) => {
+//         //         const stock =
+//         //           getStock(product);
+
+//         //         const price =
+//         //           Number(
+//         //             product.pricing
+//         //               ?.sellingPrice || 0
+//         //           );
+
+//         //         return (
+//         //           <div
+//         //             key={product._id}
+//         //             className="product-card"
+//         //           >
+
+//         //             <img
+//         //               src={
+//         //                 product.images
+//         //                   ?.length
+//         //                   ? product.images[0].url
+//         //                   : "/no-image.png"
+//         //               }
+//         //               alt={product.name}
+//         //             />
+
+//         //             <h4>
+//         //               {product.name}
+//         //             </h4>
+
+//         //             <p>
+//         //               SKU: {product.sku}
+//         //             </p>
+
+//         //             <p
+//         //               className={
+//         //                 stock > 0
+//         //                   ? "stock-available"
+//         //                   : "stock-out"
+//         //               }
+//         //             >
+//         //               Stock: {stock}
+//         //             </p>
+
+//         //             <h3>
+//         //               ₹{" "}
+//         //               {price.toLocaleString(
+//         //                 "en-IN"
+//         //               )}
+//         //             </h3>
+
+//         //             <button
+//         //               type="button"
+//         //               disabled={stock <= 0}
+//         //               onClick={() =>
+//         //                 addProduct(product)
+//         //               }
+//         //             >
+//         //               {stock > 0
+//         //                 ? "+ Add"
+//         //                 : "Out of Stock"}
+//         //             </button>
+
+//         //           </div>
+//         //         );
+//         //       }
+//         //     )}
+
+//         //   </div>
+
+//         <div className="product-list">
+
+//     {filteredProducts.length === 0 ? (
+
+//         <div className="no-products">
+//             No products found
+//         </div>
+
+//     ) : (
+
+//         filteredProducts.map((product) => {
+
+//             // const currentStock = Number(
+//             //     product.inventory?.currentStock ?? 0
+//             // );
+
+
+//     console.log(
+//         "PRODUCT JSON",
+//         JSON.stringify(product, null, 2)
+//     );
+//     const currentStock = Number(
+//         product.inventory?.currentStock ??
+//         product.currentStock ??
+//         product.availableStock ??
+//         product.stock ??
+//         0
+//     );
+
+
+//             const reservedStock = Number(
+//                 product.inventory?.reservedStock ?? 0
+//             );
+
+//             const availableStock =
+//                 Math.max(
+//                     currentStock -
+//                     reservedStock,
+//                     0
+//                 );
+
+//             const sellingPrice = Number(
+//                 product.pricing?.sellingPrice ?? 0
+//             );
+
+//             return (
+
+//                 <div
+//                     key={product._id}
+//                     className="product-card"
+//                 >
+
+//                     {/* <img
+//                         src={
+//                             product.images?.[0]?.url ||
+//                             "/no-image.png"
+//                         }
+//                         alt={product.name}
+//                     /> */}
+                    
+
+
+// <img
+//     src={
+//         product.images?.length
+//             ? `${import.meta.env.VITE_API_URL.replace("/api","")}${product.images[0].url}`
+//             : "/no-image.png"
+//     }
+//     alt={product.name}
+// />
+
+
+//                     <h4>
+//                         {product.name}
+//                     </h4>
+
+//                     <p>
+//                         SKU: {product.sku}
+//                     </p>
+
+//                     <p>
+//                         Stock: {availableStock}
+//                     </p>
+
+//                     <h3>
+//                         ₹{" "}
+//                         {sellingPrice.toLocaleString(
+//                             "en-IN"
+//                         )}
+//                     </h3>
+
+//                     <button
+//                         type="button"
+//                         disabled={
+//                             availableStock <= 0
+//                         }
+//                         onClick={() =>
+//                             addProduct(product)
+//                         }
+//                     >
+
+//                         {availableStock <= 0
+//                             ? "Out of Stock"
+//                             : "+ Add"}
+
+//                     </button>
+
+//                 </div>
+
+//             );
+
+//         })
+
+//     )}
+
+// </div>
+//         )}
+
+//       </div>
+
+//       {/* ======================================
+//           RIGHT SIDE
+//       ====================================== */}
+
+//       <div className="right-side">
+
+//         <h2>Cart</h2>
+
+//         {cart.length === 0 ? (
+//           <p>No Product Added</p>
+//         ) : (
+//           cart.map((item) => (
+//             <div
+//               className="cart-item"
+//               key={item.product}
+//             >
+
+//               <div>
+//                 <h4>
+//                   {item.title}
+//                 </h4>
+
+//                 <p>
+//                   SKU: {item.sku}
+//                 </p>
+
+//                 <p>
+//                   ₹{" "}
+//                   {item.price.toLocaleString(
+//                     "en-IN"
+//                   )}
+//                 </p>
+
+//                 <small>
+//     Available: {item.availableStock}
+// </small>
+//               </div>
+
+//               <div className="qty-box">
+
+//                 <button
+//                   type="button"
+//                   onClick={() =>
+//                     decreaseQty(
+//                       item.product
+//                     )
+//                   }
+//                 >
+//                   -
+//                 </button>
+
+//                 <span>
+//                   {item.quantity}
+//                 </span>
+
+//                 <button
+//                   type="button"
+//                   onClick={() =>
+//                     increaseQty(
+//                       item.product
+//                     )
+//                   }
+//                 >
+//                   +
+//                 </button>
+
+//               </div>
+
+//               <button
+//                 type="button"
+//                 className="remove-btn"
+//                 onClick={() =>
+//                   removeItem(
+//                     item.product
+//                   )
+//                 }
+//               >
+//                 Remove
+//               </button>
+
+//             </div>
+//           ))
+//         )}
+
+//         <hr />
+
+//         <h3>
+//           Grand Total: ₹{" "}
+//           {total.toLocaleString("en-IN")}
+//         </h3>
+
+//         <hr />
+
+//         <h2>
+//           Customer Details
+//         </h2>
+
+//         <input
+//           type="text"
+//           name="fullName"
+//           placeholder="Customer Name"
+//           value={customer.fullName}
+//           onChange={handleCustomerChange}
+//         />
+
+//         <input
+//           type="text"
+//           name="phone"
+//           placeholder="Phone Number"
+//           value={customer.phone}
+//           onChange={handleCustomerChange}
+//         />
+
+//         <input
+//           type="text"
+//           name="addressLine"
+//           placeholder="Address"
+//           value={customer.addressLine}
+//           onChange={handleCustomerChange}
+//         />
+
+//         <input
+//           type="text"
+//           name="city"
+//           placeholder="City"
+//           value={customer.city}
+//           onChange={handleCustomerChange}
+//         />
+
+//         <input
+//           type="text"
+//           name="state"
+//           placeholder="State"
+//           value={customer.state}
+//           onChange={handleCustomerChange}
+//         />
+
+//         <input
+//           type="text"
+//           name="pincode"
+//           placeholder="Pincode"
+//           value={customer.pincode}
+//           onChange={handleCustomerChange}
+//         />
+
+//         <select
+//           value={paymentMethod}
+//           onChange={(e) =>
+//             setPaymentMethod(
+//               e.target.value
+//             )
+//           }
+//         >
+//           <option value="CASH">
+//             Cash
+//           </option>
+
+//           <option value="CARD">
+//             Card
+//           </option>
+
+//           <option value="UPI">
+//             UPI
+//           </option>
+//         </select>
+
+//         <button
+//           type="button"
+//           className="place-order-btn"
+//           disabled={
+//             placingOrder ||
+//             cart.length === 0
+//           }
+//           onClick={placeOrder}
+//         >
+//           {placingOrder
+//             ? "Creating Order..."
+//             : "Create Walk-In Order"}
+//         </button>
+
+//       </div>
+
+//       {/* ======================================
+//           INVOICE
+//       ====================================== */}
+
+//       {invoiceData && (
+//         <WalkInInvoice
+//           order={invoiceData}
+//           onClose={() =>
+//             setInvoiceData(null)
+//           }
+//         />
+//       )}
+
+//     </div>
+//   );
+// }
+
+// export default NewWalkInOrder;
+
+
+
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./NewWalkInOrder.css";
+import { toast } from "react-toastify";
+
+import {
+    getProducts,
+    createWalkInOrder,
+} from "../../../../services/walkInOrderService";
+
+import WalkInInvoice from "../WalkInInvoice/WalkInInvoice";
+
+import {
+    createInvoice,
+} from "../../../../services/invoiceService";
+
+function NewWalkInOrder() {
+
+    const navigate = useNavigate();
+
+    const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+
+    const [cart, setCart] = useState([]);
+    const [search, setSearch] = useState("");
+
+    const [loading, setLoading] = useState(true);
+    const [placingOrder, setPlacingOrder] = useState(false);
+
+    const [customer, setCustomer] = useState({
+        fullName: "",
+        phone: "",
+        addressLine: "",
+        city: "",
+        state: "",
+        pincode: "",
+        country: "India",
+        landmark: "",
+    });
+
+    const [paymentMethod, setPaymentMethod] = useState("CASH");
+    const [invoiceData, setInvoiceData] = useState(null);
+
+    // =====================================================
+    // PRODUCT TYPE CHECK
+    // =====================================================
+    // Walk-In Order me sirf:
+    // NEW
+    // REFURBISHED / REFURBISH
+    // products show honge.
+    //
+    // RENTAL products ko completely hide kiya jayega.
+    // =====================================================
+
+    const isWalkInProduct = (product) => {
+
+        if (!product) {
+            return false;
+        }
+
+        const productType = String(
+            product.productType ??
+            product.type ??
+            product.product_type ??
+            product.productCategoryType ??
+            product.itemType ??
+            ""
+        )
+            .trim()
+            .toUpperCase();
+
+        // =================================================
+        // NEW PRODUCT
+        // =================================================
+
+        if (
+            productType === "NEW" ||
+            productType === "NEW_PRODUCT"
+        ) {
+            return true;
+        }
+
+        // =================================================
+        // REFURBISHED PRODUCT
+        // =================================================
+
+        if (
+            productType === "REFURBISHED" ||
+            productType === "REFURBISH" ||
+            productType === "REFURB" ||
+            productType === "REFURBISHED_PRODUCT"
+        ) {
+            return true;
+        }
+
+        // =================================================
+        // EVERYTHING ELSE INCLUDING RENTAL = HIDE
+        // =================================================
+
+        return false;
+    };
+
+    // =====================================================
+    // LOAD PRODUCTS
+    // =====================================================
+
+    useEffect(() => {
+        loadProducts();
+    }, []);
+
+    const loadProducts = async () => {
+
+        try {
+
+            setLoading(true);
+
+            console.log(
+                "Loading products for Walk-In..."
+            );
+
+            const data = await getProducts();
+
+            console.log(
+                "WALK-IN ALL PRODUCTS:",
+                data
+            );
+
+            // =================================================
+            // GET PRODUCT ARRAY
+            // =================================================
+
+            const allProducts = Array.isArray(data)
+                ? data
+                : data?.products ||
+                  data?.data ||
+                  [];
+
+            // =================================================
+            // ONLY NEW + REFURBISHED
+            // RENTAL WILL NOT SHOW
+            // =================================================
+
+            const walkInProducts = allProducts.filter(
+                (product) => {
+
+                    const type = String(
+                        product?.productType ??
+                        product?.type ??
+                        product?.product_type ??
+                        product?.productCategoryType ??
+                        product?.itemType ??
+                        ""
+                    )
+                        .trim()
+                        .toUpperCase();
+
+                    console.log(
+                        "WALK-IN PRODUCT TYPE:",
+                        product?.name,
+                        type
+                    );
+
+                    return isWalkInProduct(product);
+                }
+            );
+
+            console.log(
+                "WALK-IN ALLOWED PRODUCTS:",
+                walkInProducts
+            );
+
+            setProducts(
+                walkInProducts
+            );
+
+            setFilteredProducts(
+                walkInProducts
+            );
+
+        } catch (err) {
+
+            console.error(
+                "PRODUCT LOAD ERROR:",
+                err
+            );
+
+            setProducts([]);
+            setFilteredProducts([]);
+
+            toast.error(
+                err?.response?.data?.message ||
+                "Unable to load products"
+            );
+
+        } finally {
+
+            setLoading(false);
+
+        }
+    };
+
+    // =====================================================
+    // GET STOCK
+    // =====================================================
+
+    const getStock = (product) => {
+
+        return Number(
+            product.inventory?.currentStock ??
+            product.currentStock ??
+            product.availableStock ??
+            product.stock ??
+            0
+        );
+    };
+
+    // =====================================================
+    // SEARCH PRODUCT
+    // =====================================================
+
+    useEffect(() => {
+
+        const value = search
+            .trim()
+            .toLowerCase();
+
+        if (!value) {
+
+            setFilteredProducts(
+                products
+            );
+
+            return;
+        }
+
+        const result = products.filter(
+            (product) => {
+
+                const name = String(
+                    product.name || ""
+                ).toLowerCase();
+
+                const sku = String(
+                    product.sku || ""
+                ).toLowerCase();
+
+                return (
+                    name.includes(value) ||
+                    sku.includes(value)
+                );
+            }
+        );
+
+        setFilteredProducts(result);
+
+    }, [
+        search,
+        products
+    ]);
+
+    // =====================================================
+    // ADD PRODUCT
+    // =====================================================
+
+    const addProduct = (product) => {
+
+        // =================================================
+        // SAFETY CHECK
+        // =================================================
+        // Agar kisi reason se rental product frontend
+        // tak aa bhi jaye to cart me add nahi hoga.
+        // =================================================
+
+        if (!isWalkInProduct(product)) {
+
+            toast.error(
+                "Rental products cannot be added to Walk-In Order."
+            );
+
+            return;
+        }
+
+        const currentStock = Number(
+            product.inventory?.currentStock ??
+            product.currentStock ??
+            product.availableStock ??
+            product.stock ??
+            0
+        );
+
+        const reservedStock = Number(
+            product.inventory?.reservedStock ??
+            product.reservedStock ??
+            0
+        );
+
+        const availableStock = Math.max(
+            currentStock - reservedStock,
+            0
+        );
+
+        // =================================================
+        // OUT OF STOCK
+        // =================================================
+
+        if (availableStock <= 0) {
+
+            toast.error(
+                "This product is out of stock."
+            );
+
+            return;
+        }
+
+        // =================================================
+        // CHECK CART
+        // =================================================
+
+        const existingItem = cart.find(
+            (item) =>
+                item.product === product._id
+        );
+
+        // =================================================
+        // PRODUCT ALREADY IN CART
+        // =================================================
+
+        if (existingItem) {
+
+            if (
+                existingItem.quantity >=
+                availableStock
+            ) {
+
+                toast.error(
+                    `Only ${availableStock} item(s) available.`
+                );
+
+                return;
+            }
+
+            setCart(
+                cart.map(
+                    (item) =>
+                        item.product === product._id
+                            ? {
+                                ...item,
+                                quantity:
+                                    item.quantity + 1,
+                            }
+                            : item
+                )
+            );
+
+            return;
+        }
+
+        // =================================================
+        // ADD NEW PRODUCT
+        // =================================================
+
+        const sellingPrice = Number(
+            product.pricing?.sellingPrice ?? 0
+        );
+
+        setCart([
+            ...cart,
+
+            {
+                product: product._id,
+
+                title: product.name,
+
+                sku: product.sku,
+
+                quantity: 1,
+
+                originalPrice:
+                    sellingPrice,
+
+                price:
+                    sellingPrice,
+
+                discountAmount: 0,
+
+                imageUrl:
+                    product.images?.[0]?.url || "",
+
+                availableStock:
+                    availableStock,
+            },
+        ]);
+    };
+
+    // =====================================================
+    // INCREASE QUANTITY
+    // =====================================================
+
+    const increaseQty = (id) => {
+
+        const cartItem = cart.find(
+            (item) =>
+                item.product === id
+        );
+
+        if (!cartItem) {
+            return;
+        }
+
+        if (
+            cartItem.quantity >=
+            cartItem.availableStock
+        ) {
+
+            toast.error(
+                `Only ${cartItem.availableStock} item(s) available.`
+            );
+
             return;
         }
 
         setCart(
-            cart.map(item =>
-                item.product === product._id
-                    ? {
-                          ...item,
-                          quantity: item.quantity + 1,
-                      }
-                    : item
+            cart.map(
+                (item) =>
+                    item.product === id
+                        ? {
+                            ...item,
+                            quantity:
+                                item.quantity + 1,
+                        }
+                        : item
             )
         );
-
-        return;
-    }
-
-    const sellingPrice = Number(
-        product.pricing?.sellingPrice ?? 0
-    );
-
-    setCart([
-        ...cart,
-        {
-            product: product._id,
-            title: product.name,
-            sku: product.sku,
-            quantity: 1,
-            originalPrice: sellingPrice,
-            price: sellingPrice,
-            discountAmount: 0,
-            imageUrl: product.images?.[0]?.url || "",
-            availableStock: availableStock,
-        },
-    ]);
-};
-
-
-
-  // ============================================
-  // INCREASE QUANTITY
-  // ============================================
-
-//   const increaseQty = (id) => {
-//     setCart((currentCart) =>
-//       currentCart.map((item) => {
-//         if (item.product !== id) {
-//           return item;
-//         }
-
-//         if (item.quantity >= item.stock) {
-//           alert(
-//             `Only ${item.stock} quantity available`
-//           );
-
-//           return item;
-//         }
-
-//         return {
-//           ...item,
-//           quantity: item.quantity + 1,
-//         };
-//       })
-//     );
-//   };
-
-
-const increaseQty = (id) => {
-
-    const cartItem = cart.find(
-        item =>
-            item.product === id
-    );
-
-    if (!cartItem) {
-        return;
-    }
-
-    if (
-        cartItem.quantity >=
-        cartItem.availableStock
-    ) {
-
-        alert(
-            `Only ${cartItem.availableStock} item(s) available.`
-        );
-
-        return;
-    }
-
-    setCart(
-        cart.map(item =>
-            item.product === id
-                ? {
-                    ...item,
-                    quantity:
-                        item.quantity + 1
-                }
-                : item
-        )
-    );
-};
-
-  // ============================================
-  // DECREASE QUANTITY
-  // ============================================
-
-  const decreaseQty = (id) => {
-    setCart((currentCart) =>
-      currentCart
-        .map((item) =>
-          item.product === id
-            ? {
-                ...item,
-                quantity: item.quantity - 1,
-              }
-            : item
-        )
-        .filter(
-          (item) => item.quantity > 0
-        )
-    );
-  };
-
-  // ============================================
-  // REMOVE
-  // ============================================
-
-  const removeItem = (id) => {
-    setCart((currentCart) =>
-      currentCart.filter(
-        (item) => item.product !== id
-      )
-    );
-  };
-
-  // ============================================
-  // TOTAL
-  // ============================================
-
-  const total = cart.reduce(
-    (sum, item) =>
-      sum +
-      Number(item.price) *
-        Number(item.quantity),
-    0
-  );
-
-  // ============================================
-  // CUSTOMER INPUT
-  // ============================================
-
-  const handleCustomerChange = (e) => {
-    setCustomer({
-      ...customer,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // ============================================
-  // CREATE WALK-IN ORDER
-  // ============================================
-
-//   const placeOrder = async () => {
-//     if (cart.length === 0) {
-//       alert("Please add at least one product");
-//       return;
-//     }
-
-//     if (
-//       !customer.fullName ||
-//       !customer.phone
-//     ) {
-//       alert(
-//         "Customer Name and Phone are required"
-//       );
-//       return;
-//     }
-
-//     // Check cart quantity against stock
-//     for (const item of cart) {
-//     //   if (item.quantity > item.stock) 
-//         if (item.quantity > item.availableStock)
-//         {
-//         alert(
-//           `${item.title}: only ${item.stock} available`
-//         );
-//         return;
-//       }
-//     }
-
-//     const orderData = {
-//       orderItems: cart.map((item) => ({
-//         product: item.product,
-
-//         title: item.title,
-
-//         quantity: Number(item.quantity),
-
-//         originalPrice: Number(
-//           item.originalPrice
-//         ),
-
-//         price: Number(item.price),
-
-//         discountAmount: Number(
-//           item.discountAmount || 0
-//         ),
-
-//         imageUrl: item.imageUrl || "",
-//       })),
-
-//       shippingAddress: {
-//         fullName: customer.fullName,
-
-//         phone: customer.phone,
-
-//         addressLine:
-//           customer.addressLine ||
-//           "Walk In Customer",
-
-//         city: customer.city,
-
-//         state: customer.state,
-
-//         pincode: customer.pincode,
-
-//         country: "India",
-
-//         landmark:
-//           customer.landmark || "",
-//       },
-
-//       totalAmount: Number(total),
-
-//       paymentMethod,
-
-//       orderSource: "WALK_IN",
-//     };
-
-//     try {
-//       setPlacingOrder(true);
-
-//       console.log(
-//         "WALK-IN ORDER DATA:",
-//         orderData
-//       );
-
-
-//   //     const res =
-//   // await createWalkInOrder(
-//   //   orderData
-//   // );
-
-//   const res =
-//   await createWalkInOrder(
-//     orderData
-//   );
-
-// console.log(
-//   "WALK-IN ORDER RESPONSE:",
-//   res
-// );
-
-
-// // ============================================
-// // GET CREATED ORDER
-// // ============================================
-
-// const createdOrder =
-//   res?.order ||
-//   res?.data?.order ||
-//   res?.data;
-
-
-// if (!createdOrder?._id) {
-
-//   console.error(
-//     "Created order not found:",
-//     res
-//   );
-
-//   throw new Error(
-//     "Order created but Order ID was not returned."
-//   );
-// }
-
-
-// console.log(
-//   "CREATED WALK-IN ORDER:",
-//   createdOrder
-// );
-
-
-// // ============================================
-// // CREATE INVOICE
-// // ============================================
-
-// let createdInvoice = null;
-
-// try {
-
-//   console.log(
-//     "Creating invoice for order:",
-//     createdOrder._id
-//   );
-
-//   const invoiceResponse =
-//     await createInvoice(
-//       createdOrder._id
-//     );
-
-//   console.log(
-//     "INVOICE RESPONSE:",
-//     invoiceResponse
-//   );
-
-//   createdInvoice =
-//     invoiceResponse?.data ||
-//     invoiceResponse?.invoice ||
-//     invoiceResponse;
-
-// } catch (invoiceError) {
-
-//   console.error(
-//     "INVOICE CREATION ERROR:",
-//     invoiceError
-//   );
-
-//   alert(
-//     invoiceError?.response?.data?.message ||
-//     invoiceError?.message ||
-//     "Order created successfully, but invoice could not be created."
-//   );
-
-//   // IMPORTANT:
-//   // Order already created.
-//   // We do NOT break the order flow.
-// }
-
-
-// // ============================================
-// // SHOW INVOICE
-// // ============================================
-
-// if (createdInvoice) {
-
-//   setInvoiceData(
-//     createdInvoice
-//   );
-
-// } else {
-
-//   // fallback:
-//   // show order if invoice API failed
-//   setInvoiceData(
-//     createdOrder
-//   );
-// }
-
-
-// alert(
-//   "Walk-In Order Created Successfully"
-// );
-
-// console.log(
-//   "WALK-IN ORDER RESPONSE:",
-//   res
-// );
-
-
-// // ========================================
-// // GET CREATED ORDER
-// // ========================================
-
-// const createdOrder =
-//   res?.order ||
-//   res?.data?.order ||
-//   res?.data;
-
-
-// console.log(
-//   "CREATED WALK-IN ORDER:",
-//   createdOrder
-// );
-
-
-// // ========================================
-// // CHECK ORDER ID
-// // ========================================
-
-// const createdOrderId =
-//   createdOrder?._id ||
-//   createdOrder?.id;
-
-
-// if (!createdOrderId) {
-
-//   console.error(
-//     "Order created but Order ID not found:",
-//     createdOrder
-//   );
-
-//   alert(
-//     "Order created, but invoice could not be opened."
-//   );
-
-//   return;
-
-// }
-
-
-// // ========================================
-// // KEEP EXISTING INVOICE WORKING
-// // ========================================
-
-// setInvoiceData(
-//   createdOrder
-// );
-
-
-// // ========================================
-// // SUCCESS
-// // ========================================
-
-// alert(
-//   "Walk-In Order Created Successfully"
-// );
-//       // const res =
-//       //   await createWalkInOrder(
-//       //     orderData
-//       //   );
-
-//       // console.log(
-//       //   "WALK-IN ORDER RESPONSE:",
-//       //   res
-//       // );
-
-//       // const createdOrder =
-//       //   res?.order ||
-//       //   res?.data?.order ||
-//       //   res?.data;
-
-//       // setInvoiceData(createdOrder);
-
-//       // alert(
-//       //   "Walk-In Order Created Successfully"
-//       // );
-
-//       // setCart([]);
-
-//       setCustomer({
-//         fullName: "",
-//         phone: "",
-//         addressLine: "",
-//         city: "",
-//         state: "",
-//         pincode: "",
-//         country: "India",
-//         landmark: "",
-//       });
-
-//       // Refresh inventory/product stock
-//       await loadProducts();
-//     } catch (err) {
-//       console.error(
-//         "CREATE WALK-IN ORDER ERROR:",
-//         err
-//       );
-
-//       alert(
-//         err.response?.data?.message ||
-//           "Unable to create order"
-//       );
-//     } finally {
-//       setPlacingOrder(false);
-//     }
-//   };
-
-
-// ============================================
-// CREATE WALK-IN ORDER + INVOICE
-// ============================================
-
-const placeOrder = async () => {
-    // ============================================
-    // VALIDATE CART
-    // ============================================
-
-    if (cart.length === 0) {
-        toast.error("Please add at least one product");
-        return;
-    }
-
-    // ============================================
-    // VALIDATE CUSTOMER
-    // ============================================
-
-    if (!customer.fullName || !customer.phone) {
-        toast.error("Customer Name and Phone are required");
-        return;
-    }
-
-    // ============================================
-    // CHECK STOCK
-    // ============================================
-
-    for (const item of cart) {
-        if (item.quantity > item.availableStock) {
-            toast.error(
-                `${item.title}: only ${item.availableStock} item(s) available`
-            );
-            return;
-        }
-    }
-
-    // ============================================
-    // PREPARE ORDER DATA
-    // ============================================
-
-    const orderData = {
-        orderItems: cart.map((item) => ({
-            product: item.product,
-
-            title: item.title,
-
-            quantity: Number(item.quantity),
-
-            originalPrice: Number(
-                item.originalPrice || item.price || 0
-            ),
-
-            price: Number(
-                item.price || 0
-            ),
-
-            discountAmount: Number(
-                item.discountAmount || 0
-            ),
-
-            imageUrl: item.imageUrl || "",
-        })),
-
-        shippingAddress: {
-            fullName: customer.fullName,
-
-            phone: customer.phone,
-
-            addressLine:
-                customer.addressLine ||
-                "Walk In Customer",
-
-            city: customer.city || "",
-
-            state: customer.state || "",
-
-            pincode: customer.pincode || "",
-
-            country: customer.country || "India",
-
-            landmark:
-                customer.landmark || "",
-        },
-
-        totalAmount: Number(total),
-
-        paymentMethod,
-
-        orderSource: "WALK_IN",
     };
 
-    // ============================================
-    // CREATE ORDER
-    // ============================================
+    // =====================================================
+    // DECREASE QUANTITY
+    // =====================================================
 
-    try {
-        setPlacingOrder(true);
+    const decreaseQty = (id) => {
 
-        console.log(
-            "WALK-IN ORDER DATA:",
-            orderData
+        setCart(
+            (currentCart) =>
+                currentCart
+                    .map(
+                        (item) =>
+                            item.product === id
+                                ? {
+                                    ...item,
+                                    quantity:
+                                        item.quantity - 1,
+                                }
+                                : item
+                    )
+                    .filter(
+                        (item) =>
+                            item.quantity > 0
+                    )
         );
+    };
 
-        const res = await createWalkInOrder(
-            orderData
+    // =====================================================
+    // REMOVE
+    // =====================================================
+
+    const removeItem = (id) => {
+
+        setCart(
+            (currentCart) =>
+                currentCart.filter(
+                    (item) =>
+                        item.product !== id
+                )
         );
+    };
 
-        console.log(
-            "WALK-IN ORDER RESPONSE:",
-            res
-        );
+    // =====================================================
+    // TOTAL
+    // =====================================================
 
-        // ========================================
-        // GET CREATED ORDER
-        // ========================================
-
-        const createdOrder =
-            res?.order ||
-            res?.data?.order ||
-            res?.data;
-
-        console.log(
-            "CREATED WALK-IN ORDER:",
-            createdOrder
-        );
-
-        // ========================================
-        // CHECK ORDER ID
-        // ========================================
-
-        const createdOrderId =
-            createdOrder?._id ||
-            createdOrder?.id;
-
-        if (!createdOrderId) {
-            console.error(
-                "Created order response does not contain order ID:",
-                res
-            );
-
-            throw new Error(
-                "Order created but Order ID was not returned."
-            );
-        }
-
-        // ========================================
-        // CREATE INVOICE
-        // ========================================
-
-        let createdInvoice = null;
-
-        try {
-            console.log(
-                "CREATING INVOICE FOR ORDER:",
-                createdOrderId
-            );
-
-            const invoiceResponse =
-                await createInvoice(
-                    createdOrderId
-                );
-
-            console.log(
-                "INVOICE RESPONSE:",
-                invoiceResponse
-            );
-
-            createdInvoice =
-                invoiceResponse?.data ||
-                invoiceResponse?.invoice ||
-                invoiceResponse;
-
-            console.log(
-                "CREATED INVOICE:",
-                createdInvoice
-            );
-
-        } catch (invoiceError) {
-            // ====================================
-            // IMPORTANT:
-            // ORDER ALREADY CREATED.
-            // DON'T BREAK WALK-IN FLOW.
-            // ====================================
-
-            console.error(
-                "INVOICE CREATION ERROR:",
-                invoiceError
-            );
-
-            toast.success(
-                invoiceError?.response?.data?.message ||
-                invoiceError?.message ||
-                "Order created successfully, but invoice could not be created."
-            );
-        }
-
-        // ========================================
-        // SHOW INVOICE
-        // ========================================
-
-        if (createdInvoice) {
-            setInvoiceData(
-                createdInvoice
-            );
-        } else {
-            // Fallback:
-            // existing WalkInInvoice can still
-            // display the created order.
-            setInvoiceData(
-                createdOrder
-            );
-        }
-
-        // ========================================
-        // SUCCESS
-        // ========================================
-
-        toast.success(
-            "Walk-In Order Created Successfully"
-        );
-
-        // ========================================
-        // CLEAR CART
-        // ========================================
-
-        setCart([]);
-
-        // ========================================
-        // CLEAR CUSTOMER
-        // ========================================
-
-        setCustomer({
-            fullName: "",
-            phone: "",
-            addressLine: "",
-            city: "",
-            state: "",
-            pincode: "",
-            country: "India",
-            landmark: "",
-        });
-
-        // ========================================
-        // REFRESH PRODUCTS / INVENTORY
-        // ========================================
-
-        await loadProducts();
-
-    } catch (err) {
-
-        console.error(
-            "CREATE WALK-IN ORDER ERROR:",
-            err
-        );
-
-        toast.error(
-            err?.response?.data?.message ||
-            err?.message ||
-            "Unable to create order"
-        );
-
-    } finally {
-
-        setPlacingOrder(false);
-
-    }
-};
-
-  // ============================================
-  // JSX
-  // ============================================
-
-  return (
-    <div className="walkin-page">
-
-      {/* ======================================
-          LEFT SIDE
-      ====================================== */}
-
-      <div className="left-side">
-
-        <h2>Product Search</h2>
-
-        <input
-          type="text"
-          placeholder="Search product by Name or SKU..."
-          value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
-          className="search-box"
-        />
-
-        {loading ? (
-          <p>Loading products...</p>
-        ) : filteredProducts.length === 0 ? (
-          <p>No products found</p>
-        ) : (
-        //   <div className="product-list">
-
-        //     {filteredProducts.map(
-        //       (product) => {
-        //         const stock =
-        //           getStock(product);
-
-        //         const price =
-        //           Number(
-        //             product.pricing
-        //               ?.sellingPrice || 0
-        //           );
-
-        //         return (
-        //           <div
-        //             key={product._id}
-        //             className="product-card"
-        //           >
-
-        //             <img
-        //               src={
-        //                 product.images
-        //                   ?.length
-        //                   ? product.images[0].url
-        //                   : "/no-image.png"
-        //               }
-        //               alt={product.name}
-        //             />
-
-        //             <h4>
-        //               {product.name}
-        //             </h4>
-
-        //             <p>
-        //               SKU: {product.sku}
-        //             </p>
-
-        //             <p
-        //               className={
-        //                 stock > 0
-        //                   ? "stock-available"
-        //                   : "stock-out"
-        //               }
-        //             >
-        //               Stock: {stock}
-        //             </p>
-
-        //             <h3>
-        //               ₹{" "}
-        //               {price.toLocaleString(
-        //                 "en-IN"
-        //               )}
-        //             </h3>
-
-        //             <button
-        //               type="button"
-        //               disabled={stock <= 0}
-        //               onClick={() =>
-        //                 addProduct(product)
-        //               }
-        //             >
-        //               {stock > 0
-        //                 ? "+ Add"
-        //                 : "Out of Stock"}
-        //             </button>
-
-        //           </div>
-        //         );
-        //       }
-        //     )}
-
-        //   </div>
-
-        <div className="product-list">
-
-    {filteredProducts.length === 0 ? (
-
-        <div className="no-products">
-            No products found
-        </div>
-
-    ) : (
-
-        filteredProducts.map((product) => {
-
-            // const currentStock = Number(
-            //     product.inventory?.currentStock ?? 0
-            // );
-
-
-    console.log(
-        "PRODUCT JSON",
-        JSON.stringify(product, null, 2)
-    );
-    const currentStock = Number(
-        product.inventory?.currentStock ??
-        product.currentStock ??
-        product.availableStock ??
-        product.stock ??
+    const total = cart.reduce(
+        (sum, item) =>
+            sum +
+            Number(item.price) *
+            Number(item.quantity),
         0
     );
 
+    // =====================================================
+    // CUSTOMER INPUT
+    // =====================================================
 
-            const reservedStock = Number(
-                product.inventory?.reservedStock ?? 0
+    const handleCustomerChange = (e) => {
+
+        setCustomer({
+            ...customer,
+            [e.target.name]:
+                e.target.value,
+        });
+    };
+
+    // =====================================================
+    // CREATE WALK-IN ORDER + INVOICE
+    // =====================================================
+
+    const placeOrder = async () => {
+
+        // =================================================
+        // VALIDATE CART
+        // =================================================
+
+        if (cart.length === 0) {
+
+            toast.error(
+                "Please add at least one product"
             );
 
-            const availableStock =
-                Math.max(
-                    currentStock -
-                    reservedStock,
-                    0
+            return;
+        }
+
+        // =================================================
+        // VALIDATE CUSTOMER
+        // =================================================
+
+        if (
+            !customer.fullName ||
+            !customer.phone
+        ) {
+
+            toast.error(
+                "Customer Name and Phone are required"
+            );
+
+            return;
+        }
+
+        // =================================================
+        // CHECK STOCK
+        // =================================================
+
+        for (const item of cart) {
+
+            if (
+                item.quantity >
+                item.availableStock
+            ) {
+
+                toast.error(
+                    `${item.title}: only ${item.availableStock} item(s) available`
                 );
 
-            const sellingPrice = Number(
-                product.pricing?.sellingPrice ?? 0
+                return;
+            }
+        }
+
+        // =================================================
+        // PREPARE ORDER DATA
+        // =================================================
+
+        const orderData = {
+
+            orderItems:
+                cart.map(
+                    (item) => ({
+
+                        product:
+                            item.product,
+
+                        title:
+                            item.title,
+
+                        quantity:
+                            Number(
+                                item.quantity
+                            ),
+
+                        originalPrice:
+                            Number(
+                                item.originalPrice ||
+                                item.price ||
+                                0
+                            ),
+
+                        price:
+                            Number(
+                                item.price ||
+                                0
+                            ),
+
+                        discountAmount:
+                            Number(
+                                item.discountAmount ||
+                                0
+                            ),
+
+                        imageUrl:
+                            item.imageUrl ||
+                            "",
+                    })
+                ),
+
+            shippingAddress: {
+
+                fullName:
+                    customer.fullName,
+
+                phone:
+                    customer.phone,
+
+                addressLine:
+                    customer.addressLine ||
+                    "Walk In Customer",
+
+                city:
+                    customer.city ||
+                    "",
+
+                state:
+                    customer.state ||
+                    "",
+
+                pincode:
+                    customer.pincode ||
+                    "",
+
+                country:
+                    customer.country ||
+                    "India",
+
+                landmark:
+                    customer.landmark ||
+                    "",
+            },
+
+            totalAmount:
+                Number(total),
+
+            paymentMethod,
+
+            orderSource:
+                "WALK_IN",
+        };
+
+        // =================================================
+        // CREATE ORDER
+        // =================================================
+
+        try {
+
+            setPlacingOrder(true);
+
+            console.log(
+                "WALK-IN ORDER DATA:",
+                orderData
             );
 
-            return (
+            const res =
+                await createWalkInOrder(
+                    orderData
+                );
 
-                <div
-                    key={product._id}
-                    className="product-card"
-                >
+            console.log(
+                "WALK-IN ORDER RESPONSE:",
+                res
+            );
 
-                    {/* <img
-                        src={
-                            product.images?.[0]?.url ||
-                            "/no-image.png"
-                        }
-                        alt={product.name}
-                    /> */}
-                    
+            // =============================================
+            // GET CREATED ORDER
+            // =============================================
 
+            const createdOrder =
+                res?.order ||
+                res?.data?.order ||
+                res?.data;
 
-<img
-    src={
-        product.images?.length
-            ? `${import.meta.env.VITE_API_URL.replace("/api","")}${product.images[0].url}`
-            : "/no-image.png"
-    }
-    alt={product.name}
-/>
+            console.log(
+                "CREATED WALK-IN ORDER:",
+                createdOrder
+            );
 
+            // =============================================
+            // CHECK ORDER ID
+            // =============================================
 
-                    <h4>
-                        {product.name}
-                    </h4>
+            const createdOrderId =
+                createdOrder?._id ||
+                createdOrder?.id;
+
+            if (!createdOrderId) {
+
+                console.error(
+                    "Created order response does not contain order ID:",
+                    res
+                );
+
+                throw new Error(
+                    "Order created but Order ID was not returned."
+                );
+            }
+
+            // =============================================
+            // CREATE INVOICE
+            // =============================================
+
+            let createdInvoice = null;
+
+            try {
+
+                console.log(
+                    "CREATING INVOICE FOR ORDER:",
+                    createdOrderId
+                );
+
+                const invoiceResponse =
+                    await createInvoice(
+                        createdOrderId
+                    );
+
+                console.log(
+                    "INVOICE RESPONSE:",
+                    invoiceResponse
+                );
+
+                createdInvoice =
+                    invoiceResponse?.data ||
+                    invoiceResponse?.invoice ||
+                    invoiceResponse;
+
+                console.log(
+                    "CREATED INVOICE:",
+                    createdInvoice
+                );
+
+            } catch (
+                invoiceError
+            ) {
+
+                // =========================================
+                // IMPORTANT:
+                // ORDER ALREADY CREATED.
+                // DON'T BREAK WALK-IN FLOW.
+                // =========================================
+
+                console.error(
+                    "INVOICE CREATION ERROR:",
+                    invoiceError
+                );
+
+                toast.success(
+                    invoiceError?.response?.data?.message ||
+                    invoiceError?.message ||
+                    "Order created successfully, but invoice could not be created."
+                );
+            }
+
+            // =============================================
+            // SHOW INVOICE
+            // =============================================
+
+            if (createdInvoice) {
+
+                setInvoiceData(
+                    createdInvoice
+                );
+
+            } else {
+
+                // =========================================
+                // FALLBACK
+                // =========================================
+
+                setInvoiceData(
+                    createdOrder
+                );
+            }
+
+            // =============================================
+            // SUCCESS
+            // =============================================
+
+            toast.success(
+                "Walk-In Order Created Successfully"
+            );
+
+            // =============================================
+            // CLEAR CART
+            // =============================================
+
+            setCart([]);
+
+            // =============================================
+            // CLEAR CUSTOMER
+            // =============================================
+
+            setCustomer({
+
+                fullName: "",
+
+                phone: "",
+
+                addressLine: "",
+
+                city: "",
+
+                state: "",
+
+                pincode: "",
+
+                country: "India",
+
+                landmark: "",
+            });
+
+            // =============================================
+            // REFRESH PRODUCTS / INVENTORY
+            // =============================================
+
+            await loadProducts();
+
+        } catch (err) {
+
+            console.error(
+                "CREATE WALK-IN ORDER ERROR:",
+                err
+            );
+
+            toast.error(
+                err?.response?.data?.message ||
+                err?.message ||
+                "Unable to create order"
+            );
+
+        } finally {
+
+            setPlacingOrder(false);
+
+        }
+    };
+
+    // =====================================================
+    // JSX
+    // =====================================================
+
+    return (
+
+        <div className="walkin-page">
+
+            {/* ==========================================
+                LEFT SIDE
+            ========================================== */}
+
+            <div className="left-side">
+
+                <h2>
+                    Product Search
+                </h2>
+
+                <input
+                    type="text"
+                    placeholder="Search product by Name or SKU..."
+                    value={search}
+                    onChange={(e) =>
+                        setSearch(
+                            e.target.value
+                        )
+                    }
+                    className="search-box"
+                />
+
+                {loading ? (
 
                     <p>
-                        SKU: {product.sku}
+                        Loading products...
                     </p>
+
+                ) : filteredProducts.length === 0 ? (
 
                     <p>
-                        Stock: {availableStock}
+                        No products found
                     </p>
 
-                    <h3>
-                        ₹{" "}
-                        {sellingPrice.toLocaleString(
-                            "en-IN"
+                ) : (
+
+                    <div className="product-list">
+
+                        {filteredProducts.map(
+                            (product) => {
+
+                                // =================================
+                                // EXTRA SAFETY
+                                // =================================
+                                // Rental product kabhi bhi UI me
+                                // accidentally aa jaye to render
+                                // nahi hoga.
+                                // =================================
+
+                                if (
+                                    !isWalkInProduct(
+                                        product
+                                    )
+                                ) {
+                                    return null;
+                                }
+
+                                const currentStock =
+                                    Number(
+                                        product.inventory?.currentStock ??
+                                        product.currentStock ??
+                                        product.availableStock ??
+                                        product.stock ??
+                                        0
+                                    );
+
+                                const reservedStock =
+                                    Number(
+                                        product.inventory?.reservedStock ??
+                                        product.reservedStock ??
+                                        0
+                                    );
+
+                                const availableStock =
+                                    Math.max(
+                                        currentStock -
+                                        reservedStock,
+                                        0
+                                    );
+
+                                const sellingPrice =
+                                    Number(
+                                        product.pricing?.sellingPrice ??
+                                        0
+                                    );
+
+                                return (
+
+                                    <div
+                                        key={
+                                            product._id
+                                        }
+                                        className="product-card"
+                                    >
+
+                                        {/* ==========================
+                                            PRODUCT IMAGE
+                                        ========================== */}
+
+                                        <img
+                                            src={
+                                                product.images?.length
+                                                    ? `${import.meta.env.VITE_API_URL.replace("/api", "")}${product.images[0].url}`
+                                                    : "/no-image.png"
+                                            }
+                                            alt={
+                                                product.name
+                                            }
+                                        />
+
+                                        {/* ==========================
+                                            PRODUCT NAME
+                                        ========================== */}
+
+                                        <h4>
+                                            {
+                                                product.name
+                                            }
+                                        </h4>
+
+                                        {/* ==========================
+                                            SKU
+                                        ========================== */}
+
+                                        <p>
+                                            SKU:{" "}
+                                            {
+                                                product.sku
+                                            }
+                                        </p>
+
+                                        {/* ==========================
+                                            PRODUCT TYPE
+                                        ========================== */}
+
+                                        <p>
+                                            Type:{" "}
+                                            {String(
+                                                product.productType ??
+                                                product.type ??
+                                                product.product_type ??
+                                                product.productCategoryType ??
+                                                product.itemType ??
+                                                ""
+                                            ).toUpperCase()}
+                                        </p>
+
+                                        {/* ==========================
+                                            STOCK
+                                        ========================== */}
+
+                                        <p>
+                                            Stock:{" "}
+                                            {
+                                                availableStock
+                                            }
+                                        </p>
+
+                                        {/* ==========================
+                                            PRICE
+                                        ========================== */}
+
+                                        <h3>
+                                            ₹{" "}
+                                            {sellingPrice.toLocaleString(
+                                                "en-IN"
+                                            )}
+                                        </h3>
+
+                                        {/* ==========================
+                                            ADD BUTTON
+                                        ========================== */}
+
+                                        <button
+                                            type="button"
+                                            disabled={
+                                                availableStock <= 0
+                                            }
+                                            onClick={() =>
+                                                addProduct(
+                                                    product
+                                                )
+                                            }
+                                        >
+
+                                            {availableStock <= 0
+                                                ? "Out of Stock"
+                                                : "+ Add"}
+
+                                        </button>
+
+                                    </div>
+                                );
+                            }
                         )}
-                    </h3>
 
-                    <button
-                        type="button"
-                        disabled={
-                            availableStock <= 0
-                        }
-                        onClick={() =>
-                            addProduct(product)
-                        }
-                    >
-
-                        {availableStock <= 0
-                            ? "Out of Stock"
-                            : "+ Add"}
-
-                    </button>
-
-                </div>
-
-            );
-
-        })
-
-    )}
-
-</div>
-        )}
-
-      </div>
-
-      {/* ======================================
-          RIGHT SIDE
-      ====================================== */}
-
-      <div className="right-side">
-
-        <h2>Cart</h2>
-
-        {cart.length === 0 ? (
-          <p>No Product Added</p>
-        ) : (
-          cart.map((item) => (
-            <div
-              className="cart-item"
-              key={item.product}
-            >
-
-              <div>
-                <h4>
-                  {item.title}
-                </h4>
-
-                <p>
-                  SKU: {item.sku}
-                </p>
-
-                <p>
-                  ₹{" "}
-                  {item.price.toLocaleString(
-                    "en-IN"
-                  )}
-                </p>
-
-                <small>
-    Available: {item.availableStock}
-</small>
-              </div>
-
-              <div className="qty-box">
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    decreaseQty(
-                      item.product
-                    )
-                  }
-                >
-                  -
-                </button>
-
-                <span>
-                  {item.quantity}
-                </span>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    increaseQty(
-                      item.product
-                    )
-                  }
-                >
-                  +
-                </button>
-
-              </div>
-
-              <button
-                type="button"
-                className="remove-btn"
-                onClick={() =>
-                  removeItem(
-                    item.product
-                  )
-                }
-              >
-                Remove
-              </button>
+                    </div>
+                )}
 
             </div>
-          ))
-        )}
 
-        <hr />
+            {/* ==========================================
+                RIGHT SIDE
+            ========================================== */}
 
-        <h3>
-          Grand Total: ₹{" "}
-          {total.toLocaleString("en-IN")}
-        </h3>
+            <div className="right-side">
 
-        <hr />
+                <h2>
+                    Cart
+                </h2>
 
-        <h2>
-          Customer Details
-        </h2>
+                {cart.length === 0 ? (
 
-        <input
-          type="text"
-          name="fullName"
-          placeholder="Customer Name"
-          value={customer.fullName}
-          onChange={handleCustomerChange}
-        />
+                    <p>
+                        No Product Added
+                    </p>
 
-        <input
-          type="text"
-          name="phone"
-          placeholder="Phone Number"
-          value={customer.phone}
-          onChange={handleCustomerChange}
-        />
+                ) : (
 
-        <input
-          type="text"
-          name="addressLine"
-          placeholder="Address"
-          value={customer.addressLine}
-          onChange={handleCustomerChange}
-        />
+                    cart.map(
+                        (item) => (
 
-        <input
-          type="text"
-          name="city"
-          placeholder="City"
-          value={customer.city}
-          onChange={handleCustomerChange}
-        />
+                            <div
+                                className="cart-item"
+                                key={
+                                    item.product
+                                }
+                            >
 
-        <input
-          type="text"
-          name="state"
-          placeholder="State"
-          value={customer.state}
-          onChange={handleCustomerChange}
-        />
+                                <div>
 
-        <input
-          type="text"
-          name="pincode"
-          placeholder="Pincode"
-          value={customer.pincode}
-          onChange={handleCustomerChange}
-        />
+                                    <h4>
+                                        {
+                                            item.title
+                                        }
+                                    </h4>
 
-        <select
-          value={paymentMethod}
-          onChange={(e) =>
-            setPaymentMethod(
-              e.target.value
-            )
-          }
-        >
-          <option value="CASH">
-            Cash
-          </option>
+                                    <p>
+                                        SKU:{" "}
+                                        {
+                                            item.sku
+                                        }
+                                    </p>
 
-          <option value="CARD">
-            Card
-          </option>
+                                    <p>
+                                        ₹{" "}
+                                        {item.price.toLocaleString(
+                                            "en-IN"
+                                        )}
+                                    </p>
 
-          <option value="UPI">
-            UPI
-          </option>
-        </select>
+                                    <small>
+                                        Available:{" "}
+                                        {
+                                            item.availableStock
+                                        }
+                                    </small>
 
-        <button
-          type="button"
-          className="place-order-btn"
-          disabled={
-            placingOrder ||
-            cart.length === 0
-          }
-          onClick={placeOrder}
-        >
-          {placingOrder
-            ? "Creating Order..."
-            : "Create Walk-In Order"}
-        </button>
+                                </div>
 
-      </div>
+                                <div className="qty-box">
 
-      {/* ======================================
-          INVOICE
-      ====================================== */}
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            decreaseQty(
+                                                item.product
+                                            )
+                                        }
+                                    >
+                                        -
+                                    </button>
 
-      {invoiceData && (
-        <WalkInInvoice
-          order={invoiceData}
-          onClose={() =>
-            setInvoiceData(null)
-          }
-        />
-      )}
+                                    <span>
+                                        {
+                                            item.quantity
+                                        }
+                                    </span>
 
-    </div>
-  );
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            increaseQty(
+                                                item.product
+                                            )
+                                        }
+                                    >
+                                        +
+                                    </button>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    className="remove-btn"
+                                    onClick={() =>
+                                        removeItem(
+                                            item.product
+                                        )
+                                    }
+                                >
+                                    Remove
+                                </button>
+
+                            </div>
+                        )
+                    )
+                )}
+
+                <hr />
+
+                <h3>
+                    Grand Total: ₹{" "}
+                    {total.toLocaleString(
+                        "en-IN"
+                    )}
+                </h3>
+
+                <hr />
+
+                <h2>
+                    Customer Details
+                </h2>
+
+                <input
+                    type="text"
+                    name="fullName"
+                    placeholder="Customer Name"
+                    value={
+                        customer.fullName
+                    }
+                    onChange={
+                        handleCustomerChange
+                    }
+                />
+
+                <input
+                    type="text"
+                    name="phone"
+                    placeholder="Phone Number"
+                    value={
+                        customer.phone
+                    }
+                    onChange={
+                        handleCustomerChange
+                    }
+                />
+
+                <input
+                    type="text"
+                    name="addressLine"
+                    placeholder="Address"
+                    value={
+                        customer.addressLine
+                    }
+                    onChange={
+                        handleCustomerChange
+                    }
+                />
+
+                <input
+                    type="text"
+                    name="city"
+                    placeholder="City"
+                    value={
+                        customer.city
+                    }
+                    onChange={
+                        handleCustomerChange
+                    }
+                />
+
+                <input
+                    type="text"
+                    name="state"
+                    placeholder="State"
+                    value={
+                        customer.state
+                    }
+                    onChange={
+                        handleCustomerChange
+                    }
+                />
+
+                <input
+                    type="text"
+                    name="pincode"
+                    placeholder="Pincode"
+                    value={
+                        customer.pincode
+                    }
+                    onChange={
+                        handleCustomerChange
+                    }
+                />
+
+                <select
+                    value={
+                        paymentMethod
+                    }
+                    onChange={(e) =>
+                        setPaymentMethod(
+                            e.target.value
+                        )
+                    }
+                >
+
+                    <option value="CASH">
+                        Cash
+                    </option>
+
+                    <option value="CARD">
+                        Card
+                    </option>
+
+                    <option value="UPI">
+                        UPI
+                    </option>
+
+                </select>
+
+                <button
+                    type="button"
+                    className="place-order-btn"
+                    disabled={
+                        placingOrder ||
+                        cart.length === 0
+                    }
+                    onClick={
+                        placeOrder
+                    }
+                >
+
+                    {placingOrder
+                        ? "Creating Order..."
+                        : "Create Walk-In Order"}
+
+                </button>
+
+            </div>
+
+            {/* ==========================================
+                INVOICE
+            ========================================== */}
+
+            {invoiceData && (
+
+                <WalkInInvoice
+                    order={
+                        invoiceData
+                    }
+                    onClose={() =>
+                        setInvoiceData(
+                            null
+                        )
+                    }
+                />
+
+            )}
+
+        </div>
+    );
 }
 
 export default NewWalkInOrder;

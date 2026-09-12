@@ -2010,7 +2010,7 @@ navigate(
 
                 <div className="payment-info">
 
-                    <p>
+                    {/* <p>
 
                         <strong>
                             Order ID :
@@ -2018,7 +2018,7 @@ navigate(
 
                         {order?._id || "-"}
 
-                    </p>
+                    </p> */}
 
 
                     <p>

@@ -861,3 +861,756 @@ tbody tr:hover td {
   }
 
 }
+
+/* ============================================================
+   ADMIN DASHBOARD HOME + NOTIFICATION HEADER
+   Unique classes - no conflict with existing dashboard CSS
+============================================================ */
+
+.admin-dashboard-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+
+/* ============================================================
+   HOME BUTTON
+============================================================ */
+
+.admin-dashboard-home-btn {
+  width: 42px;
+  height: 42px;
+
+  min-width: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #16a34a;
+
+  cursor: pointer;
+
+  font-size: 18px;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-dashboard-home-btn:hover {
+  background: #16a34a;
+  color: #ffffff;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 15px rgba(22, 163, 74, 0.18);
+}
+
+.admin-dashboard-home-btn:active {
+  transform: translateY(0);
+}
+
+
+/* ============================================================
+   NOTIFICATION BUTTON
+============================================================ */
+
+.admin-dashboard-notification-btn {
+  position: relative;
+
+  width: 42px;
+  height: 42px;
+
+  min-width: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  cursor: pointer;
+
+  font-size: 18px;
+
+  margin-left: 4px;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-dashboard-notification-btn:hover {
+  background: #f3f4f6;
+  color: #16a34a;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.admin-dashboard-notification-btn:active {
+  transform: translateY(0);
+}
+
+
+/* ============================================================
+   NOTIFICATION RED BADGE
+============================================================ */
+
+.admin-dashboard-notification-badge {
+  position: absolute;
+
+  top: -7px;
+  right: -7px;
+
+  min-width: 20px;
+  height: 20px;
+
+  padding: 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ef4444;
+  color: #ffffff;
+
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+
+  box-shadow:
+    0 2px 7px rgba(239, 68, 68, 0.35);
+
+  animation: adminDashboardNotificationPulse 1.8s
+    ease-in-out infinite;
+}
+
+
+/* ============================================================
+   NOTIFICATION PULSE
+============================================================ */
+
+@keyframes adminDashboardNotificationPulse {
+
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.12);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 768px) {
+
+  .admin-dashboard-title-row {
+    gap: 8px;
+  }
+
+  .admin-dashboard-home-btn,
+  .admin-dashboard-notification-btn {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+
+    font-size: 16px;
+  }
+
+  .admin-dashboard-notification-badge {
+    top: -6px;
+    right: -6px;
+
+    min-width: 18px;
+    height: 18px;
+
+    font-size: 9px;
+  }
+
+}
+
+
+/* =========================================================
+   DASHBOARD HEADER RIGHT ACTIONS
+   ========================================================= */
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.dashboard-header-left {
+  min-width: 0;
+}
+
+.dashboard-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   HEADER ICON BUTTON
+   ========================================================= */
+
+.dashboard-header-icon {
+  position: relative;
+
+  width: 44px;
+  height: 44px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  color: #334155;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dashboard-header-icon:hover {
+  background: #f8fafc;
+  color: #16a34a;
+  border-color: #bbf7d0;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 5px 16px rgba(15, 23, 42, 0.08);
+}
+
+.dashboard-header-icon:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   HOME
+   ========================================================= */
+
+.dashboard-home-button {
+  color: #334155;
+}
+
+/* =========================================================
+   BELL
+   ========================================================= */
+
+.dashboard-bell-button {
+  color: #334155;
+}
+
+.dashboard-bell-has-notification {
+  color: #16a34a;
+}
+
+/* =========================================================
+   NOTIFICATION BADGE
+   ========================================================= */
+
+.dashboard-notification-badge {
+  position: absolute;
+
+  top: -5px;
+  right: -5px;
+
+  min-width: 19px;
+  height: 19px;
+
+  padding: 0 5px;
+
+  border-radius: 999px;
+
+  background: #ef4444;
+  color: #ffffff;
+
+  border: 2px solid #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+
+  box-sizing: border-box;
+
+  animation: dashboard-notification-pulse 1.8s infinite;
+}
+
+@keyframes dashboard-notification-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.35);
+  }
+
+  70% {
+    box-shadow: 0 0 0 7px rgba(239, 68, 68, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+/* =========================================================
+   NOTIFICATION WRAPPER
+   ========================================================= */
+
+.dashboard-notification-wrapper {
+  position: relative;
+  z-index: 500;
+}
+
+/* =========================================================
+   NOTIFICATION PANEL
+   ========================================================= */
+
+.dashboard-notification-panel {
+  position: absolute;
+
+  top: calc(100% + 12px);
+  right: 0;
+
+  width: 390px;
+  max-width: calc(100vw - 30px);
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 20px 50px rgba(15, 23, 42, 0.15),
+    0 5px 18px rgba(15, 23, 42, 0.08);
+
+  animation: dashboard-notification-open 0.18s ease-out;
+}
+
+@keyframes dashboard-notification-open {
+  from {
+    opacity: 0;
+    transform: translateY(-7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   PANEL HEADER
+   ========================================================= */
+
+.dashboard-notification-panel-header {
+  min-height: 68px;
+
+  padding: 14px 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #eef2f7;
+
+  background: #ffffff;
+}
+
+.dashboard-notification-panel-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dashboard-notification-panel-header h3 {
+  margin: 0;
+
+  color: #0f172a;
+
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.dashboard-notification-panel-header span {
+  color: #64748b;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.dashboard-notification-close {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #f8fafc;
+  color: #64748b;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.dashboard-notification-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+/* =========================================================
+   MARK ALL READ
+   ========================================================= */
+
+.dashboard-mark-all-read {
+  width: 100%;
+
+  padding: 10px 16px;
+
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+
+  background: #ffffff;
+
+  color: #16a34a;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition: background 0.2s ease;
+}
+
+.dashboard-mark-all-read:hover {
+  background: #f0fdf4;
+}
+
+/* =========================================================
+   NOTIFICATION LIST
+   ========================================================= */
+
+.dashboard-notification-list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.dashboard-notification-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.dashboard-notification-list::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+.dashboard-notification-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+/* =========================================================
+   NOTIFICATION ITEM
+   ========================================================= */
+
+.dashboard-notification-item {
+  width: 100%;
+
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+
+  background: #ffffff;
+
+  padding: 13px 15px;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition: background 0.2s ease;
+}
+
+.dashboard-notification-item:hover {
+  background: #f8fafc;
+}
+
+.dashboard-notification-unread {
+  background: #f0fdf4;
+}
+
+.dashboard-notification-unread:hover {
+  background: #ecfdf5;
+}
+
+/* =========================================================
+   NOTIFICATION DOT
+   ========================================================= */
+
+.dashboard-notification-dot-wrapper {
+  width: 15px;
+
+  padding-top: 5px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+}
+
+.dashboard-notification-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #cbd5e1;
+}
+
+.dashboard-notification-dot-unread {
+  background: #22c55e;
+
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+}
+
+/* =========================================================
+   NOTIFICATION CONTENT
+   ========================================================= */
+
+.dashboard-notification-content {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.dashboard-notification-content strong {
+  color: #0f172a;
+
+  font-size: 13px;
+  font-weight: 800;
+
+  line-height: 1.35;
+}
+
+.dashboard-notification-content p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  line-height: 1.45;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+.dashboard-notification-content small {
+  margin-top: 3px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* =========================================================
+   EMPTY / LOADING
+   ========================================================= */
+
+.dashboard-notification-empty {
+  min-height: 180px;
+
+  padding: 25px 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  color: #94a3b8;
+
+  text-align: center;
+}
+
+.dashboard-notification-empty strong {
+  color: #475569;
+
+  font-size: 13px;
+}
+
+.dashboard-notification-empty span {
+  color: #94a3b8;
+
+  font-size: 11px;
+}
+
+.dashboard-notification-loading-icon {
+  animation: dashboard-notification-spin 1s linear infinite;
+}
+
+@keyframes dashboard-notification-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   VIEW ALL
+   ========================================================= */
+
+.dashboard-view-all-notifications {
+  width: 100%;
+
+  padding: 12px 15px;
+
+  border: none;
+  border-top: 1px solid #eef2f7;
+
+  background: #ffffff;
+
+  color: #16a34a;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.dashboard-view-all-notifications:hover {
+  background: #f0fdf4;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .dashboard-header {
+    align-items: flex-start;
+  }
+
+  .dashboard-header-actions {
+    gap: 7px;
+  }
+
+  .dashboard-header-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+  }
+
+  .dashboard-notification-panel {
+    position: fixed;
+
+    top: 75px;
+    right: 15px;
+    left: 15px;
+
+    width: auto;
+    max-width: none;
+  }
+}
+
+@media (max-width: 520px) {
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dashboard-header-actions {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+
+  .dashboard-notification-panel {
+    top: 70px;
+  }
+}
