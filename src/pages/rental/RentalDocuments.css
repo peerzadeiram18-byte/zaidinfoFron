@@ -1,0 +1,764 @@
+
+/* =========================================================
+   RENTAL DOCUMENTS
+   ========================================================= */
+
+.rental-documents-section {
+    width: 100%;
+    margin-top: 24px;
+    padding: 24px;
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+
+    box-shadow:
+        0 8px 30px rgba(15, 23, 42, 0.06);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.rental-documents-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 20px;
+}
+
+.rental-documents-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+}
+
+.rental-documents-heading-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.rental-documents-heading h2 {
+    margin: 0;
+
+    font-size: 21px;
+    line-height: 1.2;
+
+    color: #111827;
+}
+
+.rental-documents-heading p {
+    margin: 5px 0 0;
+
+    font-size: 13px;
+
+    color: #6b7280;
+}
+
+.rental-documents-refresh {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 40px;
+
+    padding: 0 14px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #374151;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.rental-documents-refresh:hover {
+    border-color: #059669;
+    color: #059669;
+}
+
+.rental-documents-refresh:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   INFO
+   ========================================================= */
+
+.rental-documents-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 15px 17px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+
+    background: #f8fafc;
+}
+
+.rental-documents-info-main {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.rental-documents-info-main strong {
+    font-size: 14px;
+    color: #111827;
+}
+
+.rental-documents-info-main span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.rental-documents-progress {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+.rental-documents-progress strong {
+    font-size: 18px;
+    color: #059669;
+}
+
+.rental-documents-progress span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* =========================================================
+   COMPLETE
+   ========================================================= */
+
+.rental-documents-complete {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 11px;
+
+    padding: 14px 16px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid #bbf7d0;
+    border-radius: 11px;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+}
+
+.rental-documents-complete strong {
+    display: block;
+
+    font-size: 13px;
+}
+
+.rental-documents-complete p {
+    margin: 4px 0 0;
+
+    font-size: 12px;
+
+    color: #166534;
+}
+
+/* =========================================================
+   DOCUMENT LIST
+   ========================================================= */
+
+.rental-document-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+/* =========================================================
+   DOCUMENT CARD
+   ========================================================= */
+
+.rental-document-card {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 14px;
+
+    padding: 17px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.rental-document-card:hover {
+    border-color: #cbd5e1;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.05);
+}
+
+.rental-document-card.uploaded {
+    border-color: #bbf7d0;
+
+    background: #fbfffc;
+}
+
+/* =========================================================
+   NUMBER
+   ========================================================= */
+
+.rental-document-number {
+    flex: 0 0 auto;
+
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #f3f4f6;
+
+    color: #4b5563;
+
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.rental-document-card.uploaded
+.rental-document-number {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.rental-document-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.rental-document-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 10px;
+}
+
+.rental-document-title-row h3 {
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.3;
+
+    color: #111827;
+}
+
+.rental-document-title-row p {
+    margin: 4px 0 0;
+
+    font-size: 12px;
+    line-height: 1.4;
+
+    color: #6b7280;
+}
+
+.rental-document-required {
+    flex: 0 0 auto;
+
+    padding: 4px 8px;
+
+    border-radius: 999px;
+
+    background: #fff7ed;
+    color: #c2410c;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   UPLOADED FILE
+   ========================================================= */
+
+.rental-uploaded-file {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 10px 12px;
+
+    margin-bottom: 10px;
+
+    border: 1px solid #d1fae5;
+    border-radius: 9px;
+
+    background: #f0fdf4;
+}
+
+.rental-uploaded-file-icon {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border-radius: 8px;
+
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.rental-uploaded-file-info {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.rental-uploaded-file-info strong {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 12px;
+
+    color: #166534;
+}
+
+.rental-uploaded-file-info span {
+    font-size: 10px;
+
+    color: #4d7c0f;
+}
+
+.rental-uploaded-status {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    color: #15803d;
+}
+
+/* =========================================================
+   SELECTED FILE
+   ========================================================= */
+
+.rental-selected-file {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 10px 12px;
+
+    margin-bottom: 10px;
+
+    border: 1px solid #bfdbfe;
+    border-radius: 9px;
+
+    background: #eff6ff;
+}
+
+.rental-selected-file-left {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 0;
+}
+
+.rental-selected-file-left > svg {
+    flex: 0 0 auto;
+
+    color: #2563eb;
+}
+
+.rental-selected-file-left > div {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.rental-selected-file-left strong {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 12px;
+
+    color: #1e3a8a;
+}
+
+.rental-selected-file-left span {
+    font-size: 10px;
+
+    color: #64748b;
+}
+
+.rental-remove-file {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border: none;
+    border-radius: 7px;
+
+    background: #fee2e2;
+    color: #dc2626;
+
+    cursor: pointer;
+}
+
+.rental-remove-file:hover {
+    background: #fecaca;
+}
+
+/* =========================================================
+   HIDDEN INPUT
+   ========================================================= */
+
+.rental-hidden-file-input {
+    display: none;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.rental-document-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+.rental-choose-file-btn,
+.rental-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 37px;
+
+    padding: 0 13px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.rental-choose-file-btn {
+    border: 1px solid #d1d5db;
+
+    background: #ffffff;
+
+    color: #374151;
+}
+
+.rental-choose-file-btn:hover {
+    border-color: #2563eb;
+
+    color: #2563eb;
+}
+
+.rental-upload-btn {
+    border: 1px solid #059669;
+
+    background: #059669;
+
+    color: #ffffff;
+}
+
+.rental-upload-btn:hover {
+    background: #047857;
+    border-color: #047857;
+}
+
+.rental-choose-file-btn:disabled,
+.rental-upload-btn:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.rental-documents-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-top: 18px;
+    padding-top: 15px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.rental-documents-footer > div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.rental-documents-footer strong {
+    font-size: 11px;
+
+    color: #374151;
+}
+
+.rental-documents-footer span {
+    font-size: 11px;
+
+    color: #6b7280;
+}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.rental-documents-loading {
+    width: 100%;
+
+    padding: 45px 20px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+}
+
+.rental-documents-loading h3 {
+    margin: 12px 0 5px;
+
+    font-size: 16px;
+
+    color: #111827;
+}
+
+.rental-documents-loading p {
+    margin: 0;
+
+    font-size: 13px;
+
+    color: #6b7280;
+}
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.rental-documents-error {
+    padding: 45px 20px;
+
+    text-align: center;
+
+    background: #fff;
+
+    border: 1px solid #fecaca;
+    border-radius: 14px;
+
+    color: #dc2626;
+}
+
+.rental-documents-error h3 {
+    margin: 10px 0 5px;
+
+    color: #991b1b;
+}
+
+.rental-documents-error p {
+    margin: 0;
+
+    color: #7f1d1d;
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   SPIN
+   ========================================================= */
+
+.rental-documents-spinner {
+    animation: rentalDocumentsSpin 0.9s linear infinite;
+}
+
+.rental-refresh-spin {
+    animation: rentalDocumentsSpin 0.9s linear infinite;
+}
+
+@keyframes rentalDocumentsSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .rental-documents-section {
+        padding: 16px;
+    }
+
+    .rental-documents-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .rental-documents-refresh {
+        width: 100%;
+    }
+
+    .rental-documents-info {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .rental-documents-progress {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+    .rental-document-card {
+        padding: 13px;
+
+        gap: 10px;
+    }
+
+    .rental-document-title-row {
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+    .rental-document-required {
+        align-self: flex-start;
+    }
+
+    .rental-uploaded-file {
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+    }
+
+    .rental-uploaded-status {
+        width: 100%;
+        margin-left: 44px;
+    }
+
+    .rental-document-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .rental-choose-file-btn,
+    .rental-upload-btn {
+        width: 100%;
+    }
+
+    .rental-documents-footer {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+}

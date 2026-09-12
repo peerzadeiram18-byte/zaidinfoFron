@@ -1,4 +1,5 @@
 // import React, { useEffect, useState } from "react";
+
 // import "./ProductList.css";
 
 // import {
@@ -6,21 +7,31 @@
 //     deleteProduct,
 //     searchProducts
 // } from "../../../../services/productService";
+
 // import { toast } from "react-toastify";
+
 // const API = import.meta.env.VITE_API_URL;
 
 // const ProductList = () => {
 
+//     // =====================================================
+//     // STATES
+//     // =====================================================
+
 //     const [products, setProducts] = useState([]);
+
 //     const [loading, setLoading] = useState(true);
+
 //     const [search, setSearch] = useState("");
+
 //     const [currentPage, setCurrentPage] = useState(1);
 
 //     const itemsPerPage = 10;
 
-//     // ============================================
+
+//     // =====================================================
 //     // LOAD ALL PRODUCTS
-//     // ============================================
+//     // =====================================================
 
 //     const loadProducts = async () => {
 
@@ -30,34 +41,62 @@
 
 //             const res = await getProducts();
 
-//             console.log("PRODUCT LIST API RESPONSE:", res.data);
+//             console.log(
+//                 "PRODUCT LIST API RESPONSE:",
+//                 res.data
+//             );
+
 
 //             // Backend response:
+//             //
 //             // {
-//             //   success: true,
-//             //   message: "...",
-//             //   data: [...]
+//             //     success: true,
+//             //     message: "...",
+//             //     data: [...]
 //             // }
 
-//             const productData = Array.isArray(res.data?.data)
-//                 ? res.data.data
-//                 : Array.isArray(res.data)
-//                     ? res.data
-//                     : [];
+//             const productData =
 
-//             console.log("PRODUCTS SET TO STATE:", productData);
+//                 Array.isArray(res.data?.data)
+
+//                     ? res.data.data
+
+//                     : Array.isArray(res.data)
+
+//                         ? res.data
+
+//                         : [];
+
+
+//             console.log(
+//                 "PRODUCTS SET TO STATE:",
+//                 productData
+//             );
+
 
 //             setProducts(productData);
 
 //             setCurrentPage(1);
 
-//         } catch (error) {
+//         }
 
-//             console.error("GET PRODUCTS ERROR:", error);
+//         catch (error) {
+
+//             console.error(
+//                 "GET PRODUCTS ERROR:",
+//                 error
+//             );
 
 //             setProducts([]);
 
-//         } finally {
+//             toast.error(
+//                 error.response?.data?.message ||
+//                 "Failed to load products"
+//             );
+
+//         }
+
+//         finally {
 
 //             setLoading(false);
 
@@ -65,9 +104,10 @@
 
 //     };
 
-//     // ============================================
+
+//     // =====================================================
 //     // FIRST LOAD
-//     // ============================================
+//     // =====================================================
 
 //     useEffect(() => {
 
@@ -75,17 +115,24 @@
 
 //     }, []);
 
-//     // ============================================
+
+//     // =====================================================
 //     // SEARCH PRODUCTS
-//     // ============================================
+//     // =====================================================
 
 //     const handleSearch = async (e) => {
 
-//         const keyword = e.target.value;
+//         const keyword =
+//             e.target.value;
+
 
 //         setSearch(keyword);
 
-//         // If search box empty
+
+//         // =================================================
+//         // EMPTY SEARCH
+//         // =================================================
+
 //         if (!keyword.trim()) {
 
 //             loadProducts();
@@ -94,33 +141,63 @@
 
 //         }
 
+
 //         try {
 
 //             setLoading(true);
 
-//             const res = await searchProducts(keyword);
 
-//             console.log("SEARCH API RESPONSE:", res.data);
+//             const res =
+//                 await searchProducts(
+//                     keyword
+//                 );
 
-//             const searchData = Array.isArray(res.data?.data)
-//                 ? res.data.data
-//                 : Array.isArray(res.data)
-//                     ? res.data
-//                     : [];
 
-//             console.log("SEARCH PRODUCTS:", searchData);
+//             console.log(
+//                 "SEARCH API RESPONSE:",
+//                 res.data
+//             );
+
+
+//             const searchData =
+
+//                 Array.isArray(
+//                     res.data?.data
+//                 )
+
+//                     ? res.data.data
+
+//                     : Array.isArray(res.data)
+
+//                         ? res.data
+
+//                         : [];
+
+
+//             console.log(
+//                 "SEARCH PRODUCTS:",
+//                 searchData
+//             );
+
 
 //             setProducts(searchData);
 
 //             setCurrentPage(1);
 
-//         } catch (error) {
+//         }
 
-//             console.error("SEARCH ERROR:", error);
+//         catch (error) {
+
+//             console.error(
+//                 "SEARCH ERROR:",
+//                 error
+//             );
 
 //             setProducts([]);
 
-//         } finally {
+//         }
+
+//         finally {
 
 //             setLoading(false);
 
@@ -128,43 +205,70 @@
 
 //     };
 
-//     // ============================================
+
+//     // =====================================================
 //     // DELETE PRODUCT
-//     // ============================================
+//     // =====================================================
 
 //     const handleDelete = async (id) => {
 
-//         const confirmDelete = window.confirm(
-//             "Are you sure you want to delete this product?"
-//         );
+//         const confirmDelete =
+//             window.confirm(
+//                 "Are you sure you want to delete this product?"
+//             );
+
 
 //         if (!confirmDelete) {
+
 //             return;
+
 //         }
+
 
 //         try {
 
 //             setLoading(true);
 
-//             console.log("Deleting Product ID:", id);
+
+//             console.log(
+//                 "Deleting Product ID:",
+//                 id
+//             );
+
 
 //             await deleteProduct(id);
 
-//          toast.success("Product Deleted Successfully");
 
-//             // Reload product list
-//             await loadProducts();
-
-//         } catch (error) {
-
-//             console.error("DELETE PRODUCT ERROR:", error);
-
-//             toast.error(
-//                 error.response?.data?.message ||
-//                 "Delete Failed"
+//             toast.success(
+//                 "Product Deleted Successfully"
 //             );
 
-//         } finally {
+
+//             // Reload product list
+
+//             await loadProducts();
+
+//         }
+
+//         catch (error) {
+
+//             console.error(
+//                 "DELETE PRODUCT ERROR:",
+//                 error
+//             );
+
+
+//             toast.error(
+
+//                 error.response?.data?.message ||
+
+//                 "Delete Failed"
+
+//             );
+
+//         }
+
+//         finally {
 
 //             setLoading(false);
 
@@ -172,94 +276,215 @@
 
 //     };
 
-//     // ============================================
+
+//     // =====================================================
 //     // PAGINATION
-//     // ============================================
+//     // =====================================================
 
-//     const lastIndex = currentPage * itemsPerPage;
+//     const lastIndex =
+//         currentPage *
+//         itemsPerPage;
 
-//     const firstIndex = lastIndex - itemsPerPage;
 
-//     const currentProducts = products.slice(
-//         firstIndex,
-//         lastIndex
-//     );
+//     const firstIndex =
+//         lastIndex -
+//         itemsPerPage;
 
-//     const totalPages = Math.ceil(
-//         products.length / itemsPerPage
-//     );
 
-//     // ============================================
+//     const currentProducts =
+//         products.slice(
+//             firstIndex,
+//             lastIndex
+//         );
+
+
+//     const totalPages =
+//         Math.ceil(
+//             products.length /
+//             itemsPerPage
+//         );
+
+
+//     // =====================================================
 //     // IMAGE URL
-//     // ============================================
+//     // =====================================================
 
-// //     const getImageUrl = (product) => {
+//     const getImageUrl = (product) => {
 
-// //         if (!product?.images?.length) {
-// //             return null;
-// //         }
+//         const imageUrl =
+//             product?.images?.[0]?.url;
 
-// //         const imageUrl = product.images[0]?.url;
 
-// //         if (!imageUrl) {
-// //             return null;
-// //         }
+//         if (!imageUrl) {
 
-// //         // If backend already returns complete URL
-// //         if (
-// //             imageUrl.startsWith("http://") ||
-// //             imageUrl.startsWith("https://")
-// //         ) {
-// //             return imageUrl;
-// //         }
+//             return null;
 
-// //         // Backend local image
-// // return `${API.replace("/api", "")}${imageUrl}`;
-// //     };
+//         }
 
-// // const API = import.meta.env.VITE_API_URL;
 
-// const getImageUrl = (product) => {
+//         if (
 
-//     const imageUrl = product?.images?.[0]?.url;
+//             imageUrl.startsWith("http://") ||
 
-//     if (!imageUrl) {
-//         return null;
-//     }
+//             imageUrl.startsWith("https://")
 
-//     if (
-//         imageUrl.startsWith("http://") ||
-//         imageUrl.startsWith("https://")
-//     ) {
-//         return imageUrl;
-//     }
+//         ) {
 
-//     const serverUrl = API.replace(/\/api\/?$/, "");
+//             return imageUrl;
 
-//     return `${serverUrl}${imageUrl}`;
-// };
+//         }
 
-//     // ============================================
+
+//         const serverUrl =
+//             API.replace(
+//                 /\/api\/?$/,
+//                 ""
+//             );
+
+
+//         return `${serverUrl}${imageUrl}`;
+
+//     };
+
+
+//     // =====================================================
+//     // PRODUCT TYPE
+//     // =====================================================
+
+//     const getProductType = (product) => {
+
+//         return (
+//             product?.productType ||
+//             "NEW"
+//         );
+
+//     };
+
+
+//     // =====================================================
+//     // CATEGORY NAME
+//     // =====================================================
+
+//     const getCategoryName = (product) => {
+
+//         if (
+//             typeof product?.category ===
+//             "object"
+//         ) {
+
+//             return (
+//                 product.category?.name ||
+//                 "N/A"
+//             );
+
+//         }
+
+
+//         return (
+//             product?.category ||
+//             "N/A"
+//         );
+
+//     };
+
+
+//     // =====================================================
+//     // SUBCATEGORY NAME
+//     // =====================================================
+
+//     const getSubcategoryName = (product) => {
+
+//         if (
+//             typeof product?.subcategory ===
+//             "object"
+//         ) {
+
+//             return (
+//                 product.subcategory?.name ||
+//                 "N/A"
+//             );
+
+//         }
+
+
+//         return (
+//             product?.subcategory ||
+//             "N/A"
+//         );
+
+//     };
+
+
+//     // =====================================================
+//     // BRAND NAME
+//     // =====================================================
+
+//     const getBrandName = (product) => {
+
+//         if (
+//             typeof product?.brand ===
+//             "object"
+//         ) {
+
+//             return (
+//                 product.brand?.name ||
+//                 "N/A"
+//             );
+
+//         }
+
+
+//         return (
+//             product?.brand ||
+//             "N/A"
+//         );
+
+//     };
+
+
+//     // =====================================================
+//     // REFURBISHED DETAILS
+//     // =====================================================
+
+//     const getRefurbishedDetails = (
+//         product
+//     ) => {
+
+//         return (
+//             product?.refurbishedDetails ||
+//             null
+//         );
+
+//     };
+
+
+//     // =====================================================
 //     // UI
-//     // ============================================
+//     // =====================================================
 
 //     return (
 
 //         <div className="product-list1">
 
-//             {/* ================= HEADER ================= */}
+
+//             {/* =================================================
+//                 HEADER
+//             ================================================= */}
 
 //             <div className="page-header1">
 
 //                 <div>
 
-//                     <h2>Product List</h2>
+//                     <h2>
+//                         Product List
+//                     </h2>
 
 //                     <p>
 //                         Manage all your products
 //                     </p>
 
 //                 </div>
+
 
 //                 <input
 //                     type="text"
@@ -272,7 +497,9 @@
 //             </div>
 
 
-//             {/* ================= LOADING ================= */}
+//             {/* =================================================
+//                 LOADING
+//             ================================================= */}
 
 //             {loading ? (
 
@@ -286,7 +513,9 @@
 
 //                 <>
 
-//                     {/* ================= TABLE ================= */}
+//                     {/* =================================================
+//                         TABLE
+//                     ================================================= */}
 
 //                     <div className="table-container1">
 
@@ -296,31 +525,69 @@
 
 //                                 <tr>
 
-//                                     <th>#</th>
+//                                     <th>
+//                                         #
+//                                     </th>
 
-//                                     <th>Image</th>
+//                                     <th>
+//                                         Image
+//                                     </th>
 
-//                                     <th>Product Name</th>
+//                                     <th>
+//                                         Product Name
+//                                     </th>
 
-//                                     <th>Category</th>
+//                                     <th>
+//                                         Type
+//                                     </th>
 
-//                                     <th>Brand</th>
+//                                     <th>
+//                                         Category
+//                                     </th>
 
-//                                     <th>Purchase Price</th>
+//                                     <th>
+//                                         Subcategory
+//                                     </th>
 
-//                                     <th>Selling Price</th>
+//                                     <th>
+//                                         Brand
+//                                     </th>
 
-//                                     <th>MRP</th>
+//                                     <th>
+//                                         Refurbished Details
+//                                     </th>
 
-//                                     <th>Discount</th>
+//                                     <th>
+//                                         Purchase Price
+//                                     </th>
 
-//                                     <th>GST</th>
+//                                     <th>
+//                                         Selling Price
+//                                     </th>
 
-//                                     <th>Stock</th>
+//                                     <th>
+//                                         MRP
+//                                     </th>
 
-//                                     <th>Status</th>
+//                                     <th>
+//                                         Discount
+//                                     </th>
 
-//                                     <th>Actions</th>
+//                                     <th>
+//                                         GST
+//                                     </th>
+
+//                                     <th>
+//                                         Stock
+//                                     </th>
+
+//                                     <th>
+//                                         Status
+//                                     </th>
+
+//                                     <th>
+//                                         Actions
+//                                     </th>
 
 //                                 </tr>
 
@@ -332,10 +599,29 @@
 //                                 {currentProducts.length > 0 ? (
 
 //                                     currentProducts.map(
-//                                         (product, index) => {
+
+//                                         (
+//                                             product,
+//                                             index
+//                                         ) => {
 
 //                                             const imageUrl =
-//                                                 getImageUrl(product);
+//                                                 getImageUrl(
+//                                                     product
+//                                                 );
+
+
+//                                             const productType =
+//                                                 getProductType(
+//                                                     product
+//                                                 );
+
+
+//                                             const refurbishedDetails =
+//                                                 getRefurbishedDetails(
+//                                                     product
+//                                                 );
+
 
 //                                             return (
 
@@ -347,36 +633,53 @@
 //                                                     }
 //                                                 >
 
-//                                                     {/* NUMBER */}
+
+//                                                     {/* =================================================
+//                                                         NUMBER
+//                                                     ================================================= */}
 
 //                                                     <td>
-//                                                         {firstIndex + index + 1}
+
+//                                                         {
+//                                                             firstIndex +
+//                                                             index +
+//                                                             1
+//                                                         }
+
 //                                                     </td>
 
 
-//                                                     {/* IMAGE */}
+//                                                     {/* =================================================
+//                                                         IMAGE
+//                                                     ================================================= */}
 
 //                                                     <td>
 
 //                                                         {imageUrl ? (
 
 //                                                             <img
-//                                                                 src={imageUrl}
+//                                                                 src={
+//                                                                     imageUrl
+//                                                                 }
 //                                                                 alt={
 //                                                                     product.name ||
 //                                                                     "Product"
 //                                                                 }
 //                                                                 className="table-image1"
 //                                                                 onError={(e) => {
+
 //                                                                     e.target.style.display =
 //                                                                         "none";
+
 //                                                                 }}
 //                                                             />
 
 //                                                         ) : (
 
 //                                                             <div className="no-image1">
+
 //                                                                 No Image
+
 //                                                             </div>
 
 //                                                         )}
@@ -384,43 +687,198 @@
 //                                                     </td>
 
 
-//                                                     {/* PRODUCT NAME */}
+//                                                     {/* =================================================
+//                                                         PRODUCT NAME
+//                                                     ================================================= */}
 
 //                                                     <td>
 
 //                                                         <strong>
-//                                                             {product.name ||
-//                                                                 "N/A"}
+
+//                                                             {
+//                                                                 product.name ||
+//                                                                 "N/A"
+//                                                             }
+
 //                                                         </strong>
 
 //                                                     </td>
 
 
-//                                                     {/* CATEGORY */}
+//                                                     {/* =================================================
+//                                                         PRODUCT TYPE
+//                                                     ================================================= */}
 
 //                                                     <td>
 
-//                                                         {product.category?.name ||
-//                                                             "N/A"}
+//                                                         {productType ===
+//                                                         "REFURBISHED" ? (
+
+//                                                             <span className="refurbished-badge">
+
+//                                                                 Refurbished
+
+//                                                             </span>
+
+//                                                         ) : (
+
+//                                                             <span className="new-product-badge">
+
+//                                                                 New
+
+//                                                             </span>
+
+//                                                         )}
 
 //                                                     </td>
 
 
-//                                                     {/* BRAND */}
+//                                                     {/* =================================================
+//                                                         CATEGORY
+//                                                     ================================================= */}
 
 //                                                     <td>
 
-//                                                         {product.brand?.name ||
-//                                                             "N/A"}
+//                                                         {
+//                                                             getCategoryName(
+//                                                                 product
+//                                                             )
+//                                                         }
 
 //                                                     </td>
 
 
-//                                                     {/* PURCHASE PRICE */}
+//                                                     {/* =================================================
+//                                                         SUBCATEGORY
+//                                                     ================================================= */}
+
+//                                                     <td>
+
+//                                                         {
+//                                                             getSubcategoryName(
+//                                                                 product
+//                                                             )
+//                                                         }
+
+//                                                     </td>
+
+
+//                                                     {/* =================================================
+//                                                         BRAND
+//                                                     ================================================= */}
+
+//                                                     <td>
+
+//                                                         {
+//                                                             getBrandName(
+//                                                                 product
+//                                                             )
+//                                                         }
+
+//                                                     </td>
+
+
+//                                                     {/* =================================================
+//                                                         REFURBISHED DETAILS
+//                                                     ================================================= */}
+
+//                                                     <td>
+
+//                                                         {productType ===
+//                                                         "REFURBISHED" ? (
+
+//                                                             refurbishedDetails ? (
+
+//                                                                 <div className="refurbished-details1">
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Grade:
+//                                                                         </strong>{" "}
+
+//                                                                         {
+//                                                                             refurbishedDetails.grade ||
+//                                                                             "N/A"
+//                                                                         }
+
+//                                                                     </div>
+
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Battery:
+//                                                                         </strong>{" "}
+
+//                                                                         {
+//                                                                             refurbishedDetails.batteryHealth ??
+//                                                                             0
+//                                                                         }%
+
+//                                                                     </div>
+
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Warranty:
+//                                                                         </strong>{" "}
+
+//                                                                         {
+//                                                                             refurbishedDetails.warrantyMonths ??
+//                                                                             0
+//                                                                         }{" "}
+
+//                                                                         months
+
+//                                                                     </div>
+
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Testing:
+//                                                                         </strong>{" "}
+
+//                                                                         {
+//                                                                             refurbishedDetails.testingStatus ||
+//                                                                             "N/A"
+//                                                                         }
+
+//                                                                     </div>
+
+//                                                                 </div>
+
+//                                                             ) : (
+
+//                                                                 <span>
+//                                                                     No Details
+//                                                                 </span>
+
+//                                                             )
+
+//                                                         ) : (
+
+//                                                             <span className="not-applicable1">
+
+//                                                                 N/A
+
+//                                                             </span>
+
+//                                                         )}
+
+//                                                     </td>
+
+
+//                                                     {/* =================================================
+//                                                         PURCHASE PRICE
+//                                                     ================================================= */}
 
 //                                                     <td>
 
 //                                                         ₹{" "}
+
 //                                                         {
 //                                                             product.pricing
 //                                                                 ?.purchasePrice ??
@@ -430,11 +888,14 @@
 //                                                     </td>
 
 
-//                                                     {/* SELLING PRICE */}
+//                                                     {/* =================================================
+//                                                         SELLING PRICE
+//                                                     ================================================= */}
 
 //                                                     <td>
 
 //                                                         ₹{" "}
+
 //                                                         {
 //                                                             product.pricing
 //                                                                 ?.sellingPrice ??
@@ -444,11 +905,14 @@
 //                                                     </td>
 
 
-//                                                     {/* MRP */}
+//                                                     {/* =================================================
+//                                                         MRP
+//                                                     ================================================= */}
 
 //                                                     <td>
 
 //                                                         ₹{" "}
+
 //                                                         {
 //                                                             product.pricing
 //                                                                 ?.mrp ??
@@ -458,7 +922,9 @@
 //                                                     </td>
 
 
-//                                                     {/* DISCOUNT */}
+//                                                     {/* =================================================
+//                                                         DISCOUNT
+//                                                     ================================================= */}
 
 //                                                     <td>
 
@@ -471,7 +937,9 @@
 //                                                     </td>
 
 
-//                                                     {/* GST */}
+//                                                     {/* =================================================
+//                                                         GST
+//                                                     ================================================= */}
 
 //                                                     <td>
 
@@ -484,7 +952,9 @@
 //                                                     </td>
 
 
-//                                                     {/* STOCK */}
+//                                                     {/* =================================================
+//                                                         STOCK
+//                                                     ================================================= */}
 
 //                                                     <td>
 
@@ -497,7 +967,9 @@
 //                                                     </td>
 
 
-//                                                     {/* STATUS */}
+//                                                     {/* =================================================
+//                                                         STATUS
+//                                                     ================================================= */}
 
 //                                                     <td>
 
@@ -505,13 +977,17 @@
 //                                                         "ACTIVE" ? (
 
 //                                                             <span className="active-status">
+
 //                                                                 Active
+
 //                                                             </span>
 
 //                                                         ) : (
 
 //                                                             <span className="inactive-status">
+
 //                                                                 Inactive
+
 //                                                             </span>
 
 //                                                         )}
@@ -519,7 +995,9 @@
 //                                                     </td>
 
 
-//                                                     {/* ACTIONS */}
+//                                                     {/* =================================================
+//                                                         ACTIONS
+//                                                     ================================================= */}
 
 //                                                     <td>
 
@@ -552,7 +1030,7 @@
 //                                     <tr>
 
 //                                         <td
-//                                             colSpan="13"
+//                                             colSpan="16"
 //                                             className="no-products1"
 //                                         >
 
@@ -571,15 +1049,20 @@
 //                     </div>
 
 
-//                     {/* ================= PAGINATION ================= */}
+//                     {/* =================================================
+//                         PAGINATION
+//                     ================================================= */}
 
 //                     {totalPages > 1 && (
 
 //                         <div className="pagination1">
 
+
 //                             <button
 //                                 type="button"
-//                                 disabled={currentPage === 1}
+//                                 disabled={
+//                                     currentPage === 1
+//                                 }
 //                                 onClick={() =>
 //                                     setCurrentPage(
 //                                         currentPage - 1
@@ -593,16 +1076,21 @@
 
 
 //                             {[...Array(totalPages)].map(
+
 //                                 (_, index) => (
 
 //                                     <button
 //                                         type="button"
 //                                         key={index}
 //                                         className={
+
 //                                             currentPage ===
 //                                             index + 1
+
 //                                                 ? "active-page"
+
 //                                                 : ""
+
 //                                         }
 //                                         onClick={() =>
 //                                             setCurrentPage(
@@ -611,18 +1099,22 @@
 //                                         }
 //                                     >
 
-//                                         {index + 1}
+//                                         {
+//                                             index + 1
+//                                         }
 
 //                                     </button>
 
 //                                 )
+
 //                             )}
 
 
 //                             <button
 //                                 type="button"
 //                                 disabled={
-//                                     currentPage === totalPages
+//                                     currentPage ===
+//                                     totalPages
 //                                 }
 //                                 onClick={() =>
 //                                     setCurrentPage(
@@ -649,8 +1141,8 @@
 
 // };
 
-// export default ProductList;
 
+// export default ProductList;
 
 
 import React, { useEffect, useState } from "react";
@@ -674,24 +1166,18 @@ const ProductList = () => {
     // =====================================================
 
     const [products, setProducts] = useState([]);
-
     const [loading, setLoading] = useState(true);
-
     const [search, setSearch] = useState("");
-
     const [currentPage, setCurrentPage] = useState(1);
 
     const itemsPerPage = 10;
-
 
     // =====================================================
     // LOAD ALL PRODUCTS
     // =====================================================
 
     const loadProducts = async () => {
-
         try {
-
             setLoading(true);
 
             const res = await getProducts();
@@ -700,7 +1186,6 @@ const ProductList = () => {
                 "PRODUCT LIST API RESPONSE:",
                 res.data
             );
-
 
             // Backend response:
             //
@@ -711,31 +1196,25 @@ const ProductList = () => {
             // }
 
             const productData =
-
                 Array.isArray(res.data?.data)
-
                     ? res.data.data
-
                     : Array.isArray(res.data)
-
                         ? res.data
-
-                        : [];
-
+                        : Array.isArray(res.data?.products)
+                            ? res.data.products
+                            : Array.isArray(res.data?.data?.products)
+                                ? res.data.data.products
+                                : [];
 
             console.log(
                 "PRODUCTS SET TO STATE:",
                 productData
             );
 
-
             setProducts(productData);
-
             setCurrentPage(1);
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
                 "GET PRODUCTS ERROR:",
@@ -749,27 +1228,19 @@ const ProductList = () => {
                 "Failed to load products"
             );
 
-        }
-
-        finally {
+        } finally {
 
             setLoading(false);
-
         }
-
     };
-
 
     // =====================================================
     // FIRST LOAD
     // =====================================================
 
     useEffect(() => {
-
         loadProducts();
-
     }, []);
-
 
     // =====================================================
     // SEARCH PRODUCTS
@@ -777,12 +1248,9 @@ const ProductList = () => {
 
     const handleSearch = async (e) => {
 
-        const keyword =
-            e.target.value;
-
+        const keyword = e.target.value;
 
         setSearch(keyword);
-
 
         // =================================================
         // EMPTY SEARCH
@@ -790,58 +1258,43 @@ const ProductList = () => {
 
         if (!keyword.trim()) {
 
-            loadProducts();
+            await loadProducts();
 
             return;
-
         }
-
 
         try {
 
             setLoading(true);
 
-
             const res =
-                await searchProducts(
-                    keyword
-                );
-
+                await searchProducts(keyword);
 
             console.log(
                 "SEARCH API RESPONSE:",
                 res.data
             );
 
-
             const searchData =
-
-                Array.isArray(
-                    res.data?.data
-                )
-
+                Array.isArray(res.data?.data)
                     ? res.data.data
-
                     : Array.isArray(res.data)
-
                         ? res.data
-
-                        : [];
-
+                        : Array.isArray(res.data?.products)
+                            ? res.data.products
+                            : Array.isArray(res.data?.data?.products)
+                                ? res.data.data.products
+                                : [];
 
             console.log(
                 "SEARCH PRODUCTS:",
                 searchData
             );
 
-
             setProducts(searchData);
-
             setCurrentPage(1);
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
                 "SEARCH ERROR:",
@@ -850,16 +1303,16 @@ const ProductList = () => {
 
             setProducts([]);
 
-        }
+            toast.error(
+                error.response?.data?.message ||
+                "Search failed"
+            );
 
-        finally {
+        } finally {
 
             setLoading(false);
-
         }
-
     };
-
 
     // =====================================================
     // DELETE PRODUCT
@@ -872,79 +1325,55 @@ const ProductList = () => {
                 "Are you sure you want to delete this product?"
             );
 
-
         if (!confirmDelete) {
-
             return;
-
         }
-
 
         try {
 
             setLoading(true);
-
 
             console.log(
                 "Deleting Product ID:",
                 id
             );
 
-
             await deleteProduct(id);
-
 
             toast.success(
                 "Product Deleted Successfully"
             );
 
-
             // Reload product list
-
             await loadProducts();
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
                 "DELETE PRODUCT ERROR:",
                 error
             );
 
-
             toast.error(
-
                 error.response?.data?.message ||
-
                 "Delete Failed"
-
             );
 
-        }
-
-        finally {
+        } finally {
 
             setLoading(false);
-
         }
-
     };
-
 
     // =====================================================
     // PAGINATION
     // =====================================================
 
     const lastIndex =
-        currentPage *
-        itemsPerPage;
-
+        currentPage * itemsPerPage;
 
     const firstIndex =
-        lastIndex -
-        itemsPerPage;
-
+        lastIndex - itemsPerPage;
 
     const currentProducts =
         products.slice(
@@ -952,13 +1381,11 @@ const ProductList = () => {
             lastIndex
         );
 
-
     const totalPages =
         Math.ceil(
             products.length /
             itemsPerPage
         );
-
 
     // =====================================================
     // IMAGE URL
@@ -966,41 +1393,77 @@ const ProductList = () => {
 
     const getImageUrl = (product) => {
 
-        const imageUrl =
-            product?.images?.[0]?.url;
+        let imageUrl = null;
 
+        // -----------------------------------------------
+        // Multiple possible backend image structures
+        // -----------------------------------------------
+
+        if (
+            Array.isArray(product?.images) &&
+            product.images.length > 0
+        ) {
+
+            const firstImage =
+                product.images[0];
+
+            if (typeof firstImage === "string") {
+                imageUrl = firstImage;
+            } else {
+                imageUrl =
+                    firstImage?.url ||
+                    firstImage?.path ||
+                    firstImage?.image ||
+                    firstImage?.src ||
+                    null;
+            }
+        }
+
+        // -----------------------------------------------
+        // Fallback image fields
+        // -----------------------------------------------
 
         if (!imageUrl) {
 
-            return null;
-
+            imageUrl =
+                product?.image ||
+                product?.primaryImage ||
+                product?.thumbnail ||
+                product?.imageUrl ||
+                null;
         }
 
+        if (!imageUrl) {
+            return null;
+        }
+
+        // -----------------------------------------------
+        // Full URL
+        // -----------------------------------------------
 
         if (
-
             imageUrl.startsWith("http://") ||
-
             imageUrl.startsWith("https://")
-
         ) {
 
             return imageUrl;
-
         }
 
+        // -----------------------------------------------
+        // Backend URL
+        // -----------------------------------------------
 
         const serverUrl =
-            API.replace(
-                /\/api\/?$/,
-                ""
-            );
+            String(API || "")
+                .replace(/\/api\/?$/, "")
+                .replace(/\/$/, "");
 
+        const cleanImagePath =
+            String(imageUrl)
+                .replace(/^\/+/, "");
 
-        return `${serverUrl}${imageUrl}`;
-
+        return `${serverUrl}/${cleanImagePath}`;
     };
-
 
     // =====================================================
     // PRODUCT TYPE
@@ -1012,9 +1475,7 @@ const ProductList = () => {
             product?.productType ||
             "NEW"
         );
-
     };
-
 
     // =====================================================
     // CATEGORY NAME
@@ -1029,19 +1490,16 @@ const ProductList = () => {
 
             return (
                 product.category?.name ||
+                product.category?.title ||
                 "N/A"
             );
-
         }
-
 
         return (
             product?.category ||
             "N/A"
         );
-
     };
-
 
     // =====================================================
     // SUBCATEGORY NAME
@@ -1056,19 +1514,16 @@ const ProductList = () => {
 
             return (
                 product.subcategory?.name ||
+                product.subcategory?.title ||
                 "N/A"
             );
-
         }
-
 
         return (
             product?.subcategory ||
             "N/A"
         );
-
     };
-
 
     // =====================================================
     // BRAND NAME
@@ -1083,35 +1538,110 @@ const ProductList = () => {
 
             return (
                 product.brand?.name ||
+                product.brand?.title ||
                 "N/A"
             );
-
         }
-
 
         return (
             product?.brand ||
             "N/A"
         );
-
     };
-
 
     // =====================================================
     // REFURBISHED DETAILS
     // =====================================================
 
-    const getRefurbishedDetails = (
-        product
-    ) => {
+    const getRefurbishedDetails = (product) => {
 
         return (
             product?.refurbishedDetails ||
             null
         );
-
     };
 
+    // =====================================================
+    // RENTAL DETAILS
+    // =====================================================
+
+    const getRentalDetails = (product) => {
+
+        return (
+            product?.rental ||
+            product?.rentalDetails ||
+            product?.rentalProduct ||
+            null
+        );
+    };
+
+    // =====================================================
+    // RENTAL QUANTITY
+    // =====================================================
+
+    const getRentalQuantity = (product) => {
+
+        const rental =
+            getRentalDetails(product);
+
+        if (!rental) {
+            return null;
+        }
+
+        return {
+            available:
+                rental?.availableQuantity ??
+                rental?.availableQty ??
+                0,
+
+            total:
+                rental?.totalQuantity ??
+                rental?.quantity ??
+                rental?.availableQuantity ??
+                0,
+
+            rented:
+                rental?.rentedQuantity ??
+                0
+        };
+    };
+
+    // =====================================================
+    // RENTAL STATUS
+    // =====================================================
+
+    const getRentalStatus = (product) => {
+
+        const rental =
+            getRentalDetails(product);
+
+        if (!rental) {
+            return "NOT_CONFIGURED";
+        }
+
+        if (
+            rental?.isAvailableForRent === true
+        ) {
+
+            return "AVAILABLE";
+        }
+
+        return "UNAVAILABLE";
+    };
+
+    // =====================================================
+    // FORMAT MONEY
+    // =====================================================
+
+    const formatMoney = (value) => {
+
+        const number =
+            Number(value || 0);
+
+        return number.toLocaleString(
+            "en-IN"
+        );
+    };
 
     // =====================================================
     // UI
@@ -1120,7 +1650,6 @@ const ProductList = () => {
     return (
 
         <div className="product-list1">
-
 
             {/* =================================================
                 HEADER
@@ -1140,7 +1669,6 @@ const ProductList = () => {
 
                 </div>
 
-
                 <input
                     type="text"
                     placeholder="Search Product..."
@@ -1151,7 +1679,6 @@ const ProductList = () => {
 
             </div>
 
-
             {/* =================================================
                 LOADING
             ================================================= */}
@@ -1159,9 +1686,7 @@ const ProductList = () => {
             {loading ? (
 
                 <div className="loading1">
-
                     Loading Products...
-
                 </div>
 
             ) : (
@@ -1213,6 +1738,10 @@ const ProductList = () => {
                                     </th>
 
                                     <th>
+                                        Rental Details
+                                    </th>
+
+                                    <th>
                                         Purchase Price
                                     </th>
 
@@ -1248,13 +1777,11 @@ const ProductList = () => {
 
                             </thead>
 
-
                             <tbody>
 
                                 {currentProducts.length > 0 ? (
 
                                     currentProducts.map(
-
                                         (
                                             product,
                                             index
@@ -1265,18 +1792,30 @@ const ProductList = () => {
                                                     product
                                                 );
 
-
                                             const productType =
                                                 getProductType(
                                                     product
                                                 );
-
 
                                             const refurbishedDetails =
                                                 getRefurbishedDetails(
                                                     product
                                                 );
 
+                                            const rentalDetails =
+                                                getRentalDetails(
+                                                    product
+                                                );
+
+                                            const rentalQuantity =
+                                                getRentalQuantity(
+                                                    product
+                                                );
+
+                                            const rentalStatus =
+                                                getRentalStatus(
+                                                    product
+                                                );
 
                                             return (
 
@@ -1288,21 +1827,17 @@ const ProductList = () => {
                                                     }
                                                 >
 
-
                                                     {/* =================================================
                                                         NUMBER
                                                     ================================================= */}
 
                                                     <td>
-
                                                         {
                                                             firstIndex +
                                                             index +
                                                             1
                                                         }
-
                                                     </td>
-
 
                                                     {/* =================================================
                                                         IMAGE
@@ -1323,6 +1858,11 @@ const ProductList = () => {
                                                                 className="table-image1"
                                                                 onError={(e) => {
 
+                                                                    console.error(
+                                                                        "PRODUCT IMAGE ERROR:",
+                                                                        imageUrl
+                                                                    );
+
                                                                     e.target.style.display =
                                                                         "none";
 
@@ -1332,15 +1872,12 @@ const ProductList = () => {
                                                         ) : (
 
                                                             <div className="no-image1">
-
                                                                 No Image
-
                                                             </div>
 
                                                         )}
 
                                                     </td>
-
 
                                                     {/* =================================================
                                                         PRODUCT NAME
@@ -1349,16 +1886,13 @@ const ProductList = () => {
                                                     <td>
 
                                                         <strong>
-
                                                             {
                                                                 product.name ||
                                                                 "N/A"
                                                             }
-
                                                         </strong>
 
                                                     </td>
-
 
                                                     {/* =================================================
                                                         PRODUCT TYPE
@@ -1370,23 +1904,25 @@ const ProductList = () => {
                                                         "REFURBISHED" ? (
 
                                                             <span className="refurbished-badge">
-
                                                                 Refurbished
+                                                            </span>
 
+                                                        ) : productType ===
+                                                        "RENTAL" ? (
+
+                                                            <span className="rental-product-badge">
+                                                                Rental
                                                             </span>
 
                                                         ) : (
 
                                                             <span className="new-product-badge">
-
                                                                 New
-
                                                             </span>
 
                                                         )}
 
                                                     </td>
-
 
                                                     {/* =================================================
                                                         CATEGORY
@@ -1402,7 +1938,6 @@ const ProductList = () => {
 
                                                     </td>
 
-
                                                     {/* =================================================
                                                         SUBCATEGORY
                                                     ================================================= */}
@@ -1416,7 +1951,6 @@ const ProductList = () => {
                                                         }
 
                                                     </td>
-
 
                                                     {/* =================================================
                                                         BRAND
@@ -1432,7 +1966,6 @@ const ProductList = () => {
 
                                                     </td>
 
-
                                                     {/* =================================================
                                                         REFURBISHED DETAILS
                                                     ================================================= */}
@@ -1447,7 +1980,6 @@ const ProductList = () => {
                                                                 <div className="refurbished-details1">
 
                                                                     <div>
-
                                                                         <strong>
                                                                             Grade:
                                                                         </strong>{" "}
@@ -1456,12 +1988,9 @@ const ProductList = () => {
                                                                             refurbishedDetails.grade ||
                                                                             "N/A"
                                                                         }
-
                                                                     </div>
 
-
                                                                     <div>
-
                                                                         <strong>
                                                                             Battery:
                                                                         </strong>{" "}
@@ -1473,9 +2002,7 @@ const ProductList = () => {
 
                                                                     </div>
 
-
                                                                     <div>
-
                                                                         <strong>
                                                                             Warranty:
                                                                         </strong>{" "}
@@ -1484,14 +2011,10 @@ const ProductList = () => {
                                                                             refurbishedDetails.warrantyMonths ??
                                                                             0
                                                                         }{" "}
-
                                                                         months
-
                                                                     </div>
 
-
                                                                     <div>
-
                                                                         <strong>
                                                                             Testing:
                                                                         </strong>{" "}
@@ -1500,7 +2023,6 @@ const ProductList = () => {
                                                                             refurbishedDetails.testingStatus ||
                                                                             "N/A"
                                                                         }
-
                                                                     </div>
 
                                                                 </div>
@@ -1516,15 +2038,227 @@ const ProductList = () => {
                                                         ) : (
 
                                                             <span className="not-applicable1">
-
                                                                 N/A
-
                                                             </span>
 
                                                         )}
 
                                                     </td>
 
+                                                    {/* =================================================
+                                                        RENTAL DETAILS
+                                                    ================================================= */}
+
+                                                    <td>
+
+                                                        {productType ===
+                                                        "RENTAL" ? (
+
+                                                            rentalDetails ? (
+
+                                                                <div className="rental-details1">
+
+                                                                    {/* -----------------------------------------
+                                                                        RENTAL STATUS
+                                                                    ----------------------------------------- */}
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Rental:
+                                                                        </strong>{" "}
+
+                                                                        {rentalStatus ===
+                                                                        "AVAILABLE" ? (
+
+                                                                            <span className="rental-available1">
+                                                                                Available
+                                                                            </span>
+
+                                                                        ) : (
+
+                                                                            <span className="rental-unavailable1">
+                                                                                Unavailable
+                                                                            </span>
+
+                                                                        )}
+
+                                                                    </div>
+
+                                                                    {/* -----------------------------------------
+                                                                        MONTHLY RENT
+                                                                    ----------------------------------------- */}
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Monthly:
+                                                                        </strong>{" "}
+
+                                                                        ₹
+                                                                        {formatMoney(
+                                                                            rentalDetails.monthlyRent
+                                                                        )}
+
+                                                                    </div>
+
+                                                                    {/* -----------------------------------------
+                                                                        SECURITY DEPOSIT
+                                                                    ----------------------------------------- */}
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Deposit:
+                                                                        </strong>{" "}
+
+                                                                        ₹
+                                                                        {formatMoney(
+                                                                            rentalDetails.securityDeposit
+                                                                        )}
+
+                                                                    </div>
+
+                                                                    {/* -----------------------------------------
+                                                                        MINIMUM MONTHS
+                                                                    ----------------------------------------- */}
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Minimum:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            rentalDetails.minimumRentalMonths ??
+                                                                            3
+                                                                        }{" "}
+                                                                        months
+
+                                                                    </div>
+
+                                                                    {/* -----------------------------------------
+                                                                        GST
+                                                                    ----------------------------------------- */}
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            GST:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            rentalDetails.gst ??
+                                                                            0
+                                                                        }%
+
+                                                                    </div>
+
+                                                                    {/* -----------------------------------------
+                                                                        QUANTITY
+                                                                    ----------------------------------------- */}
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Available:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            rentalQuantity?.available ??
+                                                                            0
+                                                                        }
+
+                                                                    </div>
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Total:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            rentalQuantity?.total ??
+                                                                            0
+                                                                        }
+
+                                                                    </div>
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Rented:
+                                                                        </strong>{" "}
+
+                                                                        {
+                                                                            rentalQuantity?.rented ??
+                                                                            0
+                                                                        }
+
+                                                                    </div>
+
+                                                                    {/* -----------------------------------------
+                                                                        SOFTWARE
+                                                                    ----------------------------------------- */}
+
+                                                                    <div>
+
+                                                                        <strong>
+                                                                            Software:
+                                                                        </strong>{" "}
+
+                                                                        {rentalDetails.basicSoftwareInstalled ===
+                                                                        true
+                                                                            ? "Installed"
+                                                                            : "Not Installed"}
+
+                                                                    </div>
+
+                                                                    {/* -----------------------------------------
+                                                                        INCLUDED ITEMS
+                                                                    ----------------------------------------- */}
+
+                                                                    {Array.isArray(
+                                                                        rentalDetails.includedItems
+                                                                    ) &&
+                                                                    rentalDetails.includedItems.length >
+                                                                    0 ? (
+
+                                                                        <div>
+
+                                                                            <strong>
+                                                                                Included:
+                                                                            </strong>{" "}
+
+                                                                            {
+                                                                                rentalDetails.includedItems.join(
+                                                                                    ", "
+                                                                                )
+                                                                            }
+
+                                                                        </div>
+
+                                                                    ) : null}
+
+                                                                </div>
+
+                                                            ) : (
+
+                                                                <span className="rental-not-configured1">
+                                                                    Rental Not Configured
+                                                                </span>
+
+                                                            )
+
+                                                        ) : (
+
+                                                            <span className="not-applicable1">
+                                                                N/A
+                                                            </span>
+
+                                                        )}
+
+                                                    </td>
 
                                                     {/* =================================================
                                                         PURCHASE PRICE
@@ -1535,13 +2269,13 @@ const ProductList = () => {
                                                         ₹{" "}
 
                                                         {
-                                                            product.pricing
-                                                                ?.purchasePrice ??
-                                                            0
+                                                            formatMoney(
+                                                                product.pricing
+                                                                    ?.purchasePrice
+                                                            )
                                                         }
 
                                                     </td>
-
 
                                                     {/* =================================================
                                                         SELLING PRICE
@@ -1552,13 +2286,13 @@ const ProductList = () => {
                                                         ₹{" "}
 
                                                         {
-                                                            product.pricing
-                                                                ?.sellingPrice ??
-                                                            0
+                                                            formatMoney(
+                                                                product.pricing
+                                                                    ?.sellingPrice
+                                                            )
                                                         }
 
                                                     </td>
-
 
                                                     {/* =================================================
                                                         MRP
@@ -1569,13 +2303,13 @@ const ProductList = () => {
                                                         ₹{" "}
 
                                                         {
-                                                            product.pricing
-                                                                ?.mrp ??
-                                                            0
+                                                            formatMoney(
+                                                                product.pricing
+                                                                    ?.mrp
+                                                            )
                                                         }
 
                                                     </td>
-
 
                                                     {/* =================================================
                                                         DISCOUNT
@@ -1591,7 +2325,6 @@ const ProductList = () => {
 
                                                     </td>
 
-
                                                     {/* =================================================
                                                         GST
                                                     ================================================= */}
@@ -1606,7 +2339,6 @@ const ProductList = () => {
 
                                                     </td>
 
-
                                                     {/* =================================================
                                                         STOCK
                                                     ================================================= */}
@@ -1616,11 +2348,11 @@ const ProductList = () => {
                                                         {
                                                             product.inventory
                                                                 ?.currentStock ??
+                                                            product.stock ??
                                                             0
                                                         }
 
                                                     </td>
-
 
                                                     {/* =================================================
                                                         STATUS
@@ -1632,23 +2364,18 @@ const ProductList = () => {
                                                         "ACTIVE" ? (
 
                                                             <span className="active-status">
-
                                                                 Active
-
                                                             </span>
 
                                                         ) : (
 
                                                             <span className="inactive-status">
-
                                                                 Inactive
-
                                                             </span>
 
                                                         )}
 
                                                     </td>
-
 
                                                     {/* =================================================
                                                         ACTIONS
@@ -1661,13 +2388,12 @@ const ProductList = () => {
                                                             className="delete-btn1"
                                                             onClick={() =>
                                                                 handleDelete(
-                                                                    product._id
+                                                                    product._id ||
+                                                                    product.id
                                                                 )
                                                             }
                                                         >
-
                                                             Delete
-
                                                         </button>
 
                                                     </td>
@@ -1675,9 +2401,7 @@ const ProductList = () => {
                                                 </tr>
 
                                             );
-
                                         }
-
                                     )
 
                                 ) : (
@@ -1685,12 +2409,10 @@ const ProductList = () => {
                                     <tr>
 
                                         <td
-                                            colSpan="16"
+                                            colSpan="17"
                                             className="no-products1"
                                         >
-
                                             No Products Found
-
                                         </td>
 
                                     </tr>
@@ -1703,7 +2425,6 @@ const ProductList = () => {
 
                     </div>
 
-
                     {/* =================================================
                         PAGINATION
                     ================================================= */}
@@ -1711,7 +2432,6 @@ const ProductList = () => {
                     {totalPages > 1 && (
 
                         <div className="pagination1">
-
 
                             <button
                                 type="button"
@@ -1724,28 +2444,20 @@ const ProductList = () => {
                                     )
                                 }
                             >
-
                                 Previous
-
                             </button>
 
-
                             {[...Array(totalPages)].map(
-
                                 (_, index) => (
 
                                     <button
                                         type="button"
                                         key={index}
                                         className={
-
                                             currentPage ===
                                             index + 1
-
                                                 ? "active-page"
-
                                                 : ""
-
                                         }
                                         onClick={() =>
                                             setCurrentPage(
@@ -1753,17 +2465,13 @@ const ProductList = () => {
                                             )
                                         }
                                     >
-
                                         {
                                             index + 1
                                         }
-
                                     </button>
 
                                 )
-
                             )}
-
 
                             <button
                                 type="button"
@@ -1777,9 +2485,7 @@ const ProductList = () => {
                                     )
                                 }
                             >
-
                                 Next
-
                             </button>
 
                         </div>
@@ -1791,10 +2497,7 @@ const ProductList = () => {
             )}
 
         </div>
-
     );
-
 };
-
 
 export default ProductList;

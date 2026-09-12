@@ -1,0 +1,762 @@
+.rental-request-page {
+  min-height: 100vh;
+  background: #f6f8fb;
+  padding: 40px 20px 70px;
+}
+
+.rental-request-container {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+}
+
+/* ==========================================
+   TOP
+========================================== */
+
+.rental-request-top {
+  margin-bottom: 30px;
+}
+
+.rental-back-link {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 22px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  color: #4b5563;
+}
+
+.rental-back-link:hover {
+  color: #111827;
+}
+
+.rental-request-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+
+  color: #2563eb;
+}
+
+.rental-request-top h1 {
+  margin: 0;
+
+  font-size: clamp(30px, 4vw, 46px);
+  line-height: 1.1;
+
+  color: #111827;
+}
+
+.rental-request-top p {
+  margin: 12px 0 0;
+
+  color: #6b7280;
+  font-size: 15px;
+}
+
+/* ==========================================
+   LAYOUT
+========================================== */
+
+.rental-request-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 390px;
+  gap: 28px;
+
+  align-items: start;
+}
+
+/* ==========================================
+   FORM CARD
+========================================== */
+
+.rental-request-form-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+}
+
+.rental-form-section {
+  padding: 30px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.rental-section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  margin-bottom: 25px;
+}
+
+.rental-section-icon {
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.rental-section-heading h2 {
+  margin: 0 0 5px;
+
+  font-size: 20px;
+  color: #111827;
+}
+
+.rental-section-heading p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #6b7280;
+}
+
+/* ==========================================
+   CUSTOMER TYPE
+========================================== */
+
+.customer-type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.customer-type-card {
+  position: relative;
+
+  min-height: 105px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 20px;
+
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  text-align: left;
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.customer-type-card:hover {
+  border-color: #93c5fd;
+  transform: translateY(-1px);
+}
+
+.customer-type-card.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.customer-type-card > svg:first-child {
+  color: #2563eb;
+}
+
+.customer-type-card div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.customer-type-card strong {
+  color: #111827;
+  font-size: 15px;
+}
+
+.customer-type-card span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.customer-type-check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+
+  color: #2563eb;
+}
+
+/* ==========================================
+   FORM GRID
+========================================== */
+
+.rental-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.rental-field {
+  min-width: 0;
+}
+
+.rental-field.full {
+  grid-column: 1 / -1;
+}
+
+.rental-field label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #374151;
+}
+
+.rental-field label span {
+  color: #dc2626;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon svg {
+  position: absolute;
+
+  left: 14px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #9ca3af;
+
+  pointer-events: none;
+}
+
+.input-with-icon textarea + svg {
+  top: 18px;
+}
+
+.rental-field input,
+.rental-field textarea,
+.normal-input {
+  width: 100%;
+  box-sizing: border-box;
+
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #111827;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.rental-field input {
+  height: 48px;
+  padding: 0 14px 0 44px;
+}
+
+.rental-field textarea {
+  padding: 14px 14px 14px 44px;
+  resize: vertical;
+
+  min-height: 105px;
+}
+
+.normal-input {
+  padding: 13px 14px;
+}
+
+.rental-field input:focus,
+.rental-field textarea:focus,
+.normal-input:focus {
+  border-color: #2563eb;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.rental-field input::placeholder,
+.rental-field textarea::placeholder {
+  color: #9ca3af;
+}
+
+.field-error {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #dc2626;
+  font-size: 12px;
+}
+
+.field-help {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.field-help strong {
+  color: #374151;
+}
+
+/* ==========================================
+   SUBMIT
+========================================== */
+
+.rental-submit-area {
+  padding: 25px 30px 30px;
+
+  background: #fafbfc;
+}
+
+.rental-submit-button {
+  width: 100%;
+  min-height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.rental-submit-button:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.rental-submit-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.rental-submit-area p {
+  margin: 12px 0 0;
+
+  text-align: center;
+
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.rental-button-spinner,
+.rental-spinner {
+  animation: rental-spin 1s linear infinite;
+}
+
+@keyframes rental-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.rental-request-sidebar {
+  position: sticky;
+  top: 25px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.request-product-card,
+.rental-cost-card,
+.rental-request-info-box {
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
+}
+
+/* ==========================================
+   PRODUCT CARD
+========================================== */
+
+.request-product-card {
+  overflow: hidden;
+}
+
+.request-product-image {
+  width: 100%;
+  height: 220px;
+
+  object-fit: contain;
+
+  display: block;
+
+  background: #f8fafc;
+}
+
+.request-product-image-placeholder {
+  height: 220px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f3f4f6;
+
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.request-product-content {
+  padding: 20px;
+}
+
+.request-product-content > span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #2563eb;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.request-product-content h3 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+.request-product-content p {
+  margin: 7px 0 0;
+
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* ==========================================
+   COST CARD
+========================================== */
+
+.rental-cost-card {
+  padding: 22px;
+}
+
+.cost-card-header {
+  padding-bottom: 15px;
+  margin-bottom: 5px;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.cost-card-header h3 {
+  margin: 0;
+
+  color: #111827;
+  font-size: 17px;
+}
+
+.cost-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding: 11px 0;
+}
+
+.cost-row span {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.cost-row strong {
+  color: #111827;
+  font-size: 13px;
+}
+
+.cost-divider {
+  height: 1px;
+
+  margin: 7px 0;
+
+  background: #e5e7eb;
+}
+
+.cost-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  margin-top: 8px;
+  padding-top: 16px;
+
+  border-top: 2px solid #e5e7eb;
+}
+
+.cost-total span {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.cost-total strong {
+  color: #2563eb;
+  font-size: 19px;
+}
+
+.cost-note {
+  margin: 16px 0 0;
+  padding: 12px;
+
+  border-radius: 9px;
+
+  background: #f8fafc;
+
+  color: #6b7280;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ==========================================
+   INFO BOX
+========================================== */
+
+.rental-request-info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+
+  padding: 18px;
+
+  background: #eff6ff;
+  border-color: #bfdbfe;
+
+  color: #1d4ed8;
+}
+
+.rental-request-info-box > svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.rental-request-info-box strong {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #1e3a8a;
+
+  font-size: 14px;
+}
+
+.rental-request-info-box ol {
+  margin: 0;
+  padding-left: 18px;
+
+  color: #374151;
+
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.rental-request-loading {
+  min-height: 60vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: #6b7280;
+}
+
+.rental-request-loading p {
+  margin-top: 12px;
+}
+
+/* ==========================================
+   EMPTY
+========================================== */
+
+.rental-request-empty {
+  width: min(600px, 100%);
+
+  margin: 80px auto;
+
+  padding: 40px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+}
+
+.rental-request-empty h2 {
+  margin: 0 0 10px;
+
+  color: #111827;
+}
+
+.rental-request-empty p {
+  margin: 0 0 25px;
+
+  color: #6b7280;
+}
+
+.rental-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 11px 18px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1000px) {
+  .rental-request-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .rental-request-sidebar {
+    position: static;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .request-product-card {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .rental-request-page {
+    padding: 25px 14px 50px;
+  }
+
+  .rental-form-section {
+    padding: 22px 18px;
+  }
+
+  .rental-submit-area {
+    padding: 20px 18px 23px;
+  }
+
+  .customer-type-grid,
+  .rental-form-grid,
+  .rental-request-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .rental-field.full {
+    grid-column: auto;
+  }
+
+  .request-product-image,
+  .request-product-image-placeholder {
+    height: 190px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rental-request-top h1 {
+    font-size: 30px;
+  }
+
+  .customer-type-card {
+    min-height: 90px;
+    padding: 15px;
+  }
+
+  .rental-section-heading h2 {
+    font-size: 18px;
+  }
+
+  .cost-row {
+    align-items: flex-start;
+  }
+
+  .cost-total strong {
+    font-size: 17px;
+  }
+}

@@ -1332,6 +1332,9 @@ import WalkInOrders from "./pages/Receptionist/WalkInOrders/WalkInOrders.jsx";
 import WalkInInvoice from "./pages/Receptionist/WalkInOrders/WalkInInvoice/WalkInInvoice.jsx";
 import WalkInInvoicePage from "./pages/invoice/WalkInInvoicePage";
 
+import WalkInRental from "./pages/Receptionist/Rental/WalkInRental.jsx";
+
+
 // ===============================
 // ADMIN LAYOUT
 // ===============================
@@ -1443,6 +1446,7 @@ import RepairRates from "./pages/Receptionist/RepairRates.jsx";
 import TechinicaStaff from "./pages/Receptionist/TechinicaStaff.jsx";
 import ReceptionistLayout from "./pages/Receptionist/ReceptionistLayout.jsx";
 import RepairCustomer from "./pages/Receptionist/RepairCustomer.jsx";
+import WalkInRentalInvoice from  "./pages/Receptionist/WalkInRentalInvoice";
 
 // ===============================
 // AUTH
@@ -1450,6 +1454,19 @@ import RepairCustomer from "./pages/Receptionist/RepairCustomer.jsx";
 
 import VerifyEmail from "./pages/auth/VerifyEmail";
 import Compare from "./pages/Compare.jsx";
+
+
+import RentalListing from "./pages/rental/RentalListing";
+import RentalDetails from "./pages/rental/RentalDetails";
+import RentalRequest from "./pages/rental/RentalRequest";
+import MyRentals from "./pages/rental/MyRentals";
+import RentalSummary from "./pages/rental/RentalSummary";
+import RentalDocuments from "./pages/rental/RentalDocuments";
+import RentalReturn from "./pages/rental/RentalReturn";
+import WalkInRentalOrders from "./pages/rental/WalkInRentalOrders";
+import WalkInRentalDetails from "./pages/rental/WalkInRentalDetails.jsx";
+
+
 // =====================================================
 // APP
 // =====================================================
@@ -2558,6 +2575,33 @@ function App() {
                             element={<NewWalkInOrder />}
                         />
 
+
+                        {/* =================================================
+                            WALK-IN RENTAL
+                            ================================================= */}
+
+<Route
+  path="rental/new"
+  element={<WalkInRental />}
+/>
+
+<Route
+  path="rental/orders"
+  element={<WalkInRentalOrders />}
+/>
+
+<Route
+  path="rental/orders/:rentalId"
+  element={<WalkInRentalDetails />}
+/>
+<Route
+    path="walk-in-invoice/:rentalId"
+    element={<WalkInRentalInvoice />}
+/>
+
+
+
+
                         {/* Walk-in Orders */}
                         <Route
                             path="walk-in-orders"
@@ -2721,7 +2765,56 @@ function App() {
                         element={<Rental />}
                     />
 
+
+                                        {/* =================================================
+                        RENTAL
+                    ================================================= */}
+
+                    {/* <Route
+                        path="/rental"
+                        element={<Rental />}
+                    /> */}
+
+                    <Route
+                        path="/rentals"
+                        element={<RentalListing />}
+                    />
+
+                    <Route
+                        path="/rental/:productId"
+                        element={<RentalDetails />}
+                    />
+
+                    <Route
+                        path="/rental/request/:productId"
+                        element={<RentalRequest />}
+                    />
+
+                    <Route
+                        path="/my-rentals"
+                        element={<MyRentals />}
+                    />
+
+                    <Route
+                        path="/my-rentals/:id"
+                        element={<RentalSummary />}
+                    />
+
+                    <Route
+                        path="/rental/documents/:rentalId"
+                        element={<RentalDocuments />}
+                    />
+
+                    <Route
+                        path="/rental/return/:rentalId"
+                        element={<RentalReturn />}
+                    />
+
+                
+
                 </Routes>
+
+
 
             </main>
 

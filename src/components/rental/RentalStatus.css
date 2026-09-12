@@ -1,0 +1,326 @@
+.rental-status-wrapper {
+  width: 100%;
+}
+
+/* ==========================================
+   CURRENT STATUS
+========================================== */
+
+.rental-current-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  padding: 18px;
+
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+
+  background: #f8fafc;
+}
+
+.rental-current-status-icon {
+  width: 44px;
+  height: 44px;
+
+  flex: 0 0 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.rental-current-status-content {
+  min-width: 0;
+}
+
+.rental-current-status-content > span {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.rental-current-status-content strong {
+  display: block;
+
+  color: #111827;
+  font-size: 17px;
+}
+
+.rental-current-status-content p {
+  margin: 5px 0 0;
+
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Status colors */
+
+.rental-current-status.pending {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.rental-current-status.pending
+  .rental-current-status-icon {
+  color: #d97706;
+}
+
+.rental-current-status.verification {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.rental-current-status.verification
+  .rental-current-status-icon {
+  color: #2563eb;
+}
+
+.rental-current-status.approved,
+.rental-current-status.completed {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.rental-current-status.approved
+  .rental-current-status-icon,
+.rental-current-status.completed
+  .rental-current-status-icon {
+  color: #16a34a;
+}
+
+.rental-current-status.deposit {
+  background: #fff7ed;
+  border-color: #fed7aa;
+}
+
+.rental-current-status.deposit
+  .rental-current-status-icon {
+  color: #ea580c;
+}
+
+.rental-current-status.ready,
+.rental-current-status.active {
+  background: #f0fdfa;
+  border-color: #99f6e4;
+}
+
+.rental-current-status.ready
+  .rental-current-status-icon,
+.rental-current-status.active
+  .rental-current-status-icon {
+  color: #0f766e;
+}
+
+.rental-current-status.return,
+.rental-current-status.returned {
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+}
+
+.rental-current-status.return
+  .rental-current-status-icon,
+.rental-current-status.returned
+  .rental-current-status-icon {
+  color: #7c3aed;
+}
+
+.rental-current-status.settlement {
+  background: #fdf4ff;
+  border-color: #f5d0fe;
+}
+
+.rental-current-status.settlement
+  .rental-current-status-icon {
+  color: #a21caf;
+}
+
+.rental-current-status.rejected,
+.rental-current-status.cancelled {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.rental-current-status.rejected
+  .rental-current-status-icon,
+.rental-current-status.cancelled
+  .rental-current-status-icon {
+  color: #dc2626;
+}
+
+/* ==========================================
+   TIMELINE
+========================================== */
+
+.rental-status-timeline {
+  position: relative;
+
+  margin-top: 25px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.rental-status-step {
+  position: relative;
+
+  min-height: 58px;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.rental-status-step-marker {
+  position: relative;
+  z-index: 2;
+
+  width: 36px;
+  height: 36px;
+
+  flex: 0 0 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  border: 1px solid #d1d5db;
+
+  background: #ffffff;
+  color: #9ca3af;
+}
+
+.rental-status-step-text {
+  display: flex;
+  flex-direction: column;
+
+  padding-top: 7px;
+}
+
+.rental-status-step-text strong {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.rental-status-step-text span {
+  margin-top: 2px;
+
+  color: #2563eb;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Completed */
+
+.rental-status-step.completed
+  .rental-status-step-marker {
+  color: #16a34a;
+
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.rental-status-step.completed
+  .rental-status-step-text strong {
+  color: #374151;
+}
+
+/* Current */
+
+.rental-status-step.current
+  .rental-status-step-marker {
+  color: #2563eb;
+
+  border: 2px solid #2563eb;
+  background: #eff6ff;
+}
+
+.rental-status-step.current
+  .rental-status-step-text strong {
+  color: #111827;
+}
+
+/* Future */
+
+.rental-status-step.future
+  .rental-status-step-marker {
+  background: #f9fafb;
+}
+
+/* Line */
+
+.rental-status-line {
+  position: absolute;
+
+  left: 17px;
+  top: 36px;
+
+  width: 2px;
+  height: 22px;
+
+  background: #e5e7eb;
+}
+
+.rental-status-step.completed
+  .rental-status-line {
+  background: #86efac;
+}
+
+/* ==========================================
+   FINAL STATUS
+========================================== */
+
+.rental-final-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  margin-top: 18px;
+  padding: 14px;
+
+  border-radius: 10px;
+}
+
+.rental-final-status strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 13px;
+}
+
+.rental-final-status p {
+  margin: 0;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.rental-final-status.rejected,
+.rental-final-status.cancelled {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+@media (max-width: 600px) {
+  .rental-current-status {
+    padding: 14px;
+  }
+
+  .rental-status-step-text strong {
+    font-size: 12px;
+  }
+}

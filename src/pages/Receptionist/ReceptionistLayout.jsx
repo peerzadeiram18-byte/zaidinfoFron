@@ -128,6 +128,7 @@ import {
   FaTools,
   FaReceipt,
   FaUserFriends,
+  FaLaptop,
   FaSignOutAlt,
   FaBars,
   FaTimes,
@@ -136,7 +137,8 @@ import {
   FaPlusCircle,
   FaListAlt,
   FaCalendarPlus,
-  FaCalendarCheck
+  FaCalendarCheck,
+  FaClipboardList
 } from "react-icons/fa";
 import "./ReceptionistLayout.css";
 
@@ -203,6 +205,50 @@ export default function ReceptionistLayout() {
             <FaPlusCircle className="rep-nav-icon" />
             <span>New Walk-in Order</span>
           </NavLink>
+
+          {/* NEW — RENTAL */}
+          {/* <NavLink
+                 to="/receptionist-dashboard/rental/new"
+                 className={({ isActive }) =>
+                `rep-nav-item ${isActive ? "rep-nav-item-active" : ""}`
+                   }
+              >
+               <FaLaptop className="rep-nav-icon" />
+               <span>New Walk-in Rental</span>
+            </NavLink> */}
+
+            {/* RENTAL LIST */}
+{/* NEW — RENTAL */}
+<NavLink
+  to="/receptionist-dashboard/rental/new"
+  className={({ isActive }) =>
+    `rep-nav-item ${isActive ? "rep-nav-item-active" : ""}`
+  }
+>
+  <FaLaptop className="rep-nav-icon" />
+  <span>New Walk-in Rental</span>
+</NavLink>
+
+{/* RENTAL LIST */}
+<NavLink
+  to="/receptionist-dashboard/rental/orders"
+  className={({ isActive }) =>
+    `rep-nav-item ${isActive ? "rep-nav-item-active" : ""}`
+  }
+>
+  <FaClipboardList className="rep-nav-icon" />
+  <span>Rental List</span>
+</NavLink>
+
+{/* <NavLink
+  to="/receptionist-dashboard/walk-in-orders"
+  className={({ isActive }) =>
+    `rep-nav-item ${isActive ? "rep-nav-item-active" : ""}`
+  }
+>
+  <FaListAlt className="rep-nav-icon" />
+  <span>Walk-in Orders List</span>
+</NavLink> */}
 
           <NavLink
             to="/receptionist-dashboard/walk-in-orders"

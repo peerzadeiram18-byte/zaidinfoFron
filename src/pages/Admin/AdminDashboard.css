@@ -720,3 +720,144 @@ tbody tr:hover td {
     padding: 14px;
   }
 }
+
+/* =========================================================
+   DASHBOARD HEADER ACTIONS
+========================================================= */
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.dashboard-header-left {
+  min-width: 0;
+}
+
+.dashboard-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* =========================================================
+   HOME BUTTON
+========================================================= */
+
+.dashboard-home-btn,
+.dashboard-notification-btn {
+  position: relative;
+
+  width: 44px;
+  height: 44px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  color: #374151;
+
+  font-size: 18px;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dashboard-home-btn:hover,
+.dashboard-notification-btn:hover {
+  background: #f0fdf4;
+  color: #16a34a;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-home-btn:active,
+.dashboard-notification-btn:active {
+  transform: scale(0.96);
+}
+
+/* =========================================================
+   NOTIFICATION BADGE
+========================================================= */
+
+.dashboard-notification-badge {
+  position: absolute;
+
+  top: -6px;
+  right: -6px;
+
+  min-width: 20px;
+  height: 20px;
+
+  padding: 0 5px;
+
+  border-radius: 999px;
+
+  background: #ef4444;
+  color: #ffffff;
+
+  border: 2px solid #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  line-height: 1;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .dashboard-header {
+    align-items: flex-start;
+  }
+
+  .dashboard-header-actions {
+    gap: 8px;
+  }
+
+  .dashboard-home-btn,
+  .dashboard-notification-btn {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+  }
+
+}
+
+@media (max-width: 520px) {
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-header-actions {
+    justify-content: flex-end;
+  }
+
+}

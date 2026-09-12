@@ -1,0 +1,281 @@
+.walkin-rental-orders-page {
+    padding: 24px;
+    min-height: 100vh;
+    background: #f6f7fb;
+}
+
+/* HEADER */
+
+.rental-orders-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.rental-orders-header h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.rental-orders-header p {
+    margin: 6px 0 0;
+    color: #6b7280;
+}
+
+/* NEW RENTAL */
+
+.new-rental-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    background: #111827;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.new-rental-btn:hover {
+    opacity: 0.9;
+}
+
+/* ERROR */
+
+.rental-error-box {
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* FILTER */
+
+.rental-filter-section {
+    display: grid;
+    grid-template-columns:
+        minmax(240px, 1fr)
+        180px
+        180px
+        100px;
+
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.rental-filter-section input,
+.rental-filter-section select {
+    height: 44px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    padding: 0 12px;
+    outline: none;
+    font-size: 14px;
+}
+
+.rental-filter-section input:focus,
+.rental-filter-section select:focus {
+    border-color: #111827;
+}
+
+.refresh-btn {
+    border: none;
+    border-radius: 8px;
+    background: #374151;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* SUMMARY */
+
+.rental-summary-box {
+    display: grid;
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.rental-summary-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.rental-summary-card h3 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.rental-summary-card p {
+    margin: 8px 0 0;
+    color: #6b7280;
+}
+
+/* TABLE */
+
+.rental-orders-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+.rental-orders-table {
+    width: 100%;
+    min-width: 1250px;
+    border-collapse: collapse;
+}
+
+.rental-orders-table th {
+    background: #f9fafb;
+    padding: 14px;
+    text-align: left;
+    font-size: 13px;
+    color: #4b5563;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.rental-orders-table td {
+    padding: 14px;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.rental-orders-table tbody tr:hover {
+    background: #fafafa;
+}
+
+/* CUSTOMER */
+
+.customer-cell,
+.product-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.customer-cell small,
+.product-cell small {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* STATUS */
+
+.rental-status {
+    display: inline-flex;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.rental-status.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.rental-status.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.rental-status.returned {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.rental-status.cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.rental-status.default {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* ACTIONS */
+
+.rental-action-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.rental-action-buttons button {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 10px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.view-btn {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.print-btn {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.return-btn {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.table-message {
+    text-align: center;
+    padding: 40px !important;
+    color: #6b7280;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+    .rental-filter-section {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .rental-summary-box {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .walkin-rental-orders-page {
+        padding: 14px;
+    }
+
+    .rental-orders-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rental-filter-section {
+        grid-template-columns: 1fr;
+    }
+
+    .rental-summary-box {
+        grid-template-columns: 1fr;
+    }
+
+}

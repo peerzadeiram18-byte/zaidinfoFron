@@ -1,0 +1,215 @@
+.rental-card {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.rental-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* IMAGE */
+
+.rental-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.rental-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 18px;
+  transition: transform 0.3s ease;
+}
+
+.rental-card:hover .rental-card-image {
+  transform: scale(1.04);
+}
+
+.rental-card-image-placeholder {
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: #94a3b8;
+}
+
+/* AVAILABILITY */
+
+.rental-availability-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.rental-availability-badge.available {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.rental-availability-badge.unavailable {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* CONTENT */
+
+.rental-card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.rental-card-brand {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.7px;
+}
+
+.rental-card-title {
+  margin: 6px 0 3px;
+  font-size: 19px;
+  line-height: 1.35;
+  color: #111827;
+}
+
+.rental-card-category {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* PRICE */
+
+.rental-card-pricing {
+  margin-top: 18px;
+  padding: 13px 0;
+  border-top: 1px solid #eef2f7;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.rental-monthly-price {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  color: #111827;
+}
+
+.rental-monthly-price svg {
+  font-size: 13px;
+}
+
+.rental-monthly-price strong {
+  font-size: 23px;
+}
+
+.rental-monthly-price span {
+  margin-left: 3px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.rental-security {
+  margin-top: 5px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* INFO */
+
+.rental-card-info {
+  margin-top: 14px;
+}
+
+.rental-card-info > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  font-size: 13px;
+}
+
+.rental-card-info svg {
+  color: #64748b;
+}
+
+/* STOCK */
+
+.rental-stock {
+  margin-top: 10px;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* BUTTON */
+
+.rental-view-button {
+  width: 100%;
+  margin-top: 18px;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 10px;
+  background: #111827;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  transition: all 0.2s ease;
+}
+
+.rental-view-button:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.rental-view-button:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .rental-card-image-wrapper {
+    height: 210px;
+  }
+
+  .rental-card-content {
+    padding: 16px;
+  }
+
+  .rental-card-title {
+    font-size: 17px;
+  }
+
+  .rental-monthly-price strong {
+    font-size: 21px;
+  }
+}

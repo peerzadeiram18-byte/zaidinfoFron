@@ -1,0 +1,301 @@
+.rental-listing-page {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+/* HERO */
+
+.rental-listing-hero {
+  background: #111827;
+  color: #ffffff;
+  padding: 55px 20px;
+}
+
+.rental-hero-content {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.rental-hero-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 15px;
+  background: #2563eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 27px;
+  flex-shrink: 0;
+}
+
+.rental-hero-content h1 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.2;
+}
+
+.rental-hero-content p {
+  margin: 8px 0 0;
+  color: #cbd5e1;
+  font-size: 15px;
+}
+
+/* CONTAINER */
+
+.rental-listing-container {
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 40px 0 70px;
+}
+
+/* HEADER */
+
+.rental-listing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 25px;
+  margin-bottom: 28px;
+}
+
+.rental-listing-header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 27px;
+}
+
+.rental-listing-header p {
+  margin: 7px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* SEARCH */
+
+.rental-search-box {
+  width: min(370px, 100%);
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+
+  background: #ffffff;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+
+  padding: 0 13px;
+}
+
+.rental-search-box > svg {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.rental-search-box input {
+  flex: 1;
+  min-width: 0;
+
+  border: none;
+  outline: none;
+
+  padding: 0 10px;
+
+  font-size: 14px;
+  color: #111827;
+  background: transparent;
+}
+
+.rental-search-box input::placeholder {
+  color: #94a3b8;
+}
+
+.rental-search-box button {
+  width: 25px;
+  height: 25px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #e2e8f0;
+  color: #475569;
+
+  cursor: pointer;
+  font-size: 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* GRID */
+
+.rental-products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* LOADING */
+
+.rental-loading {
+  min-height: 350px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  color: #64748b;
+}
+
+.rental-spinner {
+  width: 42px;
+  height: 42px;
+
+  border: 4px solid #e2e8f0;
+  border-top-color: #2563eb;
+
+  border-radius: 50%;
+
+  animation: rentalSpin 0.8s linear infinite;
+}
+
+.rental-loading p {
+  margin-top: 14px;
+}
+
+@keyframes rentalSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ERROR */
+
+.rental-error {
+  min-height: 350px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.rental-error-icon {
+  font-size: 42px;
+}
+
+.rental-error h3 {
+  margin: 12px 0 5px;
+  color: #111827;
+}
+
+.rental-error p {
+  margin: 0;
+  color: #64748b;
+}
+
+.rental-error button,
+.rental-empty button {
+  margin-top: 18px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #111827;
+  color: #ffffff;
+
+  padding: 11px 17px;
+
+  cursor: pointer;
+  font-weight: 600;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rental-error button:hover,
+.rental-empty button:hover {
+  background: #2563eb;
+}
+
+/* EMPTY */
+
+.rental-empty {
+  min-height: 350px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.rental-empty > svg {
+  font-size: 55px;
+  color: #94a3b8;
+}
+
+.rental-empty h3 {
+  margin: 15px 0 6px;
+  color: #111827;
+}
+
+.rental-empty p {
+  margin: 0;
+  max-width: 500px;
+  color: #64748b;
+}
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+  .rental-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+  .rental-listing-hero {
+    padding: 40px 20px;
+  }
+
+  .rental-hero-content {
+    align-items: flex-start;
+  }
+
+  .rental-hero-content h1 {
+    font-size: 28px;
+  }
+
+  .rental-listing-container {
+    width: min(100% - 28px, 600px);
+    padding-top: 28px;
+  }
+
+  .rental-listing-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .rental-search-box {
+    width: 100%;
+  }
+
+  .rental-products-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}

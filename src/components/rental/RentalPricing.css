@@ -1,0 +1,229 @@
+.rental-pricing {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 25px;
+  height: fit-content;
+}
+
+.rental-pricing-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.rental-pricing-header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 22px;
+}
+
+.rental-pricing-header span {
+  padding: 6px 9px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* MAIN PRICE */
+
+.rental-price-main {
+  margin-top: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.rental-price-label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rental-price-label span {
+  color: #475569;
+  font-size: 14px;
+}
+
+.rental-price-label small {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.rental-price-main > strong {
+  display: flex;
+  align-items: center;
+
+  color: #111827;
+  font-size: 25px;
+}
+
+.rental-price-main svg {
+  font-size: 14px;
+}
+
+/* BREAKDOWN */
+
+.rental-price-breakdown {
+  padding: 17px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.rental-price-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+
+  margin-bottom: 11px;
+
+  color: #64748b;
+  font-size: 13px;
+}
+
+.rental-price-row:last-child {
+  margin-bottom: 0;
+}
+
+.rental-price-row strong {
+  color: #111827;
+}
+
+/* MINIMUM */
+
+.rental-minimum-period {
+  margin-top: 17px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 13px;
+
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+.rental-minimum-period > svg {
+  color: #2563eb;
+}
+
+.rental-minimum-period div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rental-minimum-period span {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.rental-minimum-period strong {
+  color: #111827;
+  font-size: 14px;
+}
+
+/* ESTIMATE */
+
+.rental-estimate {
+  margin-top: 17px;
+  padding: 15px;
+
+  background: #f8fafc;
+  border-radius: 11px;
+}
+
+.rental-estimate-title {
+  margin-bottom: 12px;
+
+  color: #111827;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rental-estimate-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin-bottom: 8px;
+
+  color: #64748b;
+  font-size: 12px;
+}
+
+.rental-estimate-row strong {
+  color: #334155;
+}
+
+.rental-estimate-total {
+  margin-top: 12px;
+  padding-top: 12px;
+
+  border-top: 1px solid #dbe2ea;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  color: #111827;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rental-estimate-total strong {
+  font-size: 16px;
+}
+
+/* BUTTON */
+
+.rental-now-button {
+  width: 100%;
+  margin-top: 20px;
+
+  padding: 14px 18px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  cursor: pointer;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  transition: 0.2s ease;
+}
+
+.rental-now-button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.rental-now-button:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.rental-price-disclaimer {
+  margin: 12px 0 0;
+
+  color: #94a3b8;
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: center;
+}
