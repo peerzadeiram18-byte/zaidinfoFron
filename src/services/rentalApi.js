@@ -911,6 +911,83 @@ export const verifyRentalDocument = async (
         return handleError(error);
     }
 };
+
+
+// =====================================================
+// SEARCH RENTALS FOR RETURN
+// =====================================================
+
+export const searchRentalsForReturn = async (
+    search
+) => {
+
+    const response =
+        await axios.get(
+            `${BASE_URL}/return/search`,
+            {
+                params: {
+                    search
+                },
+
+                headers: {
+                    Authorization:
+                        `Bearer ${getToken()}`
+                }
+            }
+        );
+
+    return response.data;
+};
+
+
+// =====================================================
+// RECEIVE RENTAL RETURN
+// =====================================================
+
+// export const markRentalReturned = async (
+//     rentalId,
+//     data
+// ) => {
+
+//     const response =
+//         await axios.patch(
+//             `${BASE_URL}/${rentalId}/return`,
+//             data,
+//             {
+//                 headers: {
+//                     Authorization:
+//                         `Bearer ${getToken()}`
+//                 }
+//             }
+//         );
+
+//     return response.data;
+// };
+
+
+// =====================================================
+// COMPLETE SETTLEMENT
+// =====================================================
+
+export const completeRentalSettlement = async (
+    rentalId,
+    data
+) => {
+
+    const response =
+        await axios.patch(
+            `${BASE_URL}/${rentalId}/settle`,
+            data,
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${getToken()}`
+                }
+            }
+        );
+
+    return response.data;
+};
 /* =========================================================
    GET RENTAL DOCUMENTS
 ========================================================= */

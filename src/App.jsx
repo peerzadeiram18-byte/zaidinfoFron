@@ -1465,8 +1465,11 @@ import RentalDocuments from "./pages/rental/RentalDocuments";
 import RentalReturn from "./pages/rental/RentalReturn";
 import WalkInRentalOrders from "./pages/rental/WalkInRentalOrders";
 import WalkInRentalDetails from "./pages/rental/WalkInRentalDetails.jsx";
+// import RentalReturn from "./pages/Rental/RentalReturn";
 
 
+import AdminSettings from "./pages/Admin/AdminSettings/AdminSettings.jsx";
+import TechnicianNotification from "./pages/Technician/TechnicianNotification.jsx";
 // =====================================================
 // APP
 // =====================================================
@@ -2417,12 +2420,11 @@ const [headerHeight, setHeaderHeight] = useState(150);
                             SETTINGS
                         ========================================= */}
 
+                        
                         <Route
                             path="/settings"
                             element={
-                                <div>
-                                    Settings Page
-                                </div>
+                                <AdminSettings/>
                             }
                         />
 
@@ -2605,8 +2607,7 @@ const [headerHeight, setHeaderHeight] = useState(150);
     path="walk-in-invoice/:rentalId"
     element={<WalkInRentalInvoice />}
 />
-
-
+<Route path="rental/orders/:rentalId/return" element={<RentalReturn />} />
 
 
                         {/* Walk-in Orders */}

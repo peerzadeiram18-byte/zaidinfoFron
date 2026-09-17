@@ -11,49 +11,138 @@ const RentalPricing = ({
   rentalProduct,
   onRentNow,
 }) => {
-  const pricing = useMemo(() => {
-    const monthlyRent = Number(
-      rentalProduct?.monthlyRent || 0
-    );
+  // const pricing = useMemo(() => {
+  //   const monthlyRent = Number(
+  //     rentalProduct?.monthlyRent || 0
+  //   );
 
-    const securityDeposit = Number(
-      rentalProduct?.securityDeposit || 0
-    );
+  //   const securityDeposit = Number(
+  //     rentalProduct?.securityDeposit || 0
+  //   );
 
-    const gstPercentage = Number(
-      rentalProduct?.gst || 0
-    );
+  //   const gstPercentage = Number(
+  //     rentalProduct?.gst || 0
+  //   );
 
-    const minimumMonths = Math.max(
-      Number(
-        rentalProduct?.minimumRentalMonths || 3
-      ),
-      3
-    );
+  //   const minimumMonths = Math.max(
+  //     Number(
+  //       rentalProduct?.minimumRentalMonths || 3
+  //     ),
+  //     3
+  //   );
 
-    const monthlyGST =
-      (monthlyRent * gstPercentage) / 100;
+  //   const monthlyGST =
+  //     (monthlyRent * gstPercentage) / 100;
 
-    const monthlyTotal =
-      monthlyRent + monthlyGST;
+  //   const monthlyTotal =
+  //     monthlyRent + monthlyGST;
 
-    const minimumRentalAmount =
-      monthlyTotal * minimumMonths;
+  //   const minimumRentalAmount =
+  //     monthlyTotal * minimumMonths;
 
-    const firstPayment =
-      minimumRentalAmount + securityDeposit;
+  //   const firstPayment =
+  //     minimumRentalAmount + securityDeposit;
+
+  //   return {
+  //     monthlyRent,
+  //     securityDeposit,
+  //     gstPercentage,
+  //     monthlyGST,
+  //     monthlyTotal,
+  //     minimumMonths,
+  //     minimumRentalAmount,
+  //     firstPayment,
+  //   };
+  // }, [rentalProduct]);
+
+const pricing = useMemo(() => {
+
+    if (!selectedProduct) {
+        return {
+            monthlyRent: 0,
+            dailyRent: 0,
+            duration: rentalDuration,
+            durationType: rentalDurationType,
+            rentSubtotal: 0,
+            gstPercentage: 0,
+            gstAmount: 0,
+            securityDeposit: 0,
+            totalAmount: 0,
+        };
+    }
+
+    const monthlyRent =
+        getMonthlyRent(selectedProduct);
+
+    const dailyRent =
+        monthlyRent / 30;
+
+    const securityDeposit =
+        getSecurityDeposit(selectedProduct);
+
+    const gstPercentage =
+        getGST(selectedProduct);
+
+
+    let rentSubtotal = 0;
+
+
+    if (rentalDurationType === "DAYS") {
+
+        rentSubtotal =
+            dailyRent *
+            Number(rentalDuration);
+
+    } else {
+
+        rentSubtotal =
+            monthlyRent *
+            Number(rentalDuration);
+    }
+
+
+    const gstAmount =
+        (rentSubtotal * gstPercentage) / 100;
+
+
+    const totalAmount =
+        rentSubtotal +
+        gstAmount +
+        securityDeposit;
+
 
     return {
-      monthlyRent,
-      securityDeposit,
-      gstPercentage,
-      monthlyGST,
-      monthlyTotal,
-      minimumMonths,
-      minimumRentalAmount,
-      firstPayment,
+
+        monthlyRent,
+
+        dailyRent,
+
+        duration:
+            Number(rentalDuration),
+
+        durationType:
+            rentalDurationType,
+
+        rentSubtotal:
+            Number(rentSubtotal.toFixed(2)),
+
+        gstPercentage,
+
+        gstAmount:
+            Number(gstAmount.toFixed(2)),
+
+        securityDeposit,
+
+        totalAmount:
+            Number(totalAmount.toFixed(2)),
     };
-  }, [rentalProduct]);
+
+}, [
+    selectedProduct,
+    rentalDuration,
+    rentalDurationType,
+]);
+
 
   const formatMoney = (amount) => {
     return Number(amount || 0).toLocaleString(

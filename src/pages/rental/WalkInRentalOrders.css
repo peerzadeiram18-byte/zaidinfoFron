@@ -279,3 +279,113 @@
     }
 
 }
+/* =====================================================
+   DEPOSIT CELL
+===================================================== */
+
+.deposit-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 90px;
+}
+
+.deposit-cell strong {
+    font-size: 14px;
+}
+
+/* =====================================================
+   DEPOSIT STATUS
+===================================================== */
+
+.deposit-status {
+    display: inline-flex;
+    width: fit-content;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+/* PAID */
+
+.deposit-paid {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* PARTIAL */
+
+.deposit-partial {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* UNPAID */
+
+.deposit-unpaid {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* COMPLETED RENTAL */
+
+.rental-status.completed {
+    background: #dcfce7;
+    color: #166534;
+}
+/* =====================================================
+   DEPOSIT STATUS
+===================================================== */
+
+.deposit-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    min-width: 90px;
+}
+
+.deposit-cell strong {
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.deposit-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+/* PAID */
+
+.deposit-paid {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+/* PARTIAL */
+
+.deposit-partial {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+/* UNPAID */
+
+.deposit-unpaid {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}

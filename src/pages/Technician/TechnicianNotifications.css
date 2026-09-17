@@ -1,0 +1,207 @@
+/* Container & Header */
+.tn-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.tn-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tn-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tn-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.tn-unread-pill {
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid #bfdbfe;
+}
+
+.tn-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Action Buttons */
+.tn-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tn-btn-secondary:hover {
+  background: #f8fafc;
+  color: #1e293b;
+  border-color: #94a3b8;
+}
+
+.tn-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tn-btn-danger:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* Notifications List */
+.tn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tn-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.1rem;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tn-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.tn-card.unread {
+  background: #ffffff;
+  border-left: 4px solid #2563eb;
+}
+
+.tn-card.read {
+  background: #f8fafc;
+  opacity: 0.85;
+}
+
+.tn-icon-box {
+  background: #f1f5f9;
+  color: #64748b;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.tn-card.unread .tn-icon-box {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.tn-content {
+  flex: 1;
+}
+
+.tn-content-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.tn-item-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.tn-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tn-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Individual Delete Button */
+.tn-delete-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.tn-delete-btn:hover {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
+.tn-message {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+/* Empty & Loading States */
+.tn-empty,
+.tn-loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #94a3b8;
+}
+
+.tn-empty-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #cbd5e1;
+}
