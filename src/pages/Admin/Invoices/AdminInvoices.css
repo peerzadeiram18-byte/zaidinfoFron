@@ -910,3 +910,288 @@
 
 }
 
+/* =====================================================
+   ADMIN RENTAL INVOICE
+===================================================== */
+
+.admin-rental-invoice-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    background: rgba(15, 23, 42, 0.72);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    overflow-y: auto;
+}
+
+
+.admin-rental-invoice-modal {
+    width: min(1400px, 96vw);
+
+    max-height: 94vh;
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.25);
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.admin-rental-invoice-header {
+    min-height: 72px;
+
+    padding: 14px 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    flex-shrink: 0;
+}
+
+
+.admin-rental-invoice-header span {
+    display: block;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.08em;
+
+    color: #0f766e;
+}
+
+
+.admin-rental-invoice-header h2 {
+    margin: 3px 0 0;
+
+    font-size: 20px;
+
+    color: #111827;
+}
+
+
+.admin-rental-invoice-header button {
+    width: 40px;
+
+    height: 40px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    font-size: 20px;
+}
+
+
+.admin-rental-invoice-header button:hover {
+    background: #e5e7eb;
+
+    color: #111827;
+}
+
+
+.admin-rental-invoice-content {
+    flex: 1;
+
+    overflow-y: auto;
+
+    background: #f8fafc;
+}
+
+
+/*
+ * Existing WalkInRentalInvoice page normally
+ * has its own topbar.
+ *
+ * In admin modal we don't need that topbar.
+ */
+
+.admin-rental-invoice-content .invoice-topbar {
+    display: none;
+}
+
+
+/*
+ * Remove unnecessary page spacing
+ * when rendered inside admin modal.
+ */
+
+.admin-rental-invoice-content
+.rental-invoice-page {
+    min-height: auto;
+}
+
+
+.admin-rental-invoice-content
+.rental-invoice-print-area {
+    padding: 20px;
+}
+
+
+.admin-rental-invoice-content
+.rental-invoice-paper {
+    margin: 0 auto;
+}
+
+
+/* =====================================================
+   RENTAL CARD
+===================================================== */
+
+.rental-invoice-card {
+    background: #ffffff;
+}
+
+
+.rental-invoice-card:hover {
+    box-shadow:
+        0 8px 24px rgba(15, 118, 110, 0.10);
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .admin-rental-invoice-overlay {
+        padding: 0;
+    }
+
+
+    .admin-rental-invoice-modal {
+        width: 100vw;
+
+        max-height: 100vh;
+
+        height: 100vh;
+
+        border-radius: 0;
+    }
+
+
+    .admin-rental-invoice-header {
+        min-height: 64px;
+
+        padding: 12px 15px;
+    }
+
+
+    .admin-rental-invoice-content
+    .rental-invoice-print-area {
+        padding: 10px;
+    }
+
+}
+
+
+/* =====================================================
+   PRINT
+===================================================== */
+
+@media print {
+
+    /*
+     * When rental invoice is printed,
+     * hide Admin UI.
+     */
+
+    body:has(
+        .admin-rental-invoice-overlay
+    ) .admin-invoices-page
+    > *:not(
+        .admin-rental-invoice-overlay
+    ) {
+        display: none !important;
+    }
+
+
+    .admin-rental-invoice-overlay {
+        position: static;
+
+        background: #ffffff;
+
+        padding: 0;
+
+        display: block;
+    }
+
+
+    .admin-rental-invoice-modal {
+        width: 100%;
+
+        max-height: none;
+
+        box-shadow: none;
+
+        border-radius: 0;
+    }
+
+
+    .admin-rental-invoice-header {
+        display: none !important;
+    }
+
+
+    .admin-rental-invoice-content {
+        overflow: visible;
+
+        background: #ffffff;
+    }
+
+
+    .admin-rental-invoice-content
+    .rental-invoice-page {
+        display: block;
+    }
+
+
+    .admin-rental-invoice-content
+    .rental-invoice-print-area {
+        padding: 0;
+    }
+
+
+    .admin-rental-invoice-content
+    .no-print {
+        display: none !important;
+    }
+
+}

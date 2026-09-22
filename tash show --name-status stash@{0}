@@ -1,0 +1,6 @@
+ src/App.jsx                                   | 6041 [32m++++++++++++++++[m[31m---------[m
+ src/pages/Admin/Invoices/AdminInvoices.css    |  285 [32m++[m
+ src/pages/Admin/Invoices/AdminInvoices.jsx    | 4478 [32m+++++++++++[m[31m-------[m
+ src/pages/Receptionist/ReceptionistLayout.css |  795 [32m+++[m[31m-[m
+ src/pages/Receptionist/ReceptionistLayout.jsx |  577 [32m++[m[31m-[m
+ 5 files changed, 8355 insertions(+), 3821 deletions(-)

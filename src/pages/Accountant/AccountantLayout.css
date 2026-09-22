@@ -1,0 +1,530 @@
+/* =========================================================
+   ACCOUNTANT LAYOUT
+========================================================= */
+
+.acc-layout-root {
+  min-height: 100vh;
+  width: 100%;
+  background: #f6f8fb;
+  font-family: "Poppins", sans-serif;
+}
+
+
+/* =========================================================
+   MOBILE TOPBAR
+========================================================= */
+
+.acc-mobile-topbar {
+  display: none;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.acc-sidebar {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: 280px;
+  height: 100vh;
+
+  background: #ffffff;
+
+  border-right: 1px solid #e5e7eb;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 999;
+
+  transition:
+    width 0.3s ease,
+    transform 0.3s ease;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   SIDEBAR OPEN
+========================================================= */
+
+.acc-sidebar-open {
+  width: 280px;
+}
+
+
+/* =========================================================
+   SIDEBAR COLLAPSED
+========================================================= */
+
+.acc-sidebar-collapsed {
+  width: 78px;
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.acc-sidebar-brand {
+  min-height: 100px;
+
+  padding: 20px 16px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+
+.acc-brand-avatar {
+  min-width: 46px;
+  width: 46px;
+  height: 46px;
+
+  border-radius: 12px;
+
+  background: #16a34a;
+
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 21px;
+}
+
+
+.acc-brand-text {
+  white-space: nowrap;
+}
+
+
+.acc-brand-text h3 {
+  margin: 0;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: #111827;
+}
+
+
+.acc-brand-text span {
+  display: block;
+
+  margin-top: 3px;
+
+  font-size: 11px;
+
+  color: #6b7280;
+}
+
+
+/* =========================================================
+   COLLAPSED BRAND
+========================================================= */
+
+.acc-sidebar-collapsed .acc-brand-text {
+  display: none;
+}
+
+
+.acc-sidebar-collapsed .acc-sidebar-brand {
+  justify-content: center;
+}
+
+
+/* =========================================================
+   NAV
+========================================================= */
+
+.acc-nav-section {
+  flex: 1;
+
+  padding: 18px 12px;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+}
+
+
+.acc-nav-heading {
+  display: block;
+
+  margin: 18px 10px 8px;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+
+  color: #9ca3af;
+
+  white-space: nowrap;
+}
+
+
+.acc-nav-heading:first-child {
+  margin-top: 0;
+}
+
+
+/* =========================================================
+   NAV ITEM
+========================================================= */
+
+.acc-nav-item {
+  min-height: 46px;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 11px 13px;
+
+  margin-bottom: 5px;
+
+  border-radius: 10px;
+
+  color: #4b5563;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.acc-nav-item:hover {
+  background: #f0fdf4;
+
+  color: #16a34a;
+}
+
+
+.acc-nav-item-active {
+  background: #dcfce7;
+
+  color: #15803d;
+
+  font-weight: 600;
+}
+
+
+.acc-nav-icon {
+  min-width: 19px;
+
+  width: 19px;
+
+  font-size: 16px;
+}
+
+
+/* =========================================================
+   COLLAPSED NAV
+========================================================= */
+
+.acc-sidebar-collapsed .acc-nav-item {
+  justify-content: center;
+
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+.acc-sidebar-collapsed .acc-nav-item span {
+  display: none;
+}
+
+
+.acc-sidebar-collapsed .acc-nav-heading {
+  display: none;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.acc-sidebar-footer {
+  padding: 13px;
+
+  border-top: 1px solid #eeeeee;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 8px;
+}
+
+
+.acc-user-profile {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+
+.acc-user-badge {
+  min-width: 38px;
+
+  width: 38px;
+
+  height: 38px;
+
+  border-radius: 50%;
+
+  background: #dcfce7;
+
+  color: #15803d;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-weight: 700;
+}
+
+
+.acc-user-meta {
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+
+  white-space: nowrap;
+}
+
+
+.acc-user-meta strong {
+  font-size: 12px;
+
+  color: #111827;
+}
+
+
+.acc-user-meta small {
+  margin-top: 2px;
+
+  font-size: 10px;
+
+  color: #9ca3af;
+}
+
+
+.acc-logout-btn {
+  border: none;
+
+  background: transparent;
+
+  color: #ef4444;
+
+  width: 38px;
+
+  height: 38px;
+
+  border-radius: 9px;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 16px;
+
+  flex-shrink: 0;
+}
+
+
+.acc-logout-btn:hover {
+  background: #fef2f2;
+}
+
+
+.acc-sidebar-collapsed .acc-user-meta {
+  display: none;
+}
+
+
+.acc-sidebar-collapsed .acc-sidebar-footer {
+  justify-content: center;
+
+  flex-direction: column;
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.acc-main-canvas {
+  margin-left: 280px;
+
+  min-height: 100vh;
+
+  padding: 25px;
+
+  transition: margin-left 0.3s ease;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .acc-mobile-topbar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    right: 0;
+
+    height: 62px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 15px;
+
+    z-index: 1100;
+  }
+
+
+  .acc-brand-badge {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #111827;
+  }
+
+
+  .acc-brand-icon {
+    color: #16a34a;
+  }
+
+
+  .acc-menu-toggle-btn {
+    width: 40px;
+
+    height: 40px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    cursor: pointer;
+
+    font-size: 17px;
+  }
+
+
+  .acc-sidebar {
+    top: 62px;
+
+    height: calc(100vh - 62px);
+
+    transform: translateX(-100%);
+
+    width: 280px;
+  }
+
+
+  .acc-sidebar-open {
+    transform: translateX(0);
+
+    width: 280px;
+  }
+
+
+  .acc-sidebar-collapsed {
+    transform: translateX(-100%);
+
+    width: 280px;
+  }
+
+
+  .acc-main-canvas {
+    margin-left: 0;
+
+    padding: 80px 15px 20px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .acc-main-canvas {
+    padding-left: 10px;
+
+    padding-right: 10px;
+  }
+
+}
