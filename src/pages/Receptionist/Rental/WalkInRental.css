@@ -1,1776 +1,1021 @@
 /* =========================================================
-   PAGE
+   WalkInRental.css
+   All classes are prefixed with "wir-" so they never clash
+   with any other component's styles in the app.
 ========================================================= */
 
-.walkin-rental-page {
-  min-height: 100vh;
-  padding: 28px;
-  background: #f6f7fb;
-  color: #172033;
+.wir-page {
+    --wir-primary: #2563eb;
+    --wir-primary-dark: #1d4ed8;
+    --wir-bg: #f4f6fb;
+    --wir-card-bg: #ffffff;
+    --wir-border: #e2e8f0;
+    --wir-text: #1e293b;
+    --wir-text-muted: #64748b;
+    --wir-danger: #dc2626;
+    --wir-warning: #d97706;
+    --wir-success: #16a34a;
+    --wir-radius: 14px;
+
+    min-height: 100vh;
+    background: var(--wir-bg);
+    color: var(--wir-text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.wir-page *,
+.wir-page *::before,
+.wir-page *::after {
+    box-sizing: border-box;
+}
+
+/* ============================= LOADING ============================= */
+
+.wir-loading-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--wir-text-muted);
+    text-align: center;
+    padding: 24px;
+}
+
+.wir-loading-page h2 {
+    margin: 4px 0 0;
+    font-size: 18px;
+}
+
+.wir-loading-page p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.wir-spin {
+    animation: wir-spin-anim 1s linear infinite;
+    font-size: 32px;
+    color: var(--wir-primary);
+}
+
+@keyframes wir-spin-anim {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================= HEADER ============================= */
+
+.wir-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    max-width: 980px;
+    margin: 0 auto 16px;
+}
+
+.wir-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
 }
 
+.wir-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--wir-card-bg);
+    border: 1px solid var(--wir-border);
+    color: var(--wir-text);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.wir-back-btn:hover {
+    background: #eef2ff;
+    border-color: var(--wir-primary);
+}
 
-/* =========================================================
-   LOADING
-========================================================= */
+.wir-header-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
 
-.walkin-loading-page {
-  min-height: 70vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: #334155;
+.wir-header-subtitle {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--wir-text-muted);
 }
 
-.walkin-loading-page h2 {
-  margin: 10px 0 0;
+.wir-source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--wir-primary), var(--wir-primary-dark));
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
 }
+
+/* ============================= FORM / CARDS ============================= */
 
-.walkin-loading-page p {
-  margin: 0;
-  color: #64748b;
+.wir-form {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
+.wir-card {
+    background: var(--wir-card-bg);
+    border: 1px solid var(--wir-border);
+    border-radius: var(--wir-radius);
+    padding: 20px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
 
-/* =========================================================
-   HEADER
-========================================================= */
+.wir-section-title {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+    color: var(--wir-primary);
+}
 
-.walkin-header {
-  max-width: 1400px;
-  margin: 0 auto 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+.wir-section-title > svg {
+    margin-top: 3px;
+    flex-shrink: 0;
+    font-size: 18px;
 }
 
-.walkin-header-left {
-  display: flex;
-  align-items: center;
-  gap: 18px;
+.wir-section-title h2 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--wir-text);
 }
 
-.walkin-header h1 {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 800;
-  color: #111827;
+.wir-section-title p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: var(--wir-text-muted);
 }
+
+/* ============================= CUSTOMER TYPE ============================= */
 
-.walkin-header p {
-  margin: 5px 0 0;
-  color: #64748b;
-  font-size: 14px;
+.wir-customer-type-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
 }
 
-.walkin-back-btn {
-  border: 1px solid #dbe1ea;
-  background: white;
-  color: #334155;
-  height: 42px;
-  padding: 0 15px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-weight: 600;
+.wir-type-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 12px;
+    background: #f8fafc;
+    border: 2px solid var(--wir-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: var(--wir-text);
 }
 
-.walkin-back-btn:hover {
-  background: #f1f5f9;
+.wir-type-card strong {
+    font-size: 14px;
 }
 
-.walkin-source-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 16px;
-  border-radius: 10px;
-  background: #eef2ff;
-  color: #4338ca;
-  font-size: 13px;
-  font-weight: 800;
+.wir-type-card span {
+    font-size: 12px;
+    color: var(--wir-text-muted);
 }
 
+.wir-type-card:hover {
+    border-color: var(--wir-primary);
+}
 
-/* =========================================================
-   FORM
-========================================================= */
+.wir-type-card-active {
+    border-color: var(--wir-primary);
+    background: #eef2ff;
+    color: var(--wir-primary-dark);
+}
 
-.walkin-form {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.wir-type-card-active svg {
+    color: var(--wir-primary);
 }
 
+/* ============================= SEARCH / REFRESH ============================= */
 
-/* =========================================================
-   CARD
-========================================================= */
+.wir-search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--wir-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+}
+
+.wir-search-box svg {
+    color: var(--wir-text-muted);
+    flex-shrink: 0;
+}
 
-.walkin-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+.wir-search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    min-width: 0;
+    background: transparent;
 }
 
-.section-title {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 22px;
+.wir-search-box button {
+    border: none;
+    background: transparent;
+    color: var(--wir-text-muted);
+    cursor: pointer;
+    display: flex;
 }
 
-.section-title > svg {
-  margin-top: 2px;
-  color: #4f46e5;
-  flex-shrink: 0;
+.wir-refresh-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 14px;
 }
 
-.section-title h2 {
-  margin: 0;
-  font-size: 19px;
-  font-weight: 750;
-  color: #111827;
+/* ============================= BUTTONS ============================= */
+
+.wir-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--wir-primary);
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    width: 100%;
 }
 
-.section-title p {
-  margin: 4px 0 0;
-  color: #64748b;
-  font-size: 13px;
+.wir-submit-btn:hover:not(:disabled) {
+    background: var(--wir-primary-dark);
 }
 
+.wir-submit-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
 
-/* =========================================================
-   CUSTOMER TYPE
-========================================================= */
+.wir-cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    color: var(--wir-text);
+    border: 1px solid var(--wir-border);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
 
-.customer-type-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+.wir-cancel-btn:hover:not(:disabled) {
+    border-color: var(--wir-danger);
+    color: var(--wir-danger);
 }
 
-.type-card {
-  border: 2px solid #e5e7eb;
-  background: #fff;
-  border-radius: 14px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 7px;
-  cursor: pointer;
-  text-align: left;
-  transition: 0.2s ease;
+.wir-cancel-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-.type-card:hover {
-  border-color: #a5b4fc;
-  background: #fafaff;
+/* ============================= EMPTY STATE ============================= */
+
+.wir-empty-products {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 40px 16px;
+    color: var(--wir-text-muted);
+    text-align: center;
 }
 
-.type-card svg {
-  color: #64748b;
+.wir-empty-products svg {
+    color: #cbd5e1;
+    margin-bottom: 6px;
 }
 
-.type-card strong {
-  font-size: 16px;
-  color: #1f2937;
+.wir-empty-products h3 {
+    margin: 0;
+    font-size: 15px;
+    color: var(--wir-text);
 }
 
-.type-card span {
-  color: #64748b;
-  font-size: 13px;
+.wir-empty-products p {
+    margin: 0;
+    font-size: 13px;
 }
+
+/* ============================= PRODUCT GRID ============================= */
 
-.type-card.active {
-  border-color: #4f46e5;
-  background: #eef2ff;
+.wir-product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
 }
 
-.type-card.active svg {
-  color: #4f46e5;
+.wir-product-card {
+    position: relative;
+    border: 1px solid var(--wir-border);
+    border-radius: 12px;
+    padding: 14px;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+.wir-product-card-selected {
+    border-color: var(--wir-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
 
-/* =========================================================
-   FORM GRID
-========================================================= */
+.wir-product-image {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    color: #94a3b8;
+}
 
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
+.wir-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.wir-product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-.form-group.full {
-  grid-column: 1 / -1;
+.wir-product-brand {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--wir-primary);
+    font-weight: 700;
 }
 
-.form-group label {
-  color: #374151;
-  font-size: 13px;
-  font-weight: 700;
+.wir-product-info h3 {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.3;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid #d8dee8;
-  background: #fff;
-  border-radius: 10px;
-  min-height: 45px;
-  padding: 11px 13px;
-  outline: none;
-  color: #111827;
-  font-size: 14px;
-  font-family: inherit;
-  transition: 0.2s ease;
+.wir-product-sku {
+    font-size: 12px;
+    color: var(--wir-text-muted);
 }
 
-.form-group textarea {
-  min-height: 100px;
-  resize: vertical;
+.wir-product-prices {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12px;
+    color: var(--wir-text-muted);
+    margin: 6px 0;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+.wir-stock {
+    display: inline-block;
+    width: fit-content;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
 }
 
-.form-group small {
-  color: #64748b;
-  font-size: 12px;
+.wir-stock-available {
+    background: #dcfce7;
+    color: #15803d;
 }
 
+.wir-stock-unavailable {
+    background: #fee2e2;
+    color: #b91c1c;
+}
 
-/* =========================================================
-   INPUT ICON
-========================================================= */
+.wir-product-select-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+}
 
-.input-icon {
-  position: relative;
-  display: flex;
-  align-items: center;
+.wir-selected-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: var(--wir-primary);
+    background: #fff;
+    border-radius: 999px;
+    font-size: 18px;
 }
+
+/* ============================= SELECTED SUMMARY ============================= */
 
-.input-icon > svg {
-  position: absolute;
-  left: 13px;
-  color: #94a3b8;
-  pointer-events: none;
+.wir-summary-product {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
 }
 
-.input-icon input,
-.input-icon textarea {
-  padding-left: 40px;
+.wir-summary-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef2ff;
+    color: var(--wir-primary);
+    border-radius: 12px;
 }
 
-.input-icon textarea {
-  padding-top: 12px;
+.wir-summary-product > div:nth-child(2) {
+    flex: 1;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.textarea-icon {
-  align-items: flex-start;
+.wir-summary-product strong {
+    font-size: 15px;
 }
 
-.textarea-icon > svg {
-  top: 13px;
+.wir-summary-product span {
+    font-size: 12px;
+    color: var(--wir-text-muted);
 }
 
+/* ============================= FORM GRID ============================= */
 
-/* =========================================================
-   SEARCH
-========================================================= */
+.wir-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
 
-.rental-search-box {
-  height: 46px;
-  border: 1px solid #d8dee8;
-  border-radius: 10px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 14px;
-  margin-bottom: 18px;
+.wir-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-.rental-search-box svg {
-  color: #94a3b8;
-  flex-shrink: 0;
+.wir-form-group-full {
+    grid-column: 1 / -1;
 }
 
-.rental-search-box input {
-  width: 100%;
-  border: 0;
-  outline: none;
-  background: transparent;
-  font-size: 14px;
-  color: #111827;
+.wir-form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wir-text);
 }
 
+.wir-form-group small {
+    font-size: 12px;
+    color: var(--wir-text-muted);
+}
 
-/* =========================================================
-   PRODUCTS
-========================================================= */
+.wir-form-group input[type="text"],
+.wir-form-group input[type="tel"],
+.wir-form-group input[type="email"],
+.wir-form-group input[type="number"],
+.wir-form-group textarea,
+.wir-form-group select {
+    width: 100%;
+    border: 1px solid var(--wir-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    background: #fff;
+    color: var(--wir-text);
+    outline: none;
+    transition: border-color 0.15s ease;
+}
 
-.rental-product-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+.wir-form-group input:focus,
+.wir-form-group textarea:focus,
+.wir-form-group select:focus {
+    border-color: var(--wir-primary);
 }
 
-.rental-product-card {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: 100%;
-  text-align: left;
-  border: 2px solid #e5e7eb;
-  background: #fff;
-  border-radius: 14px;
-  padding: 14px;
-  cursor: pointer;
-  transition: 0.2s ease;
+.wir-input-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--wir-border);
+    border-radius: 10px;
+    padding: 10px 12px;
 }
 
-.rental-product-card:hover {
-  border-color: #a5b4fc;
-  transform: translateY(-1px);
+.wir-input-icon svg {
+    color: var(--wir-text-muted);
+    flex-shrink: 0;
 }
 
-.rental-product-card.selected {
-  border-color: #4f46e5;
-  background: #f8f8ff;
+.wir-input-icon input,
+.wir-input-icon select {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    min-width: 0;
+    background: transparent;
 }
 
-.rental-product-card:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
+.wir-textarea-icon {
+    align-items: flex-start;
 }
 
-.product-image {
-  width: 85px;
-  height: 85px;
-  flex-shrink: 0;
-  border-radius: 11px;
-  background: #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  color: #64748b;
+.wir-textarea-icon textarea {
+    border: none;
+    outline: none;
+    flex: 1;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+    min-width: 0;
+    background: transparent;
 }
 
-.product-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+/* ============================= STEPPER ============================= */
+
+.wir-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--wir-border);
+    border-radius: 10px;
+    padding: 6px 10px;
 }
 
-.product-info {
-  min-width: 0;
-  flex: 1;
+.wir-stepper button {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--wir-border);
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
-.product-info h3 {
-  margin: 0 0 5px;
-  font-size: 15px;
-  line-height: 1.3;
-  color: #111827;
+.wir-stepper button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
-.product-info .brand {
-  display: block;
-  color: #4f46e5;
-  font-size: 12px;
-  font-weight: 700;
+.wir-stepper-value {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
 }
 
-.product-info .sku {
-  display: block;
-  margin-top: 3px;
-  color: #94a3b8;
-  font-size: 11px;
+.wir-stepper-value strong {
+    font-size: 16px;
 }
 
-.product-prices {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  margin-top: 9px;
+.wir-stepper-value span {
+    font-size: 11px;
+    color: var(--wir-text-muted);
 }
 
-.product-prices span {
-  font-size: 12px;
-  color: #475569;
-  font-weight: 650;
+.wir-duration-select {
+    cursor: pointer;
 }
+
+/* ============================= DOCUMENTS ============================= */
 
-.stock {
-  display: inline-flex;
-  margin-top: 8px;
-  font-size: 11px;
-  font-weight: 800;
+.wir-document-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
 }
 
-.stock.available {
-  color: #15803d;
+.wir-document-card {
+    border: 1px solid var(--wir-border);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: #fafbfe;
 }
 
-.stock.unavailable {
-  color: #dc2626;
+.wir-document-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
 }
 
-.selected-check {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: #4f46e5;
+.wir-document-header strong {
+    font-size: 13px;
 }
 
+.wir-document-header span {
+    font-size: 10px;
+    color: var(--wir-danger);
+    font-weight: 700;
+    text-transform: uppercase;
+}
 
-/* =========================================================
-   EMPTY
-========================================================= */
+.wir-document-file-label {
+    display: flex;
+    align-items: center;
+    border: 1px dashed var(--wir-border);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 12px;
+    color: var(--wir-text-muted);
+    cursor: pointer;
+    background: #fff;
+}
 
-.empty-products {
-  min-height: 180px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  text-align: center;
+.wir-document-file-label input {
+    display: none;
 }
 
-.empty-products h3 {
-  margin: 12px 0 4px;
-  color: #334155;
+.wir-document-selected {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--wir-success);
+    background: #f0fdf4;
+    border-radius: 8px;
+    padding: 6px 8px;
+    word-break: break-all;
 }
 
-.empty-products p {
-  margin: 0;
-  font-size: 13px;
+.wir-document-selected span {
+    flex: 1;
+    min-width: 0;
 }
 
+.wir-document-remove-btn {
+    border: none;
+    background: transparent;
+    color: var(--wir-danger);
+    cursor: pointer;
+    display: flex;
+    flex-shrink: 0;
+}
 
-/* =========================================================
-   MONTH CONTROL
-========================================================= */
+.wir-document-card small {
+    font-size: 11px;
+    color: var(--wir-text-muted);
+}
 
-.month-control {
-  height: 46px;
-  border: 1px solid #d8dee8;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  overflow: hidden;
+.wir-document-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 12px;
+    background: #eff6ff;
+    border-radius: 10px;
+    font-size: 12px;
+    color: #1e40af;
 }
 
-.month-control button {
-  width: 48px;
-  height: 100%;
-  border: 0;
-  background: #f8fafc;
-  cursor: pointer;
-  color: #334155;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.wir-document-note svg {
+    flex-shrink: 0;
+    margin-top: 2px;
 }
+
+/* ============================= DEPOSIT SECTION ============================= */
 
-.month-control button:hover:not(:disabled) {
-  background: #eef2ff;
-  color: #4f46e5;
+.wir-deposit-box {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.month-control button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.wir-deposit-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px;
+    background: #f8fafc;
+    border-radius: 10px;
 }
 
-.month-value {
-  display: flex;
-  align-items: center;
-  gap: 7px;
+.wir-deposit-label {
+    display: block;
+    font-size: 12px;
+    color: var(--wir-text-muted);
 }
 
-.month-value strong {
-  font-size: 17px;
-  color: #111827;
+.wir-deposit-header strong {
+    font-size: 18px;
 }
 
-.month-value span {
-  font-size: 12px;
-  color: #64748b;
+.wir-deposit-badge {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
 }
 
+.wir-deposit-badge-paid {
+    background: #dcfce7;
+    color: #15803d;
+}
 
-/* =========================================================
-   SUMMARY
-========================================================= */
+.wir-deposit-badge-partial {
+    background: #fef3c7;
+    color: #b45309;
+}
 
-.summary-card {
-  background: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    #fafaff 100%
-  );
+.wir-deposit-badge-unpaid {
+    background: #fee2e2;
+    color: #b91c1c;
 }
 
-.summary-product {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 15px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  background: #fff;
-  margin-bottom: 18px;
+.wir-deposit-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
 }
 
-.summary-icon {
-  width: 55px;
-  height: 55px;
-  border-radius: 11px;
-  background: #eef2ff;
-  color: #4f46e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.wir-deposit-checkbox input {
+    display: none;
 }
 
-.summary-product strong {
-  display: block;
-  font-size: 15px;
-  color: #111827;
+.wir-custom-checkbox {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    border: 2px solid var(--wir-border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--wir-primary);
+    margin-top: 2px;
 }
 
-.summary-product span {
-  display: block;
-  margin-top: 4px;
-  color: #64748b;
-  font-size: 12px;
+.wir-deposit-checkbox input:checked + .wir-custom-checkbox {
+    border-color: var(--wir-primary);
+    background: #eef2ff;
 }
 
-.summary-lines {
-  display: flex;
-  flex-direction: column;
+.wir-deposit-checkbox strong {
+    font-size: 14px;
+    display: block;
 }
 
-.summary-lines > div {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  padding: 13px 0;
-  border-bottom: 1px solid #eef0f4;
+.wir-deposit-checkbox small {
+    font-size: 12px;
+    color: var(--wir-text-muted);
 }
 
-.summary-lines span {
-  color: #64748b;
-  font-size: 14px;
+.wir-deposit-grid {
+    padding-top: 4px;
 }
 
-.summary-lines strong {
-  color: #1f2937;
-  font-size: 14px;
+.wir-deposit-unpaid-note,
+.wir-deposit-partial-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 12px;
 }
 
-.summary-lines .summary-total {
-  border-bottom: 0;
-  margin-top: 5px;
-  padding: 18px 0 4px;
+.wir-deposit-unpaid-note {
+    background: #fef2f2;
+    color: #991b1b;
 }
 
-.summary-total span {
-  color: #111827;
-  font-size: 16px;
-  font-weight: 800;
+.wir-deposit-partial-note {
+    background: #fffbeb;
+    color: #92400e;
 }
 
-.summary-total strong {
-  color: #4f46e5;
-  font-size: 23px;
-  font-weight: 850;
+.wir-deposit-unpaid-note svg,
+.wir-deposit-partial-note svg {
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
+.wir-deposit-unpaid-note strong {
+    display: block;
+    margin-bottom: 2px;
+}
 
-/* =========================================================
-   SUBMIT
-========================================================= */
+/* ============================= SUMMARY ============================= */
 
-.submit-row {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+.wir-summary-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.cancel-btn,
-.submit-btn {
-  min-height: 48px;
-  border-radius: 10px;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 750;
-  cursor: pointer;
+.wir-summary-lines > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--wir-border);
 }
 
-.cancel-btn {
-  border: 1px solid #d8dee8;
-  background: #fff;
-  color: #475569;
+.wir-summary-lines span {
+    color: var(--wir-text-muted);
 }
 
-.cancel-btn:hover:not(:disabled) {
-  background: #f8fafc;
+.wir-summary-lines strong {
+    font-weight: 600;
 }
 
-.submit-btn {
-  border: 0;
-  background: #4f46e5;
-  color: #fff;
-  min-width: 210px;
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+.wir-summary-total {
+    border-bottom: none !important;
+    padding-top: 6px;
+    font-size: 16px !important;
 }
 
-.submit-btn:hover:not(:disabled) {
-  background: #4338ca;
+.wir-summary-total strong {
+    color: var(--wir-primary);
+    font-size: 18px;
 }
 
-.submit-btn:disabled,
-.cancel-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+.wir-text-paid {
+    color: var(--wir-success) !important;
 }
 
-.submit-help {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 7px;
-  color: #64748b;
-  font-size: 12px;
-  padding-bottom: 10px;
+.wir-text-partial {
+    color: var(--wir-warning) !important;
 }
 
-.submit-help svg {
-  color: #16a34a;
+.wir-text-unpaid {
+    color: var(--wir-danger) !important;
 }
 
+.wir-submit-help {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--wir-text-muted);
+    margin: 16px 0;
+}
 
-/* =========================================================
-   SPINNER
-========================================================= */
+.wir-submit-help svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
 
-.spin {
-  animation: walkin-spin 0.9s linear infinite;
+.wir-submit-row {
+    display: flex;
+    gap: 12px;
 }
 
-@keyframes walkin-spin {
-  to {
-    transform: rotate(360deg);
-  }
+.wir-submit-row .wir-cancel-btn {
+    flex: 0 0 auto;
 }
 
+.wir-submit-row .wir-submit-btn {
+    flex: 1;
+}
 
 /* =========================================================
    RESPONSIVE
 ========================================================= */
 
-@media (max-width: 1100px) {
-  .rental-product-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 800px) {
-  .walkin-rental-page {
-    padding: 18px;
-  }
-
-  .walkin-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .walkin-header-left {
-    width: 100%;
-    align-items: flex-start;
-  }
-
-  .walkin-source-badge {
-    align-self: flex-start;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-group.full {
-    grid-column: auto;
-  }
-
-  .customer-type-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .rental-product-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 560px) {
-  .walkin-rental-page {
-    padding: 12px;
-  }
-
-  .walkin-card {
-    padding: 17px;
-    border-radius: 12px;
-  }
-
-  .walkin-header h1 {
-    font-size: 24px;
-  }
-
-  .walkin-header-left {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .rental-product-card {
-    align-items: flex-start;
-  }
-
-  .product-image {
-    width: 70px;
-    height: 70px;
-  }
-
-  .submit-row {
-    flex-direction: column-reverse;
-  }
-
-  .cancel-btn,
-  .submit-btn {
-    width: 100%;
-  }
-}
-/* =========================================================
-   EXTRA WALK-IN FIXES
-========================================================= */
-
-.walkin-loading-page > svg {
-  font-size: 32px;
-  color: #4f46e5;
-}
-
-.walkin-loading-page .spin {
-  animation: walkin-spin 0.9s linear infinite;
-}
-
-.input-icon textarea {
-  padding-left: 40px;
-  padding-top: 12px;
-}
-
-.input-icon {
-  position: relative;
-}
-
-.input-icon > svg {
-  position: absolute;
-  left: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #94a3b8;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.input-icon textarea + svg {
-  top: 15px;
-}
-
-.input-icon textarea {
-  min-height: 100px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.rental-product-card {
-  min-width: 0;
-}
-
-.rental-product-card .product-info {
-  min-width: 0;
-}
-
-.rental-product-card .product-info h3 {
-  word-break: break-word;
-}
-
-.rental-product-card button {
-  font-family: inherit;
-}
-
-.rental-product-card.selected {
-  border-color: #4f46e5;
-  background: #f8f8ff;
-}
-
-.selected-check {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: #4f46e5;
-  z-index: 3;
-}
-/* =========================================================
-   CUSTOMER SECTION - CLICK / INPUT FIX
-========================================================= */
-
-.customer-type-section,
-.customer-details-section {
-    position: relative;
-    z-index: 20;
-    isolation: isolate;
-    pointer-events: auto;
-}
-
-.customer-type-section *,
-.customer-details-section * {
-    pointer-events: auto;
-}
-
-
-/* =========================================================
-   CUSTOMER TYPE BUTTON FIX
-========================================================= */
-
-.customer-type-grid {
-    position: relative;
-    z-index: 30;
-    pointer-events: auto;
-}
-
-.customer-type-grid .type-card {
-    position: relative;
-    z-index: 31;
-    pointer-events: auto !important;
-    user-select: none;
-    -webkit-user-select: none;
-    cursor: pointer;
-}
-
-
-/* =========================================================
-   CUSTOMER INPUT FIX
-========================================================= */
-
-.customer-details-section .form-grid {
-    position: relative;
-    z-index: 30;
-}
-
-.customer-details-section .form-group {
-    position: relative;
-    z-index: 31;
-}
-
-.customer-details-section .input-icon {
-    position: relative;
-    z-index: 32;
-    pointer-events: auto;
-}
-
-.customer-details-section input,
-.customer-details-section textarea,
-.customer-details-section select {
-    position: relative;
-    z-index: 33;
-    pointer-events: auto !important;
-    cursor: text;
-}
-
-
-/* ICON INPUT AREA */
-
-.customer-details-section .input-icon > svg {
-    pointer-events: none !important;
-    z-index: 34;
-}
-
-
-/* =========================================================
-   CUSTOMER BUTTON
-========================================================= */
-
-.customer-type-grid button {
-    pointer-events: auto !important;
-}
-
-.customer-type-grid button * {
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   SEARCH BUTTON
-========================================================= */
-
-.rental-search-box button {
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-}
-
-
-/* =========================================================
-   REFRESH
-========================================================= */
-
-.refresh-stock-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 15px;
-}
-
-
-/* =========================================================
-   PRODUCT SELECT BUTTON
-========================================================= */
-
-.product-select-btn {
-    width: 100%;
-    margin-top: 10px;
-    min-width: 0;
-}
-
-
-/* =========================================================
-   IMPORTANT - FORM ELEMENTS
-========================================================= */
-
-.walkin-form input,
-.walkin-form textarea,
-.walkin-form select,
-.walkin-form button {
-    font-family: inherit;
-}
-
-
-/* Don't let any accidental overlay block form */
-
-.walkin-form {
-    position: relative;
-    z-index: 1;
-}
-
-.walkin-card {
-    position: relative;
-}
-
-
-/* =========================================================
-   MOBILE CUSTOMER FIX
-========================================================= */
-
-@media (max-width: 800px) {
-
-    .customer-type-grid {
-        position: relative;
-        z-index: 50;
-    }
-
-    .customer-type-grid .type-card {
-        min-height: 120px;
-    }
-
-    .customer-details-section {
-        position: relative;
-        z-index: 50;
-    }
-
-    .customer-details-section input,
-    .customer-details-section textarea {
-        min-height: 46px;
-    }
-}
-
-/* =========================================================
-   DEPOSIT PAYMENT SECTION
-   ========================================================= */
-
-.deposit-payment-section {
-    margin-top: 24px;
-    padding: 22px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
-}
-
-.deposit-payment-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.deposit-payment-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.deposit-payment-title svg {
-    font-size: 22px;
-    color: #16a34a;
-}
-
-.deposit-payment-title h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 700;
-    color: #111827;
-}
-
-.deposit-payment-subtitle {
-    margin: 4px 0 0;
-    font-size: 13px;
-    color: #6b7280;
-}
-
-
-/* =========================================================
-   EXPECTED DEPOSIT BOX
-   ========================================================= */
-
-.deposit-expected-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 15px 18px;
-    margin-bottom: 18px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-}
-
-.deposit-expected-label {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.deposit-expected-label span {
-    font-size: 12px;
-    color: #64748b;
-    font-weight: 500;
-}
-
-.deposit-expected-label strong {
-    font-size: 20px;
-    color: #111827;
-    font-weight: 800;
-}
-
-
-/* =========================================================
-   DEPOSIT PAID TOGGLE
-   ========================================================= */
-
-.deposit-paid-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 16px 18px;
-    border: 1px solid #dbeafe;
-    background: #eff6ff;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.deposit-paid-toggle:hover {
-    border-color: #93c5fd;
-    background: #eaf3ff;
-}
-
-.deposit-paid-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.deposit-paid-checkbox {
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    accent-color: #16a34a;
-}
-
-.deposit-paid-text {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-
-.deposit-paid-text strong {
-    font-size: 14px;
-    color: #111827;
-}
-
-.deposit-paid-text span {
-    font-size: 12px;
-    color: #64748b;
-}
-
-
-/* =========================================================
-   DEPOSIT STATUS BADGE
-   ========================================================= */
-
-.deposit-payment-status {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 85px;
-    padding: 7px 12px;
-    border-radius: 30px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
-}
-
-.deposit-payment-status.paid {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.deposit-payment-status.unpaid {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.deposit-payment-status.partial {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-
-/* =========================================================
-   DEPOSIT PAYMENT FORM
-   ========================================================= */
-
-.deposit-payment-form {
-    margin-top: 18px;
-    padding: 18px;
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-}
-
-.deposit-payment-form-title {
-    margin: 0 0 16px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #374151;
-}
-
-
-/* =========================================================
-   FORM GRID
-   ========================================================= */
-
-.deposit-form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-}
-
-.deposit-form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.deposit-form-group.full-width {
-    grid-column: 1 / -1;
-}
-
-.deposit-form-group label {
-    font-size: 12px;
-    font-weight: 700;
-    color: #374151;
-}
-
-.deposit-form-group input,
-.deposit-form-group select {
-    width: 100%;
-    min-height: 44px;
-    padding: 10px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 9px;
-    background: #ffffff;
-    color: #111827;
-    font-size: 14px;
-    outline: none;
-    transition: 0.2s ease;
-    box-sizing: border-box;
-}
-
-.deposit-form-group input:focus,
-.deposit-form-group select:focus {
-    border-color: #16a34a;
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.10);
-}
-
-.deposit-form-group input::placeholder {
-    color: #9ca3af;
-}
-
-
-/* =========================================================
-   PAYMENT METHOD
-   ========================================================= */
-
-.deposit-method-wrapper {
-    position: relative;
-}
-
-.deposit-method-wrapper select {
-    appearance: none;
-    padding-right: 35px;
-}
-
-.deposit-method-wrapper::after {
-    content: "⌄";
-    position: absolute;
-    right: 13px;
-    bottom: 10px;
-    font-size: 17px;
-    color: #6b7280;
-    pointer-events: none;
-}
-
-
-/* =========================================================
-   AMOUNT PAID INPUT
-   ========================================================= */
-
-.deposit-amount-input {
-    position: relative;
-}
-
-.deposit-amount-input span {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-weight: 700;
-    color: #16a34a;
-    font-size: 14px;
-}
-
-.deposit-amount-input input {
-    padding-left: 28px;
-}
-
-
-/* =========================================================
-   DEPOSIT PAYMENT INFO
-   ========================================================= */
-
-.deposit-payment-info {
-    display: flex;
-    align-items: flex-start;
-    gap: 9px;
-    margin-top: 15px;
-    padding: 12px 14px;
-    background: #ecfdf5;
-    border: 1px solid #bbf7d0;
-    border-radius: 9px;
-    color: #166534;
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-.deposit-payment-info svg {
-    flex-shrink: 0;
-    margin-top: 1px;
-}
-
-
-/* =========================================================
-   DEPOSIT SUMMARY
-   ========================================================= */
-
-.deposit-summary-box {
-    margin-top: 18px;
-    padding: 16px;
-    border-radius: 12px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-}
-
-.deposit-summary-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 7px 0;
-    font-size: 13px;
-}
-
-.deposit-summary-row + .deposit-summary-row {
-    border-top: 1px dashed #e5e7eb;
-}
-
-.deposit-summary-row span {
-    color: #6b7280;
-}
-
-.deposit-summary-row strong {
-    color: #111827;
-    font-weight: 700;
-}
-
-.deposit-summary-row.total {
-    margin-top: 5px;
-    padding-top: 12px;
-}
-
-.deposit-summary-row.total span {
-    color: #374151;
-    font-weight: 700;
-}
-
-.deposit-summary-row.total strong {
-    color: #16a34a;
-    font-size: 16px;
-}
-
-
-/* =========================================================
-   ERROR STATE
-   ========================================================= */
-
-.deposit-error {
-    margin-top: 7px;
-    font-size: 11px;
-    color: #dc2626;
-    font-weight: 600;
-}
-
-
-/* =========================================================
-   EXISTING RENTAL SUMMARY - DEPOSIT STATUS
-   ========================================================= */
-
-.summary-deposit-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 9px;
-    border-radius: 20px;
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.summary-deposit-status.paid {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.summary-deposit-status.unpaid {
-    background: #fee2e2;
-    color: #991b1b;
-}
-
-.summary-deposit-status.partial {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-
-/* =========================================================
-   RESPONSIVE - TABLET
-   ========================================================= */
-
 @media (max-width: 768px) {
-
-    .deposit-payment-section {
-        padding: 17px;
-        margin-top: 18px;
-        border-radius: 13px;
+    .wir-page {
+        padding: 12px;
     }
 
-    .deposit-payment-header {
-        align-items: flex-start;
-        flex-direction: column;
+    .wir-card {
+        padding: 16px;
+        border-radius: 12px;
     }
 
-    .deposit-expected-box {
-        padding: 13px 14px;
-    }
-
-    .deposit-form-grid {
+    .wir-form-grid {
         grid-template-columns: 1fr;
-        gap: 13px;
     }
 
-    .deposit-form-group.full-width {
+    .wir-form-group-full {
         grid-column: auto;
     }
 
-    .deposit-paid-toggle {
-        align-items: flex-start;
-        padding: 14px;
+    .wir-product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     }
 
-    .deposit-payment-status {
-        min-width: 75px;
-        padding: 6px 9px;
-    }
-}
-
-
-/* =========================================================
-   RESPONSIVE - MOBILE
-   ========================================================= */
-
-@media (max-width: 480px) {
-
-    .deposit-payment-section {
-        padding: 14px;
-    }
-
-    .deposit-payment-title h3 {
-        font-size: 16px;
-    }
-
-    .deposit-payment-subtitle {
-        font-size: 11px;
-    }
-
-    .deposit-expected-box {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .deposit-expected-label strong {
-        font-size: 18px;
-    }
-
-    .deposit-paid-toggle {
-        gap: 10px;
-    }
-
-    .deposit-paid-left {
-        align-items: flex-start;
-    }
-
-    .deposit-paid-checkbox {
-        margin-top: 2px;
-    }
-
-    .deposit-paid-text strong {
-        font-size: 13px;
-    }
-
-    .deposit-paid-text span {
-        font-size: 11px;
-    }
-
-    .deposit-payment-form {
-        padding: 13px;
-    }
-
-    .deposit-summary-row {
-        font-size: 12px;
-    }
-}
-/* =========================================================
-   SECURITY DEPOSIT CHECKBOX - CLICKABLE
-========================================================= */
-
-.deposit-paid-checkbox {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    padding: 16px 18px;
-    margin-top: 20px;
-
-    border: 1px solid #dfe5e1;
-    border-radius: 12px;
-    background: #ffffff;
-
-    cursor: pointer;
-    user-select: none;
-
-    transition:
-        border-color 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.deposit-paid-checkbox:hover {
-    border-color: #198754;
-    background: #f8fffb;
-}
-
-.deposit-paid-checkbox input[type="checkbox"] {
-    position: absolute;
-
-    width: 1px;
-    height: 1px;
-
-    opacity: 0;
-
-    pointer-events: none;
-}
-
-.custom-checkbox {
-    flex: 0 0 24px;
-
-    width: 24px;
-    height: 24px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 2px solid #aeb8b2;
-    border-radius: 6px;
-
-    background: #ffffff;
-
-    color: #ffffff;
-
-    transition:
-        all 0.2s ease;
-}
-
-.deposit-paid-checkbox input[type="checkbox"]:checked
-    + .custom-checkbox {
-    border-color: #198754;
-    background: #198754;
-}
-
-.custom-checkbox svg {
-    font-size: 15px;
-}
-
-.deposit-paid-checkbox > div:last-child {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    cursor: pointer;
-}
-
-.deposit-paid-checkbox strong {
-    font-size: 15px;
-    font-weight: 700;
-    color: #202823;
-}
-
-.deposit-paid-checkbox small {
-    font-size: 12px;
-    line-height: 1.5;
-    color: #737d77;
-}
-
-.deposit-paid-checkbox:has(input[type="checkbox"]:checked) {
-    border-color: #198754;
-    background: #f4fff8;
-
-    box-shadow: 0 3px 12px rgba(25, 135, 84, 0.08);
-}
-
-
-/* =========================================================
-   DEPOSIT PAYMENT BOX
-========================================================= */
-
-.deposit-payment-box {
-    width: 100%;
-}
-
-.deposit-payment-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 20px;
-    margin-bottom: 18px;
-}
-
-.deposit-label {
-    display: block;
-    margin-bottom: 5px;
-
-    font-size: 13px;
-    color: #707a74;
-}
-
-.deposit-payment-header strong {
-    display: block;
-
-    font-size: 24px;
-    font-weight: 800;
-    color: #198754;
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-.deposit-status-badge {
-    padding: 7px 13px;
-
-    border-radius: 999px;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    text-transform: uppercase;
-}
-
-.deposit-status-badge.paid {
-    color: #146c43;
-    background: #d1e7dd;
-}
-
-.deposit-status-badge.partial {
-    color: #997404;
-    background: #fff3cd;
-}
-
-.deposit-status-badge.unpaid {
-    color: #b02a37;
-    background: #f8d7da;
-}
-
-
-/* =========================================================
-   DEPOSIT GRID
-========================================================= */
-
-.deposit-payment-grid {
-    margin-top: 20px;
-}
-
-
-/* =========================================================
-   UNPAID NOTE
-========================================================= */
-
-.deposit-unpaid-note,
-.deposit-partial-note {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-
-    margin-top: 18px;
-    padding: 14px 16px;
-
-    border-radius: 10px;
-}
-
-.deposit-unpaid-note {
-    border: 1px solid #f1d5d8;
-    background: #fff7f7;
-    color: #842029;
-}
-
-.deposit-partial-note {
-    border: 1px solid #ffe69c;
-    background: #fffdf2;
-    color: #664d03;
-}
-
-.deposit-unpaid-note svg,
-.deposit-partial-note svg {
-    flex: 0 0 auto;
-    margin-top: 2px;
-}
-
-.deposit-unpaid-note div {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.deposit-unpaid-note strong {
-    font-size: 14px;
-}
-
-.deposit-unpaid-note span,
-.deposit-partial-note span {
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 768px) {
-
-    .deposit-payment-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .deposit-paid-checkbox {
-        padding: 14px;
-    }
-
-    .deposit-payment-grid {
+    .wir-document-grid {
         grid-template-columns: 1fr;
     }
 
+    .wir-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .wir-source-badge {
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .wir-customer-type-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wir-product-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .wir-header-title {
+        font-size: 18px;
+    }
+
+    .wir-section-title h2 {
+        font-size: 15px;
+    }
+
+    .wir-submit-row {
+        flex-direction: column;
+    }
+
+    .wir-submit-row .wir-cancel-btn,
+    .wir-submit-row .wir-submit-btn {
+        width: 100%;
+    }
+
+    .wir-deposit-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .wir-summary-product {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .wir-summary-product .wir-cancel-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 360px) {
+    .wir-product-grid {
+        grid-template-columns: 1fr;
+    }
 }

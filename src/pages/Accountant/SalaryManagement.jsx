@@ -1395,10 +1395,6 @@
 // export default SalaryManagement;
 
 
-
-
-
-
 import React, {
     useEffect,
     useMemo,
@@ -1408,104 +1404,356 @@ import React, {
 import {
     Search,
     RefreshCw,
-    CheckCircle,
-    Clock,
-    XCircle,
-    RotateCcw,
+    Download,
+    Printer,
     Eye,
     IndianRupee,
-    CreditCard,
+    Users,
+    CheckCircle2,
+    Clock3,
+    X,
     Wallet,
     Building2,
     Smartphone,
-    Wrench,
-    Laptop,
-    ShoppingCart,
+    CreditCard,
     CalendarDays,
-    X,
-    ArrowUpRight,
+    UserRound,
+    BriefcaseBusiness,
+    FileText,
 } from "lucide-react";
-
-import {
-    getAllPayments,
-    markPaymentSuccess,
-    markPaymentFailed,
-    refundPayment,
-} from "../../services/accountantPaymentService";
 
 import { toast } from "react-toastify";
 
+import {
+    getAllSalaryData,
+    exportSalaryExcel,
+} from "../../services/salary.api";
 
-const SalesPaymentManagement = () => {
+import "./SalaryManagement.css";
 
-    const [payments, setPayments] = useState([]);
+// ======================================================
+// HELPERS
+// ======================================================
 
-    const [loading, setLoading] = useState(true);
+const getEmployeeName = (employee) => {
+    if (employee?.employeeName) {
+        return employee.employeeName;
+    }
 
-    const [search, setSearch] = useState("");
+    if (employee?.name) {
+        return employee.name;
+    }
+
+    const firstName =
+        employee?.firstName ||
+        employee?.user?.firstName ||
+        "";
+
+    const lastName =
+        employee?.lastName ||
+        employee?.user?.lastName ||
+        "";
+
+    return `${firstName} ${lastName}`.trim() || "Employee";
+};
+
+
+const getEmployeeId = (employee) => {
+    return (
+        employee?.employeeId ||
+        employee?.employeeCode ||
+        employee?.user?.employeeId ||
+        "-"
+    );
+};
+
+
+const getDepartment = (employee) => {
+    return (
+        employee?.department ||
+        employee?.departmentName ||
+        "-"
+    );
+};
+
+
+const getDesignation = (employee) => {
+    return (
+        employee?.designation ||
+        employee?.role ||
+        "-"
+    );
+};
+
+
+const getSalaryType = (employee) => {
+    return (
+        employee?.salaryType ||
+        employee?.salaryMode ||
+        "MONTHLY"
+    );
+};
+
+
+const getBaseSalary = (employee) => {
+    return Number(
+        employee?.baseSalary ||
+        employee?.monthlySalary ||
+        employee?.salary ||
+        0
+    );
+};
+
+
+const getPaidAmount = (employee) => {
+    return Number(
+        employee?.totalPaidAmount ||
+        employee?.paidAmount ||
+        0
+    );
+};
+
+
+const getPendingAmount = (employee) => {
+    const salary = getBaseSalary(employee);
+    const paid = getPaidAmount(employee);
+
+    return Math.max(
+        salary - paid,
+        0
+    );
+};
+
+
+const getStatus = (employee) => {
+    return String(
+        employee?.status ||
+        "ACTIVE"
+    ).toUpperCase();
+};
+
+
+const getInitials = (name) => {
+    const value = String(
+        name || ""
+    ).trim();
+
+    if (!value) {
+        return "E";
+    }
+
+    const parts =
+        value.split(/\s+/);
+
+    if (parts.length === 1) {
+        return parts[0]
+            .substring(0, 2)
+            .toUpperCase();
+    }
+
+    return (
+        `${parts[0][0] || ""}${
+            parts[parts.length - 1][0] || ""
+        }`
+    ).toUpperCase();
+};
+
+
+const formatMoney = (amount) => {
+    return new Intl.NumberFormat(
+        "en-IN",
+        {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 2,
+        }
+    ).format(
+        Number(amount || 0)
+    );
+};
+
+
+// ======================================================
+// PAYMENT METHOD ICON
+// ======================================================
+
+const PaymentMethodIcon = ({
+    method,
+}) => {
+
+    const value = String(
+        method || ""
+    ).toUpperCase();
+
+    if (value.includes("CASH")) {
+        return <Wallet size={16} />;
+    }
+
+    if (
+        value.includes("BANK") ||
+        value.includes("NEFT") ||
+        value.includes("RTGS") ||
+        value.includes("IMPS")
+    ) {
+        return <Building2 size={16} />;
+    }
+
+    if (
+        value.includes("UPI") ||
+        value.includes("GPAY") ||
+        value.includes("PHONE")
+    ) {
+        return <Smartphone size={16} />;
+    }
+
+    return <CreditCard size={16} />;
+};
+
+
+// ======================================================
+// SUMMARY CARD
+// ======================================================
+
+const SummaryCard = ({
+    title,
+    value,
+    icon,
+    type = "",
+}) => {
+
+    return (
+        <div
+            className={`salary-summary-card ${
+                type
+                    ? `salary-summary-${type}`
+                    : ""
+            }`}
+        >
+
+            <div className="salary-summary-content">
+
+                <span className="salary-summary-title">
+                    {title}
+                </span>
+
+                <strong className="salary-summary-value">
+                    {value}
+                </strong>
+
+            </div>
+
+            <div className="salary-summary-icon">
+                {icon}
+            </div>
+
+        </div>
+    );
+};
+
+
+// ======================================================
+// MAIN COMPONENT
+// ======================================================
+
+const SalaryManagement = () => {
+
+    const [employees, setEmployees] =
+        useState([]);
+
+    const [loading, setLoading] =
+        useState(true);
+
+    const [search, setSearch] =
+        useState("");
 
     const [statusFilter, setStatusFilter] =
         useState("ALL");
 
-    const [moduleFilter, setModuleFilter] =
+    const [departmentFilter, setDepartmentFilter] =
         useState("ALL");
 
-    const [sourceFilter, setSourceFilter] =
+    const [salaryTypeFilter, setSalaryTypeFilter] =
         useState("ALL");
 
-    const [selectedPayment, setSelectedPayment] =
+    const [selectedEmployee, setSelectedEmployee] =
         useState(null);
 
-    const [showRefund, setShowRefund] =
-        useState(false);
-
-    const [refundAmount, setRefundAmount] =
-        useState("");
-
-    const [refundReason, setRefundReason] =
-        useState("");
-
-    const [actionLoading, setActionLoading] =
+    const [showDetails, setShowDetails] =
         useState(false);
 
 
-    // =========================================================
-    // LOAD
-    // =========================================================
+    // ==================================================
+    // LOAD EMPLOYEES
+    // ==================================================
 
-    const loadPayments = async () => {
+    const loadSalaryData = async () => {
 
         try {
 
             setLoading(true);
 
             const response =
-                await getAllPayments();
+                await getAllSalaryData();
 
-            const data =
-                response?.data ||
-                response?.payments ||
-                response?.data?.payments ||
-                response ||
-                [];
+            console.log(
+                "ACCOUNTANT SALARY RESPONSE:",
+                response
+            );
 
-            const list =
-                Array.isArray(data)
-                    ? data
-                    : [];
+            let list = [];
 
-            setPayments(list);
+            if (
+                Array.isArray(
+                    response?.data
+                )
+            ) {
+
+                list =
+                    response.data;
+
+            } else if (
+                Array.isArray(response)
+            ) {
+
+                list =
+                    response;
+
+            } else if (
+                Array.isArray(
+                    response?.data?.data
+                )
+            ) {
+
+                list =
+                    response.data.data;
+
+            } else if (
+                Array.isArray(
+                    response?.employees
+                )
+            ) {
+
+                list =
+                    response.employees;
+
+            }
+
+            setEmployees(list);
 
         } catch (error) {
 
             console.error(
-                "LOAD SALES PAYMENTS ERROR:",
+                "ACCOUNTANT SALARY ERROR:",
                 error
             );
 
+            setEmployees([]);
+
             toast.error(
                 error?.response?.data?.message ||
-                "Failed to load sales records"
+                error?.response?.data?.error ||
+                error?.message ||
+                "Unable to load employee salary data"
             );
 
         } finally {
@@ -1518,1138 +1766,693 @@ const SalesPaymentManagement = () => {
 
     useEffect(() => {
 
-        loadPayments();
+        loadSalaryData();
 
     }, []);
 
 
-    // =========================================================
-    // HELPERS
-    // =========================================================
+    // ==================================================
+    // DEPARTMENTS
+    // ==================================================
 
-    const getStatus = (payment) => {
+    const departments = useMemo(() => {
 
-        return String(
-            payment?.paymentStatus ||
-            payment?.status ||
-            "PENDING"
-        ).toUpperCase();
-
-    };
-
-
-    const getModule = (payment) => {
-
-        return String(
-            payment?.saleModule ||
-            payment?.paymentFor ||
-            "ORDER"
-        ).toUpperCase();
-
-    };
-
-
-    const getSource = (payment) => {
-
-        const source =
-            String(
-                payment?.saleSource ||
-                payment?.source ||
-                payment?.orderSource ||
-                payment?.rentalSource ||
-                ""
-            ).toUpperCase();
-
-        if (
-            source === "WALK_IN" ||
-            source === "WALKIN" ||
-            source === "WALK-IN"
-        ) {
-            return "WALK_IN";
-        }
-
-        if (
-            source === "ONLINE"
-        ) {
-            return "ONLINE";
-        }
-
-        /*
-         * If backend has not yet added saleSource,
-         * do not falsely call unknown data ONLINE.
-         */
-
-        return "UNKNOWN";
-    };
-
-
-    const getReferenceNumber = (payment) => {
-
-        return (
-            payment?.referenceNumber ||
-            payment?.orderNumber ||
-            payment?.repairNumber ||
-            payment?.rentalNumber ||
-            payment?.invoiceNumber ||
-            payment?.referenceId ||
-            "-"
-        );
-
-    };
-
-
-    const getCustomerName = (payment) => {
-
-        if (
-            payment?.customerName
-        ) {
-            return payment.customerName;
-        }
-
-        if (
-            payment?.companyName
-        ) {
-            return payment.companyName;
-        }
-
-        if (
-            payment?.user &&
-            typeof payment.user === "object"
-        ) {
-
-            return (
-                `${payment.user.firstName || ""} ${
-                    payment.user.lastName || ""
-                }`
-            ).trim() ||
-            payment.user.name ||
-            payment.user.email ||
-            "Customer";
-
-        }
-
-        return "Customer";
-    };
-
-
-    const getCustomerPhone = (payment) => {
-
-        return (
-            payment?.customerPhone ||
-            payment?.user?.phone ||
-            payment?.phone ||
-            "-"
-        );
-
-    };
-
-
-    const formatMoney = (amount) => {
-
-        return new Intl.NumberFormat(
-            "en-IN",
-            {
-                style: "currency",
-                currency: "INR",
-                maximumFractionDigits: 2,
-            }
-        ).format(
-            Number(amount || 0)
-        );
-
-    };
-
-
-    const formatDate = (date) => {
-
-        if (!date) return "-";
-
-        const parsed =
-            new Date(date);
-
-        if (
-            Number.isNaN(
-                parsed.getTime()
-            )
-        ) {
-            return "-";
-        }
-
-        return parsed.toLocaleString(
-            "en-IN",
-            {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-            }
-        );
-
-    };
-
-
-    // =========================================================
-    // MODULE LABEL
-    // =========================================================
-
-    const moduleLabel = (module) => {
-
-        switch (module) {
-
-            case "ORDER":
-                return "SALE";
-
-            case "REPAIR":
-                return "REPAIR";
-
-            case "RENTAL":
-                return "RENTAL";
-
-            default:
-                return module || "OTHER";
-
-        }
-
-    };
-
-
-    const moduleIcon = (module) => {
-
-        switch (module) {
-
-            case "ORDER":
-                return (
-                    <ShoppingCart size={16} />
+        const values =
+            employees
+                .map(
+                    (employee) =>
+                        getDepartment(employee)
+                )
+                .filter(
+                    (value) =>
+                        value &&
+                        value !== "-"
                 );
 
-            case "REPAIR":
-                return (
-                    <Wrench size={16} />
-                );
+        return [
+            ...new Set(values),
+        ];
 
-            case "RENTAL":
-                return (
-                    <Laptop size={16} />
-                );
-
-            default:
-                return (
-                    <IndianRupee size={16} />
-                );
-
-        }
-
-    };
+    }, [employees]);
 
 
-    // =========================================================
-    // STATUS
-    // =========================================================
+    // ==================================================
+    // SALARY TYPES
+    // ==================================================
 
-    const statusClass = (status) => {
+    const salaryTypes = useMemo(() => {
 
-        switch (status) {
+        const values =
+            employees
+                .map(
+                    (employee) =>
+                        getSalaryType(employee)
+                )
+                .filter(Boolean);
 
-            case "SUCCESS":
-            case "PAID":
-                return "bg-green-100 text-green-700";
+        return [
+            ...new Set(values),
+        ];
 
-            case "PENDING":
-                return "bg-yellow-100 text-yellow-700";
-
-            case "FAILED":
-                return "bg-red-100 text-red-700";
-
-            case "REFUNDED":
-                return "bg-purple-100 text-purple-700";
-
-            default:
-                return "bg-gray-100 text-gray-700";
-
-        }
-
-    };
+    }, [employees]);
 
 
-    // =========================================================
-    // SOURCE
-    // =========================================================
-
-    const sourceClass = (source) => {
-
-        if (
-            source === "ONLINE"
-        ) {
-            return "bg-blue-100 text-blue-700";
-        }
-
-        if (
-            source === "WALK_IN"
-        ) {
-            return "bg-orange-100 text-orange-700";
-        }
-
-        return "bg-gray-100 text-gray-600";
-
-    };
-
-
-    const sourceLabel = (source) => {
-
-        if (
-            source === "WALK_IN"
-        ) {
-            return "WALK-IN";
-        }
-
-        if (
-            source === "ONLINE"
-        ) {
-            return "ONLINE";
-        }
-
-        return "UNKNOWN";
-
-    };
-
-
-    // =========================================================
-    // PAYMENT ICON
-    // =========================================================
-
-    const paymentIcon = (method) => {
-
-        const value =
-            String(
-                method || ""
-            ).toUpperCase();
-
-        if (
-            value.includes("CASH")
-        ) {
-            return (
-                <Wallet size={17} />
-            );
-        }
-
-        if (
-            value.includes("BANK") ||
-            value.includes("NEFT") ||
-            value.includes("RTGS") ||
-            value.includes("IMPS") ||
-            value.includes("NET_BANKING")
-        ) {
-            return (
-                <Building2 size={17} />
-            );
-        }
-
-        if (
-            value.includes("UPI") ||
-            value.includes("PHONE") ||
-            value.includes("GPAY")
-        ) {
-            return (
-                <Smartphone size={17} />
-            );
-        }
-
-        return (
-            <CreditCard size={17} />
-        );
-
-    };
-
-
-    // =========================================================
+    // ==================================================
     // FILTER
-    // =========================================================
+    // ==================================================
 
-    const filteredPayments = useMemo(() => {
+    const filteredEmployees =
+        useMemo(() => {
 
-        const keyword =
-            search
-                .trim()
-                .toLowerCase();
+            const keyword =
+                search
+                    .trim()
+                    .toLowerCase();
 
-        return payments.filter(
-            (payment) => {
+            return employees.filter(
+                (employee) => {
 
-                const module =
-                    getModule(payment);
+                    const name =
+                        getEmployeeName(
+                            employee
+                        ).toLowerCase();
 
-                const source =
-                    getSource(payment);
+                    const employeeId =
+                        getEmployeeId(
+                            employee
+                        ).toLowerCase();
 
-                const status =
-                    getStatus(payment);
+                    const department =
+                        getDepartment(
+                            employee
+                        ).toLowerCase();
 
-                const customer =
-                    getCustomerName(payment);
+                    const designation =
+                        getDesignation(
+                            employee
+                        ).toLowerCase();
 
-                const reference =
-                    getReferenceNumber(payment);
-
-                const phone =
-                    getCustomerPhone(payment);
-
-                const matchesSearch =
-                    !keyword ||
-                    customer
-                        .toLowerCase()
-                        .includes(keyword) ||
-                    reference
-                        .toLowerCase()
-                        .includes(keyword) ||
-                    phone
-                        .toLowerCase()
-                        .includes(keyword) ||
-                    String(
-                        payment?.transactionId || ""
-                    )
-                        .toLowerCase()
-                        .includes(keyword) ||
-                    String(
-                        payment?.receiptNumber || ""
-                    )
-                        .toLowerCase()
-                        .includes(keyword);
-
-                const matchesModule =
-                    moduleFilter === "ALL" ||
-                    module === moduleFilter;
-
-                const matchesSource =
-                    sourceFilter === "ALL" ||
-                    source === sourceFilter;
-
-                const matchesStatus =
-                    statusFilter === "ALL" ||
-                    status === statusFilter;
-
-                return (
-                    matchesSearch &&
-                    matchesModule &&
-                    matchesSource &&
-                    matchesStatus
-                );
-
-            }
-        );
-
-    }, [
-        payments,
-        search,
-        moduleFilter,
-        sourceFilter,
-        statusFilter,
-    ]);
-
-
-    // =========================================================
-    // SUMMARY
-    // =========================================================
-
-    const summary = useMemo(() => {
-
-        const successful =
-            payments.filter(
-                (payment) => {
+                    const salaryType =
+                        String(
+                            getSalaryType(
+                                employee
+                            )
+                        ).toLowerCase();
 
                     const status =
-                        getStatus(payment);
+                        getStatus(
+                            employee
+                        );
+
+
+                    const matchesSearch =
+                        !keyword ||
+                        name.includes(keyword) ||
+                        employeeId.includes(keyword) ||
+                        department.includes(keyword) ||
+                        designation.includes(keyword) ||
+                        salaryType.includes(keyword);
+
+
+                    const matchesStatus =
+                        statusFilter === "ALL" ||
+                        status === statusFilter;
+
+
+                    const matchesDepartment =
+                        departmentFilter === "ALL" ||
+                        getDepartment(employee) ===
+                            departmentFilter;
+
+
+                    const matchesSalaryType =
+                        salaryTypeFilter === "ALL" ||
+                        getSalaryType(employee) ===
+                            salaryTypeFilter;
+
 
                     return (
-                        status === "SUCCESS" ||
-                        status === "PAID"
+                        matchesSearch &&
+                        matchesStatus &&
+                        matchesDepartment &&
+                        matchesSalaryType
                     );
 
                 }
             );
 
-
-        const pending =
-            payments.filter(
-                (payment) =>
-                    getStatus(payment) ===
-                    "PENDING"
-            );
-
-
-        const online =
-            successful.filter(
-                (payment) =>
-                    getSource(payment) ===
-                    "ONLINE"
-            );
+        }, [
+            employees,
+            search,
+            statusFilter,
+            departmentFilter,
+            salaryTypeFilter,
+        ]);
 
 
-        const walkIn =
-            successful.filter(
-                (payment) =>
-                    getSource(payment) ===
-                    "WALK_IN"
-            );
+    // ==================================================
+    // SUMMARY
+    // ==================================================
+
+    const summary = useMemo(() => {
+
+        const totalEmployees =
+            employees.length;
 
 
-        const repair =
-            successful.filter(
-                (payment) =>
-                    getModule(payment) ===
-                    "REPAIR"
-            );
+        const activeEmployees =
+            employees.filter(
+                (employee) =>
+                    getStatus(employee) ===
+                    "ACTIVE"
+            ).length;
 
 
-        const rental =
-            successful.filter(
-                (payment) =>
-                    getModule(payment) ===
-                    "RENTAL"
-            );
-
-
-        const sales =
-            successful.filter(
-                (payment) =>
-                    getModule(payment) ===
-                    "ORDER"
-            );
-
-
-        const total =
-            successful.reduce(
-                (sum, payment) =>
-                    sum +
-                    Number(
-                        payment.amount || 0
+        const totalSalary =
+            employees.reduce(
+                (
+                    total,
+                    employee
+                ) =>
+                    total +
+                    getBaseSalary(
+                        employee
                     ),
                 0
             );
 
 
-        const pendingAmount =
-            pending.reduce(
-                (sum, payment) =>
-                    sum +
-                    Number(
-                        payment.amount || 0
+        const totalPaid =
+            employees.reduce(
+                (
+                    total,
+                    employee
+                ) =>
+                    total +
+                    getPaidAmount(
+                        employee
                     ),
                 0
             );
 
 
-        const totalOf = (list) =>
-            list.reduce(
-                (sum, payment) =>
-                    sum +
-                    Number(
-                        payment.amount || 0
+        const totalPending =
+            employees.reduce(
+                (
+                    total,
+                    employee
+                ) =>
+                    total +
+                    getPendingAmount(
+                        employee
                     ),
                 0
             );
 
 
         return {
-
-            total,
-
-            pending:
-                pendingAmount,
-
-            online:
-                totalOf(online),
-
-            walkIn:
-                totalOf(walkIn),
-
-            repair:
-                totalOf(repair),
-
-            rental:
-                totalOf(rental),
-
-            sales:
-                totalOf(sales),
-
+            totalEmployees,
+            activeEmployees,
+            totalSalary,
+            totalPaid,
+            totalPending,
         };
 
-    }, [payments]);
+    }, [employees]);
 
 
-    // =========================================================
-    // SUCCESS
-    // =========================================================
+    // ==================================================
+    // EXPORT
+    // ==================================================
 
-    const handleSuccess = async (
-        payment
+    const handleExport = async () => {
+
+        try {
+
+            await exportSalaryExcel();
+
+            toast.success(
+                "Salary Excel exported successfully"
+            );
+
+        } catch (error) {
+
+            console.error(
+                "SALARY EXPORT ERROR:",
+                error
+            );
+
+            toast.error(
+                error?.response?.data?.message ||
+                "Unable to export salary Excel"
+            );
+
+        }
+    };
+
+
+    // ==================================================
+    // PRINT
+    // ==================================================
+
+    const handlePrint = () => {
+
+        window.print();
+
+    };
+
+
+    // ==================================================
+    // VIEW
+    // ==================================================
+
+    const handleView = (
+        employee
     ) => {
 
-        try {
+        setSelectedEmployee(
+            employee
+        );
 
-            setActionLoading(true);
-
-            await markPaymentSuccess(
-                payment._id,
-                {
-                    transactionId:
-                        payment.transactionId ||
-                        "",
-
-                    gatewayPaymentId:
-                        payment.gatewayPaymentId ||
-                        "",
-
-                    gateway:
-                        payment.gateway ||
-                        "MANUAL",
-
-                    gatewayResponse:
-                        {},
-                }
-            );
-
-            toast.success(
-                "Payment marked as successful"
-            );
-
-            setSelectedPayment(
-                null
-            );
-
-            await loadPayments();
-
-        } catch (error) {
-
-            toast.error(
-                error?.response?.data?.message ||
-                "Unable to update payment"
-            );
-
-        } finally {
-
-            setActionLoading(false);
-
-        }
+        setShowDetails(
+            true
+        );
 
     };
 
 
-    // =========================================================
-    // FAILED
-    // =========================================================
+    // ==================================================
+    // MANAGE
+    // ==================================================
 
-    const handleFailed = async (
-        payment
+    const handleManage = (
+        employee
     ) => {
 
-        const reason =
-            window.prompt(
-                "Enter failure reason:"
-            );
+        setSelectedEmployee(
+            employee
+        );
 
-        if (!reason) {
-            return;
-        }
-
-        try {
-
-            setActionLoading(true);
-
-            await markPaymentFailed(
-                payment._id,
-                {
-                    reason,
-                }
-            );
-
-            toast.success(
-                "Payment marked as failed"
-            );
-
-            setSelectedPayment(
-                null
-            );
-
-            await loadPayments();
-
-        } catch (error) {
-
-            toast.error(
-                error?.response?.data?.message ||
-                "Unable to update payment"
-            );
-
-        } finally {
-
-            setActionLoading(false);
-
-        }
+        setShowDetails(
+            true
+        );
 
     };
 
 
-    // =========================================================
-    // REFUND
-    // =========================================================
+    // ==================================================
+    // LOADING
+    // ==================================================
 
-    const handleRefund = async () => {
+    if (loading) {
 
-        if (!selectedPayment) {
-            return;
-        }
+        return (
 
-        const amount =
-            Number(refundAmount);
+            <div className="salary-management-page">
 
+                <div className="salary-loading">
 
-        if (
-            !amount ||
-            amount <= 0
-        ) {
+                    <RefreshCw
+                        size={22}
+                        className="salary-spin"
+                    />
 
-            toast.error(
-                "Enter valid refund amount"
-            );
+                    <span>
+                        Loading employee salary data...
+                    </span>
 
-            return;
-        }
+                </div>
 
+            </div>
 
-        if (
-            amount >
-            Number(
-                selectedPayment.amount ||
-                0
-            )
-        ) {
+        );
 
-            toast.error(
-                "Refund amount cannot exceed payment amount"
-            );
-
-            return;
-        }
+    }
 
 
-        if (
-            !refundReason.trim()
-        ) {
-
-            toast.error(
-                "Refund reason is required"
-            );
-
-            return;
-        }
-
-
-        try {
-
-            setActionLoading(true);
-
-            await refundPayment(
-                selectedPayment._id,
-                {
-                    refundReason,
-                    refundedAmount:
-                        amount,
-                }
-            );
-
-
-            toast.success(
-                "Refund recorded successfully"
-            );
-
-
-            setShowRefund(
-                false
-            );
-
-            setRefundAmount(
-                ""
-            );
-
-            setRefundReason(
-                ""
-            );
-
-            setSelectedPayment(
-                null
-            );
-
-
-            await loadPayments();
-
-        } catch (error) {
-
-            toast.error(
-                error?.response?.data?.message ||
-                "Refund failed"
-            );
-
-        } finally {
-
-            setActionLoading(
-                false
-            );
-
-        }
-
-    };
-
-
-    // =========================================================
+    // ==================================================
     // UI
-    // =========================================================
+    // ==================================================
 
     return (
 
-        <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+        <div className="salary-management-page">
 
-            {/* HEADER */}
+            {/* ==========================================
+                HEADER
+            ========================================== */}
 
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+            <div className="salary-management-header">
 
                 <div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="salary-title-row">
 
-                        <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                            Sales & Payment Management
-                        </h1>
+                        <div className="salary-title-icon">
+                            <IndianRupee size={24} />
+                        </div>
+
+                        <div>
+
+                            <h1>
+                                Employee Salary Management
+                            </h1>
+
+                            <p>
+                                Manage employee salary,
+                                payments, pending amounts
+                                and salary records.
+                            </p>
+
+                        </div>
 
                     </div>
-
-                    <p className="text-gray-500 mt-1">
-                        Online sales, walk-in sales,
-                        repairs and rentals in one place.
-                    </p>
 
                 </div>
 
 
-                <button
-                    onClick={loadPayments}
-                    disabled={loading}
-                    className="
-                        flex items-center justify-center
-                        gap-2 px-4 py-2.5 rounded-lg
-                        bg-gray-800 text-white
-                        hover:bg-gray-700
-                        disabled:opacity-50
-                    "
-                >
+                <div className="salary-header-actions">
 
-                    <RefreshCw
-                        size={17}
-                        className={
-                            loading
-                                ? "animate-spin"
-                                : ""
+                    <button
+                        type="button"
+                        onClick={
+                            loadSalaryData
                         }
-                    />
+                        className="salary-action-btn"
+                    >
 
-                    Refresh
+                        <RefreshCw
+                            size={16}
+                        />
 
-                </button>
+                        Refresh
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onClick={
+                            handleExport
+                        }
+                        className="salary-action-btn"
+                    >
+
+                        <Download
+                            size={16}
+                        />
+
+                        Export Excel
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        onClick={
+                            handlePrint
+                        }
+                        className="salary-action-btn salary-print-btn"
+                    >
+
+                        <Printer
+                            size={16}
+                        />
+
+                        Print
+
+                    </button>
+
+                </div>
 
             </div>
 
 
-            {/* SUMMARY */}
+            {/* ==========================================
+                SUMMARY
+            ========================================== */}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
+            <div className="salary-summary-grid">
 
                 <SummaryCard
-                    title="Total Collected"
-                    value={formatMoney(
-                        summary.total
-                    )}
+                    title="Total Employees"
+                    value={
+                        summary.totalEmployees
+                    }
                     icon={
-                        <IndianRupee size={22} />
+                        <Users size={22} />
                     }
                 />
 
 
                 <SummaryCard
-                    title="Online"
-                    value={formatMoney(
-                        summary.online
-                    )}
-                    icon={
-                        <ShoppingCart size={22} />
+                    title="Active Employees"
+                    value={
+                        summary.activeEmployees
                     }
+                    icon={
+                        <CheckCircle2
+                            size={22}
+                        />
+                    }
+                    type="green"
                 />
 
 
                 <SummaryCard
-                    title="Walk-In"
-                    value={formatMoney(
-                        summary.walkIn
-                    )}
+                    title="Monthly Salary"
+                    value={
+                        formatMoney(
+                            summary.totalSalary
+                        )
+                    }
+                    icon={
+                        <IndianRupee
+                            size={22}
+                        />
+                    }
+                    type="blue"
+                />
+
+
+                <SummaryCard
+                    title="Total Paid"
+                    value={
+                        formatMoney(
+                            summary.totalPaid
+                        )
+                    }
                     icon={
                         <Wallet size={22} />
                     }
+                    type="purple"
                 />
 
 
                 <SummaryCard
-                    title="Pending"
-                    value={formatMoney(
-                        summary.pending
-                    )}
-                    icon={
-                        <Clock size={22} />
+                    title="Pending Salary"
+                    value={
+                        formatMoney(
+                            summary.totalPending
+                        )
                     }
+                    icon={
+                        <Clock3 size={22} />
+                    }
+                    type="orange"
                 />
 
             </div>
 
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            {/* ==========================================
+                FILTERS
+            ========================================== */}
 
-                <SummaryCard
-                    title="Product Sales"
-                    value={formatMoney(
-                        summary.sales
-                    )}
-                    icon={
-                        <ShoppingCart size={22} />
-                    }
-                />
+            <div className="salary-filter-box">
 
+                <div className="salary-search-box">
 
-                <SummaryCard
-                    title="Repair Sales"
-                    value={formatMoney(
-                        summary.repair
-                    )}
-                    icon={
-                        <Wrench size={22} />
-                    }
-                />
+                    <Search size={18} />
 
-
-                <SummaryCard
-                    title="Rental Sales"
-                    value={formatMoney(
-                        summary.rental
-                    )}
-                    icon={
-                        <Laptop size={22} />
-                    }
-                />
-
-            </div>
-
-
-            {/* FILTERS */}
-
-            <div className="bg-white rounded-xl shadow-sm border p-4 mb-5">
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-
-                    <div className="relative">
-
-                        <Search
-                            size={18}
-                            className="
-                                absolute left-3
-                                top-1/2
-                                -translate-y-1/2
-                                text-gray-400
-                            "
-                        />
-
-                        <input
-                            value={search}
-                            onChange={(e) =>
-                                setSearch(
-                                    e.target.value
-                                )
-                            }
-                            placeholder="
-                                Search customer,
-                                invoice, transaction...
-                            "
-                            className="
-                                w-full border
-                                rounded-lg
-                                pl-10 pr-3 py-2.5
-                                outline-none
-                                focus:ring-2
-                                focus:ring-blue-500
-                            "
-                        />
-
-                    </div>
-
-
-                    <select
-                        value={moduleFilter}
-                        onChange={(e) =>
-                            setModuleFilter(
-                                e.target.value
+                    <input
+                        type="text"
+                        placeholder="Search employee, ID, department..."
+                        value={search}
+                        onChange={(event) =>
+                            setSearch(
+                                event.target.value
                             )
                         }
-                        className="
-                            border rounded-lg
-                            px-3 py-2.5
-                            outline-none
-                        "
-                    >
-
-                        <option value="ALL">
-                            All Modules
-                        </option>
-
-                        <option value="ORDER">
-                            Product Sales
-                        </option>
-
-                        <option value="REPAIR">
-                            Repair
-                        </option>
-
-                        <option value="RENTAL">
-                            Rental
-                        </option>
-
-                    </select>
-
-
-                    <select
-                        value={sourceFilter}
-                        onChange={(e) =>
-                            setSourceFilter(
-                                e.target.value
-                            )
-                        }
-                        className="
-                            border rounded-lg
-                            px-3 py-2.5
-                            outline-none
-                        "
-                    >
-
-                        <option value="ALL">
-                            All Sources
-                        </option>
-
-                        <option value="ONLINE">
-                            Online
-                        </option>
-
-                        <option value="WALK_IN">
-                            Walk-In
-                        </option>
-
-                        <option value="UNKNOWN">
-                            Unknown
-                        </option>
-
-                    </select>
-
-
-                    <select
-                        value={statusFilter}
-                        onChange={(e) =>
-                            setStatusFilter(
-                                e.target.value
-                            )
-                        }
-                        className="
-                            border rounded-lg
-                            px-3 py-2.5
-                            outline-none
-                        "
-                    >
-
-                        <option value="ALL">
-                            All Payment Status
-                        </option>
-
-                        <option value="PENDING">
-                            Pending
-                        </option>
-
-                        <option value="SUCCESS">
-                            Success
-                        </option>
-
-                        <option value="PAID">
-                            Paid
-                        </option>
-
-                        <option value="FAILED">
-                            Failed
-                        </option>
-
-                        <option value="REFUNDED">
-                            Refunded
-                        </option>
-
-                    </select>
+                    />
 
                 </div>
 
+
+                <select
+                    value={
+                        departmentFilter
+                    }
+                    onChange={(event) =>
+                        setDepartmentFilter(
+                            event.target.value
+                        )
+                    }
+                >
+
+                    <option value="ALL">
+                        All Departments
+                    </option>
+
+                    {departments.map(
+                        (department) => (
+
+                            <option
+                                key={
+                                    department
+                                }
+                                value={
+                                    department
+                                }
+                            >
+                                {department}
+                            </option>
+
+                        )
+                    )}
+
+                </select>
+
+
+                <select
+                    value={
+                        salaryTypeFilter
+                    }
+                    onChange={(event) =>
+                        setSalaryTypeFilter(
+                            event.target.value
+                        )
+                    }
+                >
+
+                    <option value="ALL">
+                        All Salary Types
+                    </option>
+
+                    {salaryTypes.map(
+                        (type) => (
+
+                            <option
+                                key={type}
+                                value={type}
+                            >
+                                {type}
+                            </option>
+
+                        )
+                    )}
+
+                </select>
+
+
+                <select
+                    value={
+                        statusFilter
+                    }
+                    onChange={(event) =>
+                        setStatusFilter(
+                            event.target.value
+                        )
+                    }
+                >
+
+                    <option value="ALL">
+                        All Status
+                    </option>
+
+                    <option value="ACTIVE">
+                        Active
+                    </option>
+
+                    <option value="INACTIVE">
+                        Inactive
+                    </option>
+
+                    <option value="SUSPENDED">
+                        Suspended
+                    </option>
+
+                </select>
+
             </div>
 
 
-            {/* TABLE */}
+            {/* ==========================================
+                TABLE
+            ========================================== */}
 
-            <div className="
-                bg-white rounded-xl
-                shadow-sm border
-                overflow-hidden
-            ">
+            <div className="salary-table-card">
 
-                <div className="overflow-x-auto">
+                <div className="salary-table-header">
 
-                    <table className="
-                        w-full
-                        min-w-[1250px]
-                    ">
+                    <div>
 
-                        <thead className="bg-gray-100">
+                        <h2>
+                            Employee Salary Records
+                        </h2>
+
+                        <p>
+                            {filteredEmployees.length}
+                            {" "}
+                            employee(s) found
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div className="salary-table-scroll">
+
+                    <table className="salary-management-table">
+
+                        <thead>
 
                             <tr>
 
-                                <th className="text-left px-4 py-3 text-sm">
-                                    Date
+                                <th>
+                                    Employee
                                 </th>
 
-                                <th className="text-left px-4 py-3 text-sm">
-                                    Customer
+                                <th>
+                                    Department
                                 </th>
 
-                                <th className="text-left px-4 py-3 text-sm">
-                                    Module
+                                <th>
+                                    Designation
                                 </th>
 
-                                <th className="text-left px-4 py-3 text-sm">
-                                    Source
+                                <th>
+                                    Salary Type
                                 </th>
 
-                                <th className="text-left px-4 py-3 text-sm">
-                                    Reference
+                                <th>
+                                    Monthly Salary
                                 </th>
 
-                                <th className="text-left px-4 py-3 text-sm">
-                                    Amount
+                                <th>
+                                    Paid
                                 </th>
 
-                                <th className="text-left px-4 py-3 text-sm">
-                                    Method
+                                <th>
+                                    Pending
                                 </th>
 
-                                <th className="text-left px-4 py-3 text-sm">
+                                <th>
                                     Status
                                 </th>
 
-                                <th className="text-right px-4 py-3 text-sm">
+                                <th>
                                     Action
                                 </th>
 
@@ -2660,122 +2463,126 @@ const SalesPaymentManagement = () => {
 
                         <tbody>
 
-                            {loading ? (
+                            {filteredEmployees.length === 0 ? (
 
                                 <tr>
 
                                     <td
                                         colSpan="9"
-                                        className="
-                                            text-center
-                                            py-12
-                                            text-gray-500
-                                        "
+                                        className="salary-empty"
                                     >
-                                        Loading sales...
-                                    </td>
 
-                                </tr>
+                                        <Users
+                                            size={36}
+                                        />
 
-                            ) : filteredPayments.length === 0 ? (
+                                        <strong>
+                                            No employees found
+                                        </strong>
 
-                                <tr>
+                                        <span>
+                                            Try changing your
+                                            search or filters.
+                                        </span>
 
-                                    <td
-                                        colSpan="9"
-                                        className="
-                                            text-center
-                                            py-12
-                                            text-gray-500
-                                        "
-                                    >
-                                        No sales/payment records found.
                                     </td>
 
                                 </tr>
 
                             ) : (
 
-                                filteredPayments.map(
-                                    (payment) => {
+                                filteredEmployees.map(
+                                    (
+                                        employee
+                                    ) => {
 
-                                        const module =
-                                            getModule(
-                                                payment
+                                        const name =
+                                            getEmployeeName(
+                                                employee
                                             );
 
-                                        const source =
-                                            getSource(
-                                                payment
+                                        const salary =
+                                            getBaseSalary(
+                                                employee
+                                            );
+
+                                        const paid =
+                                            getPaidAmount(
+                                                employee
+                                            );
+
+                                        const pending =
+                                            getPendingAmount(
+                                                employee
                                             );
 
                                         const status =
                                             getStatus(
-                                                payment
+                                                employee
                                             );
 
                                         return (
 
                                             <tr
                                                 key={
-                                                    payment._id
+                                                    employee?._id ||
+                                                    getEmployeeId(
+                                                        employee
+                                                    )
                                                 }
-                                                className="
-                                                    border-t
-                                                    hover:bg-gray-50
-                                                "
                                             >
 
-                                                {/* DATE */}
+                                                {/* EMPLOYEE */}
 
-                                                <td className="
-                                                    px-4 py-4
-                                                    text-sm
-                                                    text-gray-600
-                                                ">
+                                                <td>
 
-                                                    <div className="
-                                                        flex
-                                                        items-center
-                                                        gap-2
-                                                    ">
+                                                    <div className="salary-employee-cell">
 
-                                                        <CalendarDays
+                                                        <div className="salary-avatar">
+                                                            {
+                                                                getInitials(
+                                                                    name
+                                                                )
+                                                            }
+                                                        </div>
+
+                                                        <div>
+
+                                                            <strong>
+                                                                {
+                                                                    name
+                                                                }
+                                                            </strong>
+
+                                                            <span>
+                                                                ID:{" "}
+                                                                {
+                                                                    getEmployeeId(
+                                                                        employee
+                                                                    )
+                                                                }
+                                                            </span>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </td>
+
+
+                                                {/* DEPARTMENT */}
+
+                                                <td>
+
+                                                    <div className="salary-info-cell">
+
+                                                        <BriefcaseBusiness
                                                             size={15}
                                                         />
 
-                                                        {formatDate(
-                                                            payment.paymentDate ||
-                                                            payment.createdAt
-                                                        )}
-
-                                                    </div>
-
-                                                </td>
-
-
-                                                {/* CUSTOMER */}
-
-                                                <td className="px-4 py-4">
-
-                                                    <div className="font-medium">
-
                                                         {
-                                                            getCustomerName(
-                                                                payment
-                                                            )
-                                                        }
-
-                                                    </div>
-
-                                                    <div className="
-                                                        text-xs
-                                                        text-gray-500
-                                                    ">
-
-                                                        {
-                                                            getCustomerPhone(
-                                                                payment
+                                                            getDepartment(
+                                                                employee
                                                             )
                                                         }
 
@@ -2784,31 +2591,28 @@ const SalesPaymentManagement = () => {
                                                 </td>
 
 
-                                                {/* MODULE */}
+                                                {/* DESIGNATION */}
 
-                                                <td className="px-4 py-4">
+                                                <td>
 
-                                                    <span className="
-                                                        inline-flex
-                                                        items-center
-                                                        gap-1.5
-                                                        px-2.5 py-1
-                                                        rounded-full
-                                                        bg-gray-100
-                                                        text-gray-700
-                                                        text-xs
-                                                        font-semibold
-                                                    ">
+                                                    {
+                                                        getDesignation(
+                                                            employee
+                                                        )
+                                                    }
 
-                                                        {
-                                                            moduleIcon(
-                                                                module
-                                                            )
-                                                        }
+                                                </td>
+
+
+                                                {/* TYPE */}
+
+                                                <td>
+
+                                                    <span className="salary-type-badge">
 
                                                         {
-                                                            moduleLabel(
-                                                                module
+                                                            getSalaryType(
+                                                                employee
                                                             )
                                                         }
 
@@ -2817,30 +2621,32 @@ const SalesPaymentManagement = () => {
                                                 </td>
 
 
-                                                {/* SOURCE */}
+                                                {/* SALARY */}
 
-                                                <td className="px-4 py-4">
+                                                <td>
 
-                                                    <span className={`
-                                                        inline-flex
-                                                        items-center
-                                                        gap-1.5
-                                                        px-2.5 py-1
-                                                        rounded-full
-                                                        text-xs
-                                                        font-semibold
-                                                        ${sourceClass(
-                                                            source
-                                                        )}
-                                                    `}>
-
-                                                        <ArrowUpRight
-                                                            size={14}
-                                                        />
+                                                    <strong className="salary-money">
 
                                                         {
-                                                            sourceLabel(
-                                                                source
+                                                            formatMoney(
+                                                                salary
+                                                            )
+                                                        }
+
+                                                    </strong>
+
+                                                </td>
+
+
+                                                {/* PAID */}
+
+                                                <td>
+
+                                                    <span className="salary-paid">
+
+                                                        {
+                                                            formatMoney(
+                                                                paid
                                                             )
                                                         }
 
@@ -2849,94 +2655,43 @@ const SalesPaymentManagement = () => {
                                                 </td>
 
 
-                                                {/* REFERENCE */}
+                                                {/* PENDING */}
 
-                                                <td className="
-                                                    px-4 py-4
-                                                    font-medium
-                                                ">
+                                                <td>
 
-                                                    {
-                                                        getReferenceNumber(
-                                                            payment
-                                                        )
-                                                    }
-
-                                                    <div className="
-                                                        text-xs
-                                                        text-gray-400
-                                                        mt-1
-                                                    ">
-
-                                                        Receipt:{" "}
-
-                                                        {
-                                                            payment.receiptNumber ||
-                                                            "-"
+                                                    <span
+                                                        className={
+                                                            pending > 0
+                                                                ? "salary-pending"
+                                                                : "salary-cleared"
                                                         }
-
-                                                    </div>
-
-                                                </td>
-
-
-                                                {/* AMOUNT */}
-
-                                                <td className="
-                                                    px-4 py-4
-                                                    font-semibold
-                                                ">
-
-                                                    {
-                                                        formatMoney(
-                                                            payment.amount
-                                                        )
-                                                    }
-
-                                                </td>
-
-
-                                                {/* METHOD */}
-
-                                                <td className="px-4 py-4">
-
-                                                    <div className="
-                                                        flex
-                                                        items-center
-                                                        gap-2
-                                                    ">
+                                                    >
 
                                                         {
-                                                            paymentIcon(
-                                                                payment.paymentMethod
+                                                            formatMoney(
+                                                                pending
                                                             )
                                                         }
 
-                                                        <span>
-                                                            {
-                                                                payment.paymentMethod ||
-                                                                "-"
-                                                            }
-                                                        </span>
-
-                                                    </div>
+                                                    </span>
 
                                                 </td>
 
 
                                                 {/* STATUS */}
 
-                                                <td className="px-4 py-4">
+                                                <td>
 
-                                                    <span className={`
-                                                        px-2.5 py-1
-                                                        rounded-full
-                                                        text-xs
-                                                        font-semibold
-                                                        ${statusClass(
-                                                            status
-                                                        )}
-                                                    `}>
+                                                    <span
+                                                        className={`salary-status-badge ${
+                                                            status ===
+                                                            "ACTIVE"
+                                                                ? "active"
+                                                                : "inactive"
+                                                        }`}
+                                                    >
+
+                                                        <span />
 
                                                         {
                                                             status
@@ -2949,27 +2704,19 @@ const SalesPaymentManagement = () => {
 
                                                 {/* ACTION */}
 
-                                                <td className="px-4 py-4">
+                                                <td>
 
-                                                    <div className="
-                                                        flex
-                                                        justify-end
-                                                        gap-2
-                                                    ">
+                                                    <div className="salary-row-actions">
 
                                                         <button
+                                                            type="button"
+                                                            title="View salary"
                                                             onClick={() =>
-                                                                setSelectedPayment(
-                                                                    payment
+                                                                handleView(
+                                                                    employee
                                                                 )
                                                             }
-                                                            className="
-                                                                p-2
-                                                                rounded-lg
-                                                                bg-gray-100
-                                                                hover:bg-gray-200
-                                                            "
-                                                            title="View"
+                                                            className="salary-icon-btn"
                                                         >
 
                                                             <Eye
@@ -2979,114 +2726,23 @@ const SalesPaymentManagement = () => {
                                                         </button>
 
 
-                                                        {
-                                                            status ===
-                                                            "PENDING" && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                handleManage(
+                                                                    employee
+                                                                )
+                                                            }
+                                                            className="salary-manage-btn"
+                                                        >
 
-                                                                <>
+                                                            <IndianRupee
+                                                                size={15}
+                                                            />
 
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            handleSuccess(
-                                                                                payment
-                                                                            )
-                                                                        }
-                                                                        disabled={
-                                                                            actionLoading
-                                                                        }
-                                                                        className="
-                                                                            p-2
-                                                                            rounded-lg
-                                                                            bg-green-100
-                                                                            text-green-700
-                                                                            hover:bg-green-200
-                                                                        "
-                                                                        title="Mark Success"
-                                                                    >
+                                                            Pay / Manage
 
-                                                                        <CheckCircle
-                                                                            size={17}
-                                                                        />
-
-                                                                    </button>
-
-
-                                                                    <button
-                                                                        onClick={() =>
-                                                                            handleFailed(
-                                                                                payment
-                                                                            )
-                                                                        }
-                                                                        disabled={
-                                                                            actionLoading
-                                                                        }
-                                                                        className="
-                                                                            p-2
-                                                                            rounded-lg
-                                                                            bg-red-100
-                                                                            text-red-700
-                                                                            hover:bg-red-200
-                                                                        "
-                                                                        title="Mark Failed"
-                                                                    >
-
-                                                                        <XCircle
-                                                                            size={17}
-                                                                        />
-
-                                                                    </button>
-
-                                                                </>
-
-                                                            )
-                                                        }
-
-
-                                                        {
-                                                            (
-                                                                status ===
-                                                                "SUCCESS" ||
-                                                                status ===
-                                                                "PAID"
-                                                            ) && (
-
-                                                                <button
-                                                                    onClick={() => {
-
-                                                                        setSelectedPayment(
-                                                                            payment
-                                                                        );
-
-                                                                        setRefundAmount(
-                                                                            String(
-                                                                                payment.amount ||
-                                                                                ""
-                                                                            )
-                                                                        );
-
-                                                                        setShowRefund(
-                                                                            true
-                                                                        );
-
-                                                                    }}
-                                                                    className="
-                                                                        p-2
-                                                                        rounded-lg
-                                                                        bg-purple-100
-                                                                        text-purple-700
-                                                                        hover:bg-purple-200
-                                                                    "
-                                                                    title="Refund"
-                                                                >
-
-                                                                    <RotateCcw
-                                                                        size={17}
-                                                                    />
-
-                                                                </button>
-
-                                                            )
-                                                        }
+                                                        </button>
 
                                                     </div>
 
@@ -3110,445 +2766,401 @@ const SalesPaymentManagement = () => {
             </div>
 
 
-            {/* =====================================================
-                DETAILS MODAL
-            ===================================================== */}
+            {/* ==========================================
+                FOOTER
+            ========================================== */}
+
+            <div className="salary-footer-summary">
+
+                <div>
+
+                    <span>
+                        Showing
+                    </span>
+
+                    <strong>
+                        {filteredEmployees.length}
+                    </strong>
+
+                    <span>
+                        of
+                    </span>
+
+                    <strong>
+                        {employees.length}
+                    </strong>
+
+                    <span>
+                        employees
+                    </span>
+
+                </div>
+
+
+                <div className="salary-footer-pending">
+
+                    <span>
+                        Total Pending
+                    </span>
+
+                    <strong>
+                        {
+                            formatMoney(
+                                summary.totalPending
+                            )
+                        }
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            {/* ==========================================
+                EMPLOYEE DETAILS MODAL
+            ========================================== */}
 
             {
-                selectedPayment &&
-                !showRefund && (
+                showDetails &&
+                selectedEmployee && (
 
-                    <div className="
-                        fixed inset-0
-                        z-[2000]
-                        bg-black/50
-                        flex items-center
-                        justify-center
-                        p-4
-                    ">
+                    <SalaryEmployeeModal
+                        employee={
+                            selectedEmployee
+                        }
+                        onClose={() => {
 
-                        <div className="
-                            bg-white
-                            rounded-xl
-                            w-full
-                            max-w-2xl
-                            max-h-[90vh]
-                            overflow-y-auto
-                        ">
+                            setShowDetails(
+                                false
+                            );
 
-                            <div className="
-                                flex
-                                items-center
-                                justify-between
-                                p-5
-                                border-b
-                            ">
+                            setSelectedEmployee(
+                                null
+                            );
 
-                                <h2 className="
-                                    text-xl
-                                    font-bold
-                                ">
-                                    Sales Details
-                                </h2>
+                        }}
+                        onRefresh={
+                            loadSalaryData
+                        }
+                    />
 
-                                <button
-                                    onClick={() =>
-                                        setSelectedPayment(
-                                            null
-                                        )
-                                    }
-                                    className="
-                                        p-2
-                                        rounded-lg
-                                        hover:bg-gray-100
-                                    "
-                                >
+                )
+            }
 
-                                    <X size={20} />
-
-                                </button>
-
-                            </div>
+        </div>
+    );
+};
 
 
-                            <div className="
-                                p-5
-                                grid
-                                grid-cols-1
-                                md:grid-cols-2
-                                gap-4
-                            ">
+// ======================================================
+// EMPLOYEE SALARY MODAL
+// ======================================================
 
-                                <Detail
-                                    label="Module"
-                                    value={moduleLabel(
-                                        getModule(
-                                            selectedPayment
-                                        )
-                                    )}
-                                />
+const SalaryEmployeeModal = ({
+    employee,
+    onClose,
+    onRefresh,
+}) => {
 
-                                <Detail
-                                    label="Source"
-                                    value={sourceLabel(
-                                        getSource(
-                                            selectedPayment
-                                        )
-                                    )}
-                                />
+    const name =
+        getEmployeeName(
+            employee
+        );
 
-                                <Detail
-                                    label="Reference"
-                                    value={getReferenceNumber(
-                                        selectedPayment
-                                    )}
-                                />
+    const salary =
+        getBaseSalary(
+            employee
+        );
 
-                                <Detail
-                                    label="Customer"
-                                    value={getCustomerName(
-                                        selectedPayment
-                                    )}
-                                />
+    const paid =
+        getPaidAmount(
+            employee
+        );
 
-                                <Detail
-                                    label="Phone"
-                                    value={getCustomerPhone(
-                                        selectedPayment
-                                    )}
-                                />
+    const pending =
+        getPendingAmount(
+            employee
+        );
 
-                                <Detail
-                                    label="Amount"
-                                    value={formatMoney(
-                                        selectedPayment.amount
-                                    )}
-                                />
 
-                                <Detail
-                                    label="Payment For"
-                                    value={
-                                        selectedPayment.paymentFor ||
-                                        "-"
-                                    }
-                                />
+    return (
 
-                                <Detail
-                                    label="Payment Type"
-                                    value={
-                                        selectedPayment.paymentType ||
-                                        "-"
-                                    }
-                                />
+        <div className="salary-modal-overlay">
 
-                                <Detail
-                                    label="Payment Method"
-                                    value={
-                                        selectedPayment.paymentMethod ||
-                                        "-"
-                                    }
-                                />
+            <div className="salary-modal">
 
-                                <Detail
-                                    label="Status"
-                                    value={
-                                        selectedPayment.paymentStatus ||
-                                        selectedPayment.status ||
-                                        "-"
-                                    }
-                                />
+                {/* HEADER */}
 
-                                <Detail
-                                    label="Transaction ID"
-                                    value={
-                                        selectedPayment.transactionId ||
-                                        "-"
-                                    }
-                                />
+                <div className="salary-modal-header">
 
-                                <Detail
-                                    label="Receipt Number"
-                                    value={
-                                        selectedPayment.receiptNumber ||
-                                        "-"
-                                    }
-                                />
+                    <div>
 
-                                <Detail
-                                    label="Payment Date"
-                                    value={formatDate(
-                                        selectedPayment.paymentDate ||
-                                        selectedPayment.createdAt
-                                    )}
-                                />
+                        <h2>
+                            Salary Management
+                        </h2>
 
-                                <div className="md:col-span-2">
+                        <p>
+                            Employee salary details
+                        </p>
 
-                                    <Detail
-                                        label="Reference ID"
-                                        value={
-                                            selectedPayment.referenceId ||
-                                            "-"
-                                        }
-                                    />
+                    </div>
 
-                                </div>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="salary-modal-close"
+                    >
 
-                            </div>
+                        <X size={20} />
+
+                    </button>
+
+                </div>
+
+
+                {/* EMPLOYEE */}
+
+                <div className="salary-modal-employee">
+
+                    <div className="salary-modal-avatar">
+
+                        {
+                            getInitials(
+                                name
+                            )
+                        }
+
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            {name}
+                        </h3>
+
+                        <p>
+                            Employee ID:{" "}
+                            {
+                                getEmployeeId(
+                                    employee
+                                )
+                            }
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                {/* DETAILS */}
+
+                <div className="salary-modal-grid">
+
+                    <SalaryDetail
+                        icon={
+                            <UserRound
+                                size={17}
+                            />
+                        }
+                        label="Employee"
+                        value={name}
+                    />
+
+                    <SalaryDetail
+                        icon={
+                            <BriefcaseBusiness
+                                size={17}
+                            />
+                        }
+                        label="Department"
+                        value={
+                            getDepartment(
+                                employee
+                            )
+                        }
+                    />
+
+                    <SalaryDetail
+                        icon={
+                            <FileText
+                                size={17}
+                            />
+                        }
+                        label="Designation"
+                        value={
+                            getDesignation(
+                                employee
+                            )
+                        }
+                    />
+
+                    <SalaryDetail
+                        icon={
+                            <CalendarDays
+                                size={17}
+                            />
+                        }
+                        label="Salary Type"
+                        value={
+                            getSalaryType(
+                                employee
+                            )
+                        }
+                    />
+
+                </div>
+
+
+                {/* MONEY */}
+
+                <div className="salary-modal-money-grid">
+
+                    <div>
+
+                        <span>
+                            Monthly Salary
+                        </span>
+
+                        <strong>
+                            {
+                                formatMoney(
+                                    salary
+                                )
+                            }
+                        </strong>
+
+                    </div>
+
+
+                    <div className="paid-box">
+
+                        <span>
+                            Paid
+                        </span>
+
+                        <strong>
+                            {
+                                formatMoney(
+                                    paid
+                                )
+                            }
+                        </strong>
+
+                    </div>
+
+
+                    <div className="pending-box">
+
+                        <span>
+                            Pending
+                        </span>
+
+                        <strong>
+                            {
+                                formatMoney(
+                                    pending
+                                )
+                            }
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                {/* PAYMENT INFO */}
+
+                <div className="salary-modal-section">
+
+                    <h3>
+                        Salary Payment
+                    </h3>
+
+                    <p>
+                        Use your existing salary
+                        payment workflow here.
+                    </p>
+
+                    <div className="salary-payment-placeholder">
+
+                        <PaymentMethodIcon
+                            method={
+                                employee?.paymentMethod
+                            }
+                        />
+
+                        <div>
+
+                            <strong>
+                                {
+                                    employee?.paymentMethod ||
+                                    "Payment Method Not Available"
+                                }
+                            </strong>
+
+                            <span>
+                                {
+                                    employee?.lastPaymentDate
+                                        ? `Last payment: ${employee.lastPaymentDate}`
+                                        : "No last payment information"
+                                }
+                            </span>
 
                         </div>
 
                     </div>
 
-                )
-            }
+                </div>
 
 
-            {/* =====================================================
-                REFUND MODAL
-            ===================================================== */}
+                {/* ACTIONS */}
 
-            {
-                showRefund &&
-                selectedPayment && (
+                <div className="salary-modal-actions">
 
-                    <div className="
-                        fixed inset-0
-                        z-[2100]
-                        bg-black/50
-                        flex items-center
-                        justify-center
-                        p-4
-                    ">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="salary-modal-cancel"
+                    >
+                        Close
+                    </button>
 
-                        <div className="
-                            bg-white
-                            rounded-xl
-                            w-full
-                            max-w-md
-                        ">
+                    <button
+                        type="button"
+                        onClick={() => {
 
-                            <div className="
-                                flex
-                                items-center
-                                justify-between
-                                p-5
-                                border-b
-                            ">
+                            /*
+                             * IMPORTANT:
+                             *
+                             * If you already have SalaryModal.jsx
+                             * from HR page, open that component
+                             * here instead of creating another
+                             * payment system.
+                             *
+                             * For now we refresh the salary list.
+                             */
 
-                                <h2 className="
-                                    text-xl
-                                    font-bold
-                                ">
-                                    Record Refund
-                                </h2>
+                            onRefresh();
 
-                                <button
-                                    onClick={() =>
-                                        setShowRefund(
-                                            false
-                                        )
-                                    }
-                                    className="
-                                        p-2
-                                        rounded-lg
-                                        hover:bg-gray-100
-                                    "
-                                >
+                            toast.info(
+                                "Open the HR salary payment modal here to record payment."
+                            );
 
-                                    <X size={20} />
+                        }}
+                        className="salary-modal-pay"
+                    >
 
-                                </button>
+                        <IndianRupee
+                            size={16}
+                        />
 
-                            </div>
+                        Pay Salary
 
+                    </button>
 
-                            <div className="
-                                p-5
-                                space-y-4
-                            ">
+                </div>
 
-                                <div>
-
-                                    <label className="
-                                        block
-                                        text-sm
-                                        font-medium
-                                        mb-1
-                                    ">
-                                        Sale
-                                    </label>
-
-                                    <div className="
-                                        p-3
-                                        rounded-lg
-                                        bg-gray-100
-                                        font-semibold
-                                    ">
-
-                                        {
-                                            moduleLabel(
-                                                getModule(
-                                                    selectedPayment
-                                                )
-                                            )
-                                        }
-
-                                        {" / "}
-
-                                        {
-                                            sourceLabel(
-                                                getSource(
-                                                    selectedPayment
-                                                )
-                                            )
-                                        }
-
-                                    </div>
-
-                                </div>
-
-
-                                <div>
-
-                                    <label className="
-                                        block
-                                        text-sm
-                                        font-medium
-                                        mb-1
-                                    ">
-                                        Original Amount
-                                    </label>
-
-                                    <div className="
-                                        p-3
-                                        rounded-lg
-                                        bg-gray-100
-                                        font-semibold
-                                    ">
-
-                                        {
-                                            formatMoney(
-                                                selectedPayment.amount
-                                            )
-                                        }
-
-                                    </div>
-
-                                </div>
-
-
-                                <div>
-
-                                    <label className="
-                                        block
-                                        text-sm
-                                        font-medium
-                                        mb-1
-                                    ">
-                                        Refund Amount
-                                    </label>
-
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        value={
-                                            refundAmount
-                                        }
-                                        onChange={(e) =>
-                                            setRefundAmount(
-                                                e.target.value
-                                            )
-                                        }
-                                        className="
-                                            w-full
-                                            border
-                                            rounded-lg
-                                            px-3
-                                            py-2.5
-                                            outline-none
-                                            focus:ring-2
-                                            focus:ring-purple-500
-                                        "
-                                    />
-
-                                </div>
-
-
-                                <div>
-
-                                    <label className="
-                                        block
-                                        text-sm
-                                        font-medium
-                                        mb-1
-                                    ">
-                                        Refund Reason
-                                    </label>
-
-                                    <textarea
-                                        value={
-                                            refundReason
-                                        }
-                                        onChange={(e) =>
-                                            setRefundReason(
-                                                e.target.value
-                                            )
-                                        }
-                                        rows="4"
-                                        placeholder="
-                                            Enter refund reason...
-                                        "
-                                        className="
-                                            w-full
-                                            border
-                                            rounded-lg
-                                            px-3
-                                            py-2.5
-                                            outline-none
-                                            focus:ring-2
-                                            focus:ring-purple-500
-                                        "
-                                    />
-
-                                </div>
-
-
-                                <button
-                                    onClick={
-                                        handleRefund
-                                    }
-                                    disabled={
-                                        actionLoading
-                                    }
-                                    className="
-                                        w-full
-                                        py-3
-                                        rounded-lg
-                                        bg-purple-600
-                                        text-white
-                                        font-semibold
-                                        hover:bg-purple-700
-                                        disabled:opacity-50
-                                    "
-                                >
-
-                                    {
-                                        actionLoading
-                                            ? "Processing..."
-                                            : "Record Refund"
-                                    }
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                )
-            }
+            </div>
 
         </div>
 
@@ -3556,107 +3168,40 @@ const SalesPaymentManagement = () => {
 };
 
 
-// =========================================================
-// SUMMARY CARD
-// =========================================================
+// ======================================================
+// DETAIL
+// ======================================================
 
-const SummaryCard = ({
-    title,
-    value,
+const SalaryDetail = ({
     icon,
-}) => (
+    label,
+    value,
+}) => {
 
-    <div className="
-        bg-white
-        rounded-xl
-        border
-        shadow-sm
-        p-5
-    ">
+    return (
 
-        <div className="
-            flex
-            items-center
-            justify-between
-        ">
+        <div className="salary-detail-box">
+
+            <div className="salary-detail-icon">
+                {icon}
+            </div>
 
             <div>
 
-                <p className="
-                    text-sm
-                    text-gray-500
-                ">
-                    {title}
-                </p>
+                <span>
+                    {label}
+                </span>
 
-                <h3 className="
-                    text-xl
-                    font-bold
-                    mt-2
-                    text-gray-800
-                ">
-                    {value}
-                </h3>
-
-            </div>
-
-            <div className="
-                w-11
-                h-11
-                rounded-lg
-                bg-gray-100
-                flex
-                items-center
-                justify-center
-                text-gray-700
-            ">
-
-                {icon}
+                <strong>
+                    {value || "-"}
+                </strong>
 
             </div>
 
         </div>
 
-    </div>
-
-);
-
-
-// =========================================================
-// DETAIL
-// =========================================================
-
-const Detail = ({
-    label,
-    value,
-}) => (
-
-    <div className="
-        border
-        rounded-lg
-        p-3
-        bg-gray-50
-    ">
-
-        <p className="
-            text-xs
-            text-gray-500
-            mb-1
-        ">
-            {label}
-        </p>
-
-        <p className="
-            font-semibold
-            text-gray-800
-            break-words
-        ">
-            {value || "-"}
-        </p>
-
-    </div>
-
-);
+    );
+};
 
 
-export default SalesPaymentManagement;
+export default SalaryManagement;

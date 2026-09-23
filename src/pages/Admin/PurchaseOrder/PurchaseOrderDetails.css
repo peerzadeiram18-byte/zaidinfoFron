@@ -1,0 +1,727 @@
+
+.pod-page {
+    padding: 24px 28px;
+    max-width: 1100px;
+}
+
+/* Back button */
+.pod-back {
+    margin-bottom: 16px;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 14px;
+    color: #4b5563;
+    cursor: pointer;
+}
+
+.pod-back:hover {
+    color: #111827;
+    text-decoration: underline;
+}
+
+.pod-back:focus-visible,
+.pod-btn:focus-visible,
+.pod-link:focus-visible,
+.pod-page input:focus-visible,
+.pod-page textarea:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Header */
+.pod-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.pod-title {
+    margin: 0 0 8px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.pod-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Status badges */
+.pod-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.pod-badge-draft {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.pod-badge-ordered {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.pod-badge-received {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pod-badge-cancelled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.pod-overdue {
+    margin-left: 8px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #991b1b;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Buttons */
+.pod-btn {
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.pod-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.pod-btn-primary {
+    border: 1px solid #16a34a;
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.pod-btn-primary:hover:not(:disabled) {
+    background: #15803d;
+}
+
+.pod-btn-secondary {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+}
+
+.pod-btn-danger {
+    border: 1px solid #fca5a5;
+    background: #ffffff;
+    color: #b91c1c;
+}
+
+.pod-btn-danger:hover:not(:disabled) {
+    background: #fef2f2;
+}
+
+.pod-btn-danger-solid {
+    border: 1px solid #dc2626;
+    background: #dc2626;
+    color: #ffffff;
+}
+
+.pod-btn-danger-solid:hover:not(:disabled) {
+    background: #b91c1c;
+}
+
+/* Alerts */
+.pod-alert {
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.pod-alert-success {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pod-alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Cards */
+.pod-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.pod-card {
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.pod-grid .pod-card {
+    margin-bottom: 0;
+}
+
+.pod-card-title {
+    margin: 0 0 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Action panels */
+.pod-panel {
+    border-color: #d1d5db;
+}
+
+.pod-panel-text {
+    margin: 0 0 16px;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.pod-panel-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.pod-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.pod-field span {
+    font-size: 14px;
+    color: #374151;
+}
+
+.pod-page textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #111827;
+    resize: vertical;
+}
+
+/* Detail lists */
+.pod-list {
+    margin: 0;
+}
+
+.pod-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-top: 1px solid #f3f4f6;
+}
+
+.pod-row:first-child {
+    padding-top: 0;
+    border-top: none;
+}
+
+.pod-row dt {
+    flex-shrink: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.pod-row dd {
+    margin: 0;
+    font-size: 14px;
+    color: #111827;
+    text-align: right;
+    word-break: break-word;
+}
+
+.pod-link {
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 14px;
+    color: #1d4ed8;
+    cursor: pointer;
+}
+
+.pod-link:hover {
+    text-decoration: underline;
+}
+
+/* Tables */
+.pod-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 16px;
+}
+
+.pod-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.pod-table th {
+    padding: 10px 12px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6b7280;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.pod-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #111827;
+}
+
+.pod-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.pod-table .num {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.pod-table input {
+    width: 90px;
+    box-sizing: border-box;
+    padding: 7px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: right;
+}
+
+/* Totals breakdown */
+.pod-total-breakdown {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.pod-total-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    width: 240px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.pod-total-row-grand {
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 15px;
+    color: #374151;
+}
+
+.pod-total-row-grand strong {
+    font-size: 20px;
+    color: #111827;
+}
+
+/* Notes */
+.pod-notes {
+    margin: 0;
+    font-size: 14px;
+    color: #111827;
+    white-space: pre-wrap;
+}
+
+/* Loading / error */
+.pod-state {
+    font-size: 15px;
+    color: #4b5563;
+}
+
+.pod-state-error {
+    color: #b91c1c;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .pod-page {
+        padding: 16px;
+    }
+}
+
+/* =========================================================
+   PRINT STYLES
+   ========================================================= */
+
+@media print {
+
+    /* Hide everything that should not appear in the PO */
+    .no-print {
+        display: none !important;
+    }
+
+    /* Page reset */
+    html,
+    body {
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        overflow: visible !important;
+    }
+
+    /* Application layout reset */
+    #root,
+    .app,
+    .app-main,
+    .admin-main,
+    .main-content,
+    main {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: visible !important;
+        position: static !important;
+    }
+
+    /* Main PO page */
+    .pod-page {
+        display: block !important;
+        visibility: visible !important;
+
+        position: static !important;
+
+        width: 100% !important;
+        max-width: none !important;
+
+        height: auto !important;
+        min-height: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        overflow: visible !important;
+
+        background: #ffffff !important;
+        color: #111827 !important;
+    }
+
+    /* Header */
+    .pod-header {
+        display: flex !important;
+        visibility: visible !important;
+
+        width: 100% !important;
+        height: auto !important;
+
+        margin-bottom: 20px !important;
+
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .pod-title {
+        display: block !important;
+        visibility: visible !important;
+
+        color: #111827 !important;
+        font-size: 26px !important;
+    }
+
+    /* Status */
+    .pod-badge {
+        display: inline-block !important;
+        visibility: visible !important;
+    }
+
+    /* Information grid */
+    .pod-grid {
+        display: grid !important;
+        visibility: visible !important;
+
+        width: 100% !important;
+        height: auto !important;
+
+        grid-template-columns: 1fr 1fr !important;
+        gap: 20px !important;
+
+        margin-bottom: 20px !important;
+
+        overflow: visible !important;
+    }
+
+    /* Cards */
+    .pod-card {
+        display: block !important;
+        visibility: visible !important;
+
+        width: auto !important;
+        height: auto !important;
+        min-height: 0 !important;
+
+        margin-bottom: 20px !important;
+        padding: 20px !important;
+
+        background: #ffffff !important;
+        color: #111827 !important;
+
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+
+        box-shadow: none !important;
+
+        overflow: visible !important;
+
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .pod-card-title {
+        display: block !important;
+        visibility: visible !important;
+
+        color: #111827 !important;
+    }
+
+    /* Detail list */
+    .pod-list {
+        display: block !important;
+        visibility: visible !important;
+    }
+
+    .pod-row {
+        display: flex !important;
+        visibility: visible !important;
+
+        width: 100% !important;
+        height: auto !important;
+
+        color: #111827 !important;
+    }
+
+    .pod-row dt {
+        display: block !important;
+        visibility: visible !important;
+
+        color: #4b5563 !important;
+    }
+
+    .pod-row dd {
+        display: block !important;
+        visibility: visible !important;
+
+        color: #111827 !important;
+    }
+
+    /*
+       Vendor name
+
+       The vendor is rendered using .pod-link.
+       Force it to behave like normal printed text.
+    */
+    .pod-row .pod-link,
+    .pod-link {
+        display: inline-block !important;
+        visibility: visible !important;
+
+        width: auto !important;
+        height: auto !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        border: none !important;
+
+        background: transparent !important;
+
+        color: #111827 !important;
+
+        font-family: inherit !important;
+        font-size: 14px !important;
+        font-weight: normal !important;
+
+        line-height: normal !important;
+
+        text-decoration: none !important;
+
+        opacity: 1 !important;
+
+        cursor: default !important;
+    }
+
+    /* Table wrapper */
+    .pod-table-wrapper {
+        display: block !important;
+        visibility: visible !important;
+
+        width: 100% !important;
+        height: auto !important;
+
+        margin-bottom: 16px !important;
+
+        overflow: visible !important;
+    }
+
+    /* Table */
+    .pod-table {
+        display: table !important;
+        visibility: visible !important;
+
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+
+        border-collapse: collapse !important;
+
+        font-size: 12px !important;
+
+        color: #111827 !important;
+    }
+
+    .pod-table thead {
+        display: table-header-group !important;
+        visibility: visible !important;
+    }
+
+    .pod-table tbody {
+        display: table-row-group !important;
+        visibility: visible !important;
+    }
+
+    .pod-table tr {
+        display: table-row !important;
+        visibility: visible !important;
+
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .pod-table th,
+    .pod-table td {
+        display: table-cell !important;
+        visibility: visible !important;
+
+        padding: 8px !important;
+
+        border: 1px solid #9ca3af !important;
+
+        color: #111827 !important;
+        background: #ffffff !important;
+    }
+
+    .pod-table th {
+        background: #f3f4f6 !important;
+        color: #111827 !important;
+        font-weight: 600 !important;
+    }
+
+    /* Numbers */
+    .pod-table .num {
+        text-align: right !important;
+        white-space: nowrap !important;
+    }
+
+    /* Received quantity inputs */
+    .pod-table input {
+        display: inline-block !important;
+
+        width: auto !important;
+        height: auto !important;
+
+        padding: 0 !important;
+
+        border: none !important;
+
+        background: transparent !important;
+        color: #111827 !important;
+
+        box-shadow: none !important;
+    }
+
+    /* Totals */
+    .pod-total-breakdown {
+        display: flex !important;
+        visibility: visible !important;
+
+        width: 100% !important;
+        height: auto !important;
+
+        flex-direction: column !important;
+        align-items: flex-end !important;
+
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+
+    .pod-total-row {
+        display: flex !important;
+        visibility: visible !important;
+
+        width: 240px !important;
+
+        color: #111827 !important;
+    }
+
+    .pod-total-row-grand {
+        color: #111827 !important;
+    }
+
+    .pod-total-row-grand strong {
+        color: #111827 !important;
+    }
+
+    /* Notes */
+    .pod-notes {
+        display: block !important;
+        visibility: visible !important;
+
+        color: #111827 !important;
+
+        white-space: pre-wrap !important;
+    }
+
+    /* Remove focus outlines */
+    .pod-page *:focus {
+        outline: none !important;
+    }
+
+    /* A4 page */
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+}
+

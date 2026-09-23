@@ -1,0 +1,237 @@
+.po-create-page {
+    padding: 24px 28px;
+    max-width: 1100px;
+}
+
+.po-header h1 {
+    margin: 0 0 4px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.po-header p {
+    margin: 0 0 20px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Cards */
+.po-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.po-card-title {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Fields */
+.po-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.po-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.po-field span {
+    font-size: 14px;
+    color: #374151;
+}
+
+.po-create-page select,
+.po-create-page input,
+.po-create-page textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.po-create-page textarea {
+    resize: vertical;
+}
+
+.po-create-page select:focus-visible,
+.po-create-page input:focus-visible,
+.po-create-page textarea:focus-visible,
+.po-create-page button:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 1px;
+}
+
+/* Item rows */
+.po-rows {
+    overflow-x: auto;
+}
+
+/* Type | Item | HSN | Qty | Price | GST % | Line total | Remove */
+.po-row {
+    display: grid;
+    grid-template-columns: 120px minmax(180px, 1fr) 90px 80px 110px 80px 120px 70px;
+    gap: 10px;
+    align-items: center;
+    min-width: 980px;
+    padding: 8px 0;
+}
+
+.po-row-head {
+    padding-top: 0;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.po-line-total {
+    font-size: 14px;
+    color: #111827;
+    text-align: right;
+}
+
+.po-remove {
+    background: none;
+    border: none;
+    padding: 6px;
+    font-size: 13px;
+    color: #b91c1c;
+    cursor: pointer;
+}
+
+.po-remove:disabled {
+    color: #d1d5db;
+    cursor: not-allowed;
+}
+
+.po-add-row {
+    margin-top: 8px;
+    padding: 8px 14px;
+    border: 1px dashed #9ca3af;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.po-add-row:hover {
+    background: #f9fafb;
+}
+
+/* Totals breakdown (Subtotal / GST / Total) */
+.po-total-breakdown {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.po-total-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    width: 240px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.po-total-row-grand {
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 15px;
+    color: #374151;
+}
+
+.po-total-row-grand strong {
+    font-size: 20px;
+    color: #111827;
+}
+
+/* Alerts */
+.po-alert {
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.po-alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.po-alert-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Buttons */
+.po-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.po-btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.po-btn-primary {
+    border: 1px solid #16a34a;
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.po-btn-primary:hover:not(:disabled) {
+    background: #15803d;
+}
+
+.po-btn-secondary {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+}
+
+.po-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Loading / error */
+.po-state {
+    font-size: 15px;
+    color: #4b5563;
+}
+
+.po-state-error {
+    color: #b91c1c;
+}
+
+@media (max-width: 600px) {
+    .po-create-page {
+        padding: 16px;
+    }
+}

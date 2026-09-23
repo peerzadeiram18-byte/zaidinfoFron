@@ -9,6 +9,11 @@
 //   const [currentIndex, setCurrentIndex] = useState(0);
 //   const navigate = useNavigate();
 
+//   // ==========================================
+//   // API BASE URL FROM ENV
+//   // ==========================================
+//   const API_URL = import.meta.env.VITE_API_URL;
+
 //   // How many cards we WANT to show at once on desktop.
 //   // If offers.length is less than this, we just show them all,
 //   // centered, with no sliding.
@@ -47,8 +52,8 @@
 //     return () => clearInterval(timer);
 //   }, [totalPages, shouldSlide]);
 
-//   // Reset index whenever the offer list changes size, so we never
-//   // get stuck on an index that no longer exists
+//   // Reset index whenever the offer list changes size,
+//   // so we never get stuck on an index that no longer exists
 //   useEffect(() => {
 //     setCurrentIndex(0);
 //   }, [offers.length]);
@@ -56,6 +61,7 @@
 //   const loadOffers = async () => {
 //     try {
 //       setLoading(true);
+
 //       const response = await getOffers();
 
 //       const responseData = response?.data;
@@ -79,6 +85,7 @@
 
 //       const validOffers = offerData.filter((offer) => {
 //         if (!offer.endDate) return true;
+
 //         return new Date(offer.endDate) >= now;
 //       });
 
@@ -98,58 +105,91 @@
 //   return (
 //     <section className="home-offers-section">
 //       <div className="home-offers-container">
+
 //         {/* SECTION HEADING */}
 //         <div className="home-offers-heading">
-//           <span className="home-offers-label">⚡ SPECIAL OFFERS</span>
+//           <span className="home-offers-label">
+//             ⚡ SPECIAL OFFERS
+//           </span>
+
 //           <h2>Don't Miss Our Deals</h2>
-//           <p>Grab these limited-time deals before they expire.</p>
+
+//           <p>
+//             Grab these limited-time deals before they expire.
+//           </p>
 //         </div>
 
 //         {/* SLIDER WRAPPER */}
 //         <div className="home-offers-slider-wrapper">
 //           <div
-//             className={`home-offers-track ${!shouldSlide ? "is-static" : ""}`}
+//             className={`home-offers-track ${
+//               !shouldSlide ? "is-static" : ""
+//             }`}
 //             style={{
 //               transform: shouldSlide
-//                 ? `translateX(-${currentIndex * slideWidthPercent}%)`
+//                 ? `translateX(-${
+//                     currentIndex * slideWidthPercent
+//                   }%)`
 //                 : "none",
 //             }}
 //           >
 //             {offers.map((offer) => {
 //               const product = offer.products?.[0];
-//               const rawImageUrl = product?.images?.[0]?.url;
+
+//               const rawImageUrl =
+//                 product?.images?.[0]?.url;
+
+//               // ==========================================
+//               // IMAGE URL FROM ENV
+//               // NO HARDCODED localhost:5000
+//               // ==========================================
 
 //               const imageUrl = rawImageUrl
 //                 ? rawImageUrl.startsWith("http")
 //                   ? rawImageUrl
-//                   : `http://localhost:5000${
+//                   : `${API_URL.replace(/\/api\/?$/, "")}${
 //                       rawImageUrl.startsWith("/") ? "" : "/"
 //                     }${rawImageUrl}`
 //                 : null;
 
-//               const originalPrice = product?.price || 0;
+//               const originalPrice =
+//                 product?.price || 0;
+
 //               let finalPrice = originalPrice;
-//               if (originalPrice && offer.discountValue) {
-//                 if (offer.discountType === "PERCENTAGE") {
+
+//               if (
+//                 originalPrice &&
+//                 offer.discountValue
+//               ) {
+//                 if (
+//                   offer.discountType === "PERCENTAGE"
+//                 ) {
 //                   finalPrice = Math.round(
-//                     originalPrice * (1 - offer.discountValue / 100)
+//                     originalPrice *
+//                       (1 - offer.discountValue / 100)
 //                   );
 //                 } else {
-//                   finalPrice = Math.max(0, originalPrice - offer.discountValue);
+//                   finalPrice = Math.max(
+//                     0,
+//                     originalPrice -
+//                       offer.discountValue
+//                   );
 //                 }
 //               }
 
 //               return (
 //                 <div
 //                   className={`home-offer-slide ${
-//                     isSingleOffer ? "single-offer-slide" : ""
+//                     isSingleOffer
+//                       ? "single-offer-slide"
+//                       : ""
 //                   }`}
 //                   key={offer._id || offer.id}
 //                   style={{
-//                     // When sliding, each slide takes an exact % width.
-//                     // When static (few offers), let CSS flex-basis handle sizing
-//                     // so the cards just sit at their natural/max width, centered.
-//                     minWidth: shouldSlide ? `${slideWidthPercent}%` : undefined,
+//                     minWidth: shouldSlide
+//                       ? `${slideWidthPercent}%`
+//                       : undefined,
+
 //                     flex: shouldSlide
 //                       ? `0 0 ${slideWidthPercent}%`
 //                       : isSingleOffer
@@ -159,52 +199,82 @@
 //                 >
 //                   <div
 //                     className={`home-offer-card ${
-//                       isSingleOffer ? "single-offer-card" : ""
+//                       isSingleOffer
+//                         ? "single-offer-card"
+//                         : ""
 //                     }`}
 //                   >
+
 //                     {/* TOP BADGES */}
 //                     <div className="offer-badge-header">
+
 //                       <span className="offer-small-title">
-//                         {offer.title || "LIMITED TIME"}
+//                         {offer.title ||
+//                           "LIMITED TIME"}
 //                       </span>
+
 //                       <span className="home-offer-badge">
-//                         {offer.discountType === "PERCENTAGE"
+//                         {offer.discountType ===
+//                         "PERCENTAGE"
 //                           ? `${offer.discountValue}% OFF`
 //                           : `₹${offer.discountValue} OFF`}
 //                       </span>
+
 //                     </div>
 
 //                     {/* TRANSPARENT PNG CONTAINER */}
 //                     <div className="home-offer-image-container">
+
 //                       {imageUrl ? (
 //                         <img
 //                           src={imageUrl}
-//                           alt={product?.name || offer.title}
+//                           alt={
+//                             product?.name ||
+//                             offer.title
+//                           }
 //                           className="home-offer-image"
 //                         />
 //                       ) : (
-//                         <div className="home-offer-icon">🎁</div>
+//                         <div className="home-offer-icon">
+//                           🎁
+//                         </div>
 //                       )}
+
 //                     </div>
 
 //                     {/* BOTTOM DETAILS */}
 //                     <div className="home-offer-info">
+
 //                       {product?.name && (
-//                         <h3 className="offer-product-name">{product.name}</h3>
+//                         <h3 className="offer-product-name">
+//                           {product.name}
+//                         </h3>
 //                       )}
 
 //                       {originalPrice > 0 && (
 //                         <div className="offer-price-container">
+
 //                           <span className="offer-original-price">
-//                             ₹{originalPrice.toLocaleString("en-IN")}
+//                             ₹
+//                             {originalPrice.toLocaleString(
+//                               "en-IN"
+//                             )}
 //                           </span>
+
 //                           <span className="offer-final-price">
-//                             ₹{finalPrice.toLocaleString("en-IN")}*
+//                             ₹
+//                             {finalPrice.toLocaleString(
+//                               "en-IN"
+//                             )}
+//                             *
 //                           </span>
+
 //                         </div>
 //                       )}
 
-//                       <p className="offer-subtext">*Inclusive of all Offers</p>
+//                       <p className="offer-subtext">
+//                         *Inclusive of all Offers
+//                       </p>
 
 //                       <button
 //                         onClick={() => {
@@ -214,6 +284,7 @@
 //                       >
 //                         View Deal →
 //                       </button>
+
 //                     </div>
 //                   </div>
 //                 </div>
@@ -225,18 +296,29 @@
 //         {/* DOT INDICATORS - Only when actually sliding */}
 //         {shouldSlide && (
 //           <div className="home-offers-dots">
-//             {Array.from({ length: totalPages }).map((_, idx) => (
+
+//             {Array.from({
+//               length: totalPages,
+//             }).map((_, idx) => (
 //               <button
 //                 key={idx}
 //                 className={`home-offer-dot ${
-//                   currentIndex === idx ? "active" : ""
+//                   currentIndex === idx
+//                     ? "active"
+//                     : ""
 //                 }`}
-//                 onClick={() => setCurrentIndex(idx)}
-//                 aria-label={`Go to slide ${idx + 1}`}
+//                 onClick={() =>
+//                   setCurrentIndex(idx)
+//                 }
+//                 aria-label={`Go to slide ${
+//                   idx + 1
+//                 }`}
 //               />
 //             ))}
+
 //           </div>
 //         )}
+
 //       </div>
 //     </section>
 //   );
@@ -245,8 +327,10 @@
 // export default HomeOffers;
 
 
+
+
 import React, { useEffect, useState } from "react";
-import { getOffers } from "../../services/offerService";
+import { getActiveOffers } from "../../services/offerService";
 import "./HomeOffers.css";
 import { useNavigate } from "react-router-dom";
 
@@ -309,7 +393,7 @@ const HomeOffers = () => {
     try {
       setLoading(true);
 
-      const response = await getOffers();
+      const response = await getActiveOffers();
 
       const responseData = response?.data;
       let offerData = [];

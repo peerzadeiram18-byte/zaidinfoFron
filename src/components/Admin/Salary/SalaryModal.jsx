@@ -1328,109 +1328,336 @@ const SalaryModal = ({
     };
 
 
+    const getSalaryRecordId = () => {
+  const history =
+    Array.isArray(salaryData?.salaryHistory)
+      ? salaryData.salaryHistory
+      : [];
+
+  if (!history.length) {
+    return null;
+  }
+
+  // First try exact month match
+  const exactMatch = history.find(
+    (record) =>
+      String(record?.month || "").trim() ===
+      String(payForm.month || "").trim()
+  );
+
+  if (
+    exactMatch &&
+    exactMatch.status === "PENDING"
+  ) {
+    return exactMatch._id;
+  }
+
+  // Convert "September 2026" -> "2026-09"
+  const parsedDate = new Date(
+    `${payForm.month} 1`
+  );
+
+  if (!Number.isNaN(parsedDate.getTime())) {
+    const year =
+      parsedDate.getFullYear();
+
+    const month =
+      String(
+        parsedDate.getMonth() + 1
+      ).padStart(2, "0");
+
+    const normalizedMonth =
+      `${year}-${month}`;
+
+    const normalizedMatch =
+      history.find(
+        (record) =>
+          String(record?.month || "")
+            .trim() === normalizedMonth &&
+          record?.status === "PENDING"
+      );
+
+    if (normalizedMatch) {
+      return normalizedMatch._id;
+    }
+  }
+
+  return null;
+};
+
   // ======================================================
   // SALARY PAYMENT
   // ======================================================
 
+  // const handleSalaryPayment =
+  //   async (event) => {
+
+  //     event.preventDefault();
+
+  //     try {
+
+  //       const amount =
+  //         Number(
+  //           payForm.amount || 0
+  //         );
+
+
+  //       if (amount <= 0) {
+
+  //         toast.error(
+  //           "Please enter valid salary amount"
+  //         );
+
+  //         return;
+
+  //       }
+
+
+  //       if (!payForm.month?.trim()) {
+
+  //         toast.error(
+  //           "Please enter salary month"
+  //         );
+
+  //         return;
+
+  //       }
+
+
+  //       if (!payForm.paymentDate) {
+
+  //         toast.error(
+  //           "Please select payment date"
+  //         );
+
+  //         return;
+
+  //       }
+
+
+  //       // ==================================================
+  //       // BANK DETAILS CHECK
+  //       // ==================================================
+
+  //       if (
+  //         payForm.paymentMode ===
+  //         "BANK"
+  //       ) {
+
+  //         const bank =
+  //           salaryData?.bankDetails;
+
+
+  //         if (!bank) {
+
+  //           toast.error(
+  //             "Employee bank details are not available"
+  //           );
+
+  //           setActiveTab(
+  //             "bank"
+  //           );
+
+  //           return;
+
+  //         }
+
+
+  //         if (
+  //           !bank?.accountHolderName ||
+  //           !bank?.accountNumber ||
+  //           !bank?.ifscCode ||
+  //           !bank?.bankName
+  //         ) {
+
+  //           toast.error(
+  //             "Complete bank details are required for bank salary payment"
+  //           );
+
+  //           setActiveTab(
+  //             "bank"
+  //           );
+
+  //           return;
+
+  //         }
+
+  //       }
+
+
+  //       await updateSalaryPayment(
+  //         employeeId,
+  //         {
+
+  //           month:
+  //             payForm.month.trim(),
+
+  //           amount,
+
+  //           paymentDate:
+  //             payForm.paymentDate,
+
+  //           paymentMode:
+  //             payForm.paymentMode,
+
+  //           status:
+  //             payForm.status,
+
+  //           remark:
+  //             payForm.remark?.trim() ||
+  //             "",
+
+  //         }
+  //       );
+
+
+  //       toast.success(
+  //         "Salary Paid Successfully"
+  //       );
+
+
+  //       await fetchSalary();
+
+
+  //       setActiveTab(
+  //         "overview"
+  //       );
+
+
+  //     } catch (err) {
+
+  //       console.error(
+  //         "Salary payment error:",
+  //         err
+  //       );
+
+
+  //       toast.error(
+  //         err?.response?.data?.message ||
+  //         err?.response?.data?.error ||
+  //         err?.message ||
+  //         "Payment Failed"
+  //       );
+
+  //     }
+
+  //   };
+
+
   const handleSalaryPayment =
-    async (event) => {
+  async (event) => {
 
-      event.preventDefault();
+    event.preventDefault();
 
-      try {
+    try {
 
-        const amount =
-          Number(
-            payForm.amount || 0
-          );
+      const amount =
+        Number(
+          payForm.amount || 0
+        );
+
+      if (amount <= 0) {
+
+        toast.error(
+          "Please enter valid salary amount"
+        );
+
+        return;
+      }
+
+      if (!payForm.month?.trim()) {
+
+        toast.error(
+          "Please enter salary month"
+        );
+
+        return;
+      }
+
+      if (!payForm.paymentDate) {
+
+        toast.error(
+          "Please select payment date"
+        );
+
+        return;
+      }
 
 
-        if (amount <= 0) {
+      // ==================================================
+      // FIND PENDING SALARY RECORD
+      // ==================================================
+
+      const recordId =
+        getSalaryRecordId();
+
+
+      if (!recordId) {
+
+        toast.error(
+          "No pending salary record found. Please calculate salary first."
+        );
+
+        return;
+      }
+
+
+      console.log(
+        "Salary Record ID:",
+        recordId
+      );
+
+
+      // ==================================================
+      // BANK DETAILS CHECK
+      // ==================================================
+
+      if (
+        payForm.paymentMode === "BANK"
+      ) {
+
+        const bank =
+          salaryData?.bankDetails;
+
+        if (!bank) {
 
           toast.error(
-            "Please enter valid salary amount"
+            "Employee bank details are not available"
           );
 
-          return;
-
-        }
-
-
-        if (!payForm.month?.trim()) {
-
-          toast.error(
-            "Please enter salary month"
-          );
+          setActiveTab("bank");
 
           return;
-
         }
-
-
-        if (!payForm.paymentDate) {
-
-          toast.error(
-            "Please select payment date"
-          );
-
-          return;
-
-        }
-
-
-        // ==================================================
-        // BANK DETAILS CHECK
-        // ==================================================
 
         if (
-          payForm.paymentMode ===
-          "BANK"
+          !bank?.accountHolderName ||
+          !bank?.accountNumber ||
+          !bank?.ifscCode ||
+          !bank?.bankName
         ) {
 
-          const bank =
-            salaryData?.bankDetails;
+          toast.error(
+            "Complete bank details are required for bank salary payment"
+          );
 
+          setActiveTab("bank");
 
-          if (!bank) {
-
-            toast.error(
-              "Employee bank details are not available"
-            );
-
-            setActiveTab(
-              "bank"
-            );
-
-            return;
-
-          }
-
-
-          if (
-            !bank?.accountHolderName ||
-            !bank?.accountNumber ||
-            !bank?.ifscCode ||
-            !bank?.bankName
-          ) {
-
-            toast.error(
-              "Complete bank details are required for bank salary payment"
-            );
-
-            setActiveTab(
-              "bank"
-            );
-
-            return;
-
-          }
-
+          return;
         }
+      }
 
 
+      // ==================================================
+      // PAYMENT API
+      // ==================================================
+
+      const response =
         await updateSalaryPayment(
           employeeId,
           {
+
+            recordId,
 
             month:
               payForm.month.trim(),
@@ -1444,47 +1671,57 @@ const SalaryModal = ({
               payForm.paymentMode,
 
             status:
-              payForm.status,
+              "PAID",
 
             remark:
-              payForm.remark?.trim() ||
-              "",
+              payForm.remark?.trim() || "",
 
           }
         );
 
 
-        toast.success(
-          "Salary Paid Successfully"
-        );
+      console.log(
+        "Salary payment response:",
+        response
+      );
 
 
-        await fetchSalary();
+      toast.success(
+        "Salary Paid Successfully"
+      );
 
 
-        setActiveTab(
-          "overview"
-        );
+      await fetchSalary();
 
 
-      } catch (err) {
-
-        console.error(
-          "Salary payment error:",
-          err
-        );
+      setActiveTab(
+        "overview"
+      );
 
 
-        toast.error(
-          err?.response?.data?.message ||
-          err?.response?.data?.error ||
-          err?.message ||
-          "Payment Failed"
-        );
+    } catch (err) {
 
-      }
+      console.error(
+        "Salary payment error:",
+        err
+      );
 
-    };
+      console.error(
+        "Salary payment response:",
+        err?.response?.data
+      );
+
+
+      toast.error(
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        "Payment Failed"
+      );
+
+    }
+
+  };
 
 
   // ======================================================

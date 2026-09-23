@@ -1,0 +1,273 @@
+
+
+.apb-page {
+    padding: 24px 28px;
+    max-width: 1150px;
+}
+
+.apb-header h1 {
+    margin: 0 0 4px;
+    font-size: 26px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.apb-header p {
+    margin: 0 0 20px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Cards */
+.apb-card {
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.apb-card-title {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Bill source toggle */
+.apb-modes {
+    display: inline-flex;
+    margin-bottom: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.apb-mode {
+    padding: 9px 16px;
+    border: none;
+    background: #ffffff;
+    color: #4b5563;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.apb-mode + .apb-mode {
+    border-left: 1px solid #d1d5db;
+}
+
+.apb-mode.active {
+    background: #16a34a;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+/* Fields */
+.apb-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.apb-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.apb-field span {
+    font-size: 14px;
+    color: #374151;
+}
+
+.apb-page select,
+.apb-page input,
+.apb-page textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.apb-page textarea {
+    resize: vertical;
+}
+
+.apb-page select:focus-visible,
+.apb-page input:focus-visible,
+.apb-page textarea:focus-visible,
+.apb-page button:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 1px;
+}
+
+.apb-hint {
+    margin: 0 0 14px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Item rows */
+.apb-rows {
+    overflow-x: auto;
+}
+
+.apb-row {
+    display: grid;
+    grid-template-columns:
+        130px minmax(200px, 1fr) 90px 120px 90px 130px 80px;
+    gap: 10px;
+    align-items: center;
+    min-width: 900px;
+    padding: 8px 0;
+}
+
+.apb-row-head {
+    padding-top: 0;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.apb-text {
+    font-size: 14px;
+    color: #111827;
+}
+
+.apb-line-total {
+    font-size: 14px;
+    color: #111827;
+    text-align: right;
+}
+
+.apb-remove {
+    padding: 6px;
+    border: none;
+    background: none;
+    font-size: 13px;
+    color: #b91c1c;
+    cursor: pointer;
+}
+
+.apb-remove:disabled {
+    color: #d1d5db;
+    cursor: not-allowed;
+}
+
+.apb-add-row {
+    width: auto;
+    margin: 8px 0 14px;
+    padding: 8px 14px;
+    border: 1px dashed #9ca3af;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.apb-add-row:hover {
+    background: #f9fafb;
+}
+
+/* Totals */
+.apb-totals {
+    width: 280px;
+    max-width: 100%;
+    margin: 16px 0 0 auto;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.apb-totals > div {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 14px;
+    color: #374151;
+}
+
+.apb-totals dt,
+.apb-totals dd {
+    margin: 0;
+}
+
+.apb-totals-grand {
+    margin-top: 6px;
+    padding-top: 10px !important;
+    border-top: 1px solid #e5e7eb;
+    font-size: 17px !important;
+    font-weight: 600;
+    color: #111827 !important;
+}
+
+/* Alerts */
+.apb-alert {
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.apb-alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.apb-alert-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Buttons */
+.apb-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.apb-btn {
+    width: auto;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.apb-btn-primary {
+    border: 1px solid #16a34a;
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.apb-btn-primary:hover:not(:disabled) {
+    background: #15803d;
+}
+
+.apb-btn-secondary {
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+}
+
+.apb-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Loading */
+.apb-state {
+    font-size: 15px;
+    color: #4b5563;
+}
+
+@media (max-width: 600px) {
+    .apb-page {
+        padding: 16px;
+    }
+}

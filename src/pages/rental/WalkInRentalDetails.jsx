@@ -5483,12 +5483,34 @@ function WalkInRentalDetails() {
       // SECURITY DEPOSIT
       // ------------------------------------------------------
 
-      if (action === "deposit") {
-        response =
-          await markDepositReceived(
-            rentalId
-          );
-      }
+   if (action === "deposit") {
+
+    const paymentMethod =
+        window.prompt(
+            "Enter payment method: CASH / UPI / CARD / BANK_TRANSFER"
+        );
+
+    if (!paymentMethod) {
+        return;
+    }
+
+    await markRentalDepositReceived(
+        rentalId,
+        {
+            paymentMethod:
+                paymentMethod.trim().toUpperCase()
+        }
+    );
+
+    toast.success(
+        "Security deposit received successfully"
+    );
+
+    // Reload rental
+    await loadRentalDetails();
+
+    return;
+}
 
       // ------------------------------------------------------
       // ALLOCATE

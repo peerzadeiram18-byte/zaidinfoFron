@@ -1622,6 +1622,47 @@ function Sidebar({
       ],
     },
 
+   {
+  title: "PROCUREMENT",
+
+  links: [
+    {
+      name: "Add Vendor",
+      icon: <MdStore />,
+      path: "/add-vendor",
+    },
+
+    {
+      name: "Vendors",
+      icon: <MdStore />,
+      path: "/vendors",
+    },
+
+    {
+      name: "Create Purchase Order",
+      icon: <MdShoppingCart />,
+      path: "/add-purchase-order",
+    },
+
+    {
+      name: "Purchase Orders",
+      icon: <MdReceipt />,
+      path: "/purchase-orders",
+    },
+
+    {
+      name: "Add Purchase Bill",
+      icon: <MdPayments />,
+      path: "/add-purchase-bill",
+    },
+
+    {
+      name: "Purchase Bills",
+      icon: <MdReceipt />,
+      path: "/purchase-bills",
+    },
+  ],
+},
 
     {
       title: "EMPLOYEE",
@@ -1708,6 +1749,11 @@ function Sidebar({
           icon: <MdInventory />,
           path: "/admin/availability-requests",
         },
+           {
+          name: "Inventory",
+          icon: <MdInventory />,
+          path: "/admin/inventory",
+        },
 
         {
           name: "Stock History",
@@ -1715,17 +1761,17 @@ function Sidebar({
           path: "/stock-history",
         },
 
-        {
-          name: "Suppliers",
-          icon: <MdStore />,
-          path: "/suppliers",
-        },
+        // {
+        //   name: "Suppliers",
+        //   icon: <MdStore />,
+        //   path: "/suppliers",
+        // },
 
-        {
-          name: "Purchase",
-          icon: <MdStore />,
-          path: "/purchase-orders",
-        },
+        // {
+        //   name: "Purchase",
+        //   icon: <MdStore />,
+        //   path: "/purchase-orders",
+        // },
 
       ],
     },

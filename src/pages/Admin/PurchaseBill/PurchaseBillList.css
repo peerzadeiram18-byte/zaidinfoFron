@@ -1,0 +1,164 @@
+
+.pb-list-page {
+  padding: 24px;
+}
+
+.pb-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.pb-list-header h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+}
+
+.pb-list-header p {
+  margin: 0;
+  color: #666;
+}
+
+.pb-list-create {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 18px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.pb-list-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.pb-list-tab {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 9px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pb-list-tab.active {
+  font-weight: 600;
+}
+
+.pb-list-tab-count {
+  min-width: 22px;
+  text-align: center;
+}
+
+.pb-list-toolbar {
+  margin-bottom: 20px;
+}
+
+.pb-list-toolbar input {
+  width: 100%;
+  max-width: 500px;
+  padding: 11px 13px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  box-sizing: border-box;
+}
+
+.pb-list-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.pb-list-state.error {
+  color: #c62828;
+}
+
+.pb-list-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.pb-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.pb-list-table th,
+.pb-list-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.pb-list-table th {
+  font-weight: 600;
+}
+
+.pb-list-table tbody tr {
+  cursor: pointer;
+}
+
+.pb-list-table tbody tr:hover {
+  background: #f8f8f8;
+}
+
+.pb-list-table .num {
+  text-align: right;
+}
+
+.pb-list-number {
+  font-weight: 600;
+}
+
+.pb-list-badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pb-list-badge-pending {
+  background: #fff3cd;
+}
+
+.pb-list-badge-partial {
+  background: #e8f0fe;
+}
+
+.pb-list-badge-paid {
+  background: #e8f5e9;
+}
+
+.pb-list-badge-verified {
+  background: #e8f5e9;
+}
+
+.pb-list-badge-unverified {
+  background: #f5f5f5;
+}
+
+@media (max-width: 768px) {
+
+  .pb-list-page {
+    padding: 16px;
+  }
+
+  .pb-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pb-list-create {
+    width: 100%;
+  }
+
+}

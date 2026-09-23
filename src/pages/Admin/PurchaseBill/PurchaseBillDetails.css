@@ -1,0 +1,711 @@
+/* ======================================================
+   PURCHASE BILL DETAILS PAGE
+   ====================================================== */
+
+.purchase-bill-details-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px;
+  background: #f5f7f9;
+  box-sizing: border-box;
+  color: #1f2937;
+}
+
+
+/* ======================================================
+   HEADER
+   ====================================================== */
+
+.purchase-bill-details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.purchase-bill-details-header h1 {
+  margin: 8px 0 6px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.purchase-bill-details-subtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.purchase-bill-details-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* ======================================================
+   BACK BUTTON
+   ====================================================== */
+
+.purchase-bill-details-back-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.purchase-bill-details-back-btn:hover {
+  color: #15803d;
+}
+
+
+/* ======================================================
+   COMMON CARD
+   ====================================================== */
+
+.purchase-bill-details-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.purchase-bill-details-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.purchase-bill-details-card-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+
+/* ======================================================
+   HEADER ACTIONS
+   ====================================================== */
+
+.purchase-bill-details-verify-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  background: #15803d;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.purchase-bill-details-verify-btn:hover {
+  background: #166534;
+}
+
+.purchase-bill-details-verify-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* ======================================================
+   STATUS BADGES
+   ====================================================== */
+
+.purchase-bill-details-status-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.purchase-bill-details-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.purchase-bill-details-badge-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.purchase-bill-details-badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.purchase-bill-details-payment-pending {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.purchase-bill-details-payment-partial {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.purchase-bill-details-payment-paid {
+  background: #dcfce7;
+  color: #166534;
+}
+
+
+/* ======================================================
+   INFORMATION GRID
+   ====================================================== */
+
+.purchase-bill-details-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px 24px;
+}
+
+.purchase-bill-details-info-item {
+  min-width: 0;
+}
+
+.purchase-bill-details-info-item span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.purchase-bill-details-info-item strong {
+  display: block;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+
+/* ======================================================
+   ITEMS TABLE
+   ====================================================== */
+
+.purchase-bill-details-item-count {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.purchase-bill-details-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.purchase-bill-details-table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+}
+
+.purchase-bill-details-table th {
+  padding: 12px 14px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.purchase-bill-details-table td {
+  padding: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #374151;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.purchase-bill-details-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.purchase-bill-details-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.purchase-bill-details-item-name {
+  color: #111827;
+  font-weight: 600;
+}
+
+.purchase-bill-details-type {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.purchase-bill-details-total-cell {
+  color: #111827 !important;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+
+/* ======================================================
+   EMPTY STATE
+   ====================================================== */
+
+.purchase-bill-details-empty {
+  padding: 30px 20px;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 14px;
+  text-align: center;
+  background: #fafafa;
+}
+
+
+/* ======================================================
+   SUMMARY LAYOUT
+   ====================================================== */
+
+.purchase-bill-details-summary-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(340px, 0.7fr);
+  gap: 20px;
+}
+
+.purchase-bill-details-notes-card {
+  min-width: 0;
+}
+
+.purchase-bill-details-notes {
+  min-height: 100px;
+  padding: 14px;
+  border-radius: 8px;
+  background: #f9fafb;
+  border: 1px solid #eef0f2;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.purchase-bill-details-muted {
+  color: #9ca3af;
+}
+
+
+/* ======================================================
+   AMOUNT SUMMARY
+   ====================================================== */
+
+.purchase-bill-details-amount-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.purchase-bill-details-amount-list > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.purchase-bill-details-amount-list strong {
+  color: #111827;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.purchase-bill-details-amount-total {
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+  color: #111827 !important;
+  font-size: 15px !important;
+}
+
+.purchase-bill-details-amount-total strong {
+  font-size: 17px;
+}
+
+.purchase-bill-details-amount-paid {
+  color: #166534 !important;
+}
+
+.purchase-bill-details-amount-paid strong {
+  color: #166534;
+}
+
+.purchase-bill-details-amount-pending {
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+  color: #991b1b !important;
+  font-weight: 600;
+}
+
+.purchase-bill-details-amount-pending strong {
+  color: #991b1b;
+  font-size: 16px;
+}
+
+
+/* ======================================================
+   VERIFICATION INFORMATION
+   ====================================================== */
+
+.purchase-bill-details-section-description {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+
+/* ======================================================
+   PAYMENT SECTION
+   ====================================================== */
+
+.purchase-bill-details-payment-warning {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px 16px;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.purchase-bill-details-payment-warning strong {
+  font-size: 14px;
+}
+
+.purchase-bill-details-payment-warning span {
+  font-size: 13px;
+}
+
+.purchase-bill-details-payment-success {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px 16px;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.purchase-bill-details-payment-success strong {
+  font-size: 14px;
+}
+
+.purchase-bill-details-payment-success span {
+  font-size: 13px;
+}
+
+
+/* ======================================================
+   PAYMENT FORM
+   ====================================================== */
+
+.purchase-bill-details-payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.purchase-bill-details-payment-info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.purchase-bill-details-payment-info > div {
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.purchase-bill-details-payment-info span {
+  display: block;
+  margin-bottom: 6px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.purchase-bill-details-payment-info strong {
+  display: block;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.purchase-bill-details-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.purchase-bill-details-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.purchase-bill-details-form-group label {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.purchase-bill-details-form-group input,
+.purchase-bill-details-form-group select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  box-sizing: border-box;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #111827;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.purchase-bill-details-form-group input:focus,
+.purchase-bill-details-form-group select:focus {
+  border-color: #15803d;
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.1);
+}
+
+.purchase-bill-details-form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.purchase-bill-details-payment-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.purchase-bill-details-payment-btn {
+  min-width: 150px;
+  padding: 11px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #15803d;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.purchase-bill-details-payment-btn:hover {
+  background: #166534;
+}
+
+.purchase-bill-details-payment-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* ======================================================
+   LOADING
+   ====================================================== */
+
+.purchase-bill-details-loading {
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+
+/* ======================================================
+   ERROR
+   ====================================================== */
+
+.purchase-bill-details-error {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 30px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.purchase-bill-details-error h2 {
+  margin: 0 0 10px;
+  color: #111827;
+  font-size: 20px;
+}
+
+.purchase-bill-details-error p {
+  margin: 0 0 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.purchase-bill-details-secondary-btn {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 16px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.purchase-bill-details-secondary-btn:hover {
+  background: #f9fafb;
+}
+
+
+/* ======================================================
+   RESPONSIVE - TABLET
+   ====================================================== */
+
+@media (max-width: 1024px) {
+  .purchase-bill-details-page {
+    padding: 20px;
+  }
+
+  .purchase-bill-details-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .purchase-bill-details-summary-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .purchase-bill-details-payment-info {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .purchase-bill-details-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* ======================================================
+   RESPONSIVE - MOBILE
+   ====================================================== */
+
+@media (max-width: 700px) {
+  .purchase-bill-details-page {
+    padding: 14px;
+  }
+
+  .purchase-bill-details-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .purchase-bill-details-header h1 {
+    font-size: 23px;
+  }
+
+  .purchase-bill-details-header-actions {
+    justify-content: flex-start;
+  }
+
+  .purchase-bill-details-card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .purchase-bill-details-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .purchase-bill-details-info-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .purchase-bill-details-payment-info {
+    grid-template-columns: 1fr;
+  }
+
+  .purchase-bill-details-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .purchase-bill-details-payment-actions {
+    justify-content: stretch;
+  }
+
+  .purchase-bill-details-payment-btn {
+    width: 100%;
+  }
+
+  .purchase-bill-details-status-group {
+    width: 100%;
+  }
+
+  .purchase-bill-details-summary-layout {
+    gap: 0;
+  }
+}
+
+
+/* ======================================================
+   SMALL MOBILE
+   ====================================================== */
+
+@media (max-width: 420px) {
+  .purchase-bill-details-page {
+    padding: 10px;
+  }
+
+  .purchase-bill-details-card {
+    padding: 14px;
+  }
+
+  .purchase-bill-details-header h1 {
+    font-size: 21px;
+  }
+
+  .purchase-bill-details-table th,
+  .purchase-bill-details-table td {
+    padding: 10px;
+  }
+
+  .purchase-bill-details-verify-btn {
+    width: 100%;
+  }
+}

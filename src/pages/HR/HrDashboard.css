@@ -1,0 +1,336 @@
+.dash-root {
+  padding: 8px 4px 40px;
+}
+
+.dash-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.dash-state-error {
+  color: #b91c1c;
+}
+
+.dash-header {
+  margin-bottom: 24px;
+}
+
+.dash-header h1 {
+  margin: 0 0 4px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dash-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* Stat cards */
+
+.dash-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 900px) {
+  .dash-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .dash-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dash-stat-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dash-stat-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.dash-stat-icon-blue {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.dash-stat-icon-amber {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.dash-stat-icon-green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.dash-stat-icon-purple {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.dash-stat-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.dash-stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+/* Panels */
+
+.dash-panels-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 760px) {
+  .dash-panels-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dash-panel {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.dash-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.dash-panel-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dash-link-btn {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dash-empty {
+  color: #9ca3af;
+  font-size: 14px;
+  margin: 0;
+}
+
+.dash-holiday-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-holiday-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.dash-holiday-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.dash-holiday-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #7c3aed;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.dash-holiday-list strong {
+  font-size: 14px;
+  color: #111827;
+  font-weight: 600;
+}
+
+.dash-holiday-date {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+.dash-quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dash-quick-actions button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.dash-quick-actions button:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.dash-quick-actions svg {
+  color: #6b7280;
+  font-size: 14px;
+}
+/* =====================================================
+   HR DASHBOARD EXTRA
+===================================================== */
+
+.dash-state {
+  min-height: 300px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  color: #64748b;
+  font-size: 15px;
+}
+
+.dash-state-error {
+  text-align: center;
+}
+
+.dash-state-error h3 {
+  margin: 0;
+
+  color: #26364d;
+  font-size: 20px;
+}
+
+.dash-state-error p {
+  margin: 0 0 8px;
+}
+
+.dash-state-error button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: #26364d;
+  color: white;
+
+  cursor: pointer;
+}
+
+.dash-loading-spinner {
+  width: 28px;
+  height: 28px;
+
+  border: 3px solid #e5eaf0;
+  border-top-color: #64748b;
+
+  border-radius: 50%;
+
+  animation: hrDashSpin 0.8s linear infinite;
+}
+
+.dash-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 9px 14px;
+
+  border: 1px solid #e0e6ee;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #4d6078;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.dash-refresh-btn:hover {
+  background: #f7f9fc;
+}
+
+.dash-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dash-spin {
+  animation: hrDashSpin 0.8s linear infinite;
+}
+
+.dash-panel-subtitle {
+  margin: 3px 0 0;
+
+  color: #8a98aa;
+  font-size: 12px;
+}
+
+@keyframes hrDashSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

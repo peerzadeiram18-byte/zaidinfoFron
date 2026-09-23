@@ -3135,6 +3135,38 @@ import SalaryManagement from "./pages/Accountant/SalaryManagement";
 
 import AccountantLayout from "./pages/Accountant/AccountantLayout";
 
+
+//HR
+
+
+import HRLayout from "./pages/HR/HRLayout.jsx";
+import HrDashboard from "./pages/HR/HrDashboard.jsx"
+
+
+
+// ===============================
+// ADMIN PROCUREMENT (VENDORS / PURCHASE ORDERS / PURCHASE BILLS)
+// ===============================
+
+import AddVendor from "./pages/Admin/Vendor/AddVendor.jsx";
+import VendorList from "./pages/Admin/Vendor/VendorList.jsx";
+import VendorDetails from "./pages/Admin/Vendor/VendorDetails.jsx";
+import EditVendor from "./pages/Admin/Vendor/EditVendor.jsx";
+import PurchaseOrderEdit from "./pages/Admin/PurchaseOrder/PurchaseOrderEdit.jsx";
+import CreatePurchaseOrder from "./pages/Admin/PurchaseOrder/CreatePurchaseOrder.jsx";
+import PurchaseOrderList from "./pages/Admin/PurchaseOrder/PurchaseOrderList.jsx";
+import PurchaseOrderDetails from "./pages/Admin/PurchaseOrder/PurchaseOrderDetails.jsx";
+import AddPurchaseBill from "./pages/Admin/PurchaseBill/AddPurchaseBill.jsx";
+import PurchaseBillList from "./pages/Admin/PurchaseBill/PurchaseBillList.jsx";
+import PurchaseBillDetails from "./pages/Admin/PurchaseBill/PurchaseBillDetails.jsx";
+import InvoicePrint from "./pages/Admin/PurchaseBill/InvoicePrint.jsx";
+
+import ItSupport from './pages/It-Support/ItSupport.jsx'
+import CusromerTicket from "./pages/It-Support/CusromerTicket.jsx";
+import ItSupportLeave from "./pages/It-Support/ItSupportLeave.jsx";
+import ItSupportSettings from "./pages/It-Support/ItSupportSettings.jsx";
+
+
 // =====================================================
 // APP
 // =====================================================
@@ -3243,13 +3275,29 @@ function App() {
     "/pending-orders",
     "/completed-orders",
 
-    // SUPPLIERS
-    "/suppliers",
-    "/add-supplier",
+ // =====================================================
+// PROCUREMENT
+// =====================================================
 
-    // PURCHASE
-    "/purchase-orders",
-    "/add-purchase-order",
+// // VENDORS
+// "/vendors",
+// "/vendors/add",
+
+// // PURCHASE ORDERS
+// "/purchase-orders",
+// "/purchase-orders/create",
+
+// // PURCHASE BILLS
+// "/purchase-bills",
+// "/purchase-bills/add",
+
+// PROCUREMENT
+"/vendors",
+"/add-vendor",
+"/purchase-orders",
+"/add-purchase-order",
+"/purchase-bills",
+"/add-purchase-bill",
 
     // SALES
     "/sales",
@@ -3307,11 +3355,28 @@ function App() {
   // DYNAMIC ADMIN ROUTES
   // =====================================================
 
-  const isDynamicAdminRoute =
-    location.pathname.startsWith("/edit-product/") ||
-    location.pathname.startsWith("/view-product/") ||
-    location.pathname.startsWith("/edit-subcategory/") ||
-    location.pathname.startsWith("/admin/orders/");
+ // =====================================================
+// DYNAMIC ADMIN ROUTES
+// =====================================================
+
+const isDynamicAdminRoute =
+  location.pathname.startsWith("/edit-product/") ||
+  location.pathname.startsWith("/view-product/") ||
+  location.pathname.startsWith("/edit-subcategory/") ||
+  location.pathname.startsWith("/admin/orders/") ||
+
+  // ===================================================
+  // PROCUREMENT
+  // ===================================================
+
+  // Vendors
+  location.pathname.startsWith("/vendors/") ||
+
+  // Purchase Orders
+  location.pathname.startsWith("/purchase-orders/") ||
+
+  // Purchase Bills
+  location.pathname.startsWith("/purchase-bills/");
 
   // =====================================================
   // FINAL ADMIN CHECK
@@ -3351,7 +3416,16 @@ function App() {
     location.pathname === "/employee/dashboard" ||
     location.pathname.startsWith(
       "/employee/dashboard/"
-    );
+    )||
+
+        location.pathname === "/itsupport-dashboard" ||
+    location.pathname.startsWith("/itsupport-dashboard/") ||
+
+      // ===============================
+  // HR DASHBOARD
+  // ===============================
+  location.pathname === "/hr-dashboard" ||
+  location.pathname.startsWith("/hr-dashboard/");
 
   // =====================================================
   // HIDE WEBSITE HEADER
@@ -3490,6 +3564,111 @@ function App() {
             path="/customer-dashboard"
             element={<CustomerDashboard />}
           />
+
+{/* =====================================================
+    HR DASHBOARD
+===================================================== */}
+
+<Route
+  path="/hr-dashboard"
+  element={<HRLayout />}
+>
+  {/* =================================================
+      HR DASHBOARD HOME
+  ================================================= */}
+
+  <Route
+    index
+    element={<HrDashboard />}
+  />
+
+  {/* =================================================
+      EMPLOYEES
+      Same EmployeeList component as Admin
+  ================================================= */}
+
+  <Route
+    path="employees"
+    element={<EmployeeList />}
+  />
+
+  {/* =================================================
+      ADD EMPLOYEE
+      Same AddEmployee component as Admin
+  ================================================= */}
+
+  <Route
+    path="employees/add"
+    element={<AddEmployee />}
+  />
+
+  {/* =================================================
+      ADD SHIFTING
+      Same ShiftManagement component as Admin
+  ================================================= */}
+
+  <Route
+    path="shifting/add"
+    element={<ShiftManagement />}
+  />
+
+  {/* =================================================
+      EMPLOYEE SHIFT
+      Same EmployeeShiftList component as Admin
+  ================================================= */}
+
+  <Route
+    path="employee-shift"
+    element={<EmployeeShiftList />}
+  />
+
+  {/* =================================================
+      ATTENDANCE
+      Same AdminAttendance component
+  ================================================= */}
+
+  <Route
+    path="attendance"
+    element={<AdminAttendance />}
+  />
+
+  {/* =================================================
+      LEAVE REQUESTS
+  ================================================= */}
+
+  <Route
+    path="leave/requests"
+    element={<LeaveRequests />}
+  />
+
+  {/* =================================================
+      LEAVE POLICIES
+  ================================================= */}
+
+  <Route
+    path="leave/policies"
+    element={<LeavePolicies />}
+  />
+
+  {/* =================================================
+      HOLIDAYS
+  ================================================= */}
+
+  <Route
+    path="holidays"
+    element={<HolidaysManagement />}
+  />
+
+  {/* =================================================
+      SALARY
+      Same SalaryPage component as Admin
+  ================================================= */}
+
+  <Route
+    path="salary"
+    element={<SalaryPage />}
+  />
+</Route>
 
 
           {/* =================================================
@@ -3758,45 +3937,12 @@ function App() {
               }
             />
 
-            {/* SUPPLIERS */}
+           
+{/* SUPPLIERS */}
 
-            <Route
-              path="/suppliers"
-              element={
-                <div>
-                  Supplier List Page
-                </div>
-              }
-            />
 
-            <Route
-              path="/add-supplier"
-              element={
-                <div>
-                  Add Supplier Page
-                </div>
-              }
-            />
 
-            {/* PURCHASE */}
 
-            <Route
-              path="/purchase-orders"
-              element={
-                <div>
-                  Purchase Orders Page
-                </div>
-              }
-            />
-
-            <Route
-              path="/add-purchase-order"
-              element={
-                <div>
-                  Add Purchase Order Page
-                </div>
-              }
-            />
 
             {/* SALES */}
 
@@ -3950,6 +4096,39 @@ function App() {
               element={<EmployeeShiftList />}
             />
 
+            <Route
+    path="/vendors"
+    element={<VendorList />}
+/>
+
+<Route
+    path="/add-vendor"
+    element={<AddVendor />}
+/>
+
+<Route
+    path="/purchase-orders"
+    element={<PurchaseOrderList />}
+/>
+
+<Route
+    path="/add-purchase-order"
+    element={<CreatePurchaseOrder />}
+/>
+
+<Route
+    path="/purchase-bills"
+    element={<PurchaseBillList />}
+/>
+
+<Route
+    path="/add-purchase-bill"
+    element={<AddPurchaseBill />}
+/>
+
+
+            
+
           </Route>
 
 
@@ -4066,6 +4245,8 @@ function App() {
             path="/payment"
             element={<Payment />}
           />
+
+          
 
 
           {/* =====================================================
@@ -4381,6 +4562,16 @@ function App() {
             />
 
           </Route>
+
+
+              <Route path="/itsupport-dashboard" element={<ItSupport/>}>
+                        <Route index element={<>Dashboard</>}/>
+                        <Route path='charges' element={<RepairRates />}/>
+                        <Route path="add-new-ticket" element={<CusromerTicket/>}/>
+                        <Route path='leave' element={<ItSupportLeave/>}/>
+                        <Route path="settings" element={<ItSupportSettings/>}/>
+                        <Route path="support" element={<>suppport</>}/>
+                    </Route>
 
 
           {/* =================================================
