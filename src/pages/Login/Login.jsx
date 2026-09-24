@@ -130,6 +130,8 @@
 
 //         SALES: "/receptionist-dashboard",
 
+//         IT_SUPPORT:"/itsupport-dashboard",
+
 //         CUSTOMER: "/customer-dashboard",
 
 //         TECHNICIAN: "/technician-dashboard",
@@ -137,6 +139,8 @@
 //         INVENTORY: "/inventory-dashboard",
 
 //         ACCOUNTANT: "/accountant-dashboard",
+
+//         HR_EXECUTIVE : "/hr-dashboard"
 //       };
 
 //       const targetRoute = roleRoutes[role];
@@ -407,7 +411,6 @@
 
 
 
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/authService";
@@ -503,7 +506,7 @@ function Login({ isOpen = true, onClose }) {
       if (!token || !user) {
         toast.error(
           res.data?.message ||
-            "Login response is invalid"
+          "Login response is invalid"
         );
 
         return;
@@ -540,7 +543,7 @@ function Login({ isOpen = true, onClose }) {
 
         SALES: "/receptionist-dashboard",
 
-        IT_SUPPORT:"/itsupport-dashboard",
+        IT_SUPPORT: "/itsupport-dashboard",
 
         CUSTOMER: "/customer-dashboard",
 
@@ -550,10 +553,15 @@ function Login({ isOpen = true, onClose }) {
 
         ACCOUNTANT: "/accountant-dashboard",
 
-        HR_EXECUTIVE : "/hr-dashboard"
+        HR_EXECUTIVE: "/hr-dashboard"
       };
 
-      const targetRoute = roleRoutes[role];
+      let targetRoute = roleRoutes[role];
+
+      // Business customers go to the corporate dashboard
+      if (role === "CUSTOMER" && user.customerType === "BUSINESS") {
+        targetRoute = "/corporate-dashboard";
+      }
 
       // ==========================================
       // INVALID ROLE
@@ -581,7 +589,7 @@ function Login({ isOpen = true, onClose }) {
 
       toast.success(
         res.data?.message ||
-          "Login Successful"
+        "Login Successful"
       );
 
       if (onClose) {

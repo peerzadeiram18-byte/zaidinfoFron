@@ -1,0 +1,272 @@
+.co-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.co-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.co-title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.co-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.co-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.co-btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.co-btn-icon {
+  font-size: 12px;
+}
+
+.co-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.co-banner:hover {
+  background: #fef3c7;
+}
+
+.co-banner-icon {
+  flex-shrink: 0;
+}
+
+.co-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.co-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.co-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+}
+
+.co-stat-icon--blue {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.co-stat-icon--amber {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.co-stat-icon--green {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.co-stat-icon--rose {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.co-stat-label {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.co-stat-value {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.co-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.co-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.co-card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.co-link-btn {
+  padding: 0;
+  border: none;
+  background: none;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.co-link-btn:hover {
+  text-decoration: underline;
+}
+
+.co-table-wrap {
+  overflow-x: auto;
+}
+
+.co-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.co-table th {
+  padding: 12px 20px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.co-table td {
+  padding: 12px 20px;
+  border-top: 1px solid #f1f5f9;
+  color: #1e293b;
+}
+
+.co-table .co-right {
+  text-align: right;
+}
+
+.co-cell-strong {
+  font-weight: 500;
+}
+
+.co-cell-muted {
+  color: #64748b;
+}
+
+.co-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.co-badge--processing {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.co-badge--shipped {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.co-badge--delivered {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.co-badge--cancelled {
+  background: #fff1f2;
+  color: #be123c;
+}
+
+.co-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.co-action-card {
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.co-action-card:hover {
+  border-color: #93c5fd;
+  background: #f8fbff;
+}
+
+.co-action-icon {
+  font-size: 18px;
+  color: #2563eb;
+}
+
+.co-action-title {
+  margin: 12px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.co-action-hint {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #64748b;
+}

@@ -1,0 +1,74 @@
+
+/* All classes are prefixed with "corpq-" so they don't clash with other pages */
+
+.corpq-page {
+  padding: 8px 4px;
+  color: #0f172a;
+}
+
+.corpq-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.corpq-header h1 {
+  margin: 0 0 4px;
+  font-size: 24px;
+}
+
+.corpq-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.corpq-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: #16a34a;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.corpq-button:hover {
+  background: #15803d;
+}
+
+.corpq-button svg {
+  font-size: 18px;
+}
+
+.corpq-card {
+  max-width: 560px;
+  padding: 18px 20px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.corpq-card h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.corpq-card p {
+  margin: 0;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (max-width: 560px) {
+  .corpq-header {
+    flex-direction: column;
+  }
+}

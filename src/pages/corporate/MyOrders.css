@@ -1,0 +1,276 @@
+
+.mo-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mo-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.mo-title {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.mo-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.mo-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.mo-btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.mo-btn-icon {
+  font-size: 12px;
+}
+
+.mo-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mo-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.mo-chip:hover {
+  border-color: #93c5fd;
+}
+
+.mo-chip--active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.mo-chip-count {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.mo-chip--active .mo-chip-count {
+  color: #1d4ed8;
+}
+
+.mo-search {
+  position: relative;
+  min-width: 260px;
+}
+
+.mo-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.mo-search input {
+  width: 100%;
+  padding: 9px 12px 9px 34px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 13px;
+  color: #0f172a;
+  outline: none;
+}
+
+.mo-search input:focus {
+  border-color: #2563eb;
+}
+
+.mo-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.mo-table-wrap {
+  overflow-x: auto;
+}
+
+.mo-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.mo-table th {
+  padding: 12px 20px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.mo-table td {
+  padding: 12px 20px;
+  border-top: 1px solid #f1f5f9;
+  color: #1e293b;
+}
+
+.mo-table .mo-right {
+  text-align: right;
+}
+
+.mo-cell-strong {
+  font-weight: 500;
+}
+
+.mo-cell-muted {
+  color: #64748b;
+}
+
+.mo-row-click {
+  cursor: pointer;
+}
+
+.mo-row-click:hover td {
+  background: #f8fafc;
+}
+
+.mo-expand-btn {
+  padding: 4px;
+  border: none;
+  background: none;
+  color: #64748b;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mo-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.mo-badge--pending,
+.mo-badge--processing,
+.mo-badge--return-requested {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.mo-badge--confirmed,
+.mo-badge--shipped,
+.mo-badge--out-for-delivery {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.mo-badge--delivered,
+.mo-badge--paid {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.mo-badge--cancelled,
+.mo-badge--returned,
+.mo-badge--failed {
+  background: #fff1f2;
+  color: #be123c;
+}
+
+.mo-badge--refunded {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.mo-empty {
+  margin: 0;
+  padding: 28px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.mo-empty--error {
+  color: #be123c;
+}
+
+.mo-detail-row td {
+  padding: 0;
+  background: #f8fafc;
+}
+
+.mo-detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  padding: 16px 20px 20px;
+}
+
+.mo-detail-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.mo-detail-text {
+  margin: 0 0 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.mo-detail-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 13px;
+  color: #1e293b;
+}

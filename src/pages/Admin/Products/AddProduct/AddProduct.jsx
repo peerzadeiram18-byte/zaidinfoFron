@@ -9,7 +9,6 @@
 // import { toast } from "react-toastify";
 
 // const AddProduct = () => {
-
 //     // =====================================================
 //     // STATES
 //     // =====================================================
@@ -26,13 +25,38 @@
 
 //     const fileInputRef = useRef(null);
 
+//     // =====================================================
+//     // EMPTY OBJECTS
+//     // =====================================================
+
+//     const emptyRefurbishedDetails = {
+//         grade: "",
+//         batteryHealth: "",
+//         warrantyMonths: "",
+//         testingStatus: "",
+//     };
+
+//     const emptyRentalDetails = {
+//         isAvailableForRent: false,
+//         monthlyRent: "",
+//         securityDeposit: "",
+//         minimumRentalMonths: 3,
+//         gst: "",
+//         availableQuantity: 1,
+//         basicSoftwareInstalled: true,
+//         includedItems: [
+//             "LAPTOP",
+//             "CHARGING_ADAPTER",
+//             "BACKPACK",
+//         ],
+//         notes: "",
+//     };
 
 //     // =====================================================
 //     // FORM DATA
 //     // =====================================================
 
 //     const [formData, setFormData] = useState({
-
 //         name: "",
 
 //         category: "",
@@ -41,32 +65,25 @@
 
 //         brand: "",
 
-//         // =================================================
 //         // PRODUCT TYPE
-//         // =================================================
-
 //         productType: "NEW",
 
-//         // =================================================
-//         // REFURBISHED DETAILS
-//         // =================================================
-
+//         // REFURBISHED
 //         refurbishedDetails: {
-
-//             grade: "",
-
-//             batteryHealth: "",
-
-//             warrantyMonths: "",
-
-//             testingStatus: ""
-
+//             ...emptyRefurbishedDetails,
 //         },
 
+//         // RENTAL
+//         rental: {
+//             ...emptyRentalDetails,
+//         },
+
+//         // DESCRIPTION
 //         shortDescription: "",
 
 //         description: "",
 
+//         // PRICING
 //         purchasePrice: "",
 
 //         sellingPrice: "",
@@ -77,439 +94,345 @@
 
 //         gst: "",
 
-//         images: []
-
+//         // IMAGES
+//         images: [],
 //     });
 
-
 //     // =====================================================
-//     // LOAD CATEGORIES + BRANDS
+//     // LOAD DATA
 //     // =====================================================
 
 //     useEffect(() => {
-
 //         loadCategories();
-
 //         loadBrands();
 
 //         return () => {
-
 //             previewImages.forEach((url) => {
-
 //                 URL.revokeObjectURL(url);
-
 //             });
-
 //         };
-
 //     }, []);
-
 
 //     // =====================================================
 //     // LOAD CATEGORIES
 //     // =====================================================
 
 //     const loadCategories = async () => {
-
 //         try {
-
 //             const res = await getCategories();
 
-//             console.log(
-//                 "CATEGORY API RESPONSE:",
-//                 res.data
-//             );
+//             console.log("CATEGORY API RESPONSE:", res.data);
 
+//             const categoryData = Array.isArray(res.data)
+//                 ? res.data
+//                 : Array.isArray(res.data?.data)
+//                 ? res.data.data
+//                 : Array.isArray(res.data?.categories)
+//                 ? res.data.categories
+//                 : Array.isArray(res.data?.data?.categories)
+//                 ? res.data.data.categories
+//                 : [];
 
-//             const categoryData =
-
-//                 Array.isArray(res.data)
-
-//                     ? res.data
-
-//                     : Array.isArray(res.data?.data)
-
-//                         ? res.data.data
-
-//                         : Array.isArray(res.data?.categories)
-
-//                             ? res.data.categories
-
-//                             : Array.isArray(
-//                                 res.data?.data?.categories
-//                             )
-
-//                                 ? res.data.data.categories
-
-//                                 : [];
-
-
-//             console.log(
-//                 "ALL CATEGORIES:",
-//                 categoryData
-//             );
-
+//             console.log("ALL CATEGORIES:", categoryData);
 
 //             setCategories(categoryData);
-
-//         }
-
-//         catch (error) {
-
-//             console.error(
-//                 "CATEGORY ERROR:",
-//                 error
-//             );
+//         } catch (error) {
+//             console.error("CATEGORY ERROR:", error);
 
 //             setCategories([]);
 
-//             toast.error(
-//                 "Failed to load categories"
-//             );
-
+//             toast.error("Failed to load categories");
 //         }
-
 //     };
-
 
 //     // =====================================================
 //     // LOAD BRANDS
 //     // =====================================================
 
 //     const loadBrands = async () => {
-
 //         try {
-
 //             const res = await getBrands();
 
-//             console.log(
-//                 "BRAND API RESPONSE:",
-//                 res.data
-//             );
+//             console.log("BRAND API RESPONSE:", res.data);
 
+//             const brandData = Array.isArray(res.data)
+//                 ? res.data
+//                 : Array.isArray(res.data?.data)
+//                 ? res.data.data
+//                 : Array.isArray(res.data?.brands)
+//                 ? res.data.brands
+//                 : Array.isArray(res.data?.data?.brands)
+//                 ? res.data.data.brands
+//                 : [];
 
-//             const brandData =
-
-//                 Array.isArray(res.data)
-
-//                     ? res.data
-
-//                     : Array.isArray(res.data?.data)
-
-//                         ? res.data.data
-
-//                         : Array.isArray(res.data?.brands)
-
-//                             ? res.data.brands
-
-//                             : Array.isArray(
-//                                 res.data?.data?.brands
-//                             )
-
-//                                 ? res.data.data.brands
-
-//                                 : [];
-
-
-//             console.log(
-//                 "ALL BRANDS:",
-//                 brandData
-//             );
-
+//             console.log("ALL BRANDS:", brandData);
 
 //             setBrands(brandData);
-
-//         }
-
-//         catch (error) {
-
-//             console.error(
-//                 "BRAND ERROR:",
-//                 error
-//             );
+//         } catch (error) {
+//             console.error("BRAND ERROR:", error);
 
 //             setBrands([]);
 
-//             toast.error(
-//                 "Failed to load brands"
-//             );
-
+//             toast.error("Failed to load brands");
 //         }
-
 //     };
-
 
 //     // =====================================================
 //     // GET PARENT CATEGORIES
 //     // =====================================================
 
 //     const getParentCategories = () => {
-
 //         return categories.filter(
-//             (category) => {
-
-//                 return !category.parentCategory;
-
-//             }
+//             (category) => !category.parentCategory
 //         );
-
 //     };
 
-
 //     // =====================================================
-//     // GET CHILDREN / SUBCATEGORIES
+//     // GET SUBCATEGORIES
 //     // =====================================================
 
-//     const getSubcategoriesByParent = (
-//         parentCategoryId
-//     ) => {
-
+//     const getSubcategoriesByParent = (parentCategoryId) => {
 //         if (!parentCategoryId) {
-
 //             return [];
-
 //         }
 
+//         return categories.filter((category) => {
+//             const parent = category.parentCategory;
 
-//         return categories.filter(
-//             (category) => {
-
-//                 const parent =
-//                     category.parentCategory;
-
-
-//                 if (!parent) {
-
-//                     return false;
-
-//                 }
-
-
-//                 const parentId =
-
-//                     typeof parent === "object"
-
-//                         ? parent?._id
-
-//                         : parent;
-
-
-//                 return (
-//                     String(parentId) ===
-//                     String(parentCategoryId)
-//                 );
-
+//             if (!parent) {
+//                 return false;
 //             }
-//         );
 
+//             const parentId =
+//                 typeof parent === "object"
+//                     ? parent?._id
+//                     : parent;
+
+//             return (
+//                 String(parentId) ===
+//                 String(parentCategoryId)
+//             );
+//         });
 //     };
-
 
 //     // =====================================================
 //     // CATEGORY CHANGE
 //     // =====================================================
 
 //     const handleCategoryChange = (e) => {
-
-//         const parentCategoryId =
-//             e.target.value;
-
+//         const parentCategoryId = e.target.value;
 
 //         console.log(
 //             "SELECTED PARENT CATEGORY:",
 //             parentCategoryId
 //         );
 
-
 //         setFormData((previous) => ({
-
 //             ...previous,
 
-//             category:
-//                 parentCategoryId,
+//             category: parentCategoryId,
 
-//             subcategory: ""
-
+//             subcategory: "",
 //         }));
 
-
 //         if (!parentCategoryId) {
-
 //             setSubcategories([]);
 
 //             return;
-
 //         }
-
 
 //         const children =
 //             getSubcategoriesByParent(
 //                 parentCategoryId
 //             );
 
-
 //         console.log(
 //             "FOUND SUBCATEGORIES:",
 //             children
 //         );
 
-
 //         setSubcategories(children);
-
 //     };
-
 
 //     // =====================================================
 //     // SUBCATEGORY CHANGE
 //     // =====================================================
 
 //     const handleSubcategoryChange = (e) => {
-
-//         const subcategoryId =
-//             e.target.value;
-
+//         const subcategoryId = e.target.value;
 
 //         console.log(
 //             "SELECTED SUBCATEGORY:",
 //             subcategoryId
 //         );
 
-
 //         setFormData((previous) => ({
-
 //             ...previous,
 
-//             subcategory:
-//                 subcategoryId
-
+//             subcategory: subcategoryId,
 //         }));
-
 //     };
-
 
 //     // =====================================================
 //     // NORMAL INPUT CHANGE
 //     // =====================================================
 
 //     const handleChange = (e) => {
-
 //         const {
 //             name,
-//             value
+//             value,
 //         } = e.target;
 
-
 //         setFormData((previous) => ({
-
 //             ...previous,
 
-//             [name]: value
-
+//             [name]: value,
 //         }));
-
 //     };
-
 
 //     // =====================================================
 //     // PRODUCT TYPE CHANGE
 //     // =====================================================
 
 //     const handleProductTypeChange = (e) => {
+//         const productType = e.target.value;
 
-//         const productType =
-//             e.target.value;
-
+//         console.log(
+//             "PRODUCT TYPE:",
+//             productType
+//         );
 
 //         setFormData((previous) => ({
-
 //             ...previous,
 
 //             productType,
 
-//             // Reset refurbished details when NEW
+//             // REFURBISHED DATA
 //             refurbishedDetails:
 //                 productType === "REFURBISHED"
-
 //                     ? previous.refurbishedDetails
-
 //                     : {
+//                         ...emptyRefurbishedDetails,
+//                     },
 
-//                         grade: "",
+//             // RENTAL DATA
+//             rental:
+//                 productType === "RENTAL"
+//                     ? {
+//                         ...previous.rental,
 
-//                         batteryHealth: "",
-
-//                         warrantyMonths: "",
-
-//                         testingStatus: ""
-
+//                         isAvailableForRent:
+//                             true,
 //                     }
-
+//                     : previous.rental,
 //         }));
-
 //     };
 
-
 //     // =====================================================
-//     // REFURBISHED DETAIL CHANGE
+//     // REFURBISHED CHANGE
 //     // =====================================================
 
 //     const handleRefurbishedChange = (e) => {
-
 //         const {
 //             name,
-//             value
+//             value,
 //         } = e.target;
 
-
 //         setFormData((previous) => ({
-
 //             ...previous,
 
 //             refurbishedDetails: {
-
 //                 ...previous.refurbishedDetails,
 
-//                 [name]: value
-
-//             }
-
+//                 [name]: value,
+//             },
 //         }));
-
 //     };
 
+//     // =====================================================
+//     // RENTAL CHANGE
+//     // IMPORTANT
+//     // Supports:
+//     // handleRentalChange("monthlyRent", value)
+//     // handleRentalChange("basicSoftwareInstalled", true)
+//     // =====================================================
+
+//     const handleRentalChange = (
+//         name,
+//         value
+//     ) => {
+//         setFormData((previous) => ({
+//             ...previous,
+
+//             rental: {
+//                 ...previous.rental,
+
+//                 [name]: value,
+//             },
+//         }));
+//     };
+
+//     // =====================================================
+//     // RENTAL INCLUDED ITEM
+//     // =====================================================
+
+//     const handleRentalItemChange = (item) => {
+//         setFormData((previous) => {
+//             const currentItems =
+//                 previous.rental.includedItems || [];
+
+//             const exists =
+//                 currentItems.includes(item);
+
+//             const updatedItems = exists
+//                 ? currentItems.filter(
+//                     (value) => value !== item
+//                 )
+//                 : [
+//                     ...currentItems,
+//                     item,
+//                 ];
+
+//             return {
+//                 ...previous,
+
+//                 rental: {
+//                     ...previous.rental,
+
+//                     includedItems:
+//                         updatedItems,
+//                 },
+//             };
+//         });
+//     };
 
 //     // =====================================================
 //     // IMAGE CHANGE
 //     // =====================================================
 
 //     const handleImageChange = (e) => {
-
 //         const files = Array.from(
 //             e.target.files || []
 //         );
 
-
 //         if (files.length === 0) {
-
 //             setFormData((previous) => ({
-
 //                 ...previous,
 
-//                 images: []
-
+//                 images: [],
 //             }));
+
+//             previewImages.forEach((url) => {
+//                 URL.revokeObjectURL(url);
+//             });
 
 //             setPreviewImages([]);
 
 //             return;
-
 //         }
 
-
-//         // Maximum 5 images
-
+//         // MAX 5
 //         if (files.length > 5) {
-
 //             toast.error(
 //                 "You can upload maximum 5 images"
 //             );
@@ -517,23 +440,15 @@
 //             e.target.value = "";
 
 //             return;
-
 //         }
 
-
-//         // File type
-
-//         const invalidFile =
-//             files.find(
-//                 (file) =>
-//                     !file.type.startsWith(
-//                         "image/"
-//                     )
-//             );
-
+//         // IMAGE TYPE
+//         const invalidFile = files.find(
+//             (file) =>
+//                 !file.type.startsWith("image/")
+//         );
 
 //         if (invalidFile) {
-
 //             toast.error(
 //                 "Only image files are allowed"
 //             );
@@ -541,22 +456,16 @@
 //             e.target.value = "";
 
 //             return;
-
 //         }
 
-
-//         // File size
-
-//         const oversizedFile =
-//             files.find(
-//                 (file) =>
-//                     file.size >
-//                     5 * 1024 * 1024
-//             );
-
+//         // IMAGE SIZE
+//         const oversizedFile = files.find(
+//             (file) =>
+//                 file.size >
+//                 5 * 1024 * 1024
+//         );
 
 //         if (oversizedFile) {
-
 //             toast.error(
 //                 "Each image must be less than 5MB"
 //             );
@@ -564,91 +473,71 @@
 //             e.target.value = "";
 
 //             return;
-
 //         }
 
+//         // REVOKE OLD PREVIEWS
+//         previewImages.forEach((url) => {
+//             URL.revokeObjectURL(url);
+//         });
 
-//         // Revoke old previews
-
-//         previewImages.forEach(
-//             (url) => {
-
-//                 URL.revokeObjectURL(url);
-
-//             }
-//         );
-
-
-//         // Save images
-
+//         // SAVE FILES
 //         setFormData((previous) => ({
-
 //             ...previous,
 
-//             images: files
-
+//             images: files,
 //         }));
 
-
-//         // Create previews
-
-//         const preview =
-//             files.map(
-//                 (file) =>
-//                     URL.createObjectURL(file)
-//             );
-
+//         // CREATE PREVIEWS
+//         const preview = files.map(
+//             (file) =>
+//                 URL.createObjectURL(file)
+//         );
 
 //         setPreviewImages(preview);
-
 //     };
-
 
 //     // =====================================================
 //     // SUBMIT
 //     // =====================================================
 
 //     const handleSubmit = async (e) => {
-
 //         e.preventDefault();
-
 
 //         // =================================================
 //         // BASIC VALIDATION
 //         // =================================================
 
 //         if (!formData.name.trim()) {
-
 //             toast.error(
 //                 "Please enter product name"
 //             );
 
 //             return;
-
 //         }
 
-
 //         if (!formData.category) {
-
 //             toast.error(
 //                 "Please select category"
 //             );
 
 //             return;
-
 //         }
 
-
 //         if (!formData.brand) {
-
 //             toast.error(
 //                 "Please select brand"
 //             );
 
 //             return;
-
 //         }
 
+//         if (!formData.productType) {
+//             toast.error(
+//                 "Please select product type"
+//             );
+
+//             return;
+//         }
 
 //         // =================================================
 //         // REFURBISHED VALIDATION
@@ -658,221 +547,311 @@
 //             formData.productType ===
 //             "REFURBISHED"
 //         ) {
+//             const details =
+//                 formData.refurbishedDetails;
 
-//             if (
-//                 !formData.refurbishedDetails.grade
-//             ) {
-
+//             if (!details.grade) {
 //                 toast.error(
 //                     "Please select refurbished grade"
 //                 );
 
 //                 return;
-
 //             }
 
-
 //             if (
-//                 formData.refurbishedDetails.batteryHealth ===
-//                 ""
+//                 details.batteryHealth === ""
 //             ) {
-
 //                 toast.error(
 //                     "Please enter battery health"
 //                 );
 
 //                 return;
-
 //             }
-
 
 //             const batteryHealth =
 //                 Number(
-//                     formData.refurbishedDetails
-//                         .batteryHealth
+//                     details.batteryHealth
 //                 );
 
-
 //             if (
+//                 !Number.isFinite(
+//                     batteryHealth
+//                 ) ||
 //                 batteryHealth < 0 ||
 //                 batteryHealth > 100
 //             ) {
-
 //                 toast.error(
 //                     "Battery health must be between 0 and 100"
 //                 );
 
 //                 return;
-
 //             }
 
-
 //             if (
-//                 formData.refurbishedDetails
-//                     .warrantyMonths === ""
+//                 details.warrantyMonths === ""
 //             ) {
-
 //                 toast.error(
 //                     "Please enter warranty months"
 //                 );
 
 //                 return;
-
 //             }
 
+//             const warrantyMonths =
+//                 Number(
+//                     details.warrantyMonths
+//                 );
 
 //             if (
-//                 !formData.refurbishedDetails
-//                     .testingStatus
+//                 !Number.isFinite(
+//                     warrantyMonths
+//                 ) ||
+//                 warrantyMonths < 0
 //             ) {
+//                 toast.error(
+//                     "Warranty months cannot be negative"
+//                 );
 
+//                 return;
+//             }
+
+//             if (!details.testingStatus) {
 //                 toast.error(
 //                     "Please select testing status"
 //                 );
 
 //                 return;
-
 //             }
-
 //         }
 
+//         // =================================================
+//         // RENTAL VALIDATION
+//         // =================================================
+
+//         if (
+//             formData.productType ===
+//             "RENTAL"
+//         ) {
+//             const monthlyRent =
+//                 Number(
+//                     formData.rental
+//                         .monthlyRent || 0
+//                 );
+
+//             const securityDeposit =
+//                 Number(
+//                     formData.rental
+//                         .securityDeposit || 0
+//                 );
+
+//             const minimumRentalMonths =
+//                 Number(
+//                     formData.rental
+//                         .minimumRentalMonths || 0
+//                 );
+
+//             const rentalGst =
+//                 Number(
+//                     formData.rental.gst || 0
+//                 );
+
+//             const availableQuantity =
+//                 Number(
+//                     formData.rental
+//                         .availableQuantity || 0
+//                 );
+
+//             if (
+//                 !Number.isFinite(
+//                     monthlyRent
+//                 ) ||
+//                 monthlyRent <= 0
+//             ) {
+//                 toast.error(
+//                     "Please enter valid monthly rent"
+//                 );
+
+//                 return;
+//             }
+
+//             if (
+//                 !Number.isFinite(
+//                     securityDeposit
+//                 ) ||
+//                 securityDeposit < 0
+//             ) {
+//                 toast.error(
+//                     "Security deposit cannot be negative"
+//                 );
+
+//                 return;
+//             }
+
+//             if (
+//                 !Number.isInteger(
+//                     minimumRentalMonths
+//                 ) ||
+//                 minimumRentalMonths < 3
+//             ) {
+//                 toast.error(
+//                     "Minimum rental period must be at least 3 months"
+//                 );
+
+//                 return;
+//             }
+
+//             if (
+//                 !Number.isFinite(
+//                     rentalGst
+//                 ) ||
+//                 rentalGst < 0 ||
+//                 rentalGst > 100
+//             ) {
+//                 toast.error(
+//                     "Rental GST must be between 0 and 100"
+//                 );
+
+//                 return;
+//             }
+
+//             if (
+//                 !Number.isInteger(
+//                     availableQuantity
+//                 ) ||
+//                 availableQuantity <= 0
+//             ) {
+//                 toast.error(
+//                     "Available rental quantity must be greater than 0"
+//                 );
+
+//                 return;
+//             }
+//         }
 
 //         // =================================================
-//         // PRICE REQUIRED
+//         // PRICE VALIDATION
 //         // =================================================
 
-//         if (!formData.sellingPrice) {
-
+//         if (
+//             formData.sellingPrice === ""
+//         ) {
 //             toast.error(
 //                 "Please enter selling price"
 //             );
 
 //             return;
-
 //         }
 
-
-//         if (!formData.mrp) {
-
+//         if (
+//             formData.mrp === ""
+//         ) {
 //             toast.error(
 //                 "Please enter MRP"
 //             );
 
 //             return;
-
 //         }
-
 
 //         const purchasePrice =
 //             Number(
 //                 formData.purchasePrice || 0
 //             );
 
-
 //         const sellingPrice =
 //             Number(
 //                 formData.sellingPrice || 0
 //             );
-
 
 //         const mrp =
 //             Number(
 //                 formData.mrp || 0
 //             );
 
-
 //         const discount =
 //             Number(
 //                 formData.discount || 0
 //             );
-
 
 //         const gst =
 //             Number(
 //                 formData.gst || 0
 //             );
 
-
-//         // =================================================
-//         // PRICE VALIDATION
-//         // =================================================
-
-//         if (purchasePrice < 0) {
-
+//         if (
+//             !Number.isFinite(
+//                 purchasePrice
+//             ) ||
+//             purchasePrice < 0
+//         ) {
 //             toast.error(
 //                 "Purchase price cannot be negative"
 //             );
 
 //             return;
-
 //         }
 
-
-//         if (sellingPrice < 0) {
-
+//         if (
+//             !Number.isFinite(
+//                 sellingPrice
+//             ) ||
+//             sellingPrice < 0
+//         ) {
 //             toast.error(
 //                 "Selling price cannot be negative"
 //             );
 
 //             return;
-
 //         }
 
-
-//         if (mrp < 0) {
-
+//         if (
+//             !Number.isFinite(mrp) ||
+//             mrp < 0
+//         ) {
 //             toast.error(
 //                 "MRP cannot be negative"
 //             );
 
 //             return;
-
 //         }
 
-
 //         if (
+//             !Number.isFinite(
+//                 discount
+//             ) ||
 //             discount < 0 ||
 //             discount > 100
 //         ) {
-
 //             toast.error(
 //                 "Discount must be between 0 and 100"
 //             );
 
 //             return;
-
 //         }
 
-
 //         if (
+//             !Number.isFinite(gst) ||
 //             gst < 0 ||
 //             gst > 100
 //         ) {
-
 //             toast.error(
 //                 "GST must be between 0 and 100"
 //             );
 
 //             return;
-
 //         }
-
 
 //         // =================================================
 //         // CREATE PRODUCT
 //         // =================================================
 
 //         try {
-
 //             setLoading(true);
-
 
 //             const data =
 //                 new FormData();
 
-
 //             // =================================================
-//             // BASIC INFORMATION
+//             // BASIC
 //             // =================================================
 
 //             data.append(
@@ -880,26 +859,23 @@
 //                 formData.name.trim()
 //             );
 
-
 //             data.append(
 //                 "category",
 //                 formData.category
 //             );
 
-
 //             // =================================================
 //             // SUBCATEGORY
 //             // =================================================
 
-//             if (formData.subcategory) {
-
+//             if (
+//                 formData.subcategory
+//             ) {
 //                 data.append(
 //                     "subcategory",
 //                     formData.subcategory
 //                 );
-
 //             }
-
 
 //             // =================================================
 //             // PRODUCT TYPE
@@ -910,40 +886,39 @@
 //                 formData.productType
 //             );
 
-
 //             // =================================================
-//             // REFURBISHED DETAILS
+//             // REFURBISHED
 //             // =================================================
 
 //             if (
 //                 formData.productType ===
 //                 "REFURBISHED"
 //             ) {
-
 //                 const refurbishedDetails = {
-
 //                     grade:
-//                         formData.refurbishedDetails
+//                         formData
+//                             .refurbishedDetails
 //                             .grade,
 
 //                     batteryHealth:
 //                         Number(
-//                             formData.refurbishedDetails
+//                             formData
+//                                 .refurbishedDetails
 //                                 .batteryHealth
 //                         ),
 
 //                     warrantyMonths:
 //                         Number(
-//                             formData.refurbishedDetails
+//                             formData
+//                                 .refurbishedDetails
 //                                 .warrantyMonths
 //                         ),
 
 //                     testingStatus:
-//                         formData.refurbishedDetails
-//                             .testingStatus
-
+//                         formData
+//                             .refurbishedDetails
+//                             .testingStatus,
 //                 };
-
 
 //                 data.append(
 //                     "refurbishedDetails",
@@ -951,9 +926,85 @@
 //                         refurbishedDetails
 //                     )
 //                 );
-
 //             }
 
+//             // =================================================
+//             // RENTAL
+//             // =================================================
+
+//             const isRental =
+//                 formData.productType ===
+//                 "RENTAL";
+
+//             const rentalData = {
+//                 isAvailableForRent:
+//                     isRental
+//                         ? true
+//                         : formData.rental
+//                             .isAvailableForRent ===
+//                           true,
+
+//                 monthlyRent:
+//                     Number(
+//                         formData.rental
+//                             .monthlyRent || 0
+//                     ),
+
+//                 securityDeposit:
+//                     Number(
+//                         formData.rental
+//                             .securityDeposit || 0
+//                     ),
+
+//                 minimumRentalMonths:
+//                     Math.max(
+//                         Number(
+//                             formData.rental
+//                                 .minimumRentalMonths ||
+//                                 3
+//                         ),
+//                         3
+//                     ),
+
+//                 gst:
+//                     Number(
+//                         formData.rental
+//                             .gst || 0
+//                     ),
+
+//                 availableQuantity:
+//                     Number(
+//                         formData.rental
+//                             .availableQuantity ||
+//                             0
+//                     ),
+
+//                 basicSoftwareInstalled:
+//                     formData.rental
+//                         .basicSoftwareInstalled ===
+//                     true,
+
+//                 includedItems:
+//                     Array.isArray(
+//                         formData.rental
+//                             .includedItems
+//                     )
+//                         ? formData.rental
+//                             .includedItems
+//                         : [],
+
+//                 notes:
+//                     formData.rental
+//                         .notes
+//                         ?.trim() || "",
+//             };
+
+//             data.append(
+//                 "rental",
+//                 JSON.stringify(
+//                     rentalData
+//                 )
+//             );
 
 //             // =================================================
 //             // BRAND
@@ -964,7 +1015,6 @@
 //                 formData.brand
 //             );
 
-
 //             // =================================================
 //             // DESCRIPTION
 //             // =================================================
@@ -974,19 +1024,16 @@
 //                 formData.shortDescription.trim()
 //             );
 
-
 //             data.append(
 //                 "description",
 //                 formData.description.trim()
 //             );
-
 
 //             // =================================================
 //             // PRICING
 //             // =================================================
 
 //             const pricing = {
-
 //                 purchasePrice,
 
 //                 sellingPrice,
@@ -995,16 +1042,15 @@
 
 //                 discount,
 
-//                 gst
-
+//                 gst,
 //             };
-
 
 //             data.append(
 //                 "pricing",
-//                 JSON.stringify(pricing)
+//                 JSON.stringify(
+//                     pricing
+//                 )
 //             );
-
 
 //             // =================================================
 //             // IMAGES
@@ -1012,15 +1058,12 @@
 
 //             formData.images.forEach(
 //                 (image) => {
-
 //                     data.append(
 //                         "images",
 //                         image
 //                     );
-
 //                 }
 //             );
-
 
 //             // =================================================
 //             // DEBUG
@@ -1064,6 +1107,11 @@
 //             );
 
 //             console.log(
+//                 "Rental:",
+//                 rentalData
+//             );
+
+//             console.log(
 //                 "Brand:",
 //                 formData.brand
 //             );
@@ -1078,54 +1126,57 @@
 //                 formData.images
 //             );
 
-
-//             // =================================================
-//             // FORMDATA DEBUG
-//             // =================================================
-
 //             for (
 //                 const [key, value]
 //                 of data.entries()
 //             ) {
-
 //                 console.log(
 //                     "FORM DATA:",
 //                     key,
 //                     value
 //                 );
-
 //             }
 
-
 //             // =================================================
-//             // API
+//             // API CALL
 //             // =================================================
 
 //             const response =
-//                 await createProduct(data);
+//                 await createProduct(
+//                     data
+//                 );
 
+//             console.log(
+//                 "======================================"
+//             );
 
 //             console.log(
 //                 "CREATE PRODUCT SUCCESS:",
 //                 response.data
 //             );
 
+//             console.log(
+//                 "======================================"
+//             );
 
 //             // =================================================
 //             // SUCCESS
 //             // =================================================
 
 //             toast.success(
-//                 "Product Added Successfully"
+//                 isRental
+//                     ? "Rental Product Added Successfully"
+//                     : formData.productType ===
+//                       "REFURBISHED"
+//                     ? "Refurbished Product Added Successfully"
+//                     : "New Product Added Successfully"
 //             );
-
 
 //             // =================================================
 //             // RESET
 //             // =================================================
 
 //             setFormData({
-
 //                 name: "",
 
 //                 category: "",
@@ -1137,15 +1188,11 @@
 //                 productType: "NEW",
 
 //                 refurbishedDetails: {
+//                     ...emptyRefurbishedDetails,
+//                 },
 
-//                     grade: "",
-
-//                     batteryHealth: "",
-
-//                     warrantyMonths: "",
-
-//                     testingStatus: ""
-
+//                 rental: {
+//                     ...emptyRentalDetails,
 //                 },
 
 //                 shortDescription: "",
@@ -1162,26 +1209,26 @@
 
 //                 gst: "",
 
-//                 images: []
-
+//                 images: [],
 //             });
 
+//             // =================================================
+//             // RESET PREVIEWS
+//             // =================================================
 
 //             previewImages.forEach(
 //                 (url) => {
-
-//                     URL.revokeObjectURL(
-//                         url
-//                     );
-
+//                     URL.revokeObjectURL(url);
 //                 }
 //             );
 
-
 //             setPreviewImages([]);
 
-//             setSubcategories([]);
+//             // =================================================
+//             // RESET SUBCATEGORY
+//             // =================================================
 
+//             setSubcategories([]);
 
 //             // =================================================
 //             // RESET FILE INPUT
@@ -1190,16 +1237,10 @@
 //             if (
 //                 fileInputRef.current
 //             ) {
-
 //                 fileInputRef.current.value =
 //                     "";
-
 //             }
-
-//         }
-
-//         catch (error) {
-
+//         } catch (error) {
 //             console.error(
 //                 "======================================"
 //             );
@@ -1212,87 +1253,61 @@
 //                 "======================================"
 //             );
 
-//             console.error(
-//                 error
-//             );
-
+//             console.error(error);
 
 //             console.error(
 //                 "STATUS:",
 //                 error.response?.status
 //             );
 
-
 //             console.error(
 //                 "BACKEND RESPONSE:",
 //                 error.response?.data
 //             );
-
 
 //             console.error(
 //                 "BACKEND MESSAGE:",
 //                 error.response?.data?.message
 //             );
 
-
 //             console.error(
 //                 "BACKEND ERRORS:",
 //                 error.response?.data?.errors
 //             );
 
-
 //             let backendMessage =
-
 //                 error.response?.data?.message ||
-
 //                 error.response?.data?.error ||
-
+//                 error.message ||
 //                 "Failed to add product";
 
-
 //             if (
-
 //                 Array.isArray(
 //                     error.response?.data?.errors
-//                 )
-
-//                 &&
-
-//                 error.response.data.errors.length > 0
-
+//                 ) &&
+//                 error.response.data.errors
+//                     .length > 0
 //             ) {
-
 //                 backendMessage =
 //                     error.response.data.errors.join(
 //                         ", "
 //                     );
-
 //             }
-
 
 //             toast.error(
 //                 backendMessage
 //             );
-
-//         }
-
-//         finally {
-
+//         } finally {
 //             setLoading(false);
-
 //         }
-
 //     };
-
 
 //     // =====================================================
 //     // UI
 //     // =====================================================
 
 //     return (
-
 //         <div className="add-product">
-
 
 //             {/* =================================================
 //                 HEADER
@@ -1310,7 +1325,6 @@
 
 //             </div>
 
-
 //             {/* =================================================
 //                 FORM
 //             ================================================= */}
@@ -1319,7 +1333,6 @@
 //                 className="product-form"
 //                 onSubmit={handleSubmit}
 //             >
-
 
 //                 {/* =================================================
 //                     BASIC INFORMATION
@@ -1331,9 +1344,7 @@
 //                         Basic Information
 //                     </h3>
 
-
 //                     <div className="form-grid">
-
 
 //                         {/* PRODUCT NAME */}
 
@@ -1358,10 +1369,7 @@
 
 //                         </div>
 
-
-//                         {/* =================================================
-//                             PARENT CATEGORY
-//                         ================================================= */}
+//                         {/* CATEGORY */}
 
 //                         <div className="form-group">
 
@@ -1384,10 +1392,8 @@
 //                                     Select Category
 //                                 </option>
 
-
 //                                 {getParentCategories().map(
 //                                     (category) => (
-
 //                                         <option
 //                                             key={
 //                                                 category._id
@@ -1396,13 +1402,10 @@
 //                                                 category._id
 //                                             }
 //                                         >
-
 //                                             {
 //                                                 category.name
 //                                             }
-
 //                                         </option>
-
 //                                     )
 //                                 )}
 
@@ -1410,10 +1413,7 @@
 
 //                         </div>
 
-
-//                         {/* =================================================
-//                             SUBCATEGORY
-//                         ================================================= */}
+//                         {/* SUBCATEGORY */}
 
 //                         <div className="form-group">
 
@@ -1438,23 +1438,15 @@
 //                                 <option value="">
 
 //                                     {!formData.category
-
 //                                         ? "Select Category First"
-
 //                                         : subcategories.length === 0
-
-//                                             ? "No Subcategories"
-
-//                                             : "Select Subcategory"
-
-//                                     }
+//                                         ? "No Subcategories"
+//                                         : "Select Subcategory"}
 
 //                                 </option>
 
-
 //                                 {subcategories.map(
 //                                     (subcategory) => (
-
 //                                         <option
 //                                             key={
 //                                                 subcategory._id
@@ -1463,37 +1455,27 @@
 //                                                 subcategory._id
 //                                             }
 //                                         >
-
 //                                             {
 //                                                 subcategory.name
 //                                             }
-
 //                                         </option>
-
 //                                     )
 //                                 )}
 
 //                             </select>
 
-
 //                             {formData.category &&
-//                                 subcategories.length === 0 && (
-
+//                                 subcategories.length ===
+//                                     0 && (
 //                                     <small className="subcategory-help">
-
 //                                         This category has no
 //                                         subcategories.
-
 //                                     </small>
-
 //                                 )}
 
 //                         </div>
 
-
-//                         {/* =================================================
-//                             BRAND
-//                         ================================================= */}
+//                         {/* BRAND */}
 
 //                         <div className="form-group">
 
@@ -1516,10 +1498,8 @@
 //                                     Select Brand
 //                                 </option>
 
-
 //                                 {brands.map(
 //                                     (brand) => (
-
 //                                         <option
 //                                             key={
 //                                                 brand._id
@@ -1528,13 +1508,10 @@
 //                                                 brand._id
 //                                             }
 //                                         >
-
 //                                             {
 //                                                 brand.name
 //                                             }
-
 //                                         </option>
-
 //                                     )
 //                                 )}
 
@@ -1542,10 +1519,7 @@
 
 //                         </div>
 
-
-//                         {/* =================================================
-//                             PRODUCT TYPE
-//                         ================================================= */}
+//                         {/* PRODUCT TYPE */}
 
 //                         <div className="form-group">
 
@@ -1561,6 +1535,7 @@
 //                                 onChange={
 //                                     handleProductTypeChange
 //                                 }
+//                                 required
 //                             >
 
 //                                 <option value="NEW">
@@ -1571,6 +1546,10 @@
 //                                     Refurbished Product
 //                                 </option>
 
+//                                 <option value="RENTAL">
+//                                     Rental Product
+//                                 </option>
+
 //                             </select>
 
 //                         </div>
@@ -1579,23 +1558,19 @@
 
 //                 </div>
 
-
 //                 {/* =================================================
 //                     REFURBISHED DETAILS
 //                 ================================================= */}
 
 //                 {formData.productType ===
 //                     "REFURBISHED" && (
-
 //                     <div className="form-section">
 
 //                         <h3>
 //                             Refurbished Product Details
 //                         </h3>
 
-
 //                         <div className="form-grid">
-
 
 //                             {/* GRADE */}
 
@@ -1642,8 +1617,7 @@
 
 //                             </div>
 
-
-//                             {/* BATTERY HEALTH */}
+//                             {/* BATTERY */}
 
 //                             <div className="form-group">
 
@@ -1670,7 +1644,6 @@
 //                                 />
 
 //                             </div>
-
 
 //                             {/* WARRANTY */}
 
@@ -1699,8 +1672,7 @@
 
 //                             </div>
 
-
-//                             {/* TESTING STATUS */}
+//                             {/* TESTING */}
 
 //                             <div className="form-group">
 
@@ -1740,9 +1712,284 @@
 //                         </div>
 
 //                     </div>
-
 //                 )}
 
+//                 {/* =================================================
+//                     RENTAL DETAILS
+//                 ================================================= */}
+
+//                 {formData.productType ===
+//                     "RENTAL" && (
+//                     <div className="form-section rental-section">
+
+//                         <h3>
+//                             Rental Details
+//                         </h3>
+
+//                         <div className="form-grid">
+
+//                             {/* MONTHLY RENT */}
+
+//                             <div className="form-group">
+
+//                                 <label>
+//                                     Monthly Rent
+//                                 </label>
+
+//                                 <input
+//                                     type="number"
+//                                     min="0"
+//                                     step="0.01"
+//                                     name="monthlyRent"
+//                                     value={
+//                                         formData
+//                                             .rental
+//                                             .monthlyRent
+//                                     }
+//                                     onChange={(e) =>
+//                                         handleRentalChange(
+//                                             "monthlyRent",
+//                                             e.target.value
+//                                         )
+//                                     }
+//                                     placeholder="Enter monthly rent"
+//                                     required
+//                                 />
+
+//                             </div>
+
+//                             {/* SECURITY DEPOSIT */}
+
+//                             <div className="form-group">
+
+//                                 <label>
+//                                     Security Deposit
+//                                 </label>
+
+//                                 <input
+//                                     type="number"
+//                                     min="0"
+//                                     step="0.01"
+//                                     name="securityDeposit"
+//                                     value={
+//                                         formData
+//                                             .rental
+//                                             .securityDeposit
+//                                     }
+//                                     onChange={(e) =>
+//                                         handleRentalChange(
+//                                             "securityDeposit",
+//                                             e.target.value
+//                                         )
+//                                     }
+//                                     placeholder="Enter security deposit"
+//                                     required
+//                                 />
+
+//                             </div>
+
+//                             {/* MINIMUM MONTHS */}
+
+//                             <div className="form-group">
+
+//                                 <label>
+//                                     Minimum Rental Months
+//                                 </label>
+
+//                                 <input
+//                                     type="number"
+//                                     min="3"
+//                                     step="1"
+//                                     name="minimumRentalMonths"
+//                                     value={
+//                                         formData
+//                                             .rental
+//                                             .minimumRentalMonths
+//                                     }
+//                                     onChange={(e) =>
+//                                         handleRentalChange(
+//                                             "minimumRentalMonths",
+//                                             e.target.value
+//                                         )
+//                                     }
+//                                     required
+//                                 />
+
+//                                 <small>
+//                                     Minimum rental period is
+//                                     3 months.
+//                                 </small>
+
+//                             </div>
+
+//                             {/* GST */}
+
+//                             <div className="form-group">
+
+//                                 <label>
+//                                     Rental GST (%)
+//                                 </label>
+
+//                                 <input
+//                                     type="number"
+//                                     min="0"
+//                                     max="100"
+//                                     step="0.01"
+//                                     name="gst"
+//                                     value={
+//                                         formData
+//                                             .rental
+//                                             .gst
+//                                     }
+//                                     onChange={(e) =>
+//                                         handleRentalChange(
+//                                             "gst",
+//                                             e.target.value
+//                                         )
+//                                     }
+//                                     placeholder="Example: 18"
+//                                 />
+
+//                             </div>
+
+//                             {/* QUANTITY */}
+
+//                             <div className="form-group">
+
+//                                 <label>
+//                                     Available Quantity
+//                                 </label>
+
+//                                 <input
+//                                     type="number"
+//                                     min="1"
+//                                     step="1"
+//                                     name="availableQuantity"
+//                                     value={
+//                                         formData
+//                                             .rental
+//                                             .availableQuantity
+//                                     }
+//                                     onChange={(e) =>
+//                                         handleRentalChange(
+//                                             "availableQuantity",
+//                                             e.target.value
+//                                         )
+//                                     }
+//                                     required
+//                                 />
+
+//                             </div>
+
+//                         </div>
+
+//                         {/* SOFTWARE */}
+
+//                         <div className="form-group">
+
+//                             <label className="checkbox-label">
+
+//                                 <input
+//                                     type="checkbox"
+//                                     checked={
+//                                         formData
+//                                             .rental
+//                                             .basicSoftwareInstalled
+//                                     }
+//                                     onChange={(e) =>
+//                                         handleRentalChange(
+//                                             "basicSoftwareInstalled",
+//                                             e.target.checked
+//                                         )
+//                                     }
+//                                 />
+
+//                                 Basic Software Installed
+
+//                             </label>
+
+//                         </div>
+
+//                         {/* INCLUDED ITEMS */}
+
+//                         <div className="form-group">
+
+//                             <label>
+//                                 Included Items
+//                             </label>
+
+//                             <div className="rental-items">
+
+//                                 {[
+//                                     "LAPTOP",
+//                                     "CHARGING_ADAPTER",
+//                                     "BACKPACK",
+//                                     "MOUSE",
+//                                     "LAPTOP_BAG",
+//                                 ].map((item) => (
+//                                     <label
+//                                         key={item}
+//                                         className="checkbox-label"
+//                                     >
+
+//                                         <input
+//                                             type="checkbox"
+//                                             checked={
+//                                                 formData
+//                                                     .rental
+//                                                     .includedItems
+//                                                     .includes(
+//                                                         item
+//                                                     )
+//                                             }
+//                                             onChange={() =>
+//                                                 handleRentalItemChange(
+//                                                     item
+//                                                 )
+//                                             }
+//                                         />
+
+//                                         {item.replaceAll(
+//                                             "_",
+//                                             " "
+//                                         )}
+
+//                                     </label>
+//                                 ))}
+
+//                             </div>
+
+//                         </div>
+
+//                         {/* NOTES */}
+
+//                         <div className="form-group">
+
+//                             <label>
+//                                 Rental Notes
+//                             </label>
+
+//                             <textarea
+//                                 name="rentalNotes"
+//                                 value={
+//                                     formData
+//                                         .rental
+//                                         .notes
+//                                 }
+//                                 onChange={(e) =>
+//                                     handleRentalChange(
+//                                         "notes",
+//                                         e.target.value
+//                                     )
+//                                 }
+//                                 rows={4}
+//                                 placeholder="Enter rental notes..."
+//                             />
+
+//                         </div>
+
+//                     </div>
+//                 )}
 
 //                 {/* =================================================
 //                     DESCRIPTION
@@ -1754,7 +2001,6 @@
 //                         Description
 //                     </h3>
 
-
 //                     <div className="form-group">
 
 //                         <label>
@@ -1764,7 +2010,8 @@
 //                         <textarea
 //                             name="shortDescription"
 //                             value={
-//                                 formData.shortDescription
+//                                 formData
+//                                     .shortDescription
 //                             }
 //                             onChange={
 //                                 handleChange
@@ -1774,7 +2021,6 @@
 //                         />
 
 //                     </div>
-
 
 //                     <div className="form-group">
 
@@ -1798,7 +2044,6 @@
 
 //                 </div>
 
-
 //                 {/* =================================================
 //                     PRICING
 //                 ================================================= */}
@@ -1809,9 +2054,7 @@
 //                         Pricing
 //                     </h3>
 
-
 //                     <div className="form-grid">
-
 
 //                         {/* PURCHASE PRICE */}
 
@@ -1832,10 +2075,10 @@
 //                                 }
 //                                 min="0"
 //                                 step="0.01"
+//                                 placeholder="Purchase price"
 //                             />
 
 //                         </div>
-
 
 //                         {/* SELLING PRICE */}
 
@@ -1861,7 +2104,6 @@
 
 //                         </div>
 
-
 //                         {/* MRP */}
 
 //                         <div className="form-group">
@@ -1885,7 +2127,6 @@
 //                             />
 
 //                         </div>
-
 
 //                         {/* DISCOUNT */}
 
@@ -1911,13 +2152,12 @@
 
 //                         </div>
 
-
 //                         {/* GST */}
 
 //                         <div className="form-group">
 
 //                             <label>
-//                                 GST (%)
+//                                 Product GST (%)
 //                             </label>
 
 //                             <input
@@ -1940,7 +2180,6 @@
 
 //                 </div>
 
-
 //                 {/* =================================================
 //                     PRODUCT IMAGES
 //                 ================================================= */}
@@ -1950,7 +2189,6 @@
 //                     <h3>
 //                         Product Images
 //                     </h3>
-
 
 //                     <div className="form-group">
 
@@ -1966,11 +2204,14 @@
 //                             }
 //                         />
 
+//                         <small>
+//                             Maximum 5 images, each less
+//                             than 5MB.
+//                         </small>
+
 //                     </div>
 
-
 //                     {previewImages.length > 0 && (
-
 //                         <div className="image-preview">
 
 //                             {previewImages.map(
@@ -1978,25 +2219,25 @@
 //                                     image,
 //                                     index
 //                                 ) => (
-
 //                                     <img
-//                                         key={index}
-//                                         src={image}
+//                                         key={
+//                                             index
+//                                         }
+//                                         src={
+//                                             image
+//                                         }
 //                                         alt={`Preview ${
 //                                             index + 1
 //                                         }`}
 //                                         className="preview-img"
 //                                     />
-
 //                                 )
 //                             )}
 
 //                         </div>
-
 //                     )}
 
 //                 </div>
-
 
 //                 {/* =================================================
 //                     SUBMIT
@@ -2007,16 +2248,20 @@
 //                     <button
 //                         type="submit"
 //                         className="submit-btn"
-//                         disabled={loading}
+//                         disabled={
+//                             loading
+//                         }
 //                     >
 
 //                         {loading
-
 //                             ? "Saving Product..."
-
-//                             : "Save Product"
-
-//                         }
+//                             : formData.productType ===
+//                               "RENTAL"
+//                             ? "Save Rental Product"
+//                             : formData.productType ===
+//                               "REFURBISHED"
+//                             ? "Save Refurbished Product"
+//                             : "Save New Product"}
 
 //                     </button>
 
@@ -2025,11 +2270,8 @@
 //             </form>
 
 //         </div>
-
 //     );
-
 // };
-
 
 // export default AddProduct;
 
@@ -2121,9 +2363,14 @@ const AddProduct = () => {
         description: "",
 
         // PRICING
+        // NOTE: sellingPrice removed.
+        // retailPrice  = PERSONAL customer price (required)
+        // wholesalePrice = BUSINESS / CORPORATE customer price (optional)
         purchasePrice: "",
 
-        sellingPrice: "",
+        retailPrice: "",
+
+        wholesalePrice: "",
 
         mrp: "",
 
@@ -2767,13 +3014,15 @@ const AddProduct = () => {
 
         // =================================================
         // PRICE VALIDATION
+        // retailPrice  = required (PERSONAL customer price)
+        // wholesalePrice = optional (BUSINESS/CORPORATE price)
         // =================================================
 
         if (
-            formData.sellingPrice === ""
+            formData.retailPrice === ""
         ) {
             toast.error(
-                "Please enter selling price"
+                "Please enter retail price"
             );
 
             return;
@@ -2794,10 +3043,17 @@ const AddProduct = () => {
                 formData.purchasePrice || 0
             );
 
-        const sellingPrice =
+        const retailPrice =
             Number(
-                formData.sellingPrice || 0
+                formData.retailPrice || 0
             );
+
+        const wholesalePrice =
+            formData.wholesalePrice === ""
+                ? null
+                : Number(
+                    formData.wholesalePrice
+                );
 
         const mrp =
             Number(
@@ -2829,12 +3085,28 @@ const AddProduct = () => {
 
         if (
             !Number.isFinite(
-                sellingPrice
+                retailPrice
             ) ||
-            sellingPrice < 0
+            retailPrice < 0
         ) {
             toast.error(
-                "Selling price cannot be negative"
+                "Retail price cannot be negative"
+            );
+
+            return;
+        }
+
+        if (
+            wholesalePrice !== null &&
+            (
+                !Number.isFinite(
+                    wholesalePrice
+                ) ||
+                wholesalePrice < 0
+            )
+        ) {
+            toast.error(
+                "Wholesale / Corporate price cannot be negative"
             );
 
             return;
@@ -3068,12 +3340,16 @@ const AddProduct = () => {
 
             // =================================================
             // PRICING
+            // retailPrice = PERSONAL price (required)
+            // wholesalePrice = BUSINESS/CORPORATE price (optional, null if not set)
             // =================================================
 
             const pricing = {
                 purchasePrice,
 
-                sellingPrice,
+                retailPrice,
+
+                wholesalePrice,
 
                 mrp,
 
@@ -3238,7 +3514,9 @@ const AddProduct = () => {
 
                 purchasePrice: "",
 
-                sellingPrice: "",
+                retailPrice: "",
+
+                wholesalePrice: "",
 
                 mrp: "",
 
@@ -4083,6 +4361,8 @@ const AddProduct = () => {
 
                 {/* =================================================
                     PRICING
+                    retailPrice     -> PERSONAL customer price (required)
+                    wholesalePrice  -> BUSINESS / CORPORATE customer price (optional)
                 ================================================= */}
 
                 <div className="form-section">
@@ -4117,27 +4397,57 @@ const AddProduct = () => {
 
                         </div>
 
-                        {/* SELLING PRICE */}
+                        {/* RETAIL PRICE */}
 
                         <div className="form-group">
 
                             <label>
-                                Selling Price
+                                Retail Price
                             </label>
 
                             <input
                                 type="number"
-                                name="sellingPrice"
+                                name="retailPrice"
                                 value={
-                                    formData.sellingPrice
+                                    formData.retailPrice
                                 }
                                 onChange={
                                     handleChange
                                 }
                                 min="0"
                                 step="0.01"
+                                placeholder="Price for personal customers"
                                 required
                             />
+
+                        </div>
+
+                        {/* WHOLESALE / CORPORATE PRICE */}
+
+                        <div className="form-group">
+
+                            <label>
+                                Wholesale / Corporate Price
+                            </label>
+
+                            <input
+                                type="number"
+                                name="wholesalePrice"
+                                value={
+                                    formData.wholesalePrice
+                                }
+                                onChange={
+                                    handleChange
+                                }
+                                min="0"
+                                step="0.01"
+                                placeholder="Price for corporate/business customers"
+                            />
+
+                            <small>
+                                Leave blank if this product
+                                isn't sold to corporate customers.
+                            </small>
 
                         </div>
 

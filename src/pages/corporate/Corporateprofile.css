@@ -1,0 +1,98 @@
+.profile-page {
+  padding: 24px;
+}
+
+.profile-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.profile-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  color: #374151;
+}
+
+.profile-alert {
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.profile-alert-error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.profile-alert-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.profile-form {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 720px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 20px;
+}
+
+.profile-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-form-row-full {
+  grid-column: 1 / -1;
+}
+
+.profile-form-row label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.profile-form-row input,
+.profile-form-row select {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.profile-form-row input:disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.profile-save-btn {
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.profile-save-btn:hover {
+  background: #15803d;
+}
+
+.profile-save-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}

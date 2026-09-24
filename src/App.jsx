@@ -3175,6 +3175,25 @@ import TechnicianLeave from './pages/Technician/TechnicianLeave.jsx'
 
 import AdminRefund from "./pages/Admin/Refund/AdminRefund.jsx";
 import AdminReturn from "./pages/Admin/Return/AdminReturn.jsx";
+
+{/* =================================================
+              CORPORATE DASHBOARD
+   ================================================= */}
+
+
+//import { CorporateDashboard } from "./pages/corporate/CorporateDashboard.jsx";
+
+import CorporateLayout from "./pages/corporate/CorporateLayout.jsx";
+import CorporateOverview from "./pages/corporate/CorporateView.jsx";
+import CorporateMyOrders from "./pages/corporate/MyOrders.jsx";
+import CorporateInvoices from "./pages/corporate/CorporateInvoices.jsx";
+import CorporateQuotes from "./pages/corporate/Corporatequotes.jsx";
+import CorporateSupport from "./pages/corporate/CorporateSupport";
+import CorporateProfile from "./pages/corporate/Corporateprofile.jsx";
+
+
+
+
 // =====================================================
 // APP
 // =====================================================
@@ -3725,6 +3744,24 @@ const isDynamicAdminRoute =
               path="/salary"
               element={<SalaryPage />}
             />
+
+          {/* =================================================
+              CORPORATE DASHBOARD
+          ================================================= */}
+
+          <Route path="/corporate-dashboard" element={<CorporateLayout />}>
+            <Route index element={<CorporateOverview />} />
+            <Route path="new-order" element={<div>New Order</div>} />
+           <Route path="quotes" element={<CorporateQuotes />} />
+            <Route path="orders" element={<CorporateMyOrders />} />
+           <Route path="invoices" element={<CorporateInvoices />} />
+            <Route path="devices" element={<div>My Devices</div>} />
+            <Route path="support" element={<CorporateSupport />} />
+            <Route path="profile" element={<CorporateProfile/>} />
+            <Route path="add-address" element={<AddAddress />} />
+            <Route path="addresses" element={<MyAddress />} />
+            
+          </Route>
 
             {/* CUSTOMER */}
 
