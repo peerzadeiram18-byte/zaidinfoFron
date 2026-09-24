@@ -434,7 +434,8 @@ import ReviewModal from "../../../components/Reviews/ReviewModal";
 import { getMyOrders } from "../../../services/orderService";
 import "./MyOrders.css";
 
-const API_BASE_URL = "http://localhost:5000/api";
+// const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 const MyOrders = () => {
   const navigate = useNavigate();
@@ -466,8 +467,8 @@ const MyOrders = () => {
     return {
       headers: {
         Authorization: token ? `Bearer ${token}` : "",
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     };
   };
 
@@ -495,10 +496,13 @@ const MyOrders = () => {
         try {
           const res = await axios.get(
             `${API_BASE_URL}/returns/order/${orderId}`,
-            getAuthHeaders()
+            getAuthHeaders(),
           );
           const data =
-            res?.data?.returns || res?.data?.return || res?.data?.data || res?.data;
+            res?.data?.returns ||
+            res?.data?.return ||
+            res?.data?.data ||
+            res?.data;
 
           if (Array.isArray(data) && data.length > 0) {
             returns[orderId] = data[data.length - 1];
@@ -510,10 +514,13 @@ const MyOrders = () => {
         try {
           const res = await axios.get(
             `${API_BASE_URL}/refunds/order/${orderId}`,
-            getAuthHeaders()
+            getAuthHeaders(),
           );
           const data =
-            res?.data?.refunds || res?.data?.refund || res?.data?.data || res?.data;
+            res?.data?.refunds ||
+            res?.data?.refund ||
+            res?.data?.data ||
+            res?.data;
 
           if (Array.isArray(data) && data.length > 0) {
             refunds[orderId] = data[data.length - 1];
@@ -521,7 +528,7 @@ const MyOrders = () => {
             refunds[orderId] = data;
           }
         } catch (e) {}
-      })
+      }),
     );
 
     setReturnDetails(returns);
@@ -557,7 +564,10 @@ const MyOrders = () => {
 
   // Modal Controls
   const openReturnModal = (order) => {
-    if (order?.orderStatus !== "DELIVERED" && order?.orderStatus !== "COMPLETED") {
+    if (
+      order?.orderStatus !== "DELIVERED" &&
+      order?.orderStatus !== "COMPLETED"
+    ) {
       alert("Only delivered orders can be returned.");
       return;
     }
@@ -602,16 +612,16 @@ const MyOrders = () => {
       return [
         ...prev,
         {
-          itemId: prodId,
-          productId: prodId,
+          itemId: item?.product?._id || item?.product || item?._id,
+          productId: item?.product?._id || item?.product || item?._id,
           productName:
             item?.title ||
             item?.product?.name ||
             item?.productName ||
             item?.name ||
             "Product",
-          quantity: Number(item?.quantity) || 1
-        }
+          quantity: Number(item?.quantity) || 1,
+        },
       ];
     });
   };
@@ -643,7 +653,8 @@ const MyOrders = () => {
       setReturnLoading(true);
       setReturnMessage("");
 
-      const finalNote = returnReason === "OTHER" ? otherReasonText.trim() : returnReason;
+      const finalNote =
+        returnReason === "OTHER" ? otherReasonText.trim() : returnReason;
 
       // Matches returnSchema & return.service.js exactly
       const payload = {
@@ -654,18 +665,18 @@ const MyOrders = () => {
           productId: String(item.productId),
           quantity: Number(item.quantity) || 1,
           reason: returnReason, // Exact ENUM from schema
-          reasonNote: finalNote
-        }))
+          reasonNote: finalNote,
+        })),
       };
 
       const response = await axios.post(
         `${API_BASE_URL}/returns`,
         payload,
-        getAuthHeaders()
+        getAuthHeaders(),
       );
 
       setReturnMessage(
-        response?.data?.message || "Return request created successfully!"
+        response?.data?.message || "Return request created successfully!",
       );
 
       setTimeout(async () => {
@@ -677,7 +688,7 @@ const MyOrders = () => {
       setReturnMessage(
         error?.response?.data?.message ||
           error?.message ||
-          "Failed to create return request."
+          "Failed to create return request.",
       );
     } finally {
       setReturnLoading(false);
@@ -688,10 +699,7 @@ const MyOrders = () => {
     const orderId = order?._id || order?.id;
     const returnData = orderId ? returnDetails[orderId] : null;
     return (
-      returnData?.status ||
-      order?.returnStatus ||
-      order?.return?.status ||
-      null
+      returnData?.status || order?.returnStatus || order?.return?.status || null
     );
   };
 
@@ -699,10 +707,7 @@ const MyOrders = () => {
     const orderId = order?._id || order?.id;
     const refundData = orderId ? refundDetails[orderId] : null;
     return (
-      refundData?.status ||
-      order?.refundStatus ||
-      order?.refund?.status ||
-      null
+      refundData?.status || order?.refundStatus || order?.refund?.status || null
     );
   };
 
@@ -790,7 +795,8 @@ const MyOrders = () => {
                   🚚 Track Order
                 </button>
 
-                {(order?.orderStatus === "DELIVERED" || order?.orderStatus === "COMPLETED") && (
+                {(order?.orderStatus === "DELIVERED" ||
+                  order?.orderStatus === "COMPLETED") && (
                   <button
                     className="return-order-btn"
                     onClick={() => openReturnModal(order)}
@@ -799,7 +805,9 @@ const MyOrders = () => {
                       !["REJECTED", "CANCELLED"].includes(returnStatus)
                     }
                   >
-                    {returnStatus ? `↩️ Return: ${returnStatus}` : "↩️ Return Product"}
+                    {returnStatus
+                      ? `↩️ Return: ${returnStatus}`
+                      : "↩️ Return Product"}
                   </button>
                 )}
 
@@ -814,7 +822,11 @@ const MyOrders = () => {
                 <div className="return-refund-timeline">
                   <h4>Return & Refund Progress</h4>
                   <div className="timeline">
-                    <div className={returnStatus ? "timeline-step active" : "timeline-step"}>
+                    <div
+                      className={
+                        returnStatus ? "timeline-step active" : "timeline-step"
+                      }
+                    >
                       <span>1</span>
                       <p>Return Requested</p>
                     </div>
@@ -826,7 +838,7 @@ const MyOrders = () => {
                           "PICKED_UP",
                           "RECEIVED",
                           "INSPECTED",
-                          "COMPLETED"
+                          "COMPLETED",
                         ].includes(returnStatus)
                           ? "timeline-step active"
                           : "timeline-step"
@@ -842,7 +854,7 @@ const MyOrders = () => {
                           "PICKED_UP",
                           "RECEIVED",
                           "INSPECTED",
-                          "COMPLETED"
+                          "COMPLETED",
                         ].includes(returnStatus)
                           ? "timeline-step active"
                           : "timeline-step"
@@ -853,7 +865,9 @@ const MyOrders = () => {
                     </div>
                     <div
                       className={
-                        ["RECEIVED", "INSPECTED", "COMPLETED"].includes(returnStatus)
+                        ["RECEIVED", "INSPECTED", "COMPLETED"].includes(
+                          returnStatus,
+                        )
                           ? "timeline-step active"
                           : "timeline-step"
                       }
@@ -871,7 +885,11 @@ const MyOrders = () => {
                       <span>5</span>
                       <p>Inspection</p>
                     </div>
-                    <div className={refundStatus ? "timeline-step active" : "timeline-step"}>
+                    <div
+                      className={
+                        refundStatus ? "timeline-step active" : "timeline-step"
+                      }
+                    >
                       <span>6</span>
                       <p>Refund</p>
                     </div>
@@ -899,7 +917,8 @@ const MyOrders = () => {
                             Qty: {item?.quantity || 1}
                           </span>
                         </div>
-                        {(order?.orderStatus === "DELIVERED" || order?.orderStatus === "COMPLETED") && (
+                        {(order?.orderStatus === "DELIVERED" ||
+                          order?.orderStatus === "COMPLETED") && (
                           <button
                             type="button"
                             className="review-btn"
@@ -938,10 +957,12 @@ const MyOrders = () => {
 
             <div className="return-modal-body">
               <p>
-                Order ID: <strong>{returningOrder?._id || returningOrder?.id}</strong>
+                Order ID:{" "}
+                <strong>{returningOrder?._id || returningOrder?.id}</strong>
               </p>
               <p>
-                Total Amount: <strong>₹ {returningOrder?.totalAmount ?? 0}</strong>
+                Total Amount:{" "}
+                <strong>₹ {returningOrder?.totalAmount ?? 0}</strong>
               </p>
 
               <label>Select Products</label>

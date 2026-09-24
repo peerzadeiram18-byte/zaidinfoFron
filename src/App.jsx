@@ -3958,17 +3958,29 @@ const isDynamicAdminRoute =
                 </div>
               }
             />
+      
+                        {/* =========================================
+                            REPAIRS
+                        ========================================= */}
+
+                        <Route
+                            path="/repairs"
+                            element={
+                                <RepairCustomer/>
+                            }
+                        />
+      
 
             {/* REPAIRS */}
 
-            <Route
+            {/* <Route
               path="/repairs"
               element={
                 <div>
                   Repair Jobs Page
                 </div>
               }
-            />
+            /> */}
 
             <Route
               path="/add-repair"
