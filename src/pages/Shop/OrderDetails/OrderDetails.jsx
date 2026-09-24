@@ -400,7 +400,7 @@ const OrderDetails = () => {
                     TRACK BUTTON
                 ====================================== */}
 
-                <button
+                {/* <button
                     className="track-order-button"
                     onClick={() =>
                         navigate(
@@ -409,7 +409,21 @@ const OrderDetails = () => {
                     }
                 >
                     🚚 Track Order
-                </button>
+                </button> */}
+
+
+                {order.shipmentId && (
+    <button
+        className="track-order-button"
+        onClick={() =>
+            navigate(
+                `/shipment/${order.shipmentId}/tracking`
+            )
+        }
+    >
+        🚚 Track Shipment
+    </button>
+)}
 
             </div>
 

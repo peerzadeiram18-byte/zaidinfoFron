@@ -3165,8 +3165,16 @@ import ItSupport from './pages/It-Support/ItSupport.jsx'
 import CusromerTicket from "./pages/It-Support/CusromerTicket.jsx";
 import ItSupportLeave from "./pages/It-Support/ItSupportLeave.jsx";
 import ItSupportSettings from "./pages/It-Support/ItSupportSettings.jsx";
+import ShipmentTracking
+    from "./pages/Customer/Shipment/ShipmentTracking";
 
 
+import TechnicianSettings from './pages/Technician/TechnicianSettings.jsx'
+// import TechnicianNotification from './pages/Technician/TechnicianNotification.jsx'
+import TechnicianLeave from './pages/Technician/TechnicianLeave.jsx' 
+
+import AdminRefund from "./pages/Admin/Refund/AdminRefund.jsx";
+import AdminReturn from "./pages/Admin/Return/AdminReturn.jsx";
 // =====================================================
 // APP
 // =====================================================
@@ -3246,6 +3254,7 @@ function App() {
     "/admin/products",
     "/add-product",
 
+    "/inventory-dashboard",
     // INVENTORY
     "/stock-history",
 
@@ -3260,6 +3269,7 @@ function App() {
     // ORDERS
     "/admin/orders",
 
+    
     // INVOICES
     "/admin/invoices",
 
@@ -3316,6 +3326,9 @@ function App() {
     // BLOGS
     "/blogs",
     "/add-blog",
+
+    "/return",
+    "/refund",
 
     // BANNERS
     "/banners",
@@ -3827,6 +3840,11 @@ const isDynamicAdminRoute =
               element={<ViewProduct />}
             />
 
+              <Route
+            path="/inventory-dashboard"
+            element={<InventoryDashboard />}
+          />
+
             {/* INVENTORY */}
 
             <Route
@@ -3877,6 +3895,13 @@ const isDynamicAdminRoute =
               element={<AdminInvoices />}
             />
 
+            <Route
+    path="/shipment/:shipmentId/tracking"
+    element={
+        <ShipmentTracking />
+    }
+/> 
+
             {/* RENTALS */}
 
             <Route
@@ -3916,6 +3941,24 @@ const isDynamicAdminRoute =
                 </div>
               }
             />
+
+            
+                                {/* =========================================
+                            REFUND RETURN
+                        ========================================= */}
+                        
+                        <Route
+                            path="/return"
+                            element={
+                                <AdminReturn/>
+                            }
+                        />
+                        <Route
+                            path="/refund"
+                            element={
+                               <AdminRefund/>
+                            }
+                        />
 
             {/* ORDERS */}
 
@@ -4541,26 +4584,26 @@ const isDynamicAdminRoute =
 
             {/* NOTIFICATIONS */}
 
-            <Route
-              path="notifications"
-              element={
-                <div>
-                  Notifications Content
-                </div>
-              }
-            />
+           <Route
+                            path="notifications"
+                            element={
+                                <TechnicianNotification/>
+                            }
+                        />
 
-            {/* SETTINGS */}
-
-            <Route
-              path="settings"
-              element={
-                <div>
-                  Settings Content
-                </div>
-              }
-            />
-
+                        {/* Settings */}
+                        <Route
+                            path="settings"
+                            element={
+                                <TechnicianSettings/>
+                            }
+                        />
+                         <Route
+                            path="leave"
+                            element={
+                                <TechnicianLeave/>
+                            }
+                        />
           </Route>
 
 
@@ -4578,10 +4621,10 @@ const isDynamicAdminRoute =
               INVENTORY DASHBOARD
           ================================================= */}
 
-          <Route
+          {/* <Route
             path="/inventory-dashboard"
             element={<InventoryDashboard />}
-          />
+          /> */}
 
 
           {/* =====================================================

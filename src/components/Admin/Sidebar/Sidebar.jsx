@@ -1261,6 +1261,7 @@ import {
   MdCircle,
   MdRefresh,
   MdLogout,
+  MdAssignmentReturn,
 } from "react-icons/md";
 
 import {
@@ -1268,7 +1269,7 @@ import {
   markNotificationAsRead,
   markAllNotificationsAsRead,
 } from "../../../services/notificationService";
-
+import { RiRefund2Fill } from "react-icons/ri";
 
 function Sidebar({
   sidebarOpen,
@@ -1568,6 +1569,25 @@ function Sidebar({
       ],
     },
 
+    
+    {
+      title: "RETURN AND REFUND",
+
+      links: [
+         {
+          name: "Return",
+          icon: <MdAssignmentReturn />,
+          path: "/return"
+        },
+
+        {
+          name: "Refund",
+          icon: <RiRefund2Fill />, 
+          path: "/refund"
+        },
+      ]
+    },
+
 
     {
       title: "COUPONS",
@@ -1664,6 +1684,8 @@ function Sidebar({
   ],
 },
 
+
+
     {
       title: "EMPLOYEE",
 
@@ -1752,7 +1774,7 @@ function Sidebar({
            {
           name: "Inventory",
           icon: <MdInventory />,
-          path: "/admin/inventory",
+          path: "/inventory-dashboard",
         },
 
         {

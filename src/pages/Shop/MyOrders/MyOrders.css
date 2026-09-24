@@ -1,154 +1,106 @@
-/* =====================================================
+
+/* =========================================================
    MY ORDERS PAGE
-===================================================== */
+========================================================= */
 
 .myorders-container {
     width: 100%;
-    max-width: 1200px;
-
-    margin: 0 auto;
-    padding: 40px 24px 60px;
-
+    min-height: 100vh;
+    padding: 35px;
+    background: #f7f9fc;
     box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
-
-/* =====================================================
-   PAGE TITLE
-===================================================== */
 
 .myorders-title {
-    margin: 0 0 30px;
-
-    font-size: 32px;
+    margin: 0 0 28px;
+    color: #1f2937;
+    font-size: 30px;
     font-weight: 700;
-
-    color: #111827;
-
-    letter-spacing: -0.5px;
 }
 
-/* =====================================================
+
+/* =========================================================
    LOADING
-===================================================== */
+========================================================= */
 
 .myorders-loading {
     min-height: 60vh;
-
     display: flex;
-    align-items: center;
     justify-content: center;
-
-    font-size: 17px;
+    align-items: center;
+    color: #16a34a;
+    font-size: 18px;
     font-weight: 600;
-
-    color: #64748b;
 }
 
-/* =====================================================
+
+/* =========================================================
    NO ORDERS
-===================================================== */
+========================================================= */
 
 .no-orders {
-    width: 100%;
-
-    padding: 60px 30px;
-
-    text-align: center;
-
     background: #ffffff;
-
     border: 1px solid #e5e7eb;
     border-radius: 14px;
-
-    box-sizing: border-box;
-
-    box-shadow:
-        0 4px 18px rgba(15, 23, 42, 0.05);
+    padding: 50px 30px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
 }
 
 .no-orders h3 {
     margin: 0 0 20px;
-
-    font-size: 22px;
-    font-weight: 600;
-
     color: #374151;
+    font-size: 20px;
 }
 
 .no-orders button {
     border: none;
-
-    padding: 12px 22px;
-
-    border-radius: 8px;
-
-    background: #2563eb;
+    background: #16a34a;
     color: #ffffff;
-
+    padding: 11px 22px;
+    border-radius: 8px;
+    cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: 0.2s ease;
 }
 
 .no-orders button:hover {
-    background: #1d4ed8;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 5px 14px rgba(37, 99, 235, 0.25);
+    background: #15803d;
 }
 
-/* =====================================================
+
+/* =========================================================
    ORDER CARD
-===================================================== */
+========================================================= */
 
 .order-card {
-    width: 100%;
-
-    margin-bottom: 24px;
-    padding: 24px;
-
     background: #ffffff;
-
     border: 1px solid #e5e7eb;
-    border-radius: 14px;
-
-    box-sizing: border-box;
-
-    box-shadow:
-        0 4px 18px rgba(15, 23, 42, 0.05);
-
-    transition:
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+    transition: 0.2s ease;
 }
 
 .order-card:hover {
-    box-shadow:
-        0 8px 28px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* =====================================================
+
+/* =========================================================
    ORDER ROW
-===================================================== */
+========================================================= */
 
 .order-row {
     display: grid;
-
     grid-template-columns: 180px 1fr;
-
     align-items: center;
-
-    min-height: 42px;
-
-    border-bottom: 1px solid #f1f5f9;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f2f5;
 }
 
 .order-row:last-of-type {
@@ -156,458 +108,703 @@
 }
 
 .order-row span {
+    color: #6b7280;
     font-size: 14px;
     font-weight: 600;
-
-    color: #64748b;
 }
 
 .order-row p {
     margin: 0;
-
+    color: #1f2937;
     font-size: 14px;
     font-weight: 500;
-
-    color: #111827;
-
     word-break: break-word;
 }
 
-/* =====================================================
-   ORDER ID
-===================================================== */
 
-.order-row:first-child p {
-    font-family: monospace;
-
-    font-size: 13px;
-
-    color: #475569;
-}
-
-/* =====================================================
-   ACTIONS
-===================================================== */
+/* =========================================================
+   ORDER ACTIONS
+========================================================= */
 
 .order-actions {
     display: flex;
-
-    align-items: center;
     flex-wrap: wrap;
-
     gap: 10px;
-
     margin-top: 22px;
 }
 
-/* =====================================================
-   COMMON ACTION BUTTON
-===================================================== */
-
-.view-btn,
-.track-order-btn,
-.review-btn {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    min-height: 40px;
-
-    padding: 9px 16px;
-
+.order-actions button {
+    border: none;
     border-radius: 8px;
-
+    padding: 10px 15px;
     font-size: 13px;
     font-weight: 600;
-
     cursor: pointer;
-
-    white-space: nowrap;
-
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    transition: 0.2s ease;
 }
 
-/* =====================================================
-   VIEW DETAILS
-===================================================== */
+
+/* VIEW */
 
 .view-btn {
-    border: 1px solid #2563eb;
-
-    background: #2563eb;
-
-    color: #ffffff;
+    background: #eef2ff;
+    color: #4338ca;
 }
 
 .view-btn:hover {
-    background: #1d4ed8;
-
-    border-color: #1d4ed8;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 5px 12px rgba(37, 99, 235, 0.22);
+    background: #e0e7ff;
 }
 
-/* =====================================================
-   TRACK ORDER
-===================================================== */
+
+/* TRACK */
 
 .track-order-btn {
-    border: 1px solid #16a34a;
-
-    background: #f0fdf4;
-
-    color: #15803d;
+    background: #eff6ff;
+    color: #2563eb;
 }
 
 .track-order-btn:hover {
-    background: #16a34a;
-
-    color: #ffffff;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 5px 12px rgba(22, 163, 74, 0.2);
+    background: #dbeafe;
 }
 
-/* =====================================================
-   REVIEW PRODUCTS SECTION
-===================================================== */
+
+/* RETURN */
+
+.return-order-btn {
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+.return-order-btn:hover:not(:disabled) {
+    background: #ffedd5;
+}
+
+.return-order-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+/* REFUND */
+
+.refund-status-btn {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.refund-status-btn:hover {
+    background: #dcfce7;
+}
+
+
+/* =========================================================
+   RETURN / REFUND TIMELINE
+========================================================= */
+
+.return-refund-timeline {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow-x: auto;
+}
+
+.return-refund-timeline h4 {
+    margin: 0 0 22px;
+    color: #374151;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+/* TIMELINE */
+
+.timeline {
+    display: flex;
+    align-items: flex-start;
+    min-width: 700px;
+    position: relative;
+}
+
+
+/* CONNECTING LINE */
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    top: 17px;
+    left: 35px;
+    right: 35px;
+    height: 2px;
+    background: #d1d5db;
+    z-index: 0;
+}
+
+
+/* STEP */
+
+.timeline-step {
+    flex: 1;
+    min-width: 110px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-step span {
+    width: 34px;
+    height: 34px;
+    margin: 0 auto 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 700;
+    border: 3px solid #ffffff;
+    box-shadow: 0 0 0 1px #d1d5db;
+}
+
+.timeline-step p {
+    margin: 0;
+    color: #9ca3af;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+
+/* ACTIVE STEP */
+
+.timeline-step.active span {
+    background: #16a34a;
+    color: #ffffff;
+    box-shadow: 0 0 0 1px #16a34a;
+}
+
+.timeline-step.active p {
+    color: #15803d;
+}
+
+
+/* =========================================================
+   PRODUCT REVIEW SECTION
+========================================================= */
 
 .order-products-review {
-    width: 100%;
-
-    margin-top: 24px;
-    padding-top: 22px;
-
-    border-top: 1px solid #e5e7eb;
+    margin-top: 25px;
+    padding: 20px;
+    background: #fafafa;
+    border: 1px solid #eeeeee;
+    border-radius: 12px;
 }
 
 .order-products-review h4 {
-    margin: 0 0 14px;
-
+    margin: 0 0 15px;
+    color: #374151;
     font-size: 16px;
-    font-weight: 700;
-
-    color: #111827;
 }
 
-/* =====================================================
-   REVIEW PRODUCT ROW
-===================================================== */
+
+/* PRODUCT ROW */
 
 .review-product-row {
     display: flex;
-
     align-items: center;
     justify-content: space-between;
-
-    gap: 16px;
-
-    padding: 14px 16px;
-
-    margin-bottom: 10px;
-
-    background: #f8fafc;
-
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-
-    box-sizing: border-box;
+    gap: 15px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eeeeee;
 }
 
 .review-product-row:last-child {
-    margin-bottom: 0;
+    border-bottom: none;
 }
 
-/* =====================================================
-   PRODUCT INFO
-===================================================== */
+
+/* PRODUCT INFO */
 
 .review-product-info {
-    min-width: 0;
-
     display: flex;
-
     flex-direction: column;
-
     gap: 5px;
 }
 
 .review-product-name {
+    color: #1f2937;
     font-size: 14px;
     font-weight: 600;
-
-    color: #1e293b;
-
-    word-break: break-word;
 }
 
 .review-product-quantity {
+    color: #6b7280;
     font-size: 12px;
-    font-weight: 500;
-
-    color: #64748b;
 }
 
-/* =====================================================
-   REVIEW BUTTON
-===================================================== */
+
+/* REVIEW BUTTON */
 
 .review-btn {
-    flex-shrink: 0;
-
-    border: 1px solid #f59e0b;
-
+    border: none;
     background: #fff7ed;
-
-    color: #d97706;
+    color: #ea580c;
+    border-radius: 7px;
+    padding: 9px 13px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s ease;
 }
 
 .review-btn:hover {
-    background: #f59e0b;
+    background: #ffedd5;
+}
 
-    border-color: #f59e0b;
 
+/* =========================================================
+   RETURN MODAL OVERLAY
+========================================================= */
+
+.return-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+}
+
+
+/* =========================================================
+   RETURN MODAL
+========================================================= */
+
+.return-modal {
+    width: 100%;
+    max-width: 550px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    animation: returnModalIn 0.2s ease;
+}
+
+@keyframes returnModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.return-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.return-modal-header h2 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.return-modal-header button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: #4b5563;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.return-modal-header button:hover:not(:disabled) {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.return-modal-header button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MODAL BODY
+========================================================= */
+
+.return-modal-body {
+    padding: 22px;
+}
+
+.return-modal-body > p {
+    margin: 0 0 10px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.return-modal-body > p strong {
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   LABELS
+========================================================= */
+
+.return-modal-body > label {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   RETURN ITEMS
+========================================================= */
+
+.return-items {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 3px;
+}
+
+
+/* ITEM */
+
+.return-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.return-item:hover {
+    background: #f8fafc;
+    border-color: #bbf7d0;
+}
+
+.return-item input {
+    width: 17px;
+    height: 17px;
+    accent-color: #16a34a;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.return-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.return-item strong {
+    color: #1f2937;
+    font-size: 13px;
+}
+
+.return-item span {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   SELECT
+========================================================= */
+
+.return-modal-body select {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    background: #ffffff;
+    color: #374151;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.return-modal-body select:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+
+/* =========================================================
+   TEXTAREA
+========================================================= */
+
+.return-modal-body textarea {
+    width: 100%;
+    min-height: 100px;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    resize: vertical;
+    box-sizing: border-box;
+    color: #374151;
+    font-family: inherit;
+    font-size: 13px;
+    transition: 0.2s ease;
+}
+
+.return-modal-body textarea:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+.return-modal-body textarea::placeholder {
+    color: #9ca3af;
+}
+
+
+/* =========================================================
+   RETURN MESSAGE
+========================================================= */
+
+.return-message {
+    margin-top: 15px;
+    padding: 11px 13px;
+    border-radius: 8px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   MODAL ACTIONS
+========================================================= */
+
+.return-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.return-modal-actions button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+
+/* CANCEL */
+
+.cancel-return-btn {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.cancel-return-btn:hover:not(:disabled) {
+    background: #e5e7eb;
+}
+
+
+/* SUBMIT */
+
+.submit-return-btn {
+    background: #16a34a;
     color: #ffffff;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 5px 14px rgba(245, 158, 11, 0.25);
 }
 
-.review-btn:active,
-.view-btn:active,
-.track-order-btn:active {
-    transform: translateY(0);
-
-    box-shadow: none;
+.submit-return-btn:hover:not(:disabled) {
+    background: #15803d;
 }
 
-/* =====================================================
-   BUTTON FOCUS
-===================================================== */
-
-.view-btn:focus-visible,
-.track-order-btn:focus-visible,
-.review-btn:focus-visible,
-.no-orders button:focus-visible {
-    outline: 3px solid rgba(37, 99, 235, 0.2);
-
-    outline-offset: 2px;
+.submit-return-btn:disabled,
+.cancel-return-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
-/* =====================================================
-   TABLET
-===================================================== */
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.return-modal::-webkit-scrollbar,
+.return-items::-webkit-scrollbar,
+.return-refund-timeline::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.return-modal::-webkit-scrollbar-thumb,
+.return-items::-webkit-scrollbar-thumb,
+.return-refund-timeline::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.return-modal::-webkit-scrollbar-track,
+.return-items::-webkit-scrollbar-track,
+.return-refund-timeline::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 @media (max-width: 768px) {
 
     .myorders-container {
-        padding: 30px 18px 50px;
+        padding: 20px 15px;
     }
 
     .myorders-title {
-        margin-bottom: 24px;
-
-        font-size: 28px;
-    }
-
-    .order-card {
-        padding: 20px;
-    }
-
-    .order-row {
-        grid-template-columns: 145px 1fr;
-    }
-
-    .order-actions {
-        gap: 9px;
-    }
-
-    .review-product-row {
-        align-items: flex-start;
-    }
-
-}
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 600px) {
-
-    .myorders-container {
-        padding: 24px 14px 40px;
-    }
-
-    .myorders-title {
-        margin-bottom: 20px;
-
         font-size: 24px;
+        margin-bottom: 20px;
     }
 
-    /* -----------------------------------------------
-       ORDER CARD
-    ----------------------------------------------- */
-
     .order-card {
-        padding: 16px;
-
+        padding: 17px;
         border-radius: 12px;
     }
 
-    /* -----------------------------------------------
-       ORDER ROW
-    ----------------------------------------------- */
-
     .order-row {
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        gap: 5px;
-
-        padding: 11px 0;
-
-        min-height: auto;
+        grid-template-columns: 120px 1fr;
+        gap: 10px;
     }
 
-    .order-row span {
-        font-size: 12px;
-    }
-
+    .order-row span,
     .order-row p {
-        width: 100%;
-
-        font-size: 14px;
-    }
-
-    .order-row:first-child p {
         font-size: 12px;
     }
-
-    /* -----------------------------------------------
-       ACTIONS
-    ----------------------------------------------- */
 
     .order-actions {
-        display: flex;
-
         flex-direction: column;
-
-        align-items: stretch;
-
-        width: 100%;
-
-        margin-top: 18px;
     }
 
-    .view-btn,
-    .track-order-btn {
+    .order-actions button {
         width: 100%;
     }
-
-    /* -----------------------------------------------
-       REVIEW SECTION
-    ----------------------------------------------- */
-
-    .order-products-review {
-        margin-top: 20px;
-        padding-top: 18px;
-    }
-
-    .order-products-review h4 {
-        font-size: 15px;
-    }
-
-    /* -----------------------------------------------
-       PRODUCT ROW
-    ----------------------------------------------- */
 
     .review-product-row {
-        display: flex;
-
+        align-items: flex-start;
         flex-direction: column;
-
-        align-items: stretch;
-
-        gap: 12px;
-
-        padding: 13px;
-    }
-
-    .review-product-info {
-        width: 100%;
-    }
-
-    .review-product-name {
-        font-size: 14px;
     }
 
     .review-btn {
         width: 100%;
     }
 
-    /* -----------------------------------------------
-       EMPTY STATE
-    ----------------------------------------------- */
-
-    .no-orders {
-        padding: 45px 20px;
+    .return-modal {
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: 13px;
     }
 
-    .no-orders h3 {
-        font-size: 19px;
+    .return-modal-header {
+        padding: 16px;
     }
 
-    .no-orders button {
+    .return-modal-body {
+        padding: 16px;
+    }
+
+    .return-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .return-modal-actions button {
         width: 100%;
     }
 }
 
-/* =====================================================
-   SMALL MOBILE
-===================================================== */
 
-@media (max-width: 400px) {
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
 
     .myorders-container {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding: 15px 10px;
     }
 
     .myorders-title {
-        font-size: 22px;
+        font-size: 21px;
     }
 
     .order-card {
         padding: 14px;
     }
 
+    .order-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    .order-row span {
+        font-size: 11px;
+    }
+
     .order-row p {
         font-size: 13px;
     }
 
-    .review-product-row {
-        padding: 12px;
+    .return-refund-timeline {
+        padding: 15px;
     }
 
-    .review-btn {
-        font-size: 12px;
+    .return-modal-overlay {
+        padding: 10px;
+    }
 
-        padding: 10px 12px;
+    .return-modal-header h2 {
+        font-size: 18px;
     }
 }
