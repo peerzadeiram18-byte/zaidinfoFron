@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import api from "../../api/axios";
-import "./CorporateProfile.css";
+import "./Corporateprofile.css";
 
 const BUSINESS_TYPE_OPTIONS = [
   "PROPRIETORSHIP",
