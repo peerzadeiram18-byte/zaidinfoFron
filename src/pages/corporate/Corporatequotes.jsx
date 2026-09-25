@@ -1,8 +1,6 @@
-
-
 import { FaWhatsapp } from "react-icons/fa";
 
-import "./CorporateQuotes.css";
+import "./Corporatequotes.css";
 
 // =====================================================
 // WHATSAPP LINK

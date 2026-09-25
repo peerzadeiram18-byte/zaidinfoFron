@@ -1033,3 +1033,532 @@
   margin-left: 0 !important;
   padding-left: 0 !important;
 }
+/* =========================================================
+   RECEPTIONIST LAYOUT
+========================================================= */
+
+.rep-layout-root {
+    --rep-sidebar-width: 273px;
+
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+
+    position: relative;
+
+    background: #f5f7fb;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.rep-sidebar {
+    width: var(--rep-sidebar-width);
+    min-width: var(--rep-sidebar-width);
+
+    height: 100vh;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #ffffff;
+
+    border-right: 1px solid #e5e7eb;
+
+    z-index: 1000;
+
+    transition:
+        transform 0.25s ease,
+        width 0.25s ease;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   SIDEBAR OPEN
+========================================================= */
+
+.rep-sidebar-open {
+    transform: translateX(0);
+}
+
+
+/* =========================================================
+   SIDEBAR COLLAPSED
+========================================================= */
+
+.rep-sidebar-collapsed {
+    transform: translateX(-100%);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+
+   IMPORTANT:
+   DO NOT USE margin-left HERE.
+
+   Sidebar is fixed, so main content gets its own
+   left spacing using padding/margin ONLY when sidebar
+   is visible.
+========================================================= */
+
+.rep-main-canvas {
+    min-width: 0;
+
+    width: 100%;
+    min-height: 100vh;
+
+    margin-left: var(--rep-sidebar-width);
+
+    box-sizing: border-box;
+
+    background: #f5f7fb;
+
+    transition:
+        margin-left 0.25s ease,
+        width 0.25s ease;
+}
+
+
+/* =========================================================
+   WHEN SIDEBAR IS CLOSED
+========================================================= */
+
+.rep-layout-root:has(.rep-sidebar-collapsed) .rep-main-canvas {
+    margin-left: 0;
+}
+
+
+/* =========================================================
+   MOBILE TOPBAR
+========================================================= */
+
+.rep-mobile-topbar {
+    display: none;
+}
+
+
+/* =========================================================
+   SIDEBAR BRAND
+========================================================= */
+
+.rep-sidebar-brand {
+    flex-shrink: 0;
+
+    height: 160px;
+
+    padding: 28px 18px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    border-bottom: 1px solid #edf0f5;
+}
+
+
+.rep-brand-avatar {
+    width: 44px;
+    height: 44px;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #2864e8;
+    color: #ffffff;
+
+    font-size: 20px;
+}
+
+
+.rep-brand-text {
+    min-width: 0;
+}
+
+
+.rep-brand-text h3 {
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    color: #172b4d;
+
+    white-space: nowrap;
+}
+
+
+.rep-brand-text span {
+    display: inline-block;
+
+    margin-top: 4px;
+
+    padding: 3px 5px;
+
+    background: #eaf2ff;
+
+    color: #6781a4;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.rep-nav-section {
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 18px 10px 20px;
+}
+
+
+.rep-nav-section::-webkit-scrollbar {
+    width: 5px;
+}
+
+
+.rep-nav-section::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+
+.rep-nav-heading {
+    display: block;
+
+    margin: 12px 12px 8px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    color: #718096;
+
+    letter-spacing: 0.5px;
+}
+
+
+.rep-nav-item {
+    width: 100%;
+
+    min-height: 44px;
+
+    margin-bottom: 4px;
+
+    padding: 0 12px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    box-sizing: border-box;
+
+    border-radius: 8px;
+
+    color: #60748f;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.rep-nav-item:hover {
+    background: #f2f6fd;
+    color: #2864e8;
+}
+
+
+.rep-nav-item-active {
+    background: #eaf2ff;
+    color: #2864e8;
+    font-weight: 600;
+}
+
+
+.rep-nav-icon {
+    width: 18px;
+    min-width: 18px;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.rep-sidebar-footer {
+    flex-shrink: 0;
+
+    min-height: 68px;
+
+    padding: 10px 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-top: 1px solid #edf0f5;
+
+    background: #ffffff;
+}
+
+
+.rep-user-profile {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.rep-user-badge {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #edf2f7;
+
+    color: #52657d;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+.rep-user-meta {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.rep-user-meta strong {
+    font-size: 13px;
+    color: #1e293b;
+
+    white-space: nowrap;
+}
+
+
+.rep-user-meta small {
+    margin-top: 2px;
+
+    font-size: 11px;
+    color: #16a34a;
+
+    white-space: nowrap;
+}
+
+
+.rep-logout-btn {
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    border: none;
+    background: transparent;
+
+    color: #64748b;
+
+    cursor: pointer;
+
+    border-radius: 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.rep-logout-btn:hover {
+    background: #f1f5f9;
+    color: #2563eb;
+}
+
+
+/* =========================================================
+   OVERLAY
+========================================================= */
+
+.rep-sidebar-overlay {
+    display: none;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 992px) {
+
+    .rep-mobile-topbar {
+        position: fixed;
+
+        top: 0;
+        left: 0;
+        right: 0;
+
+        height: 60px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 16px;
+
+        background: #ffffff;
+
+        border-bottom: 1px solid #e5e7eb;
+
+        z-index: 1200;
+    }
+
+
+    .rep-brand-badge {
+        display: flex;
+        align-items: center;
+
+        gap: 8px;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        color: #172b4d;
+    }
+
+
+    .rep-brand-icon {
+        color: #2864e8;
+    }
+
+
+    .rep-menu-toggle-btn {
+        width: 40px;
+        height: 40px;
+
+        border: none;
+        border-radius: 8px;
+
+        background: #eff4ff;
+
+        color: #2864e8;
+
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 18px;
+    }
+
+
+    .rep-sidebar {
+        top: 60px;
+
+        height: calc(100vh - 60px);
+
+        width: 273px;
+        min-width: 273px;
+
+        transform: translateX(-100%);
+    }
+
+
+    .rep-sidebar-open {
+        transform: translateX(0);
+    }
+
+
+    .rep-sidebar-collapsed {
+        transform: translateX(-100%);
+    }
+
+
+    .rep-main-canvas {
+        width: 100%;
+
+        margin-left: 0;
+
+        padding-top: 60px;
+
+        box-sizing: border-box;
+    }
+
+
+    .rep-sidebar-overlay {
+        display: block;
+
+        position: fixed;
+
+        top: 60px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        background: rgba(0, 0, 0, 0.25);
+
+        z-index: 900;
+    }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+
+    .rep-sidebar {
+        width: 260px;
+        min-width: 260px;
+    }
+
+    .rep-sidebar-brand {
+        height: 130px;
+    }
+
+}
