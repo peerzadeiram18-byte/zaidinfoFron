@@ -2,11 +2,20 @@
    MAIN DASHBOARD
 ========================================= */
 
-.receptionist-dashboard {
+/* .receptionist-dashboard {
     min-height: 100vh;
     padding: 30px;
     background: #f5f7fb;
     box-sizing: border-box;
+} */
+
+.receptionist-dashboard {
+    width: 100%;
+    min-height: 100vh;
+    padding: 30px;
+    margin: 0;
+    box-sizing: border-box;
+    background: #f5f7fb;
 }
 
 

@@ -1,0 +1,145 @@
+.customers-page {
+    padding: 1.5rem 2rem;
+}
+
+.customers-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 20px;
+    color: #111827;
+}
+
+.customers-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.customers-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter-chip {
+    padding: 6px 14px;
+    font-size: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.filter-chip:hover {
+    background: #f3f4f6;
+}
+
+.filter-chip.active {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+}
+
+.customers-search {
+    width: 240px;
+    padding: 7px 12px;
+    font-size: 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    outline: none;
+}
+
+.customers-search:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.customers-state {
+    padding: 40px 0;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.customers-state.error {
+    color: #b91c1c;
+}
+
+.customers-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.customers-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 720px;
+}
+
+.customers-table thead {
+    background: #f9fafb;
+}
+
+.customers-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 500;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.customers-table td {
+    padding: 10px 14px;
+    color: #111827;
+    border-top: 1px solid #f0f0f0;
+}
+
+.customers-table th.align-right,
+.customers-table td.align-right {
+    text-align: right;
+}
+
+.customers-table td.muted {
+    color: #6b7280;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-online_order {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.badge-walk_in_order {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.badge-rental {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.badge-repair {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.badge-status {
+    background: #f3f4f6;
+    color: #374151;
+}
