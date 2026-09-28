@@ -4,6 +4,7 @@
 
 // import zaidInfotechLogoDark from "../../assets/images/zaidinfotechlogo-white.png";
 
+
 // // Context & API Services
 // import { useTheme } from "../../context/ThemeContext";
 // import { useCompare } from "../../context/CompareContext";
@@ -119,6 +120,9 @@
 // }
 
 // export default function Header() {
+//    const phoneNumber = '919876543210';
+//   const message = encodeURIComponent('Hi Zaid Infotech, I have a query!');
+  
 //   const [category, setCategory] = useState(categories[0]);
 //   const [query, setQuery] = useState("");
 //   const [wishlistCount, setWishlistCount] = useState(0);
@@ -494,6 +498,38 @@
 //     } else {
 //       navigate("/compare");
 //     }
+//   };
+
+//   // ---------------------------------------------------------------------------
+//   // NAV LINK ACTIVE-STATE LOGIC
+//   // NavLink only checks the pathname by default, so "/shop" and
+//   // "/shop?condition=refurbished" were both marked active together.
+//   // This checks the query string too, so only one is active at a time.
+//   // ---------------------------------------------------------------------------
+
+//   const isNavItemActive = (itemPath) => {
+
+//     const [itemPathname, itemQueryString] = itemPath.split("?");
+
+//     if (location.pathname !== itemPathname) {
+//       return false;
+//     }
+
+//     const itemParams = new URLSearchParams(itemQueryString || "");
+//     const currentParams = new URLSearchParams(location.search);
+
+//     for (const [key, value] of itemParams.entries()) {
+//       if (currentParams.get(key) !== value) {
+//         return false;
+//       }
+//     }
+
+//     if (itemQueryString === undefined && currentParams.has("condition")) {
+//       return false;
+//     }
+
+//     return true;
+
 //   };
 
 //   // ---------------------------------------------------------------------------
@@ -1005,8 +1041,13 @@
 //               <button
 //                 className="quote-button"
 //                 type="button"
-//                 onClick={() =>
-//                   announce("Request a Quote")
+//                 onClick={() =>{
+//                    announce("Request a Quote")
+//                     navigate(`https://wa.me/${phoneNumber}?text=${message}`)
+
+//                 }
+                 
+                  
 //                 }
 //               >
 //                 <span>
@@ -1116,9 +1157,9 @@
 //             path,
 //           }) => (
 //             <NavLink
-//               className={({ isActive }) =>
+//               className={() =>
 //                 `nav-item${
-//                   isActive
+//                   isNavItemActive(path)
 //                     ? " nav-item-active"
 //                     : ""
 //                 }`
@@ -1176,11 +1217,9 @@
 //                   path,
 //                 }) => (
 //                   <NavLink
-//                     className={({
-//                       isActive,
-//                     }) =>
+//                     className={() =>
 //                       `mobile-nav-item${
-//                         isActive
+//                         isNavItemActive(path)
 //                           ? " mobile-nav-item-active"
 //                           : ""
 //                       }`
@@ -1441,13 +1480,11 @@
 // }
 
 
-
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link, NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 import zaidInfotechLogoDark from "../../assets/images/zaidinfotechlogo-white.png";
-
 
 // Context & API Services
 import { useTheme } from "../../context/ThemeContext";
@@ -1463,6 +1500,8 @@ import {
 // Lucide Icons
 import {
   BriefcaseBusiness,
+  Building2,
+  FileText,
   ChevronDown,
   GraduationCap,
   Heart,
@@ -1521,17 +1560,18 @@ const navigationItems = [
     path: "/shop?condition=refurbished",
   },
   {
+    label: "CORPORATE",
+    subtitle: "Solutions For Business",
+    icon: Building2,
+    path: "/corporate",
+  },
+  {
     label: "ABOUT US",
     subtitle: "Why Choose Us?",
     icon: Info,
     path: "/about-us",
   },
-  {
-    label: "CONTACT",
-    subtitle: "Solutions for Business",
-    icon: BriefcaseBusiness,
-    path: "/contact",
-  },
+  
 ];
 
 const iconVariants = {
@@ -1564,13 +1604,14 @@ function HeaderAction({ icon: Icon, label, badge, onClick }) {
 }
 
 export default function Header() {
-   const phoneNumber = '919876543210';
+  const phoneNumber = '919876543210';
   const message = encodeURIComponent('Hi Zaid Infotech, I have a query!');
-  
+
   const [category, setCategory] = useState(categories[0]);
   const [query, setQuery] = useState("");
   const [wishlistCount, setWishlistCount] = useState(0);
   const [cartCount, setCartCount] = useState(0);
+  const [quoteCount, setQuoteCount] = useState(0);
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const token = localStorage.getItem("token");
@@ -1589,11 +1630,6 @@ export default function Header() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notificationLoading, setNotificationLoading] = useState(false);
-
-  // ---------------------------------------------------------
-  // NOTIFICATION DROPDOWN REF
-  // Used to detect clicks outside dropdown
-  // ---------------------------------------------------------
 
   const notificationRef = useRef(null);
 
@@ -1628,6 +1664,7 @@ export default function Header() {
     setIsLoggedIn(false);
     setWishlistCount(0);
     setCartCount(0);
+    setQuoteCount(0);
     setNotifications([]);
     setUnreadCount(0);
     setNotificationOpen(false);
@@ -1649,6 +1686,15 @@ export default function Header() {
       }
 
       const user = JSON.parse(userData);
+
+      // Business customers go to the corporate dashboard,
+      // NOT the normal customer-dashboard.
+      if (
+        String(user?.role).toUpperCase() === "CUSTOMER" &&
+        String(user?.customerType).toUpperCase() === "BUSINESS"
+      ) {
+        return "/corporate-dashboard";
+      }
 
       const role = String(
         user?.role ||
@@ -1719,6 +1765,34 @@ export default function Header() {
   };
 
   // ---------------------------------------------------------------------------
+  // ROLE CHECK:
+  // BUSINESS / CORPORATE CUSTOMER
+  // Used to hide Cart + WhatsApp quote CTA, and show the
+  // Request Quote icon instead.
+  // ---------------------------------------------------------------------------
+
+  const isBusinessCustomer = () => {
+    try {
+      const userData = localStorage.getItem("user");
+
+      if (!userData) {
+        return false;
+      }
+
+      const user = JSON.parse(userData);
+
+      return (
+        String(user?.role).toUpperCase() === "CUSTOMER" &&
+        String(user?.customerType).toUpperCase() === "BUSINESS"
+      );
+    } catch (error) {
+      console.error("BUSINESS ROLE CHECK ERROR:", error);
+
+      return false;
+    }
+  };
+
+  // ---------------------------------------------------------------------------
   // LOAD CART / WISHLIST COUNTS
   // ---------------------------------------------------------------------------
 
@@ -1743,9 +1817,6 @@ export default function Header() {
         wishlistResponse?.data ||
         wishlistResponse?.wishlist ||
         wishlistResponse;
-
-      console.log("wishlistData is printed below");
-      console.log(wishlistData);
 
       const wishlistItems =
         Array.isArray(
@@ -1784,6 +1855,24 @@ export default function Header() {
         "HEADER CART/WISHLIST COUNT ERROR:",
         error
       );
+    }
+  };
+
+  // ---------------------------------------------------------------------------
+  // LOAD QUOTE CART COUNT (BUSINESS CUSTOMERS)
+  // Reads the same "quoteCart" localStorage key Shop.jsx writes to.
+  // ---------------------------------------------------------------------------
+
+  const loadQuoteCount = () => {
+    try {
+      const raw = localStorage.getItem("quoteCart");
+      const cart = raw ? JSON.parse(raw) : [];
+
+      setQuoteCount(Array.isArray(cart) ? cart.length : 0);
+    } catch (error) {
+      console.error("QUOTE COUNT ERROR:", error);
+
+      setQuoteCount(0);
     }
   };
 
@@ -1872,7 +1961,6 @@ export default function Header() {
       );
     }
 
-    // Close dropdown first
     setNotificationOpen(false);
 
     if (
@@ -1913,22 +2001,9 @@ export default function Header() {
     }
   };
 
-  // ---------------------------------------------------------------------------
-  // VIEW ALL NOTIFICATIONS
-  // IMPORTANT:
-  // Do NOT use getDashboardPath() here.
-  // Always go to notifications page.
-  // ---------------------------------------------------------------------------
-
-  // const handleViewAllNotifications = () => {
-  //   setNotificationOpen(false);
-
-  //   navigate("/notifications");
-  // };
-
   const handleViewAllNotifications = () => {
-  setNotificationOpen(false);
-};
+    setNotificationOpen(false);
+  };
 
   // ---------------------------------------------------------------------------
   // COMPARE LOGIC
@@ -1946,9 +2021,6 @@ export default function Header() {
 
   // ---------------------------------------------------------------------------
   // NAV LINK ACTIVE-STATE LOGIC
-  // NavLink only checks the pathname by default, so "/shop" and
-  // "/shop?condition=refurbished" were both marked active together.
-  // This checks the query string too, so only one is active at a time.
   // ---------------------------------------------------------------------------
 
   const isNavItemActive = (itemPath) => {
@@ -1977,16 +2049,18 @@ export default function Header() {
   };
 
   // ---------------------------------------------------------------------------
-  // MAIN AUTH + CART + WISHLIST EFFECT
+  // MAIN AUTH + CART + WISHLIST + QUOTE EFFECT
   // ---------------------------------------------------------------------------
 
   useEffect(() => {
     checkAuthStatus();
     loadHeaderCounts();
+    loadQuoteCount();
 
     const handleCartWishlistUpdate = () => {
       checkAuthStatus();
       loadHeaderCounts();
+      loadQuoteCount();
     };
 
     window.addEventListener(
@@ -2004,6 +2078,11 @@ export default function Header() {
       handleCartWishlistUpdate
     );
 
+    window.addEventListener(
+      "quote-updated",
+      handleCartWishlistUpdate
+    );
+
     return () => {
       window.removeEventListener(
         "cart-updated",
@@ -2017,6 +2096,11 @@ export default function Header() {
 
       window.removeEventListener(
         "authChanged",
+        handleCartWishlistUpdate
+      );
+
+      window.removeEventListener(
+        "quote-updated",
         handleCartWishlistUpdate
       );
     };
@@ -2054,7 +2138,6 @@ export default function Header() {
   }, [isLoggedIn]);
 
   // ---------------------------------------------------------------------------
-  // NEW:
   // CLOSE NOTIFICATION DROPDOWN WHEN CLICKING OUTSIDE
   // ---------------------------------------------------------------------------
 
@@ -2228,9 +2311,7 @@ export default function Header() {
             )}
           </motion.button>
 
-          {/* ------------------------------------------------
-              NOTIFICATION BELL
-          ------------------------------------------------ */}
+          {/* NOTIFICATION BELL */}
           {isLoggedIn && (
             <div
               className="notification-wrap"
@@ -2262,7 +2343,6 @@ export default function Header() {
                 )}
               </motion.button>
 
-              {/* NOTIFICATION DROPDOWN */}
               <AnimatePresence>
                 {notificationOpen && (
                   <motion.div
@@ -2284,7 +2364,6 @@ export default function Header() {
                     className="notification-dropdown"
                   >
 
-                    {/* HEADER */}
                     <div className="notification-dropdown-header">
                       <div>
                         <h3>
@@ -2311,7 +2390,6 @@ export default function Header() {
                       )}
                     </div>
 
-                    {/* LIST */}
                     <div className="notification-list">
 
                       {notificationLoading ? (
@@ -2396,7 +2474,6 @@ export default function Header() {
 
                     </div>
 
-                    {/* FOOTER */}
                     {notifications.length > 0 && (
                       <div className="notification-dropdown-footer">
                         <button
@@ -2428,7 +2505,7 @@ export default function Header() {
             onClick={handleCompareClick}
           />
 
-          {/* CUSTOMER CART / WISHLIST */}
+          {/* CUSTOMER CART / WISHLIST / QUOTE */}
           {!isInventoryRole() && (
             <>
               {/* WISHLIST */}
@@ -2456,52 +2533,80 @@ export default function Header() {
                 )}
               </motion.button>
 
-              {/* CART */}
-              <motion.button
-                variants={iconVariants}
-                whileHover="hover"
-                whileTap="tap"
-                onClick={() =>
-                  navigate("/cart")
-                }
-                className="header-icon-btn"
-                aria-label="Cart"
-              >
-                <ShoppingCart
-                  size={22}
-                  strokeWidth={2}
-                />
+              {/* CART - hidden for BUSINESS customers */}
+              {!isBusinessCustomer() && (
+                <motion.button
+                  variants={iconVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  onClick={() =>
+                    navigate("/cart")
+                  }
+                  className="header-icon-btn"
+                  aria-label="Cart"
+                >
+                  <ShoppingCart
+                    size={22}
+                    strokeWidth={2}
+                  />
 
-                {cartCount > 0 && (
-                  <span className="header-badge">
-                    {cartCount > 99
-                      ? "99+"
-                      : cartCount}
+                  {cartCount > 0 && (
+                    <span className="header-badge">
+                      {cartCount > 99
+                        ? "99+"
+                        : cartCount}
+                    </span>
+                  )}
+                </motion.button>
+              )}
+
+              {/* REQUEST QUOTE ICON - BUSINESS customers only */}
+              {isBusinessCustomer() && (
+                <motion.button
+                  variants={iconVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  onClick={() =>
+                    navigate("/corporate-dashboard/request-quote")
+                  }
+                  className="header-icon-btn"
+                  aria-label="Request Quote"
+                  title="Request Quote"
+                >
+                  <FileText
+                    size={22}
+                    strokeWidth={2}
+                  />
+
+                  {quoteCount > 0 && (
+                    <span className="header-badge">
+                      {quoteCount > 99
+                        ? "99+"
+                        : quoteCount}
+                    </span>
+                  )}
+                </motion.button>
+              )}
+
+              {/* REQUEST QUOTE (WHATSAPP CTA) - hidden for logged-in BUSINESS customers */}
+              {!isBusinessCustomer() && (
+                <button
+                  className="quote-button"
+                  type="button"
+                  onClick={() => {
+                    announce("Request a Quote");
+                    navigate(`https://wa.me/${phoneNumber}?text=${message}`);
+                  }}
+                >
+                  <span>
+                    Request a Quote
                   </span>
-                )}
-              </motion.button>
 
-              {/* REQUEST QUOTE */}
-              <button
-                className="quote-button"
-                type="button"
-                onClick={() =>{
-                   announce("Request a Quote")
-                    navigate(`https://wa.me/${phoneNumber}?text=${message}`)
-
-                }
-                 
-                  
-                }
-              >
-                <span>
-                  Request a Quote
-                </span>
-
-                <small>
-                  For Business
-                </small>
-              </button>
+                  <small>
+                    For Business
+                  </small>
+                </button>
+              )}
             </>
           )}
 
@@ -2586,9 +2691,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* ------------------------------------------------
-          MAIN NAV
-      ------------------------------------------------ */}
+      {/* MAIN NAV */}
       <nav
         className="category-nav"
         aria-label="Main navigation"
@@ -2631,9 +2734,7 @@ export default function Header() {
         )}
       </nav>
 
-      {/* ------------------------------------------------
-          MOBILE DRAWER
-      ------------------------------------------------ */}
+      {/* MOBILE DRAWER */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -2835,9 +2936,7 @@ export default function Header() {
         )}
       </AnimatePresence>
 
-      {/* ------------------------------------------------
-          COMPARE POPUP
-      ------------------------------------------------ */}
+      {/* COMPARE POPUP */}
       <AnimatePresence>
         {comparePopup && (
           <motion.div

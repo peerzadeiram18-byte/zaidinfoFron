@@ -1643,12 +1643,49 @@ const Checkout = () => {
 
             // 3. GO TO PAYMENT PAGE
 
+            // navigate("/payment", {
+            //     state: {
+            //         order: order,
+            //         payment: createdPayment
+            //     }
+            // });
+
+
             navigate("/payment", {
-                state: {
-                    order: order,
-                    payment: createdPayment
-                }
-            });
+    state: {
+        order: order,
+
+        payment: createdPayment,
+
+        paymentSummary: {
+            subtotal: Number(subtotal),
+
+            couponDiscount: Number(
+                couponDiscount
+            ),
+
+            taxableAmount: Number(
+                discountedSubtotal
+            ),
+
+            shippingCharge: Number(
+                shippingCharge
+            ),
+
+            gstPercentage: Number(
+                gst
+            ),
+
+            gstAmount: Number(
+                gstAmount
+            ),
+
+            total: Number(
+                grandTotal
+            )
+        }
+    }
+});
 
         }
         catch (err) {

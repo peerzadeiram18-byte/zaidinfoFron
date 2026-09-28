@@ -340,6 +340,19 @@ import CorporateProfile from "./pages/corporate/Corporateprofile.jsx";
 
 import { Customers } from "./pages/Receptionist/Customers.jsx";
 
+// =====================================================
+// NEW — QUOTATION FEATURE (RequestQuote + Admin Management)
+// =====================================================
+
+import RequestQuote from "./pages/corporate/RequestQuote.jsx";
+import QuotationManagement from "./pages/Admin/Quotation/QuotationManagement.jsx";
+
+
+
+
+//added new link of corporate page
+import Corporate from "./pages/corporate/Corporate"; 
+// match your actual casing/path
 
 // =====================================================
 // APP
@@ -707,6 +720,8 @@ const isDynamicAdminRoute =
             element={<Contact />}
           />
 
+          <Route path="/corporate" element={<Corporate />} />
+
           <Route
             path="/faq"
             element={<FAQ />}
@@ -915,6 +930,10 @@ const isDynamicAdminRoute =
             <Route path="profile" element={<CorporateProfile/>} />
             <Route path="add-address" element={<AddAddress />} />
             <Route path="addresses" element={<MyAddress />} />
+
+
+             {/* NEW — Request Quote page (business customer submits a quote request) */}
+            <Route path="request-quote" element={<RequestQuote />} />
             
           </Route>
 
@@ -1372,6 +1391,25 @@ const isDynamicAdminRoute =
     path="/add-purchase-bill"
     element={<AddPurchaseBill />}
 />
+
+ {/* VENDORS */}
+            <Route path="/vendors/:vendorId" element={<VendorDetails />} />
+            <Route path="/vendors/:vendorId/edit" element={<EditVendor />} />
+
+            {/* PURCHASE ORDERS */}
+            <Route path="/purchase-orders/:purchaseOrderId" element={<PurchaseOrderDetails />} />
+            <Route path="/purchase-orders/:purchaseOrderId/edit" element={<PurchaseOrderEdit />} />
+
+            {/* PURCHASE BILLS */}
+            <Route path="/purchase-bills/:purchaseId" element={<PurchaseBillDetails />} />
+            <Route path="/purchase-bills/:purchaseId/invoice" element={<InvoicePrint />} />
+
+  {/* NEW — Admin Quotation Management (approve/counter/reject quote items) */}
+            <Route
+              path="/admin/quotations"
+              element={<QuotationManagement />}
+            />
+
 
 
             

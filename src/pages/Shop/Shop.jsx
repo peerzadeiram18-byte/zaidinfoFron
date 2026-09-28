@@ -16,7 +16,7 @@
 // import { addToCart } from "../../services/cartService";
 // import { addToWishlist } from "../../services/wishlistService";
 
-// import {  getShopInventory } from "../../services/inventoryService";
+// import { getShopInventory } from "../../services/inventoryService";
 
 
 // // =====================================================
@@ -215,6 +215,139 @@
 //       product.brandId ??
 //       product.brandData
 //   );
+// };
+
+
+// // =====================================================
+// // PRODUCT TYPE VALUE
+// //
+// // IMPORTANT:
+// // Shop mein sirf NEW + REFURBISHED products allowed.
+// // Rental products yahan se completely block honge.
+// //
+// // Multiple possible backend field names supported:
+// // productType
+// // type
+// // itemType
+// // condition
+// // productCondition
+// // =====================================================
+
+// const getShopProductType = (product) => {
+//   if (!product) {
+//     return "";
+//   }
+
+//   const possibleValues = [
+//     product.productType,
+//     product.itemType,
+//     product.type,
+//     product.condition,
+//     product.productCondition,
+//     product.product_kind,
+//     product.productKind,
+//   ];
+
+//   for (const value of possibleValues) {
+//     if (
+//       value !== undefined &&
+//       value !== null &&
+//       String(value).trim() !== ""
+//     ) {
+//       return String(value)
+//         .trim()
+//         .toUpperCase()
+//         .replace(/[\s_-]+/g, "");
+//     }
+//   }
+
+//   return "";
+// };
+
+
+// // =====================================================
+// // SHOP PRODUCT FILTER
+// //
+// // ONLY:
+// // NEW
+// // REFURBISHED / REFURB / RENEWED / RECONDITIONED
+// //
+// // NEVER:
+// // RENTAL
+// // RENT
+// // RENTED
+// // UNKNOWN
+// // EMPTY
+// // =====================================================
+
+// const isShopProduct = (product) => {
+//   if (!product) {
+//     return false;
+//   }
+
+//   // -----------------------------------------------
+//   // Explicit rental flags
+//   // -----------------------------------------------
+
+//   if (
+//     product.isRental === true ||
+//     product.rental === true ||
+//     product.isRentable === true
+//   ) {
+//     return false;
+//   }
+
+//   // -----------------------------------------------
+//   // Product type
+//   // -----------------------------------------------
+
+//   const productType =
+//     getShopProductType(product);
+
+//   // -----------------------------------------------
+//   // Rental types
+//   // -----------------------------------------------
+
+//   if (
+//     productType === "RENTAL" ||
+//     productType === "RENT" ||
+//     productType === "RENTED"
+//   ) {
+//     return false;
+//   }
+
+//   // -----------------------------------------------
+//   // New
+//   // -----------------------------------------------
+
+//   if (
+//     productType === "NEW" ||
+//     productType === "NEWPRODUCT"
+//   ) {
+//     return true;
+//   }
+
+//   // -----------------------------------------------
+//   // Refurbished
+//   // -----------------------------------------------
+
+//   if (
+//     productType === "REFURBISHED" ||
+//     productType === "REFURB" ||
+//     productType === "RENEWED" ||
+//     productType === "RECONDITIONED" ||
+//     productType === "REFURBISHMENT" ||
+//     productType === "REFURBISHEDPRODUCT"
+//   ) {
+//     return true;
+//   }
+
+//   // -----------------------------------------------
+//   // If product type is missing/unknown,
+//   // DO NOT show it.
+//   // -----------------------------------------------
+
+//   return false;
 // };
 
 
@@ -750,11 +883,6 @@
 //   const [offers, setOffers] =
 //     useState([]);
 
-//   // NOTE: inventoryList state removed —
-//   // inventory data is now passed as a local
-//   // variable (inventoryData) instead of relying
-//   // on state, which was stale at the point of use.
-
 //   const [loading, setLoading] =
 //     useState(true);
 
@@ -781,52 +909,68 @@
 //   // ===================================================
 
 //   useEffect(() => {
-//     const conditionFromUrl = searchParams.get("condition");
-//     if (conditionFromUrl === "refurbished" || conditionFromUrl === "new") {
-//       setCondition(conditionFromUrl);
+//     const conditionFromUrl =
+//       searchParams.get("condition");
+
+//     if (
+//       conditionFromUrl === "refurbished" ||
+//       conditionFromUrl === "new"
+//     ) {
+//       setCondition(
+//         conditionFromUrl
+//       );
 //     }
 //   }, [searchParams]);
 
 
 //   // ===================================================
-// // READ SEARCH FROM URL
-// // ===================================================
+//   // READ SEARCH FROM URL
+//   // ===================================================
 
-// useEffect(() => {
-//   const searchFromUrl = searchParams.get("search");
+//   useEffect(() => {
+//     const searchFromUrl =
+//       searchParams.get("search");
 
-//   setSearch(searchFromUrl || "");
-// }, [searchParams]);
-
+//     setSearch(
+//       searchFromUrl || ""
+//     );
+//   }, [searchParams]);
 
 
 //   // ===================================================
-// // READ SEARCH FROM URL
-// // =====
+//   // READ BRAND FROM URL
+//   // ===================================================
 
+//   useEffect(() => {
+//     const brandFromUrl =
+//       searchParams.get("brand");
 
-// useEffect(()=>{
-//   const brandFromUrl=searchParams.get("brand")
-//   setBrand(brandFromUrl || "")
-
-// },[searchParams])
-
+//     setBrand(
+//       brandFromUrl || ""
+//     );
+//   }, [searchParams]);
 
 
 //   // ===================================================
-// // READ category from  FROM URL
-// // ===================================================
+//   // READ CATEGORY FROM URL
+//   // ===================================================
 
-// useEffect(()=>{
-//   const categoryFromUrl=searchParams.get("category")
-//   console.log("category name is written below")
-//   console.log(categoryFromUrl)
-//   setCategory(categoryFromUrl)
+//   useEffect(() => {
+//     const categoryFromUrl =
+//       searchParams.get("category");
 
- 
-// },[])
+//     console.log(
+//       "category name is written below"
+//     );
 
+//     console.log(
+//       categoryFromUrl
+//     );
 
+//     setCategory(
+//       categoryFromUrl || ""
+//     );
+//   }, [searchParams]);
 
 
 //   // ===================================================
@@ -840,20 +984,16 @@
 
 //   // ===================================================
 //   // LOAD INVENTORY
-//   //
-//   // IMPORTANT:
-//   // This now RETURNS the fetched data directly,
-//   // instead of only storing it in state. State
-//   // updates are async and were not available in
-//   // time for the stock calculation below.
 //   // ===================================================
 
 //   const loadInventory = async () => {
 //     try {
 //       const response =
-//         await  getShopInventory();
+//         await getShopInventory();
 
-//       console.log("data received from the inventory and it is printed below");
+//       console.log(
+//         "data received from the inventory and it is printed below"
+//       );
 
 //       console.log(
 //         "SHOP INVENTORY RESPONSE:",
@@ -875,15 +1015,6 @@
 //         "SHOP INVENTORY ERROR:",
 //         error
 //       );
-
-//       /*
-//         IMPORTANT:
-
-//         Inventory fail hone par
-//         products ko remove nahi karenge.
-
-//         Existing shop normally work karega.
-//       */
 
 //       return [];
 //     }
@@ -934,16 +1065,6 @@
 //       try {
 //         setLoading(true);
 
-//         /*
-//           Existing APIs are still used.
-//           Inventory is added separately.
-
-//           IMPORTANT:
-//           inventoryData is now captured directly
-//           from Promise.all, instead of being
-//           discarded via .then((results) => [results[0], results[1]]).
-//         */
-
 //         const [
 //           productsResponse,
 //           offersResponse,
@@ -973,13 +1094,45 @@
 //           rawProductList
 //         );
 
+//         // =================================================
+//         // IMPORTANT PRODUCT TYPE FILTER
+//         //
+//         // ONLY NEW + REFURBISHED
+//         // RENTAL PRODUCTS REMOVED HERE
+//         // =================================================
+
+//         const shopProductList =
+//           rawProductList.filter(
+//             isShopProduct
+//           );
+
+//         console.log(
+//           "SHOP PRODUCT TYPE FILTER:",
+//           {
+//             totalFromAPI:
+//               rawProductList.length,
+
+//             allowedProducts:
+//               shopProductList.length,
+
+//             removedProducts:
+//               rawProductList.length -
+//               shopProductList.length,
+//           }
+//         );
+
+//         console.log(
+//           "ONLY NEW + REFURBISHED PRODUCTS:",
+//           shopProductList
+//         );
+
 //         // ---------------------------------------------
 //         // REMOVE DUPLICATES
 //         // ---------------------------------------------
 
 //         const productList =
 //           removeDuplicateProducts(
-//             rawProductList
+//             shopProductList
 //           );
 
 //         console.log(
@@ -1014,18 +1167,9 @@
 //                   product
 //                 );
 
-//               /*
-//                 STOCK
-
-//                 Inventory list se current
-//                 product ka inventory find karenge.
-
-//                 IMPORTANT:
-//                 Uses inventoryData (local variable,
-//                 freshly fetched) instead of
-//                 inventoryList (state, stale at this
-//                 point in execution).
-//               */
+//               // ---------------------------------------
+//               // STOCK
+//               // ---------------------------------------
 
 //               const inventory =
 //                 findInventoryForProduct(
@@ -1042,6 +1186,10 @@
 //                 getStockLabel(
 //                   stockStatus
 //                 );
+
+//               // ---------------------------------------
+//               // PRODUCT OFFERS
+//               // ---------------------------------------
 
 //               const productOffers =
 //                 activeOffers.filter(
@@ -1114,7 +1262,6 @@
 
 //                   offerDiscountValue: 0,
 
-//                   // STOCK
 //                   stockStatus,
 
 //                   stockLabel,
@@ -1186,7 +1333,6 @@
 
 //                   offerDiscountValue: 0,
 
-//                   // STOCK
 //                   stockStatus,
 
 //                   stockLabel,
@@ -1223,7 +1369,7 @@
 //                       return current;
 //                     }
 
-//                     return current.finalPrice 
+//                     return current.finalPrice <
 //                       best.finalPrice
 //                       ? current
 //                       : best;
@@ -1262,7 +1408,6 @@
 //                     ?.discountValue ??
 //                   0,
 
-//                 // STOCK
 //                 stockStatus,
 
 //                 stockLabel,
@@ -1323,20 +1468,29 @@
 //               productsResponse
 //             );
 
-//           const productList =
-//             removeDuplicateProducts(
-//               rawProductList
+//           // =================================================
+//           // IMPORTANT:
+//           // FALLBACK ME BHI RENTAL PRODUCTS REMOVE
+//           // =================================================
+
+//           const shopProductList =
+//             rawProductList.filter(
+//               isShopProduct
 //             );
 
-//           /*
-//             IMPORTANT:
-//             This catch block is a separate scope
-//             from the try block above, so it has no
-//             access to that inventoryData variable.
-//             Re-fetch inventory here so stock is
-//             still calculated correctly on the
-//             fallback path.
-//           */
+//           console.log(
+//             "FALLBACK ONLY NEW + REFURBISHED:",
+//             shopProductList
+//           );
+
+//           const productList =
+//             removeDuplicateProducts(
+//               shopProductList
+//             );
+
+//           // ---------------------------------------------
+//           // INVENTORY
+//           // ---------------------------------------------
 
 //           const fallbackInventoryData =
 //             await loadInventory();
@@ -1349,14 +1503,6 @@
 //                   getProductPrice(
 //                     product
 //                   );
-
-//                 /*
-//                   Fallback stock
-
-//                   Inventory fail hone par
-//                   existing shop products
-//                   normal load honge.
-//                 */
 
 //                 const productId =
 //                   getProductId(
@@ -1396,7 +1542,6 @@
 
 //                   offerDiscountValue: 0,
 
-//                   // STOCK
 //                   stockStatus,
 
 //                   stockLabel:
@@ -1549,6 +1694,17 @@
 //     )
 //       ? [...products]
 //       : [];
+
+//     // =================================================
+//     // EXTRA SAFETY
+//     //
+//     // Even if products state somehow receives
+//     // a changed API result, rental won't render.
+//     // =================================================
+
+//     data = data.filter(
+//       isShopProduct
+//     );
 
 //     // =================================================
 //     // SEARCH
@@ -1815,6 +1971,22 @@
 //         return;
 //       }
 
+//       // =================================================
+//       // EXTRA SAFETY:
+//       // RENTAL PRODUCT CART ME BHI NAHI JA SAKTA
+//       // =================================================
+
+//       if (
+//         !isShopProduct(product)
+//       ) {
+
+//         toast.error(
+//           "This product is not available for purchase"
+//         );
+
+//         return;
+//       }
+
 //       /*
 //         OPTIONAL SAFETY
 
@@ -1825,9 +1997,11 @@
 //       if (
 //         product?.stockStatus ===
 //         "OUT_OF_STOCK"
-
 //       ) {
-//         console.log("product is out of stock");
+
+//         console.log(
+//           "product is out of stock"
+//         );
 
 //         toast.error(
 //           "Product is currently out of stock"
@@ -1847,8 +2021,11 @@
 //           "Added To Cart"
 //         );
 
-//         // dispatch here — cart item count may have changed
-//         window.dispatchEvent(new CustomEvent("cart-updated"));
+//         window.dispatchEvent(
+//           new CustomEvent(
+//             "cart-updated"
+//           )
+//         );
 
 //         navigate("/cart");
 
@@ -1899,6 +2076,22 @@
 //         return;
 //       }
 
+//       // =================================================
+//       // EXTRA SAFETY:
+//       // RENTAL PRODUCT WISHLIST ME NAHI JAYEGA
+//       // =================================================
+
+//       if (
+//         !isShopProduct(product)
+//       ) {
+
+//         toast.error(
+//           "This product is not available for purchase"
+//         );
+
+//         return;
+//       }
+
 //       try {
 
 //         await addToWishlist(
@@ -1909,9 +2102,11 @@
 //           "Added To Wishlist"
 //         );
 
-
-//         // dispatch here — wishlist actually changed
-//         window.dispatchEvent(new CustomEvent("wishlist-updated"));
+//         window.dispatchEvent(
+//           new CustomEvent(
+//             "wishlist-updated"
+//           )
+//         );
 
 //       } catch (error) {
 
@@ -2521,7 +2716,6 @@
 //         ) : (
 
 //           <div className="space-y-10">
-
 
 //             {/* =================================================
 //                 REFURBISHED
@@ -4851,6 +5045,142 @@ const Shop = () => {
 
 
   // ===================================================
+  // REQUEST QUOTE (NEW)
+  //
+  // Adds the clicked product into a "quoteCart" kept
+  // in localStorage. Does NOT touch the normal cart
+  // in any way — completely separate flow used only
+  // by RequestQuote.jsx on the corporate dashboard.
+  // =====================================================
+
+    const QUOTE_CART_KEY = "quoteCart";
+
+const handleRequestQuote = (product) => {
+
+  const token =
+    localStorage.getItem("token");
+
+  if (!token) {
+
+    toast.error(
+      "Please Login First"
+    );
+
+    navigate("/login");
+
+    return;
+
+  }
+
+  const productId =
+    getProductId(product);
+
+  if (!productId) {
+
+    toast.error(
+      "Product ID not found"
+    );
+
+    return;
+
+  }
+
+  try {
+
+    const raw =
+      localStorage.getItem(
+        QUOTE_CART_KEY
+      );
+
+    const existing = raw
+      ? JSON.parse(raw)
+      : [];
+
+    const cart = Array.isArray(
+      existing
+    )
+      ? existing
+      : [];
+
+    const alreadyInCart =
+      cart.some((entry) => {
+
+        const entryId =
+          getProductId(
+            entry.product
+          );
+
+        return (
+          String(entryId) ===
+          String(productId)
+        );
+
+      });
+
+    if (alreadyInCart) {
+
+      toast.info(
+        "Already added to your quote request"
+      );
+
+    } else {
+
+      const updatedCart = [
+        ...cart,
+        {
+          product,
+          quantity: 1,
+          proposedPrice: null,
+        },
+      ];
+
+      localStorage.setItem(
+        QUOTE_CART_KEY,
+        JSON.stringify(
+          updatedCart
+        )
+      );
+
+      window.dispatchEvent(
+        new CustomEvent("quote-updated")
+      );
+
+      toast.success(
+        ({ closeToast }) => (
+          <div className="flex items-center justify-between gap-3">
+            <span>Added to quote request</span>
+            <button
+              onClick={() => {
+                closeToast();
+                navigate("/corporate-dashboard/request-quote");
+              }}
+              className="px-2.5 py-1 rounded-full bg-white text-emerald-700 text-xs font-bold whitespace-nowrap hover:bg-emerald-50 transition"
+            >
+              View Quote
+            </button>
+          </div>
+        )
+      );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "REQUEST QUOTE ERROR:",
+      error
+    );
+
+    toast.error(
+      "Failed to add to quote request"
+    );
+
+  }
+
+};
+
+
+  // ===================================================
   // SECTION DATA
   // ===================================================
 
@@ -5455,6 +5785,9 @@ const Shop = () => {
                   onAddToWishlist={
                     handleWishlist
                   }
+                  onRequestQuote={
+                    handleRequestQuote
+                  }
                 />
 
               )}
@@ -5483,6 +5816,9 @@ const Shop = () => {
                   }
                   onAddToWishlist={
                     handleWishlist
+                  }
+                  onRequestQuote={
+                    handleRequestQuote
                   }
                 />
 
@@ -5513,6 +5849,9 @@ const Shop = () => {
                   onAddToWishlist={
                     handleWishlist
                   }
+                  onRequestQuote={
+                    handleRequestQuote
+                  }
                 />
 
               )}
@@ -5541,6 +5880,9 @@ const Shop = () => {
                   }
                   onAddToWishlist={
                     handleWishlist
+                  }
+                  onRequestQuote={
+                    handleRequestQuote
                   }
                 />
 
@@ -5571,6 +5913,9 @@ const Shop = () => {
                   onAddToWishlist={
                     handleWishlist
                   }
+                  onRequestQuote={
+                    handleRequestQuote
+                  }
                 />
 
               )}
@@ -5598,6 +5943,9 @@ const Shop = () => {
                   }
                   onAddToWishlist={
                     handleWishlist
+                  }
+                  onRequestQuote={
+                    handleRequestQuote
                   }
                 />
 
