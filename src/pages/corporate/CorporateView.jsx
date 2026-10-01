@@ -1,9 +1,9 @@
+
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaBoxOpen,
   FaClipboardList,
-  FaFileInvoiceDollar,
   FaFileInvoice,
   FaHeadset,
   FaLaptop,
@@ -15,15 +15,12 @@ import { getMyOrders } from "../../services/orderService";
 
 import "./CorporateView.css";
 
-
 // =====================================================
 // ROUTES
-// Change these to match your corporate dashboard routes
 // =====================================================
 
 const ROUTES = {
   newOrder: "/shop",
-  quotes: "/corporate-dashboard/quotes",
   orders: "/corporate-dashboard/orders",
   invoices: "/corporate-dashboard/invoices",
   devices: "/corporate-dashboard/devices",
@@ -33,7 +30,6 @@ const ROUTES = {
 const RECENT_ORDERS_COUNT = 4;
 
 const INACTIVE_STATUSES = ["DELIVERED", "CANCELLED", "RETURNED"];
-
 
 // =====================================================
 // HELPERS
@@ -73,7 +69,9 @@ const getItemsText = (order) => {
 };
 
 const statusLabel = (status) => {
-  const text = String(status || "").replace(/_/g, " ").toLowerCase();
+  const text = String(status || "")
+    .replace(/_/g, " ")
+    .toLowerCase();
 
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
@@ -82,7 +80,6 @@ const statusClass = (status) =>
   `co-badge--${String(status || "")
     .toLowerCase()
     .replace(/_/g, "-")}`;
-
 
 // =====================================================
 // COMPONENT
@@ -94,7 +91,6 @@ export default function CorporateOverview() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
 
   // ===================================================
   // LOAD ORDERS
@@ -121,7 +117,8 @@ export default function CorporateOverview() {
         console.error("CORPORATE ORDERS ERROR:", err);
 
         setError(
-          err?.response?.data?.message || "Couldn't load your orders."
+          err?.response?.data?.message ||
+            "Couldn't load your orders."
         );
       } finally {
         setLoading(false);
@@ -131,9 +128,8 @@ export default function CorporateOverview() {
     loadOrders();
   }, []);
 
-
   // ===================================================
-  // STATS (calculated from the orders list)
+  // STATS
   // ===================================================
 
   const stats = useMemo(() => {
@@ -155,7 +151,8 @@ export default function CorporateOverview() {
         order.paymentStatus !== "PAID"
       ) {
         amountDue += Math.max(
-          Number(order.finalAmount || 0) - Number(order.paidAmount || 0),
+          Number(order.finalAmount || 0) -
+            Number(order.paidAmount || 0),
           0
         );
       }
@@ -192,13 +189,11 @@ export default function CorporateOverview() {
 
   const recentOrders = orders.slice(0, RECENT_ORDERS_COUNT);
 
+  // ===================================================
+  // QUICK ACTIONS
+  // ===================================================
+
   const quickActions = [
-    {
-      title: "Request a quote",
-      hint: "For 10 or more laptops",
-      icon: FaFileInvoiceDollar,
-      to: ROUTES.quotes,
-    },
     {
       title: "Download GST invoices",
       hint: "Your latest invoices",
@@ -213,21 +208,21 @@ export default function CorporateOverview() {
     },
   ];
 
-
   // ===================================================
   // RENDER
   // ===================================================
 
   return (
     <div className="co-page">
-
       {/* HEADER */}
 
       <div className="co-header">
         <div>
           <h2 className="co-title">Corporate overview</h2>
 
-          <p className="co-subtitle">Wholesale pricing active</p>
+          <p className="co-subtitle">
+            Wholesale pricing active
+          </p>
         </div>
 
         <button
@@ -240,7 +235,6 @@ export default function CorporateOverview() {
         </button>
       </div>
 
-
       {/* STAT CARDS */}
 
       <div className="co-stats">
@@ -249,12 +243,16 @@ export default function CorporateOverview() {
 
           return (
             <div key={stat.label} className="co-stat-card">
-              <div className={`co-stat-icon ${stat.iconClass}`}>
+              <div
+                className={`co-stat-icon ${stat.iconClass}`}
+              >
                 <Icon />
               </div>
 
               <div>
-                <p className="co-stat-label">{stat.label}</p>
+                <p className="co-stat-label">
+                  {stat.label}
+                </p>
 
                 <p className="co-stat-value">
                   {loading
@@ -269,12 +267,13 @@ export default function CorporateOverview() {
         })}
       </div>
 
-
       {/* RECENT ORDERS */}
 
       <div className="co-card">
         <div className="co-card-header">
-          <h3 className="co-card-title">Recent orders</h3>
+          <h3 className="co-card-title">
+            Recent orders
+          </h3>
 
           <button
             type="button"
@@ -286,13 +285,17 @@ export default function CorporateOverview() {
         </div>
 
         {loading ? (
-          <p className="co-empty">Loading your orders…</p>
+          <p className="co-empty">
+            Loading your orders…
+          </p>
         ) : error ? (
-          <p className="co-empty co-empty--error">{error}</p>
+          <p className="co-empty co-empty--error">
+            {error}
+          </p>
         ) : recentOrders.length === 0 ? (
           <p className="co-empty">
-            You haven't placed any orders yet. Start with your first
-            bulk order.
+            You haven't placed any orders yet. Start with
+            your first bulk order.
           </p>
         ) : (
           <div className="co-table-wrap">
@@ -341,7 +344,6 @@ export default function CorporateOverview() {
         )}
       </div>
 
-
       {/* QUICK ACTIONS */}
 
       <div className="co-actions">
@@ -357,14 +359,17 @@ export default function CorporateOverview() {
             >
               <Icon className="co-action-icon" />
 
-              <p className="co-action-title">{action.title}</p>
+              <p className="co-action-title">
+                {action.title}
+              </p>
 
-              <p className="co-action-hint">{action.hint}</p>
+              <p className="co-action-hint">
+                {action.hint}
+              </p>
             </button>
           );
         })}
       </div>
-
     </div>
   );
 }

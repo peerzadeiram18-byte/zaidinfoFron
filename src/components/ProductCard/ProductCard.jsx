@@ -289,7 +289,6 @@
 // export default ProductCard;
 
 
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -298,7 +297,6 @@ import {
   Percent,
   Truck,
   SlidersHorizontal,
-  FileText,
 } from 'lucide-react';
 import { useCompare } from '../../context/CompareContext';
 
@@ -340,21 +338,8 @@ const ProductCard = ({
   theme,
   onAddToCart,
   onAddToWishlist,
-  onRequestQuote,
 }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
-
-  // =====================================================
-  // CURRENT USER
-  // =====================================================
-
-  const currentUser = JSON.parse(
-    localStorage.getItem('user') || 'null'
-  );
-
-  const isBusinessCustomer =
-    currentUser?.role === 'CUSTOMER' &&
-    currentUser?.customerType === 'BUSINESS';
 
   // Compare Context
   const { addToCompare, removeFromCompare, isInCompare } = useCompare();
@@ -497,15 +482,6 @@ const ProductCard = ({
       removeFromCompare(productId);
     } else {
       addToCompare(product);
-    }
-  };
-
-  const handleRequestQuoteClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (onRequestQuote) {
-      onRequestQuote(product);
     }
   };
 
@@ -666,32 +642,14 @@ const ProductCard = ({
               />
             </button>
 
-
-                        {/* Cart Button - HIDDEN for BUSINESS customers */}
-            {!isBusinessCustomer && (
-              <button
-                onClick={handleAddToCartClick}
-                aria-label="Add to Cart"
-                className="w-9 h-9 rounded-full bg-black dark:bg-slate-100 text-white dark:text-black flex items-center justify-center hover:opacity-90 transition-all shadow-sm"
-              >
-                <ShoppingCart className="w-4 h-4" />
-              </button>
-            )}
-
-            {/* Request Quote Button - BUSINESS CUSTOMER ONLY */}
-            {isBusinessCustomer && (
-              <button
-                onClick={handleRequestQuoteClick}
-                aria-label="Request Quote"
-                title="Request Quote"
-                className="h-9 px-3 rounded-full bg-[#16a34a] text-white flex items-center justify-center gap-1.5 hover:bg-[#15803d] transition-all shadow-sm text-xs font-semibold whitespace-nowrap"
-              >
-                <FileText className="w-4 h-4" />
-                <span>Request Quote</span>
-              </button>
-            )}
-
-           
+            {/* Cart Button - shown for ALL customers */}
+            <button
+              onClick={handleAddToCartClick}
+              aria-label="Add to Cart"
+              className="w-9 h-9 rounded-full bg-black dark:bg-slate-100 text-white dark:text-black flex items-center justify-center hover:opacity-90 transition-all shadow-sm"
+            >
+              <ShoppingCart className="w-4 h-4" />
+            </button>
 
           </div>
         </div>

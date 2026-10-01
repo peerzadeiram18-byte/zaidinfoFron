@@ -2203,11 +2203,11 @@ function Sidebar({
           path: "/admin/orders",
         },
 
-        {
-          name: "Quotations",
-          icon: <MdReceipt />,
-          path: "/admin/quotations",
-        },
+        // {
+        //   name: "Quotations",
+        //   icon: <MdReceipt />,
+        //   path: "/admin/quotations",
+        // },
 
         {
           name: "Invoices",
@@ -2223,8 +2223,8 @@ function Sidebar({
 
         {
           name: "Inventory",
-          icon: <MdInventory />,
-          path: "/admin/inventory",
+         icon: <MdInventory />,
+         path: "/inventory-dashboard",
         },
 
         {

@@ -5,11 +5,12 @@
   min-height: 100vh;
   background-color: #ffffff;
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: clip;
 }
 
 @media (prefers-color-scheme: dark) {
   .corp-page {
-    background-color: #020617; /* slate-950 */
+    background-color: #020617;
   }
 }
 
@@ -21,6 +22,7 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 @media (min-width: 640px) {
@@ -33,6 +35,22 @@
   .corp-container {
     padding: 0 3rem;
   }
+}
+
+/* =========================================================
+   FULL WIDTH SECTIONS
+   Used for:
+   1. Why Businesses Choose Zaid Infotech
+   2. How The Quote Process Works
+   3. Ready to get started?
+   ========================================================= */
+
+.corp-full-width-container {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
 }
 
 .corp-section {
@@ -63,7 +81,7 @@
 }
 
 .corp-icon-accent {
-  color: #10b981; /* emerald-500 */
+  color: #10b981;
 }
 
 /* ===== Buttons ===== */
@@ -81,12 +99,12 @@
 }
 
 .corp-btn-primary {
-  background-color: #10b981; /* emerald-500 */
-  color: #020617; /* slate-950 */
+  background-color: #10b981;
+  color: #020617;
 }
 
 .corp-btn-primary:hover {
-  background-color: #059669; /* emerald-600 */
+  background-color: #059669;
 }
 
 .corp-btn-outline {
@@ -103,9 +121,14 @@
 /* ===== Hero ===== */
 .corp-hero {
   position: relative;
-  background-color: #020617; /* slate-950 */
+  background-color: #020617;
   color: #ffffff;
   overflow: hidden;
+
+  /* break out of any parent padding/max-width and use the full screen width */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  box-sizing: border-box;
 }
 
 .corp-hero-bg {
@@ -133,7 +156,7 @@
 }
 
 .corp-hero-eyebrow {
-  color: #34d399; /* emerald-400 */
+  color: #34d399;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -168,12 +191,12 @@
 }
 
 .corp-hero-title-accent {
-  color: #34d399; /* emerald-400 */
+  color: #34d399;
 }
 
 .corp-hero-desc {
   margin-top: 1.5rem;
-  color: #cbd5e1; /* slate-300 */
+  color: #cbd5e1;
   font-size: 1rem;
   max-width: 36rem;
 }
@@ -198,7 +221,7 @@
   column-gap: 2rem;
   row-gap: 0.75rem;
   font-size: 0.875rem;
-  color: #cbd5e1; /* slate-300 */
+  color: #cbd5e1;
 }
 
 .corp-trust-item {
@@ -221,7 +244,7 @@
 .corp-section-heading {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #111827; /* gray-900 */
+  color: #111827;
   text-align: center;
 }
 
@@ -242,6 +265,7 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
+  width: 100%;
 }
 
 @media (min-width: 640px) {
@@ -257,11 +281,12 @@
 }
 
 .corp-benefit-card {
-  border: 1px solid #e5e7eb; /* gray-200 */
+  border: 1px solid #e5e7eb;
   border-radius: 1rem;
   padding: 1.5rem;
   background-color: #ffffff;
   transition: box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
 .corp-benefit-card:hover {
@@ -270,8 +295,8 @@
 
 @media (prefers-color-scheme: dark) {
   .corp-benefit-card {
-    border-color: #1e293b; /* slate-800 */
-    background-color: #0f172a; /* slate-900 */
+    border-color: #1e293b;
+    background-color: #0f172a;
   }
 }
 
@@ -279,7 +304,7 @@
   width: 3rem;
   height: 3rem;
   border-radius: 9999px;
-  border: 2px solid #10b981; /* emerald-500 */
+  border: 2px solid #10b981;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -288,7 +313,7 @@
 
 .corp-benefit-title {
   font-weight: 700;
-  color: #111827; /* gray-900 */
+  color: #111827;
   font-size: 1rem;
   margin-bottom: 0.375rem;
 }
@@ -301,20 +326,22 @@
 
 .corp-benefit-desc {
   font-size: 0.875rem;
-  color: #6b7280; /* gray-500 */
+  color: #6b7280;
   line-height: 1.6;
 }
 
 @media (prefers-color-scheme: dark) {
   .corp-benefit-desc {
-    color: #94a3b8; /* slate-400 */
+    color: #94a3b8;
   }
 }
 
 /* ===== How it works ===== */
 .corp-how-section {
-  background-color: #f9fafb; /* gray-50 */
+  background-color: #f9fafb;
   padding: 4rem 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (min-width: 640px) {
@@ -325,7 +352,7 @@
 
 @media (prefers-color-scheme: dark) {
   .corp-how-section {
-    background-color: rgba(15, 23, 42, 0.4); /* slate-900/40 */
+    background-color: rgba(15, 23, 42, 0.4);
   }
 }
 
@@ -334,6 +361,7 @@
   grid-template-columns: 1fr;
   gap: 2rem;
   position: relative;
+  width: 100%;
 }
 
 @media (min-width: 640px) {
@@ -360,8 +388,8 @@
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 9999px;
-  background-color: #10b981; /* emerald-500 */
-  color: #020617; /* slate-950 */
+  background-color: #10b981;
+  color: #020617;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -377,7 +405,7 @@
 
 .corp-step-title {
   font-weight: 700;
-  color: #111827; /* gray-900 */
+  color: #111827;
   font-size: 0.875rem;
   margin-bottom: 0.375rem;
 }
@@ -390,25 +418,27 @@
 
 .corp-step-desc {
   font-size: 0.75rem;
-  color: #6b7280; /* gray-500 */
+  color: #6b7280;
   line-height: 1.6;
   max-width: 200px;
 }
 
 @media (prefers-color-scheme: dark) {
   .corp-step-desc {
-    color: #94a3b8; /* slate-400 */
+    color: #94a3b8;
   }
 }
 
 /* ===== Final CTA card ===== */
 .corp-cta-card {
   position: relative;
-  background-color: #020617; /* slate-950 */
+  background-color: #020617;
   border-radius: 1.5rem;
-  border: 1px solid #1e293b; /* slate-800 */
+  border: 1px solid #1e293b;
   padding: 2.5rem;
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (min-width: 640px) {
@@ -458,7 +488,7 @@
 }
 
 .corp-cta-desc {
-  color: #cbd5e1; /* slate-300 */
+  color: #cbd5e1;
   font-size: 0.875rem;
   max-width: 28rem;
 }

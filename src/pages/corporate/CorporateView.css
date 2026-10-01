@@ -1,7 +1,10 @@
+
 .co-page {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .co-header {
@@ -28,6 +31,7 @@
 .co-btn-primary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   padding: 10px 16px;
   border: none;
@@ -38,6 +42,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease;
+  white-space: nowrap;
 }
 
 .co-btn-primary:hover {
@@ -47,6 +52,10 @@
 .co-btn-icon {
   font-size: 12px;
 }
+
+/* =====================================================
+   BANNER
+   ===================================================== */
 
 .co-banner {
   display: flex;
@@ -62,6 +71,7 @@
   text-align: left;
   cursor: pointer;
   transition: background 0.15s ease;
+  box-sizing: border-box;
 }
 
 .co-banner:hover {
@@ -72,9 +82,16 @@
   flex-shrink: 0;
 }
 
+/* =====================================================
+   STAT CARDS
+   ===================================================== */
+
 .co-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(220px, 1fr)
+  );
   gap: 16px;
 }
 
@@ -82,10 +99,12 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  min-width: 0;
   padding: 16px;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   background: #ffffff;
+  box-sizing: border-box;
 }
 
 .co-stat-icon {
@@ -129,18 +148,27 @@
   font-size: 24px;
   font-weight: 600;
   color: #0f172a;
+  overflow-wrap: anywhere;
 }
 
+/* =====================================================
+   RECENT ORDERS CARD
+   ===================================================== */
+
 .co-card {
+  width: 100%;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   background: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .co-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   padding: 16px 20px;
   border-bottom: 1px solid #e2e8f0;
 }
@@ -160,6 +188,7 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .co-link-btn:hover {
@@ -167,7 +196,9 @@
 }
 
 .co-table-wrap {
+  width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .co-table {
@@ -182,6 +213,7 @@
   padding: 12px 20px;
   color: #64748b;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .co-table td {
@@ -210,6 +242,7 @@
   font-weight: 500;
   background: #f1f5f9;
   color: #334155;
+  white-space: nowrap;
 }
 
 .co-badge--processing {
@@ -232,20 +265,31 @@
   color: #be123c;
 }
 
+/* =====================================================
+   QUICK ACTIONS
+   ===================================================== */
+
 .co-actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(200px, 1fr)
+  );
   gap: 16px;
 }
 
 .co-action-card {
+  width: 100%;
   padding: 16px;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   background: #ffffff;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+  box-sizing: border-box;
 }
 
 .co-action-card:hover {
@@ -269,4 +313,161 @@
   margin: 2px 0 0;
   font-size: 12px;
   color: #64748b;
+}
+
+/* =====================================================
+   EMPTY / ERROR STATES
+   ===================================================== */
+
+.co-empty {
+  margin: 0;
+  padding: 28px 20px;
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+}
+
+.co-empty--error {
+  color: #dc2626;
+}
+
+/* =====================================================
+   TABLET
+   ===================================================== */
+
+@media (max-width: 768px) {
+  .co-page {
+    gap: 20px;
+  }
+
+  .co-title {
+    font-size: 26px;
+  }
+
+  .co-header {
+    align-items: flex-start;
+  }
+
+  .co-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .co-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .co-card-header {
+    padding: 14px 16px;
+  }
+
+  .co-table th,
+  .co-table td {
+    padding: 11px 16px;
+  }
+}
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 480px) {
+  .co-page {
+    gap: 16px;
+  }
+
+  .co-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .co-title {
+    font-size: 23px;
+    line-height: 1.25;
+  }
+
+  .co-subtitle {
+    font-size: 13px;
+  }
+
+  .co-btn-primary {
+    width: 100%;
+    padding: 11px 14px;
+  }
+
+  .co-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .co-stat-card {
+    padding: 14px;
+  }
+
+  .co-stat-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .co-stat-value {
+    font-size: 22px;
+  }
+
+  .co-card {
+    border-radius: 10px;
+  }
+
+  .co-card-header {
+    padding: 14px;
+  }
+
+  .co-card-title {
+    font-size: 15px;
+  }
+
+  .co-link-btn {
+    font-size: 13px;
+  }
+
+  .co-empty {
+    padding: 24px 14px;
+    line-height: 1.5;
+  }
+
+  .co-actions {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .co-action-card {
+    padding: 14px;
+  }
+}
+
+/* =====================================================
+   VERY SMALL SCREENS
+   ===================================================== */
+
+@media (max-width: 360px) {
+  .co-title {
+    font-size: 21px;
+  }
+
+  .co-stat-card {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .co-stat-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .co-stat-value {
+    font-size: 20px;
+  }
+
+  .co-card-header {
+    flex-wrap: wrap;
+  }
 }

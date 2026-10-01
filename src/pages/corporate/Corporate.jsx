@@ -66,8 +66,11 @@ const steps = [
 const isBusinessCustomer = () => {
   try {
     const userData = localStorage.getItem("user");
+
     if (!userData) return false;
+
     const user = JSON.parse(userData);
+
     return (
       String(user?.role).toUpperCase() === "CUSTOMER" &&
       String(user?.customerType).toUpperCase() === "BUSINESS"
@@ -147,12 +150,18 @@ const Corporate = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="corp-hero-actions"
             >
-              <button onClick={handlePrimaryCta} className="corp-btn corp-btn-primary">
+              <button
+                onClick={handlePrimaryCta}
+                className="corp-btn corp-btn-primary"
+              >
                 {primaryCtaLabel}
                 <ArrowRight className="corp-icon-sm" />
               </button>
 
-              <button onClick={() => navigate("/contact")} className="corp-btn corp-btn-outline">
+              <button
+                onClick={() => navigate("/contact")}
+                className="corp-btn corp-btn-outline"
+              >
                 Talk to Sales
               </button>
             </motion.div>
@@ -163,14 +172,17 @@ const Corporate = () => {
                 <Wallet className="corp-icon-sm corp-icon-accent" />
                 Wholesale Pricing
               </span>
+
               <span className="corp-trust-item">
                 <FileText className="corp-icon-sm corp-icon-accent" />
                 GST Invoicing
               </span>
+
               <span className="corp-trust-item">
                 <Headset className="corp-icon-sm corp-icon-accent" />
                 Dedicated Support
               </span>
+
               <span className="corp-trust-item">
                 <BadgeCheck className="corp-icon-sm corp-icon-accent" />
                 Flexible Terms
@@ -180,7 +192,7 @@ const Corporate = () => {
         </section>
 
         {/* ================= WHY BUY FROM US ================= */}
-        <section className="corp-container corp-section">
+        <section className="corp-container corp-section corp-full-width-container">
           <div className="corp-section-heading-wrap">
             <motion.h2
               initial={{ opacity: 0.6, scale: 0.95 }}
@@ -199,8 +211,14 @@ const Corporate = () => {
                 <div className="corp-benefit-icon-circle">
                   <Icon className="corp-icon-md corp-icon-accent" />
                 </div>
-                <h3 className="corp-benefit-title">{title}</h3>
-                <p className="corp-benefit-desc">{desc}</p>
+
+                <h3 className="corp-benefit-title">
+                  {title}
+                </h3>
+
+                <p className="corp-benefit-desc">
+                  {desc}
+                </p>
               </div>
             ))}
           </div>
@@ -208,7 +226,7 @@ const Corporate = () => {
 
         {/* ================= HOW IT WORKS ================= */}
         <section className="corp-how-section">
-          <div className="corp-container">
+          <div className="corp-container corp-full-width-container">
             <div className="corp-section-heading-wrap corp-how-heading-wrap">
               <motion.h2
                 initial={{ opacity: 0.6, scale: 0.95 }}
@@ -224,13 +242,19 @@ const Corporate = () => {
             <div className="corp-steps-grid">
               {steps.map(({ icon: Icon, title, desc }, index) => (
                 <div key={title} className="corp-step">
-                  <div className="corp-step-number">{index + 1}</div>
+                  <div className="corp-step-number">
+                    {index + 1}
+                  </div>
 
                   <Icon className="corp-icon-md corp-icon-accent corp-step-icon" />
 
-                  <h3 className="corp-step-title">{title}</h3>
+                  <h3 className="corp-step-title">
+                    {title}
+                  </h3>
 
-                  <p className="corp-step-desc">{desc}</p>
+                  <p className="corp-step-desc">
+                    {desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -238,20 +262,26 @@ const Corporate = () => {
         </section>
 
         {/* ================= FINAL CTA CARD ================= */}
-        <section className="corp-container corp-section">
+        <section className="corp-container corp-section corp-full-width-container">
           <div className="corp-cta-card">
             <div className="corp-cta-card-bg" />
 
             <div className="corp-cta-inner">
               <div>
-                <h3 className="corp-cta-title">Ready to get started?</h3>
+                <h3 className="corp-cta-title">
+                  Ready to get started?
+                </h3>
+
                 <p className="corp-cta-desc">
                   Register your business with Zaid Infotech today and
                   start requesting quotes on bulk laptop orders.
                 </p>
               </div>
 
-              <button onClick={handlePrimaryCta} className="corp-btn corp-btn-primary corp-cta-btn">
+              <button
+                onClick={handlePrimaryCta}
+                className="corp-btn corp-btn-primary corp-cta-btn"
+              >
                 {primaryCtaLabel}
                 <ArrowRight className="corp-icon-sm" />
               </button>

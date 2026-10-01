@@ -318,7 +318,7 @@
    ========================================================================== */
 .category-nav {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   min-height: 82px;
   padding: 0 clamp(28px, 6vw, 76px);
   border-top: 1px solid var(--header-border);

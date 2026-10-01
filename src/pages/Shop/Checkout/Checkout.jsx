@@ -1,79 +1,1344 @@
-// import React, {
-//     useEffect,
-//     useState
-// } from "react";
+// // import React, {
+// //     useEffect,
+// //     useState
+// // } from "react";
 
-// import axios from "axios";
+// // import axios from "axios";
+
+// // // import {
+// // //     useNavigate
+// // // } from "react-router-dom";
 
 // // import {
-// //     useNavigate
+// //     useNavigate,
+// //     useLocation
 // // } from "react-router-dom";
 
-// import {
-//     useNavigate,
-//     useLocation
-// } from "react-router-dom";
+// // import "./Checkout.css";
+// // import { toast } from "react-toastify";
 
-// import "./Checkout.css";
+// // import {
+// //     createPayment
+// // } from "../../../services/paymentService";
+
+
+// // const API = import.meta.env.VITE_API_URL;
+
+// // const Checkout = () => {
+
+// //     const navigate =
+// //         useNavigate();
+
+// //         const location =
+// //     useLocation();
+
+
+// //     const token =
+// //         localStorage.getItem("token");
+
+
+// //         const coupon =
+// //     location.state?.coupon || null;
+
+// // const couponCode =
+// //     location.state?.couponCode || "";
+
+// // const couponDiscount =
+// //     Number(
+// //         location.state?.couponDiscount || 0
+// //     );
+
+// //     // =================================
+// //     // STATES
+// //     // =================================
+
+// //     const [cart, setCart] =
+// //         useState([]);
+
+
+// //     const [addresses, setAddresses] =
+// //         useState([]);
+
+
+// //     const [selectedAddress, setSelectedAddress] =
+// //         useState("");
+
+
+// //     const [loading, setLoading] =
+// //         useState(false);
+
+
+// //     const [cartLoading, setCartLoading] =
+// //         useState(true);
+
+
+// //     const shippingCharge = 100;
+
+// //     const gst = 18;
+
+
+// //     // =================================
+// //     // LOAD DATA
+// //     // =================================
+
+// //     useEffect(() => {
+
+// //         loadCart();
+
+// //         getAddresses();
+
+// //     }, []);
+
+
+// //     // =================================
+// //     // GET CART
+// //     // =================================
+
+// //     const loadCart = async () => {
+
+// //         try {
+
+// //             setCartLoading(true);
+
+
+// //             const res =
+// //                await axios.get(`${API}/cart`, {
+// //                         headers: {
+
+// //                             Authorization:
+// //                                 `Bearer ${token}`
+
+// //                         }
+
+// //                     }
+
+// //                 );
+
+
+// //             console.log(
+// //                 "CHECKOUT CART:",
+// //                 res.data
+// //             );
+
+
+// //             const items =
+// //                 res.data?.data?.items || [];
+
+
+// //             setCart(
+
+// //                 Array.isArray(items)
+// //                     ? items
+// //                     : []
+
+// //             );
+
+// //         }
+
+// //         catch (err) {
+
+// //             console.error(
+// //                 "GET CART ERROR:",
+// //                 err.response?.data || err
+// //             );
+
+
+// //             setCart([]);
+
+// //         }
+
+// //         finally {
+
+// //             setCartLoading(false);
+
+// //         }
+
+// //     };
+
+
+// //     // =================================
+// //     // GET ADDRESSES
+// //     // =================================
+
+// //     const getAddresses = async () => {
+
+// //         try {
+
+// //             const res =
+// //               await axios.get(`${API}/addresses`, {
+// //                         headers: {
+
+// //                             Authorization:
+// //                                 `Bearer ${token}`
+
+// //                         }
+
+// //                     }
+
+// //                 );
+
+
+// //             console.log(
+// //                 "ADDRESS RESPONSE:",
+// //                 res.data
+// //             );
+
+
+// //             const addressData =
+// //                 res.data?.data || [];
+
+
+// //             setAddresses(
+
+// //                 Array.isArray(addressData)
+// //                     ? addressData
+// //                     : []
+
+// //             );
+
+// //         }
+
+// //         catch (err) {
+
+// //             console.error(
+// //                 "GET ADDRESS ERROR:",
+// //                 err.response?.data || err
+// //             );
+
+// //         }
+
+// //     };
+
+
+// //     // =================================
+// //     // SUBTOTAL
+// //     // =================================
+
+// //     const subtotal =
+// //         cart.reduce(
+
+// //             (sum, item) => {
+
+// //                 const price =
+// //                     Number(
+// //                         item.product?.pricing?.sellingPrice || 0
+// //                     );
+
+
+// //                 const quantity =
+// //                     Number(
+// //                         item.quantity || 0
+// //                     );
+
+
+// //                 return (
+// //                     sum +
+// //                     price * quantity
+// //                 );
+
+// //             },
+
+// //             0
+
+// //         );
+
+
+// //     // =================================
+// //     // GST
+// //     // =================================
+
+
+// //     const discountedSubtotal =
+// //     Math.max(
+// //         subtotal - couponDiscount,
+// //         0
+// //     );
+
+// //   const gstAmount =
+// //     Math.round(
+// //         discountedSubtotal *
+// //         gst /
+// //         100
+// //     );
+
+
+// //     // =================================
+// //     // GRAND TOTAL
+// //     // =================================
+
+// // const grandTotal =
+// //     subtotal -
+// //     couponDiscount +
+// //     shippingCharge +
+// //     gstAmount;
+
+// // // grandTotal =
+// // //     discountedSubtotal +
+// // //     shippingCharge +
+// // //     gstAmount;
+
+// //     // =================================
+// //     // PLACE ORDER
+// //     // =================================
+
+// //     const placeOrder = async () => {
+
+// //         if (loading) {
+
+// //             return;
+
+// //         }
+
+
+// //         // =================================
+// //         // ADDRESS CHECK
+// //         // =================================
+
+// //         if (!selectedAddress) {
+
+// //             toast.error(
+// //                 "Please select delivery address"
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         const address =
+// //             addresses.find(
+
+// //                 (item) =>
+// //                     item._id ===
+// //                     selectedAddress
+
+// //             );
+
+
+// //         if (!address) {
+
+// //             toast.error(
+// //                 "Address not found"
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         // =================================
+// //         // CART CHECK
+// //         // =================================
+
+// //         if (!cart.length) {
+
+// //             toast.error(
+// //                 "Your cart is empty"
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         // =================================
+// //         // SHIPPING ADDRESS
+// //         // =================================
+
+// //         const shippingAddress = {
+
+// //             fullName:
+// //                 address.fullName ||
+// //                 address.name ||
+// //                 "",
+
+
+// //             phone:
+// //                 address.phone ||
+// //                 address.mobile ||
+// //                 "",
+
+
+// //             addressLine:
+// //                 address.addressLine ||
+// //                 address.address ||
+// //                 address.streetAddress ||
+// //                 "",
+
+
+// //             city:
+// //                 address.city ||
+// //                 "",
+
+
+// //             state:
+// //                 address.state ||
+// //                 "",
+
+
+// //             pincode:
+// //                 address.pincode ||
+// //                 "",
+
+
+// //             country:
+// //                 address.country ||
+// //                 "India",
+
+
+// //             landmark:
+// //                 address.landmark ||
+// //                 ""
+
+// //         };
+
+
+// //         // =================================
+// //         // SHIPPING ADDRESS VALIDATION
+// //         // =================================
+
+// //         if (!shippingAddress.fullName) {
+
+// //             toast.error(
+// //                 "Address name is missing"
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         if (!shippingAddress.phone) {
+
+// //             toast.error(
+// //                 "Phone number is missing"
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         if (!shippingAddress.addressLine) {
+
+// //             toast.error(
+// //                 "Address is missing"
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         if (!shippingAddress.city) {
+
+// //             toast.error(
+// //                 "City is missing"
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         if (!shippingAddress.state) {
+
+// //             toast.error(
+// //                 "State is missing"
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         if (!shippingAddress.pincode) {
+
+// //             toast.error(
+// //                 "Pincode is missing"
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         // =================================
+// //         // ORDER ITEMS
+// //         // =================================
+
+// //         const orderItems =
+// //             cart.map(
+
+// //                 (item) => {
+
+// //                     const sellingPrice =
+// //                         Number(
+
+// //                             item.product?.pricing?.sellingPrice ??
+// //                             0
+
+// //                         );
+
+
+// //                     const originalPrice =
+// //                         Number(
+
+// //                             item.product?.pricing?.originalPrice ??
+// //                             item.originalPrice ??
+// //                             sellingPrice
+
+// //                         );
+
+
+// //                     const quantity =
+// //                         Number(
+// //                             item.quantity ?? 1
+// //                         );
+
+
+// //                     const discountAmount =
+// //                         Number(
+
+// //                             item.discountAmount ??
+// //                             Math.max(
+
+// //                                 originalPrice -
+// //                                 sellingPrice,
+
+// //                                 0
+
+// //                             )
+
+// //                         );
+
+
+// //                     return {
+
+// //                         product:
+// //                             item.product?._id ||
+// //                             item.product ||
+// //                             "",
+
+
+// //                         title:
+// //                             item.product?.name ||
+// //                             item.title ||
+// //                             "",
+
+
+// //                         quantity:
+// //                             quantity,
+
+
+// //                         originalPrice:
+// //                             originalPrice,
+
+
+// //                         discountAmount:
+// //                             discountAmount,
+
+
+// //                         price:
+// //                             sellingPrice,
+
+
+// //                         offer:
+// //                             item.offer ||
+// //                             null,
+
+
+// //                         imageUrl:
+// //                             item.product?.images?.[0]?.url ||
+// //                             item.imageUrl ||
+// //                             ""
+
+// //                     };
+
+// //                 }
+
+// //             );
+
+
+// //         // =================================
+// //         // CHECK PRODUCT DATA
+// //         // =================================
+
+// //         const invalidOrderItem =
+// //             orderItems.some(
+
+// //                 (item) =>
+
+// //                     !item.product ||
+
+// //                     !item.title ||
+
+// //                     !Number.isFinite(
+// //                         item.quantity
+// //                     ) ||
+
+// //                     item.quantity < 1 ||
+
+// //                     !Number.isFinite(
+// //                         item.originalPrice
+// //                     ) ||
+
+// //                     !Number.isFinite(
+// //                         item.price
+// //                     )
+
+// //             );
+
+
+// //         if (invalidOrderItem) {
+
+// //             toast.error(
+// //                 "Some product information is missing. Please refresh the cart and try again."
+// //             );
+
+// //             return;
+
+// //         }
+
+
+// //         // =================================
+// //         // ORDER DATA
+// //         // =================================
+
+// //       const orderData = {
+
+// //     orderItems: orderItems,
+
+// //     shippingAddress: shippingAddress,
+
+// //     totalAmount: Number(grandTotal),
+
+// //     orderSource: "ONLINE"
+
+// // };
+
+// //         console.log(
+// //             "FINAL ORDER DATA:",
+// //             orderData
+// //         );
+
+
+// //         // =================================
+// //         // API PROCESS
+// //         // =================================
+
+// //         try {
+
+// //             setLoading(true);
+
+
+// //             // =================================
+// //             // 1. CREATE ORDER
+// //             // =================================
+
+// //         const orderRes = await axios.post(
+// //     `${API}/orders`,
+// //     orderData,
+// //     {
+// //         headers: {
+// //             Authorization: `Bearer ${token}`,
+// //             "Content-Type": "application/json",
+// //         },
+// //     }
+// // );
+
+
+// //             console.log(
+// //                 "ORDER RESPONSE:",
+// //                 orderRes.data
+// //             );
+
+
+// //             const order =
+// //                 orderRes.data?.order;
+
+
+// //             if (!order) {
+
+// //                 throw new Error(
+// //                     "Order was not created"
+// //                 );
+
+// //             }
+
+
+// //             console.log(
+// //                 "ORDER CREATED:",
+// //                 order
+// //             );
+
+
+// //             // =================================
+// //             // 2. CREATE DATABASE PAYMENT
+// //             // =================================
+// //             //
+// //             // IMPORTANT:
+// //             //
+// //             // Backend allows:
+// //             //
+// //             // UPI
+// //             // CARD
+// //             // NET_BANKING
+// //             // CASH
+// //             //
+// //             // Razorpay ke liye abhi UPI use kar rahe hain.
+// //             //
+// //             // COD MAT BHEJNA.
+// //             //
+// //             // =================================
+
+// //             const paymentData = {
+
+// //                 paymentFor:
+// //                     "ORDER",
+
+
+// //                 referenceId:
+// //                     order._id,
+
+
+// //                 amount:
+// //                     Number(
+// //                         order.totalAmount
+// //                     ),
+
+
+// //                 paymentMethod:
+// //                     "UPI"
+
+// //             };
+
+
+// //             console.log(
+// //                 "PAYMENT DATA:",
+// //                 paymentData
+// //             );
+
+
+// //             const paymentRes =
+// //                 await createPayment(
+// //                     paymentData
+// //                 );
+
+
+// //             console.log(
+// //                 "PAYMENT RESPONSE:",
+// //                 paymentRes
+// //             );
+
+
+// //             // =================================
+// //             // PAYMENT RESPONSE VALIDATION
+// //             // =================================
+
+// //             if (
+
+// //                 !paymentRes ||
+
+// //                 !paymentRes.success ||
+
+// //                 !paymentRes.payment
+
+// //             ) {
+
+// //                 throw new Error(
+
+// //                     paymentRes?.message ||
+
+// //                     "Payment creation failed"
+
+// //                 );
+
+// //             }
+
+
+// //             const createdPayment =
+// //                 paymentRes.payment;
+
+
+// //             console.log(
+// //                 "PAYMENT CREATED:",
+// //                 createdPayment
+// //             );
+
+
+// //             // =================================
+// //             // 3. GO TO PAYMENT PAGE
+// //             // =================================
+
+// //             navigate(
+
+// //                 "/payment",
+
+// //                 {
+
+// //                     state: {
+
+// //                         order:
+// //                             order,
+
+
+// //                         payment:
+// //                             createdPayment
+
+// //                     }
+
+// //                 }
+
+// //             );
+
+// //         }
+
+
+// //         catch (err) {
+
+// //             console.error(
+// //                 "================================="
+// //             );
+
+
+// //             console.error(
+// //                 "ORDER / PAYMENT ERROR:",
+// //                 err
+// //             );
+
+
+// //             console.error(
+// //                 "BACKEND ERROR:",
+// //                 err.response?.data
+// //             );
+
+
+// //             console.error(
+// //                 "VALIDATION ERRORS:",
+// //                 err.response?.data?.errors
+// //             );
+
+
+// //             const backendData =
+// //                 err.response?.data;
+
+
+// //             let message =
+// //                 backendData?.message ||
+// //                 err.message ||
+// //                 "Order failed";
+
+
+// //             // =================================
+// //             // JOI VALIDATION ERRORS
+// //             // =================================
+
+// //             if (
+
+// //                 Array.isArray(
+// //                     backendData?.errors
+// //                 ) &&
+
+// //                 backendData.errors.length > 0
+
+// //             ) {
+
+// //                 message =
+// //                     backendData.errors.join(
+// //                         "\n"
+// //                     );
+
+// //             }
+
+
+// //             toast.error(
+// //                 message
+// //             );
+
+// //         }
+
+
+// //         finally {
+
+// //             setLoading(false);
+
+// //         }
+
+// //     };
+
+
+// //     // =================================
+// //     // LOADING
+// //     // =================================
+
+// //     if (cartLoading) {
+
+// //         return (
+
+// //             <div className="checkout">
+
+// //                 <div className="checkout-right">
+
+// //                     <h2>
+// //                         Loading Cart...
+// //                     </h2>
+
+// //                 </div>
+
+// //             </div>
+
+// //         );
+
+// //     }
+
+
+// //     // =================================
+// //     // UI
+// //     // =================================
+
+// //     return (
+
+// //         <div className="checkout">
+
+
+// //             {/* =================================
+// //                 LEFT
+// //             ================================= */}
+
+// //             <div className="checkout-left">
+
+// //                 <h2>
+// //                     Select Delivery Address
+// //                 </h2>
+
+
+// //                 {addresses.length === 0 ? (
+
+// //                     <p>
+// //                         No Address Found
+// //                     </p>
+
+// //                 ) : (
+
+// //                     addresses.map(
+
+// //                         (address) => (
+
+// //                             <div
+// //                                 className="address-card"
+// //                                 key={
+// //                                     address._id
+// //                                 }
+// //                             >
+
+// //                                 <input
+// //                                     type="radio"
+// //                                     name="deliveryAddress"
+// //                                     checked={
+// //                                         selectedAddress ===
+// //                                         address._id
+// //                                     }
+// //                                     onChange={() =>
+// //                                         setSelectedAddress(
+// //                                             address._id
+// //                                         )
+// //                                     }
+// //                                 />
+
+
+// //                                 <div>
+
+// //                                     <h4>
+
+// //                                         {
+// //                                             address.fullName ||
+// //                                             address.name ||
+// //                                             "Customer"
+// //                                         }
+
+// //                                     </h4>
+
+
+// //                                     <p>
+
+// //                                         {
+// //                                             address.phone ||
+// //                                             address.mobile ||
+// //                                             ""
+// //                                         }
+
+// //                                     </p>
+
+
+// //                                     <p>
+
+// //                                         {
+// //                                             address.addressLine ||
+// //                                             address.address ||
+// //                                             address.streetAddress ||
+// //                                             ""
+// //                                         }
+
+// //                                     </p>
+
+
+// //                                     <p>
+
+// //                                         {
+// //                                             address.city ||
+// //                                             ""
+// //                                         }
+
+// //                                         ,{" "}
+
+// //                                         {
+// //                                             address.state ||
+// //                                             ""
+// //                                         }
+
+// //                                     </p>
+
+
+// //                                     <p>
+
+// //                                         {
+// //                                             address.pincode ||
+// //                                             ""
+// //                                         }
+
+// //                                     </p>
+
+// //                                 </div>
+
+// //                             </div>
+
+// //                         )
+
+// //                     )
+
+// //                 )}
+
+// //             </div>
+
+
+// //             {/* =================================
+// //                 RIGHT
+// //             ================================= */}
+
+// //             <div className="checkout-right">
+
+// //                 <h2>
+// //                     Order Summary
+// //                 </h2>
+
+
+// //                 {cart.length === 0 ? (
+
+// //                     <div>
+
+// //                         <p>
+// //                             Cart is empty
+// //                         </p>
+
+
+// //                         <button
+// //                             type="button"
+// //                             onClick={() =>
+// //                                 navigate("/shop")
+// //                             }
+// //                         >
+
+// //                             Continue Shopping
+
+// //                         </button>
+
+// //                     </div>
+
+// //                 ) : (
+
+// //                     cart.map(
+
+// //                         (item, index) => {
+
+// //                             const productId =
+// //                                 item.product?._id ||
+// //                                 item._id;
+
+
+// //                             const price =
+// //                                 Number(
+
+// //                                     item.product?.pricing?.sellingPrice ||
+// //                                     0
+
+// //                                 );
+
+
+// //                             const quantity =
+// //                                 Number(
+
+// //                                     item.quantity ||
+// //                                     0
+
+// //                                 );
+
+
+// //                             const itemTotal =
+// //                                 price *
+// //                                 quantity;
+
+
+// //                             return (
+
+// //                                 <div
+// //                                     className="summary-item"
+// //                                     key={
+// //                                         productId ||
+// //                                         index
+// //                                     }
+// //                                 >
+
+// //                                     <p>
+
+// //                                         {
+// //                                             item.product?.name
+// //                                         }
+
+// //                                     </p>
+
+
+// //                                     <p>
+
+// //                                         Qty:{" "}
+
+// //                                         {
+// //                                             quantity
+// //                                         }
+
+// //                                     </p>
+
+
+// //                                     <p>
+
+// //                                         ₹ {price}
+
+// //                                     </p>
+
+
+// //                                     <p>
+
+// //                                         Item Total: ₹{" "}
+
+// //                                         {
+// //                                             itemTotal
+// //                                         }
+
+// //                                     </p>
+
+// //                                 </div>
+
+// //                             );
+
+// //                         }
+
+// //                     )
+
+// //                 )}
+
+
+// //                 {cart.length > 0 && (
+
+// //                     <>
+
+// //                         <hr />
+
+
+// //                         {/* =================================
+// //                             SUBTOTAL
+// //                         ================================= */}
+
+// //                         <div className="summary-row">
+
+// //                             <span>
+// //                                 Subtotal
+// //                             </span>
+
+// //                             <span>
+// //                                 ₹ {subtotal}
+// //                             </span>
+
+// //                         </div>
+
+// //                         {couponDiscount > 0 && (
+
+// //     <div className="summary-row">
+
+// //         <span>
+// //             Coupon Discount
+// //         </span>
+
+// //         <span>
+// //             - ₹ {couponDiscount}
+// //         </span>
+
+// //     </div>
+
+// // )}
+
+
+// //                         {/* =================================
+// //                             SHIPPING
+// //                         ================================= */}
+
+// //                         <div className="summary-row">
+
+// //                             <span>
+// //                                 Shipping
+// //                             </span>
+
+// //                             <span>
+// //                                 ₹ {shippingCharge}
+// //                             </span>
+
+// //                         </div>
+
+
+// //                         {/* =================================
+// //                             GST
+// //                         ================================= */}
+
+// //                         <div className="summary-row">
+
+// //                             <span>
+// //                                 GST ({gst}%)
+// //                             </span>
+
+// //                             <span>
+// //                                 ₹ {gstAmount}
+// //                             </span>
+
+// //                         </div>
+
+
+// //                         <hr />
+
+
+// //                         {/* =================================
+// //                             GRAND TOTAL
+// //                         ================================= */}
+
+// //                         <h2>
+
+// //                             Total : ₹ {grandTotal}
+
+// //                         </h2>
+
+
+// //                         {/* =================================
+// //                             PLACE ORDER
+// //                         ================================= */}
+
+// //                         <button
+// //                             type="button"
+// //                             onClick={placeOrder}
+// //                             disabled={loading}
+// //                         >
+
+// //                             {
+
+// //                                 loading
+
+// //                                     ? "Placing Order..."
+
+// //                                     : "Place Order"
+
+// //                             }
+
+// //                         </button>
+
+// //                     </>
+
+// //                 )}
+
+// //             </div>
+
+// //         </div>
+
+// //     );
+
+// // };
+
+
+// // export default Checkout;
+
+
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// // import { useNavigate, useLocation } from "react-router-dom";
+
+// import { useNavigate, useLocation, Link } from "react-router-dom";
 // import { toast } from "react-toastify";
 
-// import {
-//     createPayment
-// } from "../../../services/paymentService";
+// import "./Checkout.css";
+
+// import { createPayment } from "../../../services/paymentService";
 
 
 // const API = import.meta.env.VITE_API_URL;
 
+
+// // =================================
+// // UNIT PRICE
+// // Uses the price saved on the cart item first
+// // (backend picks retail / wholesale by customer type).
+// // Falls back to product fields for old cart items.
+// // =================================
+
+// const getUnitPrice = (item) => {
+
+//     const candidates = [
+//         item?.finalPrice,
+//         item?.price,
+//         item?.product?.pricing?.sellingPrice,
+//         item?.product?.pricing?.retailPrice
+//     ];
+
+//     const found = candidates
+//         .map(Number)
+//         .find((n) => Number.isFinite(n) && n > 0);
+
+//     return found ?? 0;
+// };
+
+
 // const Checkout = () => {
 
-//     const navigate =
-//         useNavigate();
+//     const navigate = useNavigate();
+//     const location = useLocation();
 
-//         const location =
-//     useLocation();
-
-
-//     const token =
-//         localStorage.getItem("token");
+//     const token = localStorage.getItem("token");
 
 
-//         const coupon =
-//     location.state?.coupon || null;
+//     // Coupon passed from the cart page
+//     const coupon = location.state?.coupon || null;
+//     const couponCode = location.state?.couponCode || "";
+//     const couponDiscount = Number(location.state?.couponDiscount || 0);
 
-// const couponCode =
-//     location.state?.couponCode || "";
-
-// const couponDiscount =
-//     Number(
-//         location.state?.couponDiscount || 0
-//     );
 
 //     // =================================
 //     // STATES
 //     // =================================
 
-//     const [cart, setCart] =
-//         useState([]);
+//     const [cart, setCart] = useState([]);
+//     const [addresses, setAddresses] = useState([]);
+//     const [selectedAddress, setSelectedAddress] = useState("");
+//     const [loading, setLoading] = useState(false);
+//     const [cartLoading, setCartLoading] = useState(true);
 
-
-//     const [addresses, setAddresses] =
-//         useState([]);
-
-
-//     const [selectedAddress, setSelectedAddress] =
-//         useState("");
-
-
-//     const [loading, setLoading] =
-//         useState(false);
-
-
-//     const [cartLoading, setCartLoading] =
-//         useState(true);
-
+//     const [termsAccepted, setTermsAccepted] = useState(false);
 
 //     const shippingCharge = 100;
-
 //     const gst = 18;
 
 
@@ -82,11 +1347,8 @@
 //     // =================================
 
 //     useEffect(() => {
-
 //         loadCart();
-
 //         getAddresses();
-
 //     }, []);
 
 
@@ -100,53 +1362,22 @@
 
 //             setCartLoading(true);
 
+//             const res = await axios.get(`${API}/cart`, {
+//                 headers: { Authorization: `Bearer ${token}` }
+//             });
 
-//             const res =
-//                await axios.get(`${API}/cart`, {
-//                         headers: {
+//             console.log("CHECKOUT CART:", res.data);
 
-//                             Authorization:
-//                                 `Bearer ${token}`
-
-//                         }
-
-//                     }
-
-//                 );
-
-
-//             console.log(
-//                 "CHECKOUT CART:",
-//                 res.data
-//             );
-
-
-//             const items =
-//                 res.data?.data?.items || [];
-
-
-//             setCart(
-
-//                 Array.isArray(items)
-//                     ? items
-//                     : []
-
-//             );
+//             const items = res.data?.data?.items || [];
+//             setCart(Array.isArray(items) ? items : []);
 
 //         }
-
 //         catch (err) {
 
-//             console.error(
-//                 "GET CART ERROR:",
-//                 err.response?.data || err
-//             );
-
-
+//             console.error("GET CART ERROR:", err.response?.data || err);
 //             setCart([]);
 
 //         }
-
 //         finally {
 
 //             setCartLoading(false);
@@ -164,46 +1395,19 @@
 
 //         try {
 
-//             const res =
-//               await axios.get(`${API}/addresses`, {
-//                         headers: {
+//             const res = await axios.get(`${API}/addresses`, {
+//                 headers: { Authorization: `Bearer ${token}` }
+//             });
 
-//                             Authorization:
-//                                 `Bearer ${token}`
+//             console.log("ADDRESS RESPONSE:", res.data);
 
-//                         }
-
-//                     }
-
-//                 );
-
-
-//             console.log(
-//                 "ADDRESS RESPONSE:",
-//                 res.data
-//             );
-
-
-//             const addressData =
-//                 res.data?.data || [];
-
-
-//             setAddresses(
-
-//                 Array.isArray(addressData)
-//                     ? addressData
-//                     : []
-
-//             );
+//             const addressData = res.data?.data || [];
+//             setAddresses(Array.isArray(addressData) ? addressData : []);
 
 //         }
-
 //         catch (err) {
 
-//             console.error(
-//                 "GET ADDRESS ERROR:",
-//                 err.response?.data || err
-//             );
+//             console.error("GET ADDRESS ERROR:", err.response?.data || err);
 
 //         }
 
@@ -211,71 +1415,24 @@
 
 
 //     // =================================
-//     // SUBTOTAL
+//     // TOTALS
 //     // =================================
 
-//     const subtotal =
-//         cart.reduce(
+//     const subtotal = cart.reduce((sum, item) => {
 
-//             (sum, item) => {
+//         const price = getUnitPrice(item);
+//         const quantity = Number(item.quantity || 0);
 
-//                 const price =
-//                     Number(
-//                         item.product?.pricing?.sellingPrice || 0
-//                     );
+//         return sum + price * quantity;
 
+//     }, 0);
 
-//                 const quantity =
-//                     Number(
-//                         item.quantity || 0
-//                     );
+//     const discountedSubtotal = Math.max(subtotal - couponDiscount, 0);
 
+//     const gstAmount = Math.round(discountedSubtotal * gst / 100);
 
-//                 return (
-//                     sum +
-//                     price * quantity
-//                 );
+//     const grandTotal = discountedSubtotal + shippingCharge + gstAmount;
 
-//             },
-
-//             0
-
-//         );
-
-
-//     // =================================
-//     // GST
-//     // =================================
-
-
-//     const discountedSubtotal =
-//     Math.max(
-//         subtotal - couponDiscount,
-//         0
-//     );
-
-//   const gstAmount =
-//     Math.round(
-//         discountedSubtotal *
-//         gst /
-//         100
-//     );
-
-
-//     // =================================
-//     // GRAND TOTAL
-//     // =================================
-
-// const grandTotal =
-//     subtotal -
-//     couponDiscount +
-//     shippingCharge +
-//     gstAmount;
-
-// // grandTotal =
-// //     discountedSubtotal +
-// //     shippingCharge +
-// //     gstAmount;
 
 //     // =================================
 //     // PLACE ORDER
@@ -284,581 +1441,290 @@
 //     const placeOrder = async () => {
 
 //         if (loading) {
-
 //             return;
-
 //         }
 
+//         // TERMS CHECK
 
-//         // =================================
+// if (!termsAccepted) {
+//     toast.error("Please accept the Terms & Conditions before placing your order");
+//     return;
+// }
+
 //         // ADDRESS CHECK
-//         // =================================
 
 //         if (!selectedAddress) {
-
-//             toast.error(
-//                 "Please select delivery address"
-//             );
-
+//             toast.error("Please select delivery address");
 //             return;
-
 //         }
 
-
-//         const address =
-//             addresses.find(
-
-//                 (item) =>
-//                     item._id ===
-//                     selectedAddress
-
-//             );
-
+//         const address = addresses.find(
+//             (item) => item._id === selectedAddress
+//         );
 
 //         if (!address) {
-
-//             toast.error(
-//                 "Address not found"
-//             );
-
+//             toast.error("Address not found");
 //             return;
-
 //         }
 
-
-//         // =================================
 //         // CART CHECK
-//         // =================================
 
 //         if (!cart.length) {
-
-//             toast.error(
-//                 "Your cart is empty"
-//             );
-
+//             toast.error("Your cart is empty");
 //             return;
-
 //         }
 
-
-//         // =================================
 //         // SHIPPING ADDRESS
-//         // =================================
 
 //         const shippingAddress = {
-
-//             fullName:
-//                 address.fullName ||
-//                 address.name ||
-//                 "",
-
-
-//             phone:
-//                 address.phone ||
-//                 address.mobile ||
-//                 "",
-
-
+//             fullName: address.fullName || address.name || "",
+//             phone: address.phone || address.mobile || "",
 //             addressLine:
 //                 address.addressLine ||
 //                 address.address ||
 //                 address.streetAddress ||
 //                 "",
-
-
-//             city:
-//                 address.city ||
-//                 "",
-
-
-//             state:
-//                 address.state ||
-//                 "",
-
-
-//             pincode:
-//                 address.pincode ||
-//                 "",
-
-
-//             country:
-//                 address.country ||
-//                 "India",
-
-
-//             landmark:
-//                 address.landmark ||
-//                 ""
-
+//             city: address.city || "",
+//             state: address.state || "",
+//             pincode: address.pincode || "",
+//             country: address.country || "India",
+//             landmark: address.landmark || ""
 //         };
 
-
-//         // =================================
 //         // SHIPPING ADDRESS VALIDATION
-//         // =================================
 
 //         if (!shippingAddress.fullName) {
-
-//             toast.error(
-//                 "Address name is missing"
-//             );
-
+//             toast.error("Address name is missing");
 //             return;
-
 //         }
-
 
 //         if (!shippingAddress.phone) {
-
-//             toast.error(
-//                 "Phone number is missing"
-//             );
-
+//             toast.error("Phone number is missing");
 //             return;
-
 //         }
-
 
 //         if (!shippingAddress.addressLine) {
-
-//             toast.error(
-//                 "Address is missing"
-//             );
-
+//             toast.error("Address is missing");
 //             return;
-
 //         }
-
 
 //         if (!shippingAddress.city) {
-
-//             toast.error(
-//                 "City is missing"
-//             );
-
+//             toast.error("City is missing");
 //             return;
-
 //         }
-
 
 //         if (!shippingAddress.state) {
-
-//             toast.error(
-//                 "State is missing"
-//             );
-
+//             toast.error("State is missing");
 //             return;
-
 //         }
-
 
 //         if (!shippingAddress.pincode) {
-
-//             toast.error(
-//                 "Pincode is missing"
-//             );
-
+//             toast.error("Pincode is missing");
 //             return;
-
 //         }
 
-
-//         // =================================
 //         // ORDER ITEMS
-//         // =================================
 
-//         const orderItems =
-//             cart.map(
+//         const orderItems = cart.map((item) => {
 
-//                 (item) => {
+//             const unitPrice = getUnitPrice(item);
 
-//                     const sellingPrice =
-//                         Number(
-
-//                             item.product?.pricing?.sellingPrice ??
-//                             0
-
-//                         );
-
-
-//                     const originalPrice =
-//                         Number(
-
-//                             item.product?.pricing?.originalPrice ??
-//                             item.originalPrice ??
-//                             sellingPrice
-
-//                         );
-
-
-//                     const quantity =
-//                         Number(
-//                             item.quantity ?? 1
-//                         );
-
-
-//                     const discountAmount =
-//                         Number(
-
-//                             item.discountAmount ??
-//                             Math.max(
-
-//                                 originalPrice -
-//                                 sellingPrice,
-
-//                                 0
-
-//                             )
-
-//                         );
-
-
-//                     return {
-
-//                         product:
-//                             item.product?._id ||
-//                             item.product ||
-//                             "",
-
-
-//                         title:
-//                             item.product?.name ||
-//                             item.title ||
-//                             "",
-
-
-//                         quantity:
-//                             quantity,
-
-
-//                         originalPrice:
-//                             originalPrice,
-
-
-//                         discountAmount:
-//                             discountAmount,
-
-
-//                         price:
-//                             sellingPrice,
-
-
-//                         offer:
-//                             item.offer ||
-//                             null,
-
-
-//                         imageUrl:
-//                             item.product?.images?.[0]?.url ||
-//                             item.imageUrl ||
-//                             ""
-
-//                     };
-
-//                 }
-
+//             const originalPrice = Number(
+//                 item.originalPrice ??
+//                 item.product?.pricing?.mrp ??
+//                 unitPrice
 //             );
 
+//             const quantity = Number(item.quantity ?? 1);
 
-//         // =================================
+//             const discountAmount = Number(
+//                 item.discountAmount ??
+//                 Math.max(originalPrice - unitPrice, 0)
+//             );
+
+//             return {
+//                 product: item.product?._id || item.product || "",
+//                 title: item.product?.name || item.title || "",
+//                 quantity: quantity,
+//                 originalPrice: originalPrice,
+//                 discountAmount: discountAmount,
+//                 price: unitPrice,
+//                 offer: item.offer || null,
+//                 imageUrl:
+//                     item.product?.images?.[0]?.url ||
+//                     item.imageUrl ||
+//                     ""
+//             };
+
+//         });
+
 //         // CHECK PRODUCT DATA
-//         // =================================
 
-//         const invalidOrderItem =
-//             orderItems.some(
-
-//                 (item) =>
-
-//                     !item.product ||
-
-//                     !item.title ||
-
-//                     !Number.isFinite(
-//                         item.quantity
-//                     ) ||
-
-//                     item.quantity < 1 ||
-
-//                     !Number.isFinite(
-//                         item.originalPrice
-//                     ) ||
-
-//                     !Number.isFinite(
-//                         item.price
-//                     )
-
-//             );
-
+//         const invalidOrderItem = orderItems.some(
+//             (item) =>
+//                 !item.product ||
+//                 !item.title ||
+//                 !Number.isFinite(item.quantity) ||
+//                 item.quantity < 1 ||
+//                 !Number.isFinite(item.originalPrice) ||
+//                 !Number.isFinite(item.price) ||
+//                 item.price <= 0
+//         );
 
 //         if (invalidOrderItem) {
-
 //             toast.error(
 //                 "Some product information is missing. Please refresh the cart and try again."
 //             );
-
 //             return;
-
 //         }
 
-
-//         // =================================
 //         // ORDER DATA
-//         // =================================
 
-//       const orderData = {
+//         const orderData = {
+//             orderItems: orderItems,
+//             shippingAddress: shippingAddress,
+//             totalAmount: Number(grandTotal),
+//             orderSource: "ONLINE"
+//         };
 
-//     orderItems: orderItems,
+//         console.log("FINAL ORDER DATA:", orderData);
 
-//     shippingAddress: shippingAddress,
-
-//     totalAmount: Number(grandTotal),
-
-//     orderSource: "ONLINE"
-
-// };
-
-//         console.log(
-//             "FINAL ORDER DATA:",
-//             orderData
-//         );
-
-
-//         // =================================
 //         // API PROCESS
-//         // =================================
 
 //         try {
 
 //             setLoading(true);
 
-
-//             // =================================
 //             // 1. CREATE ORDER
-//             // =================================
 
-//         const orderRes = await axios.post(
-//     `${API}/orders`,
-//     orderData,
-//     {
-//         headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//         },
-//     }
-// );
-
-
-//             console.log(
-//                 "ORDER RESPONSE:",
-//                 orderRes.data
+//             const orderRes = await axios.post(
+//                 `${API}/orders`,
+//                 orderData,
+//                 {
+//                     headers: {
+//                         Authorization: `Bearer ${token}`,
+//                         "Content-Type": "application/json"
+//                     }
+//                 }
 //             );
 
+//             console.log("ORDER RESPONSE:", orderRes.data);
 
-//             const order =
-//                 orderRes.data?.order;
-
+//             const order = orderRes.data?.order;
 
 //             if (!order) {
-
-//                 throw new Error(
-//                     "Order was not created"
-//                 );
-
+//                 throw new Error("Order was not created");
 //             }
 
+//             console.log("ORDER CREATED:", order);
 
-//             console.log(
-//                 "ORDER CREATED:",
-//                 order
-//             );
-
-
-//             // =================================
 //             // 2. CREATE DATABASE PAYMENT
-//             // =================================
 //             //
-//             // IMPORTANT:
-//             //
-//             // Backend allows:
-//             //
-//             // UPI
-//             // CARD
-//             // NET_BANKING
-//             // CASH
-//             //
+//             // Backend allows: UPI, CARD, NET_BANKING, CASH
 //             // Razorpay ke liye abhi UPI use kar rahe hain.
-//             //
 //             // COD MAT BHEJNA.
-//             //
-//             // =================================
 
 //             const paymentData = {
-
-//                 paymentFor:
-//                     "ORDER",
-
-
-//                 referenceId:
-//                     order._id,
-
-
-//                 amount:
-//                     Number(
-//                         order.totalAmount
-//                     ),
-
-
-//                 paymentMethod:
-//                     "UPI"
-
+//                 paymentFor: "ORDER",
+//                 referenceId: order._id,
+//                 amount: Number(order.totalAmount),
+//                 paymentMethod: "UPI"
 //             };
 
+//             console.log("PAYMENT DATA:", paymentData);
 
-//             console.log(
-//                 "PAYMENT DATA:",
-//                 paymentData
-//             );
+//             const paymentRes = await createPayment(paymentData);
 
-
-//             const paymentRes =
-//                 await createPayment(
-//                     paymentData
-//                 );
-
-
-//             console.log(
-//                 "PAYMENT RESPONSE:",
-//                 paymentRes
-//             );
-
-
-//             // =================================
-//             // PAYMENT RESPONSE VALIDATION
-//             // =================================
+//             console.log("PAYMENT RESPONSE:", paymentRes);
 
 //             if (
-
 //                 !paymentRes ||
-
 //                 !paymentRes.success ||
-
 //                 !paymentRes.payment
-
 //             ) {
-
 //                 throw new Error(
-
 //                     paymentRes?.message ||
-
 //                     "Payment creation failed"
-
 //                 );
-
 //             }
 
+//             const createdPayment = paymentRes.payment;
 
-//             const createdPayment =
-//                 paymentRes.payment;
+//             console.log("PAYMENT CREATED:", createdPayment);
 
-
-//             console.log(
-//                 "PAYMENT CREATED:",
-//                 createdPayment
-//             );
-
-
-//             // =================================
 //             // 3. GO TO PAYMENT PAGE
-//             // =================================
 
-//             navigate(
-
-//                 "/payment",
-
-//                 {
-
-//                     state: {
-
-//                         order:
-//                             order,
+//             // navigate("/payment", {
+//             //     state: {
+//             //         order: order,
+//             //         payment: createdPayment
+//             //     }
+//             // });
 
 
-//                         payment:
-//                             createdPayment
+//             navigate("/payment", {
+//     state: {
+//         order: order,
 
-//                     }
+//         payment: createdPayment,
 
-//                 }
+//         paymentSummary: {
+//             subtotal: Number(subtotal),
 
-//             );
+//             couponDiscount: Number(
+//                 couponDiscount
+//             ),
+
+//             taxableAmount: Number(
+//                 discountedSubtotal
+//             ),
+
+//             shippingCharge: Number(
+//                 shippingCharge
+//             ),
+
+//             gstPercentage: Number(
+//                 gst
+//             ),
+
+//             gstAmount: Number(
+//                 gstAmount
+//             ),
+
+//             total: Number(
+//                 grandTotal
+//             )
+//         }
+//     }
+// });
 
 //         }
-
-
 //         catch (err) {
 
-//             console.error(
-//                 "================================="
-//             );
+//             console.error("=================================");
+//             console.error("ORDER / PAYMENT ERROR:", err);
+//             console.error("BACKEND ERROR:", err.response?.data);
+//             console.error("VALIDATION ERRORS:", err.response?.data?.errors);
 
-
-//             console.error(
-//                 "ORDER / PAYMENT ERROR:",
-//                 err
-//             );
-
-
-//             console.error(
-//                 "BACKEND ERROR:",
-//                 err.response?.data
-//             );
-
-
-//             console.error(
-//                 "VALIDATION ERRORS:",
-//                 err.response?.data?.errors
-//             );
-
-
-//             const backendData =
-//                 err.response?.data;
-
+//             const backendData = err.response?.data;
 
 //             let message =
 //                 backendData?.message ||
 //                 err.message ||
 //                 "Order failed";
 
-
-//             // =================================
 //             // JOI VALIDATION ERRORS
-//             // =================================
 
 //             if (
-
-//                 Array.isArray(
-//                     backendData?.errors
-//                 ) &&
-
+//                 Array.isArray(backendData?.errors) &&
 //                 backendData.errors.length > 0
-
 //             ) {
-
-//                 message =
-//                     backendData.errors.join(
-//                         "\n"
-//                     );
-
+//                 message = backendData.errors.join("\n");
 //             }
 
-
-//             toast.error(
-//                 message
-//             );
+//             toast.error(message);
 
 //         }
-
-
 //         finally {
 
 //             setLoading(false);
@@ -875,19 +1741,11 @@
 //     if (cartLoading) {
 
 //         return (
-
 //             <div className="checkout">
-
 //                 <div className="checkout-right">
-
-//                     <h2>
-//                         Loading Cart...
-//                     </h2>
-
+//                     <h2>Loading Cart...</h2>
 //                 </div>
-
 //             </div>
-
 //         );
 
 //     }
@@ -901,251 +1759,113 @@
 
 //         <div className="checkout">
 
-
-//             {/* =================================
-//                 LEFT
-//             ================================= */}
+//             {/* LEFT */}
 
 //             <div className="checkout-left">
 
-//                 <h2>
-//                     Select Delivery Address
-//                 </h2>
-
+//                 <h2>Select Delivery Address</h2>
 
 //                 {addresses.length === 0 ? (
 
-//                     <p>
-//                         No Address Found
-//                     </p>
+//                     <p>No Address Found</p>
 
 //                 ) : (
 
-//                     addresses.map(
+//                     addresses.map((address) => (
 
-//                         (address) => (
+//                         <div className="address-card" key={address._id}>
 
-//                             <div
-//                                 className="address-card"
-//                                 key={
-//                                     address._id
-//                                 }
-//                             >
+//                             <input
+//                                 type="radio"
+//                                 name="deliveryAddress"
+//                                 checked={selectedAddress === address._id}
+//                                 onChange={() => setSelectedAddress(address._id)}
+//                             />
 
-//                                 <input
-//                                     type="radio"
-//                                     name="deliveryAddress"
-//                                     checked={
-//                                         selectedAddress ===
-//                                         address._id
+//                             <div>
+
+//                                 <h4>
+//                                     {address.fullName || address.name || "Customer"}
+//                                 </h4>
+
+//                                 <p>{address.phone || address.mobile || ""}</p>
+
+//                                 <p>
+//                                     {
+//                                         address.addressLine ||
+//                                         address.address ||
+//                                         address.streetAddress ||
+//                                         ""
 //                                     }
-//                                     onChange={() =>
-//                                         setSelectedAddress(
-//                                             address._id
-//                                         )
-//                                     }
-//                                 />
+//                                 </p>
 
+//                                 <p>
+//                                     {address.city || ""},{" "}
+//                                     {address.state || ""}
+//                                 </p>
 
-//                                 <div>
-
-//                                     <h4>
-
-//                                         {
-//                                             address.fullName ||
-//                                             address.name ||
-//                                             "Customer"
-//                                         }
-
-//                                     </h4>
-
-
-//                                     <p>
-
-//                                         {
-//                                             address.phone ||
-//                                             address.mobile ||
-//                                             ""
-//                                         }
-
-//                                     </p>
-
-
-//                                     <p>
-
-//                                         {
-//                                             address.addressLine ||
-//                                             address.address ||
-//                                             address.streetAddress ||
-//                                             ""
-//                                         }
-
-//                                     </p>
-
-
-//                                     <p>
-
-//                                         {
-//                                             address.city ||
-//                                             ""
-//                                         }
-
-//                                         ,{" "}
-
-//                                         {
-//                                             address.state ||
-//                                             ""
-//                                         }
-
-//                                     </p>
-
-
-//                                     <p>
-
-//                                         {
-//                                             address.pincode ||
-//                                             ""
-//                                         }
-
-//                                     </p>
-
-//                                 </div>
+//                                 <p>{address.pincode || ""}</p>
 
 //                             </div>
 
-//                         )
+//                         </div>
 
-//                     )
+//                     ))
 
 //                 )}
 
 //             </div>
 
 
-//             {/* =================================
-//                 RIGHT
-//             ================================= */}
+//             {/* RIGHT */}
 
 //             <div className="checkout-right">
 
-//                 <h2>
-//                     Order Summary
-//                 </h2>
-
+//                 <h2>Order Summary</h2>
 
 //                 {cart.length === 0 ? (
 
 //                     <div>
 
-//                         <p>
-//                             Cart is empty
-//                         </p>
+//                         <p>Cart is empty</p>
 
-
-//                         <button
-//                             type="button"
-//                             onClick={() =>
-//                                 navigate("/shop")
-//                             }
-//                         >
-
+//                         <button type="button" onClick={() => navigate("/shop")}>
 //                             Continue Shopping
-
 //                         </button>
 
 //                     </div>
 
 //                 ) : (
 
-//                     cart.map(
+//                     cart.map((item, index) => {
 
-//                         (item, index) => {
+//                         const productId = item.product?._id || item._id;
 
-//                             const productId =
-//                                 item.product?._id ||
-//                                 item._id;
+//                         const price = getUnitPrice(item);
 
+//                         const quantity = Number(item.quantity || 0);
 
-//                             const price =
-//                                 Number(
+//                         const itemTotal = price * quantity;
 
-//                                     item.product?.pricing?.sellingPrice ||
-//                                     0
+//                         return (
 
-//                                 );
+//                             <div className="summary-item" key={productId || index}>
 
+//                                 <p>{item.product?.name}</p>
 
-//                             const quantity =
-//                                 Number(
+//                                 <p>Qty: {quantity}</p>
 
-//                                     item.quantity ||
-//                                     0
+//                                 <p>₹ {price}</p>
 
-//                                 );
+//                                 <p>Item Total: ₹ {itemTotal}</p>
 
+//                             </div>
 
-//                             const itemTotal =
-//                                 price *
-//                                 quantity;
+//                         );
 
-
-//                             return (
-
-//                                 <div
-//                                     className="summary-item"
-//                                     key={
-//                                         productId ||
-//                                         index
-//                                     }
-//                                 >
-
-//                                     <p>
-
-//                                         {
-//                                             item.product?.name
-//                                         }
-
-//                                     </p>
-
-
-//                                     <p>
-
-//                                         Qty:{" "}
-
-//                                         {
-//                                             quantity
-//                                         }
-
-//                                     </p>
-
-
-//                                     <p>
-
-//                                         ₹ {price}
-
-//                                     </p>
-
-
-//                                     <p>
-
-//                                         Item Total: ₹{" "}
-
-//                                         {
-//                                             itemTotal
-//                                         }
-
-//                                     </p>
-
-//                                 </div>
-
-//                             );
-
-//                         }
-
-//                     )
+//                     })
 
 //                 )}
-
 
 //                 {cart.length > 0 && (
 
@@ -1153,108 +1873,72 @@
 
 //                         <hr />
 
-
-//                         {/* =================================
-//                             SUBTOTAL
-//                         ================================= */}
+//                         {/* SUBTOTAL */}
 
 //                         <div className="summary-row">
-
-//                             <span>
-//                                 Subtotal
-//                             </span>
-
-//                             <span>
-//                                 ₹ {subtotal}
-//                             </span>
-
+//                             <span>Subtotal</span>
+//                             <span>₹ {subtotal}</span>
 //                         </div>
+
+//                         {/* COUPON */}
 
 //                         {couponDiscount > 0 && (
+//                             <div className="summary-row">
+//                                 <span>
+//                                     Coupon Discount
+//                                     {couponCode ? ` (${couponCode})` : ""}
+//                                 </span>
+//                                 <span>- ₹ {couponDiscount}</span>
+//                             </div>
+//                         )}
 
-//     <div className="summary-row">
-
-//         <span>
-//             Coupon Discount
-//         </span>
-
-//         <span>
-//             - ₹ {couponDiscount}
-//         </span>
-
-//     </div>
-
-// )}
-
-
-//                         {/* =================================
-//                             SHIPPING
-//                         ================================= */}
+//                         {/* SHIPPING */}
 
 //                         <div className="summary-row">
-
-//                             <span>
-//                                 Shipping
-//                             </span>
-
-//                             <span>
-//                                 ₹ {shippingCharge}
-//                             </span>
-
+//                             <span>Shipping</span>
+//                             <span>₹ {shippingCharge}</span>
 //                         </div>
 
-
-//                         {/* =================================
-//                             GST
-//                         ================================= */}
+//                         {/* GST */}
 
 //                         <div className="summary-row">
-
-//                             <span>
-//                                 GST ({gst}%)
-//                             </span>
-
-//                             <span>
-//                                 ₹ {gstAmount}
-//                             </span>
-
+//                             <span>GST ({gst}%)</span>
+//                             <span>₹ {gstAmount}</span>
 //                         </div>
-
 
 //                         <hr />
 
+//                         {/* GRAND TOTAL */}
 
-//                         {/* =================================
-//                             GRAND TOTAL
-//                         ================================= */}
+//                         <h2>Total : ₹ {grandTotal}</h2>
 
-//                         <h2>
+//                         {/* TERMS & CONDITIONS */}
 
-//                             Total : ₹ {grandTotal}
+// <div className="checkout-terms">
+//     <label style={{ display: "flex", gap: "8px", alignItems: "flex-start", fontSize: "13px", margin: "10px 0", cursor: "pointer" }}>
+//         <input
+//             type="checkbox"
+//             checked={termsAccepted}
+//             onChange={(e) => setTermsAccepted(e.target.checked)}
+//             style={{ marginTop: "3px" }}
+//         />
+//         <span>
+//             I agree to the{" "}
+//             <Link to="/terms-conditions" target="_blank">Terms &amp; Conditions</Link>{" "}
+//             and acknowledge the{" "}
+//             <Link to="/privacy-policy" target="_blank">Privacy Policy</Link>.
+//         </span>
+//     </label>
+// </div>
 
-//                         </h2>
-
-
-//                         {/* =================================
-//                             PLACE ORDER
-//                         ================================= */}
+//                         {/* PLACE ORDER */}
 
 //                         <button
 //                             type="button"
 //                             onClick={placeOrder}
 //                             disabled={loading}
 //                         >
-
-//                             {
-
-//                                 loading
-
-//                                     ? "Placing Order..."
-
-//                                     : "Place Order"
-
-//                             }
-
+//                             {loading ? "Placing Order..." : "Place Order"}
 //                         </button>
 
 //                     </>
@@ -1273,15 +1957,17 @@
 // export default Checkout;
 
 
+
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import "./Checkout.css";
 
 import { createPayment } from "../../../services/paymentService";
-
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -1289,12 +1975,11 @@ const API = import.meta.env.VITE_API_URL;
 // =================================
 // UNIT PRICE
 // Uses the price saved on the cart item first
-// (backend picks retail / wholesale by customer type).
+// Backend picks retail / wholesale by customer type.
 // Falls back to product fields for old cart items.
 // =================================
 
 const getUnitPrice = (item) => {
-
     const candidates = [
         item?.finalPrice,
         item?.price,
@@ -1318,10 +2003,15 @@ const Checkout = () => {
     const token = localStorage.getItem("token");
 
 
-    // Coupon passed from the cart page
+    // =================================
+    // COUPON PASSED FROM CART
+    // =================================
+
     const coupon = location.state?.coupon || null;
     const couponCode = location.state?.couponCode || "";
-    const couponDiscount = Number(location.state?.couponDiscount || 0);
+    const couponDiscount = Number(
+        location.state?.couponDiscount || 0
+    );
 
 
     // =================================
@@ -1333,6 +2023,13 @@ const Checkout = () => {
     const [selectedAddress, setSelectedAddress] = useState("");
     const [loading, setLoading] = useState(false);
     const [cartLoading, setCartLoading] = useState(true);
+
+    const [termsAccepted, setTermsAccepted] = useState(false);
+
+
+    // =================================
+    // PRICING
+    // =================================
 
     const shippingCharge = 100;
     const gst = 18;
@@ -1359,18 +2056,29 @@ const Checkout = () => {
             setCartLoading(true);
 
             const res = await axios.get(`${API}/cart`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
 
             console.log("CHECKOUT CART:", res.data);
 
             const items = res.data?.data?.items || [];
-            setCart(Array.isArray(items) ? items : []);
+
+            setCart(
+                Array.isArray(items)
+                    ? items
+                    : []
+            );
 
         }
         catch (err) {
 
-            console.error("GET CART ERROR:", err.response?.data || err);
+            console.error(
+                "GET CART ERROR:",
+                err.response?.data || err
+            );
+
             setCart([]);
 
         }
@@ -1391,19 +2099,36 @@ const Checkout = () => {
 
         try {
 
-            const res = await axios.get(`${API}/addresses`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await axios.get(
+                `${API}/addresses`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
 
-            console.log("ADDRESS RESPONSE:", res.data);
+            console.log(
+                "ADDRESS RESPONSE:",
+                res.data
+            );
 
-            const addressData = res.data?.data || [];
-            setAddresses(Array.isArray(addressData) ? addressData : []);
+            const addressData =
+                res.data?.data || [];
+
+            setAddresses(
+                Array.isArray(addressData)
+                    ? addressData
+                    : []
+            );
 
         }
         catch (err) {
 
-            console.error("GET ADDRESS ERROR:", err.response?.data || err);
+            console.error(
+                "GET ADDRESS ERROR:",
+                err.response?.data || err
+            );
 
         }
 
@@ -1414,20 +2139,37 @@ const Checkout = () => {
     // TOTALS
     // =================================
 
-    const subtotal = cart.reduce((sum, item) => {
+    const subtotal = cart.reduce(
+        (sum, item) => {
 
-        const price = getUnitPrice(item);
-        const quantity = Number(item.quantity || 0);
+            const price = getUnitPrice(item);
 
-        return sum + price * quantity;
+            const quantity = Number(
+                item.quantity || 0
+            );
 
-    }, 0);
+            return sum + price * quantity;
 
-    const discountedSubtotal = Math.max(subtotal - couponDiscount, 0);
+        },
+        0
+    );
 
-    const gstAmount = Math.round(discountedSubtotal * gst / 100);
 
-    const grandTotal = discountedSubtotal + shippingCharge + gstAmount;
+    const discountedSubtotal = Math.max(
+        subtotal - couponDiscount,
+        0
+    );
+
+
+    const gstAmount = Math.round(
+        discountedSubtotal * gst / 100
+    );
+
+
+    const grandTotal =
+        discountedSubtotal +
+        shippingCharge +
+        gstAmount;
 
 
     // =================================
@@ -1440,276 +2182,535 @@ const Checkout = () => {
             return;
         }
 
+
+        // =================================
+        // TERMS CHECK
+        // =================================
+
+        if (!termsAccepted) {
+
+            toast.error(
+                "Please accept the Terms & Conditions before placing your order"
+            );
+
+            return;
+        }
+
+
+        // =================================
         // ADDRESS CHECK
+        // =================================
 
         if (!selectedAddress) {
-            toast.error("Please select delivery address");
+
+            toast.error(
+                "Please select delivery address"
+            );
+
             return;
         }
+
 
         const address = addresses.find(
-            (item) => item._id === selectedAddress
+            (item) =>
+                item._id === selectedAddress
         );
 
+
         if (!address) {
-            toast.error("Address not found");
+
+            toast.error(
+                "Address not found"
+            );
+
             return;
         }
 
+
+        // =================================
         // CART CHECK
+        // =================================
 
         if (!cart.length) {
-            toast.error("Your cart is empty");
+
+            toast.error(
+                "Your cart is empty"
+            );
+
             return;
         }
 
+
+        // =================================
         // SHIPPING ADDRESS
+        // =================================
 
         const shippingAddress = {
-            fullName: address.fullName || address.name || "",
-            phone: address.phone || address.mobile || "",
+
+            fullName:
+                address.fullName ||
+                address.name ||
+                "",
+
+            phone:
+                address.phone ||
+                address.mobile ||
+                "",
+
             addressLine:
                 address.addressLine ||
                 address.address ||
                 address.streetAddress ||
                 "",
-            city: address.city || "",
-            state: address.state || "",
-            pincode: address.pincode || "",
-            country: address.country || "India",
-            landmark: address.landmark || ""
+
+            city:
+                address.city ||
+                "",
+
+            state:
+                address.state ||
+                "",
+
+            pincode:
+                address.pincode ||
+                "",
+
+            country:
+                address.country ||
+                "India",
+
+            landmark:
+                address.landmark ||
+                ""
         };
 
+
+        // =================================
         // SHIPPING ADDRESS VALIDATION
+        // =================================
 
         if (!shippingAddress.fullName) {
-            toast.error("Address name is missing");
+
+            toast.error(
+                "Address name is missing"
+            );
+
             return;
         }
+
 
         if (!shippingAddress.phone) {
-            toast.error("Phone number is missing");
+
+            toast.error(
+                "Phone number is missing"
+            );
+
             return;
         }
+
 
         if (!shippingAddress.addressLine) {
-            toast.error("Address is missing");
+
+            toast.error(
+                "Address is missing"
+            );
+
             return;
         }
+
 
         if (!shippingAddress.city) {
-            toast.error("City is missing");
+
+            toast.error(
+                "City is missing"
+            );
+
             return;
         }
+
 
         if (!shippingAddress.state) {
-            toast.error("State is missing");
+
+            toast.error(
+                "State is missing"
+            );
+
             return;
         }
+
 
         if (!shippingAddress.pincode) {
-            toast.error("Pincode is missing");
+
+            toast.error(
+                "Pincode is missing"
+            );
+
             return;
         }
 
+
+        // =================================
         // ORDER ITEMS
+        // =================================
 
-        const orderItems = cart.map((item) => {
+        const orderItems = cart.map(
+            (item) => {
 
-            const unitPrice = getUnitPrice(item);
+                const unitPrice =
+                    getUnitPrice(item);
 
-            const originalPrice = Number(
-                item.originalPrice ??
-                item.product?.pricing?.mrp ??
-                unitPrice
-            );
 
-            const quantity = Number(item.quantity ?? 1);
+                const originalPrice = Number(
+                    item.originalPrice ??
+                    item.product?.pricing?.mrp ??
+                    unitPrice
+                );
 
-            const discountAmount = Number(
-                item.discountAmount ??
-                Math.max(originalPrice - unitPrice, 0)
-            );
 
-            return {
-                product: item.product?._id || item.product || "",
-                title: item.product?.name || item.title || "",
-                quantity: quantity,
-                originalPrice: originalPrice,
-                discountAmount: discountAmount,
-                price: unitPrice,
-                offer: item.offer || null,
-                imageUrl:
-                    item.product?.images?.[0]?.url ||
-                    item.imageUrl ||
-                    ""
-            };
+                const quantity = Number(
+                    item.quantity ?? 1
+                );
 
-        });
 
-        // CHECK PRODUCT DATA
+                const discountAmount = Number(
+                    item.discountAmount ??
+                    Math.max(
+                        originalPrice -
+                        unitPrice,
+                        0
+                    )
+                );
 
-        const invalidOrderItem = orderItems.some(
-            (item) =>
-                !item.product ||
-                !item.title ||
-                !Number.isFinite(item.quantity) ||
-                item.quantity < 1 ||
-                !Number.isFinite(item.originalPrice) ||
-                !Number.isFinite(item.price) ||
-                item.price <= 0
+
+                return {
+
+                    product:
+                        item.product?._id ||
+                        item.product ||
+                        "",
+
+                    title:
+                        item.product?.name ||
+                        item.title ||
+                        "",
+
+                    quantity:
+                        quantity,
+
+                    originalPrice:
+                        originalPrice,
+
+                    discountAmount:
+                        discountAmount,
+
+                    price:
+                        unitPrice,
+
+                    offer:
+                        item.offer ||
+                        null,
+
+                    imageUrl:
+                        item.product?.images?.[0]?.url ||
+                        item.imageUrl ||
+                        ""
+                };
+
+            }
         );
 
+
+        // =================================
+        // CHECK PRODUCT DATA
+        // =================================
+
+        const invalidOrderItem =
+            orderItems.some(
+                (item) =>
+                    !item.product ||
+                    !item.title ||
+                    !Number.isFinite(
+                        item.quantity
+                    ) ||
+                    item.quantity < 1 ||
+                    !Number.isFinite(
+                        item.originalPrice
+                    ) ||
+                    !Number.isFinite(
+                        item.price
+                    ) ||
+                    item.price <= 0
+            );
+
+
         if (invalidOrderItem) {
+
             toast.error(
                 "Some product information is missing. Please refresh the cart and try again."
             );
+
             return;
         }
 
+
+        // =================================
         // ORDER DATA
+        // =================================
 
         const orderData = {
-            orderItems: orderItems,
-            shippingAddress: shippingAddress,
-            totalAmount: Number(grandTotal),
-            orderSource: "ONLINE"
+
+            orderItems:
+                orderItems,
+
+            shippingAddress:
+                shippingAddress,
+
+            totalAmount:
+                Number(grandTotal),
+
+            orderSource:
+                "ONLINE"
         };
 
-        console.log("FINAL ORDER DATA:", orderData);
 
+        console.log(
+            "FINAL ORDER DATA:",
+            orderData
+        );
+
+
+        // =================================
         // API PROCESS
+        // =================================
 
         try {
 
             setLoading(true);
 
-            // 1. CREATE ORDER
 
-            const orderRes = await axios.post(
-                `${API}/orders`,
-                orderData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json"
+            // =================================
+            // 1. CREATE ORDER
+            // =================================
+
+            const orderRes =
+                await axios.post(
+                    `${API}/orders`,
+                    orderData,
+                    {
+                        headers: {
+                            Authorization:
+                                `Bearer ${token}`,
+
+                            "Content-Type":
+                                "application/json"
+                        }
                     }
-                }
+                );
+
+
+            console.log(
+                "ORDER RESPONSE:",
+                orderRes.data
             );
 
-            console.log("ORDER RESPONSE:", orderRes.data);
 
-            const order = orderRes.data?.order;
+            const order =
+                orderRes.data?.order;
+
 
             if (!order) {
-                throw new Error("Order was not created");
+
+                throw new Error(
+                    "Order was not created"
+                );
+
             }
 
-            console.log("ORDER CREATED:", order);
 
+            console.log(
+                "ORDER CREATED:",
+                order
+            );
+
+
+            // =================================
             // 2. CREATE DATABASE PAYMENT
+            // =================================
             //
-            // Backend allows: UPI, CARD, NET_BANKING, CASH
+            // Backend allows:
+            // UPI, CARD, NET_BANKING, CASH
+            //
             // Razorpay ke liye abhi UPI use kar rahe hain.
             // COD MAT BHEJNA.
+            // =================================
 
             const paymentData = {
-                paymentFor: "ORDER",
-                referenceId: order._id,
-                amount: Number(order.totalAmount),
-                paymentMethod: "UPI"
+
+                paymentFor:
+                    "ORDER",
+
+                referenceId:
+                    order._id,
+
+                amount:
+                    Number(
+                        order.totalAmount
+                    ),
+
+                paymentMethod:
+                    "UPI"
             };
 
-            console.log("PAYMENT DATA:", paymentData);
 
-            const paymentRes = await createPayment(paymentData);
+            console.log(
+                "PAYMENT DATA:",
+                paymentData
+            );
 
-            console.log("PAYMENT RESPONSE:", paymentRes);
+
+            const paymentRes =
+                await createPayment(
+                    paymentData
+                );
+
+
+            console.log(
+                "PAYMENT RESPONSE:",
+                paymentRes
+            );
+
 
             if (
                 !paymentRes ||
                 !paymentRes.success ||
                 !paymentRes.payment
             ) {
+
                 throw new Error(
                     paymentRes?.message ||
                     "Payment creation failed"
                 );
+
             }
 
-            const createdPayment = paymentRes.payment;
 
-            console.log("PAYMENT CREATED:", createdPayment);
+            const createdPayment =
+                paymentRes.payment;
 
+
+            console.log(
+                "PAYMENT CREATED:",
+                createdPayment
+            );
+
+
+            // =================================
             // 3. GO TO PAYMENT PAGE
+            // =================================
 
-            // navigate("/payment", {
-            //     state: {
-            //         order: order,
-            //         payment: createdPayment
-            //     }
-            // });
+            navigate(
+                "/payment",
+                {
+                    state: {
 
+                        order:
+                            order,
 
-            navigate("/payment", {
-    state: {
-        order: order,
+                        payment:
+                            createdPayment,
 
-        payment: createdPayment,
+                        paymentSummary: {
 
-        paymentSummary: {
-            subtotal: Number(subtotal),
+                            subtotal:
+                                Number(
+                                    subtotal
+                                ),
 
-            couponDiscount: Number(
-                couponDiscount
-            ),
+                            couponDiscount:
+                                Number(
+                                    couponDiscount
+                                ),
 
-            taxableAmount: Number(
-                discountedSubtotal
-            ),
+                            taxableAmount:
+                                Number(
+                                    discountedSubtotal
+                                ),
 
-            shippingCharge: Number(
-                shippingCharge
-            ),
+                            shippingCharge:
+                                Number(
+                                    shippingCharge
+                                ),
 
-            gstPercentage: Number(
-                gst
-            ),
+                            gstPercentage:
+                                Number(
+                                    gst
+                                ),
 
-            gstAmount: Number(
-                gstAmount
-            ),
+                            gstAmount:
+                                Number(
+                                    gstAmount
+                                ),
 
-            total: Number(
-                grandTotal
-            )
-        }
-    }
-});
+                            total:
+                                Number(
+                                    grandTotal
+                                )
+                        }
+                    }
+                }
+            );
 
         }
         catch (err) {
 
-            console.error("=================================");
-            console.error("ORDER / PAYMENT ERROR:", err);
-            console.error("BACKEND ERROR:", err.response?.data);
-            console.error("VALIDATION ERRORS:", err.response?.data?.errors);
+            console.error(
+                "================================="
+            );
 
-            const backendData = err.response?.data;
+            console.error(
+                "ORDER / PAYMENT ERROR:",
+                err
+            );
+
+            console.error(
+                "BACKEND ERROR:",
+                err.response?.data
+            );
+
+            console.error(
+                "VALIDATION ERRORS:",
+                err.response?.data?.errors
+            );
+
+
+            const backendData =
+                err.response?.data;
+
 
             let message =
                 backendData?.message ||
                 err.message ||
                 "Order failed";
 
+
+            // =================================
             // JOI VALIDATION ERRORS
+            // =================================
 
             if (
-                Array.isArray(backendData?.errors) &&
+                Array.isArray(
+                    backendData?.errors
+                ) &&
                 backendData.errors.length > 0
             ) {
-                message = backendData.errors.join("\n");
+
+                message =
+                    backendData.errors.join(
+                        "\n"
+                    );
+
             }
+
 
             toast.error(message);
 
@@ -1730,11 +2731,19 @@ const Checkout = () => {
     if (cartLoading) {
 
         return (
+
             <div className="checkout">
+
                 <div className="checkout-right">
-                    <h2>Loading Cart...</h2>
+
+                    <h2>
+                        Loading Cart...
+                    </h2>
+
                 </div>
+
             </div>
+
         );
 
     }
@@ -1748,77 +2757,140 @@ const Checkout = () => {
 
         <div className="checkout">
 
-            {/* LEFT */}
+            {/* =================================
+                LEFT
+            ================================= */}
 
             <div className="checkout-left">
 
-                <h2>Select Delivery Address</h2>
+                <h2>
+                    Select Delivery Address
+                </h2>
+
 
                 {addresses.length === 0 ? (
 
-                    <p>No Address Found</p>
+                    <p>
+                        No Address Found
+                    </p>
 
                 ) : (
 
-                    addresses.map((address) => (
+                    addresses.map(
+                        (address) => (
 
-                        <div className="address-card" key={address._id}>
+                            <div
+                                className="address-card"
+                                key={address._id}
+                            >
 
-                            <input
-                                type="radio"
-                                name="deliveryAddress"
-                                checked={selectedAddress === address._id}
-                                onChange={() => setSelectedAddress(address._id)}
-                            />
-
-                            <div>
-
-                                <h4>
-                                    {address.fullName || address.name || "Customer"}
-                                </h4>
-
-                                <p>{address.phone || address.mobile || ""}</p>
-
-                                <p>
-                                    {
-                                        address.addressLine ||
-                                        address.address ||
-                                        address.streetAddress ||
-                                        ""
+                                <input
+                                    type="radio"
+                                    name="deliveryAddress"
+                                    checked={
+                                        selectedAddress ===
+                                        address._id
                                     }
-                                </p>
+                                    onChange={() =>
+                                        setSelectedAddress(
+                                            address._id
+                                        )
+                                    }
+                                />
 
-                                <p>
-                                    {address.city || ""},{" "}
-                                    {address.state || ""}
-                                </p>
 
-                                <p>{address.pincode || ""}</p>
+                                <div>
+
+                                    <h4>
+                                        {
+                                            address.fullName ||
+                                            address.name ||
+                                            "Customer"
+                                        }
+                                    </h4>
+
+
+                                    <p>
+                                        {
+                                            address.phone ||
+                                            address.mobile ||
+                                            ""
+                                        }
+                                    </p>
+
+
+                                    <p>
+                                        {
+                                            address.addressLine ||
+                                            address.address ||
+                                            address.streetAddress ||
+                                            ""
+                                        }
+                                    </p>
+
+
+                                    <p>
+
+                                        {
+                                            address.city ||
+                                            ""
+                                        }
+
+                                        {", "}
+
+                                        {
+                                            address.state ||
+                                            ""
+                                        }
+
+                                    </p>
+
+
+                                    <p>
+                                        {
+                                            address.pincode ||
+                                            ""
+                                        }
+                                    </p>
+
+                                </div>
 
                             </div>
 
-                        </div>
-
-                    ))
+                        )
+                    )
 
                 )}
 
             </div>
 
 
-            {/* RIGHT */}
+            {/* =================================
+                RIGHT
+            ================================= */}
 
             <div className="checkout-right">
 
-                <h2>Order Summary</h2>
+                <h2>
+                    Order Summary
+                </h2>
+
 
                 {cart.length === 0 ? (
 
                     <div>
 
-                        <p>Cart is empty</p>
+                        <p>
+                            Cart is empty
+                        </p>
 
-                        <button type="button" onClick={() => navigate("/shop")}>
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                navigate("/shop")
+                            }
+                        >
                             Continue Shopping
                         </button>
 
@@ -1826,35 +2898,70 @@ const Checkout = () => {
 
                 ) : (
 
-                    cart.map((item, index) => {
+                    cart.map(
+                        (item, index) => {
 
-                        const productId = item.product?._id || item._id;
+                            const productId =
+                                item.product?._id ||
+                                item._id;
 
-                        const price = getUnitPrice(item);
 
-                        const quantity = Number(item.quantity || 0);
+                            const price =
+                                getUnitPrice(item);
 
-                        const itemTotal = price * quantity;
 
-                        return (
+                            const quantity =
+                                Number(
+                                    item.quantity || 0
+                                );
 
-                            <div className="summary-item" key={productId || index}>
 
-                                <p>{item.product?.name}</p>
+                            const itemTotal =
+                                price * quantity;
 
-                                <p>Qty: {quantity}</p>
 
-                                <p>₹ {price}</p>
+                            return (
 
-                                <p>Item Total: ₹ {itemTotal}</p>
+                                <div
+                                    className="summary-item"
+                                    key={
+                                        productId ||
+                                        index
+                                    }
+                                >
 
-                            </div>
+                                    <p>
+                                        {
+                                            item.product?.name
+                                        }
+                                    </p>
 
-                        );
 
-                    })
+                                    <p>
+                                        Qty: {quantity}
+                                    </p>
+
+
+                                    <p>
+                                        ₹ {price}
+                                    </p>
+
+
+                                    <p>
+                                        Item Total:
+                                        {" "}
+                                        ₹ {itemTotal}
+                                    </p>
+
+                                </div>
+
+                            );
+
+                        }
+                    )
 
                 )}
+
 
                 {cart.length > 0 && (
 
@@ -1862,53 +2969,182 @@ const Checkout = () => {
 
                         <hr />
 
-                        {/* SUBTOTAL */}
+
+                        {/* =================================
+                            SUBTOTAL
+                        ================================= */}
 
                         <div className="summary-row">
-                            <span>Subtotal</span>
-                            <span>₹ {subtotal}</span>
+
+                            <span>
+                                Subtotal
+                            </span>
+
+                            <span>
+                                ₹ {subtotal}
+                            </span>
+
                         </div>
 
-                        {/* COUPON */}
+
+                        {/* =================================
+                            COUPON
+                        ================================= */}
 
                         {couponDiscount > 0 && (
+
                             <div className="summary-row">
+
                                 <span>
+
                                     Coupon Discount
-                                    {couponCode ? ` (${couponCode})` : ""}
+
+                                    {
+                                        couponCode
+                                            ? ` (${couponCode})`
+                                            : ""
+                                    }
+
                                 </span>
-                                <span>- ₹ {couponDiscount}</span>
+
+                                <span>
+                                    - ₹ {couponDiscount}
+                                </span>
+
                             </div>
+
                         )}
 
-                        {/* SHIPPING */}
+
+                        {/* =================================
+                            SHIPPING
+                        ================================= */}
 
                         <div className="summary-row">
-                            <span>Shipping</span>
-                            <span>₹ {shippingCharge}</span>
+
+                            <span>
+                                Shipping
+                            </span>
+
+                            <span>
+                                ₹ {shippingCharge}
+                            </span>
+
                         </div>
 
-                        {/* GST */}
+
+                        {/* =================================
+                            GST
+                        ================================= */}
 
                         <div className="summary-row">
-                            <span>GST ({gst}%)</span>
-                            <span>₹ {gstAmount}</span>
+
+                            <span>
+                                GST ({gst}%)
+                            </span>
+
+                            <span>
+                                ₹ {gstAmount}
+                            </span>
+
                         </div>
+
 
                         <hr />
 
-                        {/* GRAND TOTAL */}
 
-                        <h2>Total : ₹ {grandTotal}</h2>
+                        {/* =================================
+                            GRAND TOTAL
+                        ================================= */}
 
-                        {/* PLACE ORDER */}
+                        <h2>
+                            Total : ₹ {grandTotal}
+                        </h2>
+
+
+                        {/* =================================
+                            TERMS & CONDITIONS
+                        ================================= */}
+
+                        <div className="checkout-terms">
+
+                            <label
+                                style={{
+                                    display: "flex",
+                                    gap: "8px",
+                                    alignItems:
+                                        "flex-start",
+                                    fontSize: "13px",
+                                    margin:
+                                        "10px 0",
+                                    cursor:
+                                        "pointer"
+                                }}
+                            >
+
+                                <input
+                                    type="checkbox"
+                                    checked={
+                                        termsAccepted
+                                    }
+                                    onChange={(e) =>
+                                        setTermsAccepted(
+                                            e.target.checked
+                                        )
+                                    }
+                                    style={{
+                                        marginTop:
+                                            "3px"
+                                    }}
+                                />
+
+
+                                <span>
+
+                                    I agree to the{" "}
+
+                                    <Link
+                                        to="/terms-conditions"
+                                        target="_blank"
+                                    >
+                                        Terms &amp;
+                                        Conditions
+                                    </Link>
+
+                                    {" "}and acknowledge the{" "}
+
+                                    <Link
+                                        to="/privacy-policy"
+                                        target="_blank"
+                                    >
+                                        Privacy Policy
+                                    </Link>
+
+                                    .
+
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        {/* =================================
+                            PLACE ORDER
+                        ================================= */}
 
                         <button
                             type="button"
                             onClick={placeOrder}
                             disabled={loading}
                         >
-                            {loading ? "Placing Order..." : "Place Order"}
+
+                            {
+                                loading
+                                    ? "Placing Order..."
+                                    : "Place Order"
+                            }
+
                         </button>
 
                     </>

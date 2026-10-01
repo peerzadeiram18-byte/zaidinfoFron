@@ -1,0 +1,225 @@
+/* =====================================================
+   TERMS & CONDITIONS PAGE
+===================================================== */
+
+.terms-page {
+    width: 100%;
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #1e293b;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.terms-header {
+    width: 100%;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 70px 20px;
+}
+
+.terms-header-inner {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.terms-header h1 {
+    margin: 0 0 15px;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.terms-header p {
+    max-width: 760px;
+    margin: 0 auto;
+    color: #cbd5e1;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+
+.terms-container {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 50px 20px 70px;
+}
+
+
+/* =====================================================
+   SECTION
+===================================================== */
+
+.terms-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 28px 30px;
+    margin-bottom: 22px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.terms-section h2 {
+    margin: 0 0 15px;
+    color: #0f172a;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.terms-section p {
+    margin: 0 0 14px;
+    color: #475569;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.terms-section p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* =====================================================
+   LIST
+===================================================== */
+
+.terms-section ul {
+    margin: 10px 0 0;
+    padding-left: 22px;
+}
+
+.terms-section li {
+    margin-bottom: 9px;
+    color: #475569;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   CONTACT
+===================================================== */
+
+.terms-contact {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.terms-contact p {
+    margin-bottom: 8px;
+}
+
+.terms-contact a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.terms-contact a:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   BOTTOM LINKS
+===================================================== */
+
+.terms-bottom-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 35px;
+}
+
+.terms-back-btn,
+.terms-policy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.terms-back-btn {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+.terms-back-btn:hover {
+    background: #1e293b;
+}
+
+.terms-policy-btn {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+}
+
+.terms-policy-btn:hover {
+    background: #f1f5f9;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .terms-header {
+        padding: 50px 18px;
+    }
+
+    .terms-header h1 {
+        font-size: 32px;
+    }
+
+    .terms-header p {
+        font-size: 14px;
+    }
+
+    .terms-container {
+        padding: 30px 14px 50px;
+    }
+
+    .terms-section {
+        padding: 22px 20px;
+        border-radius: 10px;
+    }
+
+    .terms-section h2 {
+        font-size: 19px;
+    }
+
+    .terms-section p,
+    .terms-section li {
+        font-size: 14px;
+    }
+
+    .terms-bottom-links {
+        flex-direction: column;
+    }
+
+    .terms-back-btn,
+    .terms-policy-btn {
+        width: 100%;
+    }
+}

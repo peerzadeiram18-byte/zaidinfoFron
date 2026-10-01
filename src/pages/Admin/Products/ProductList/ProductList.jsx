@@ -19,24 +19,18 @@
 //     // =====================================================
 
 //     const [products, setProducts] = useState([]);
-
 //     const [loading, setLoading] = useState(true);
-
 //     const [search, setSearch] = useState("");
-
 //     const [currentPage, setCurrentPage] = useState(1);
 
 //     const itemsPerPage = 10;
-
 
 //     // =====================================================
 //     // LOAD ALL PRODUCTS
 //     // =====================================================
 
 //     const loadProducts = async () => {
-
 //         try {
-
 //             setLoading(true);
 
 //             const res = await getProducts();
@@ -45,7 +39,6 @@
 //                 "PRODUCT LIST API RESPONSE:",
 //                 res.data
 //             );
-
 
 //             // Backend response:
 //             //
@@ -56,31 +49,25 @@
 //             // }
 
 //             const productData =
-
 //                 Array.isArray(res.data?.data)
-
 //                     ? res.data.data
-
 //                     : Array.isArray(res.data)
-
 //                         ? res.data
-
-//                         : [];
-
+//                         : Array.isArray(res.data?.products)
+//                             ? res.data.products
+//                             : Array.isArray(res.data?.data?.products)
+//                                 ? res.data.data.products
+//                                 : [];
 
 //             console.log(
 //                 "PRODUCTS SET TO STATE:",
 //                 productData
 //             );
 
-
 //             setProducts(productData);
-
 //             setCurrentPage(1);
 
-//         }
-
-//         catch (error) {
+//         } catch (error) {
 
 //             console.error(
 //                 "GET PRODUCTS ERROR:",
@@ -94,27 +81,19 @@
 //                 "Failed to load products"
 //             );
 
-//         }
-
-//         finally {
+//         } finally {
 
 //             setLoading(false);
-
 //         }
-
 //     };
-
 
 //     // =====================================================
 //     // FIRST LOAD
 //     // =====================================================
 
 //     useEffect(() => {
-
 //         loadProducts();
-
 //     }, []);
-
 
 //     // =====================================================
 //     // SEARCH PRODUCTS
@@ -122,12 +101,9 @@
 
 //     const handleSearch = async (e) => {
 
-//         const keyword =
-//             e.target.value;
-
+//         const keyword = e.target.value;
 
 //         setSearch(keyword);
-
 
 //         // =================================================
 //         // EMPTY SEARCH
@@ -135,58 +111,43 @@
 
 //         if (!keyword.trim()) {
 
-//             loadProducts();
+//             await loadProducts();
 
 //             return;
-
 //         }
-
 
 //         try {
 
 //             setLoading(true);
 
-
 //             const res =
-//                 await searchProducts(
-//                     keyword
-//                 );
-
+//                 await searchProducts(keyword);
 
 //             console.log(
 //                 "SEARCH API RESPONSE:",
 //                 res.data
 //             );
 
-
 //             const searchData =
-
-//                 Array.isArray(
-//                     res.data?.data
-//                 )
-
+//                 Array.isArray(res.data?.data)
 //                     ? res.data.data
-
 //                     : Array.isArray(res.data)
-
 //                         ? res.data
-
-//                         : [];
-
+//                         : Array.isArray(res.data?.products)
+//                             ? res.data.products
+//                             : Array.isArray(res.data?.data?.products)
+//                                 ? res.data.data.products
+//                                 : [];
 
 //             console.log(
 //                 "SEARCH PRODUCTS:",
 //                 searchData
 //             );
 
-
 //             setProducts(searchData);
-
 //             setCurrentPage(1);
 
-//         }
-
-//         catch (error) {
+//         } catch (error) {
 
 //             console.error(
 //                 "SEARCH ERROR:",
@@ -195,16 +156,16 @@
 
 //             setProducts([]);
 
-//         }
+//             toast.error(
+//                 error.response?.data?.message ||
+//                 "Search failed"
+//             );
 
-//         finally {
+//         } finally {
 
 //             setLoading(false);
-
 //         }
-
 //     };
-
 
 //     // =====================================================
 //     // DELETE PRODUCT
@@ -217,79 +178,55 @@
 //                 "Are you sure you want to delete this product?"
 //             );
 
-
 //         if (!confirmDelete) {
-
 //             return;
-
 //         }
-
 
 //         try {
 
 //             setLoading(true);
-
 
 //             console.log(
 //                 "Deleting Product ID:",
 //                 id
 //             );
 
-
 //             await deleteProduct(id);
-
 
 //             toast.success(
 //                 "Product Deleted Successfully"
 //             );
 
-
 //             // Reload product list
-
 //             await loadProducts();
 
-//         }
-
-//         catch (error) {
+//         } catch (error) {
 
 //             console.error(
 //                 "DELETE PRODUCT ERROR:",
 //                 error
 //             );
 
-
 //             toast.error(
-
 //                 error.response?.data?.message ||
-
 //                 "Delete Failed"
-
 //             );
 
-//         }
-
-//         finally {
+//         } finally {
 
 //             setLoading(false);
-
 //         }
-
 //     };
-
 
 //     // =====================================================
 //     // PAGINATION
 //     // =====================================================
 
 //     const lastIndex =
-//         currentPage *
-//         itemsPerPage;
-
+//         currentPage * itemsPerPage;
 
 //     const firstIndex =
-//         lastIndex -
-//         itemsPerPage;
-
+//         lastIndex - itemsPerPage;
 
 //     const currentProducts =
 //         products.slice(
@@ -297,13 +234,11 @@
 //             lastIndex
 //         );
 
-
 //     const totalPages =
 //         Math.ceil(
 //             products.length /
 //             itemsPerPage
 //         );
-
 
 //     // =====================================================
 //     // IMAGE URL
@@ -311,41 +246,77 @@
 
 //     const getImageUrl = (product) => {
 
-//         const imageUrl =
-//             product?.images?.[0]?.url;
+//         let imageUrl = null;
 
+//         // -----------------------------------------------
+//         // Multiple possible backend image structures
+//         // -----------------------------------------------
+
+//         if (
+//             Array.isArray(product?.images) &&
+//             product.images.length > 0
+//         ) {
+
+//             const firstImage =
+//                 product.images[0];
+
+//             if (typeof firstImage === "string") {
+//                 imageUrl = firstImage;
+//             } else {
+//                 imageUrl =
+//                     firstImage?.url ||
+//                     firstImage?.path ||
+//                     firstImage?.image ||
+//                     firstImage?.src ||
+//                     null;
+//             }
+//         }
+
+//         // -----------------------------------------------
+//         // Fallback image fields
+//         // -----------------------------------------------
 
 //         if (!imageUrl) {
 
-//             return null;
-
+//             imageUrl =
+//                 product?.image ||
+//                 product?.primaryImage ||
+//                 product?.thumbnail ||
+//                 product?.imageUrl ||
+//                 null;
 //         }
 
+//         if (!imageUrl) {
+//             return null;
+//         }
+
+//         // -----------------------------------------------
+//         // Full URL
+//         // -----------------------------------------------
 
 //         if (
-
 //             imageUrl.startsWith("http://") ||
-
 //             imageUrl.startsWith("https://")
-
 //         ) {
 
 //             return imageUrl;
-
 //         }
 
+//         // -----------------------------------------------
+//         // Backend URL
+//         // -----------------------------------------------
 
 //         const serverUrl =
-//             API.replace(
-//                 /\/api\/?$/,
-//                 ""
-//             );
+//             String(API || "")
+//                 .replace(/\/api\/?$/, "")
+//                 .replace(/\/$/, "");
 
+//         const cleanImagePath =
+//             String(imageUrl)
+//                 .replace(/^\/+/, "");
 
-//         return `${serverUrl}${imageUrl}`;
-
+//         return `${serverUrl}/${cleanImagePath}`;
 //     };
-
 
 //     // =====================================================
 //     // PRODUCT TYPE
@@ -357,9 +328,7 @@
 //             product?.productType ||
 //             "NEW"
 //         );
-
 //     };
-
 
 //     // =====================================================
 //     // CATEGORY NAME
@@ -374,19 +343,16 @@
 
 //             return (
 //                 product.category?.name ||
+//                 product.category?.title ||
 //                 "N/A"
 //             );
-
 //         }
-
 
 //         return (
 //             product?.category ||
 //             "N/A"
 //         );
-
 //     };
-
 
 //     // =====================================================
 //     // SUBCATEGORY NAME
@@ -401,19 +367,16 @@
 
 //             return (
 //                 product.subcategory?.name ||
+//                 product.subcategory?.title ||
 //                 "N/A"
 //             );
-
 //         }
-
 
 //         return (
 //             product?.subcategory ||
 //             "N/A"
 //         );
-
 //     };
-
 
 //     // =====================================================
 //     // BRAND NAME
@@ -428,35 +391,110 @@
 
 //             return (
 //                 product.brand?.name ||
+//                 product.brand?.title ||
 //                 "N/A"
 //             );
-
 //         }
-
 
 //         return (
 //             product?.brand ||
 //             "N/A"
 //         );
-
 //     };
-
 
 //     // =====================================================
 //     // REFURBISHED DETAILS
 //     // =====================================================
 
-//     const getRefurbishedDetails = (
-//         product
-//     ) => {
+//     const getRefurbishedDetails = (product) => {
 
 //         return (
 //             product?.refurbishedDetails ||
 //             null
 //         );
-
 //     };
 
+//     // =====================================================
+//     // RENTAL DETAILS
+//     // =====================================================
+
+//     const getRentalDetails = (product) => {
+
+//         return (
+//             product?.rental ||
+//             product?.rentalDetails ||
+//             product?.rentalProduct ||
+//             null
+//         );
+//     };
+
+//     // =====================================================
+//     // RENTAL QUANTITY
+//     // =====================================================
+
+//     const getRentalQuantity = (product) => {
+
+//         const rental =
+//             getRentalDetails(product);
+
+//         if (!rental) {
+//             return null;
+//         }
+
+//         return {
+//             available:
+//                 rental?.availableQuantity ??
+//                 rental?.availableQty ??
+//                 0,
+
+//             total:
+//                 rental?.totalQuantity ??
+//                 rental?.quantity ??
+//                 rental?.availableQuantity ??
+//                 0,
+
+//             rented:
+//                 rental?.rentedQuantity ??
+//                 0
+//         };
+//     };
+
+//     // =====================================================
+//     // RENTAL STATUS
+//     // =====================================================
+
+//     const getRentalStatus = (product) => {
+
+//         const rental =
+//             getRentalDetails(product);
+
+//         if (!rental) {
+//             return "NOT_CONFIGURED";
+//         }
+
+//         if (
+//             rental?.isAvailableForRent === true
+//         ) {
+
+//             return "AVAILABLE";
+//         }
+
+//         return "UNAVAILABLE";
+//     };
+
+//     // =====================================================
+//     // FORMAT MONEY
+//     // =====================================================
+
+//     const formatMoney = (value) => {
+
+//         const number =
+//             Number(value || 0);
+
+//         return number.toLocaleString(
+//             "en-IN"
+//         );
+//     };
 
 //     // =====================================================
 //     // UI
@@ -465,7 +503,6 @@
 //     return (
 
 //         <div className="product-list1">
-
 
 //             {/* =================================================
 //                 HEADER
@@ -485,7 +522,6 @@
 
 //                 </div>
 
-
 //                 <input
 //                     type="text"
 //                     placeholder="Search Product..."
@@ -496,7 +532,6 @@
 
 //             </div>
 
-
 //             {/* =================================================
 //                 LOADING
 //             ================================================= */}
@@ -504,9 +539,7 @@
 //             {loading ? (
 
 //                 <div className="loading1">
-
 //                     Loading Products...
-
 //                 </div>
 
 //             ) : (
@@ -558,6 +591,10 @@
 //                                     </th>
 
 //                                     <th>
+//                                         Rental Details
+//                                     </th>
+
+//                                     <th>
 //                                         Purchase Price
 //                                     </th>
 
@@ -593,13 +630,11 @@
 
 //                             </thead>
 
-
 //                             <tbody>
 
 //                                 {currentProducts.length > 0 ? (
 
 //                                     currentProducts.map(
-
 //                                         (
 //                                             product,
 //                                             index
@@ -610,18 +645,30 @@
 //                                                     product
 //                                                 );
 
-
 //                                             const productType =
 //                                                 getProductType(
 //                                                     product
 //                                                 );
-
 
 //                                             const refurbishedDetails =
 //                                                 getRefurbishedDetails(
 //                                                     product
 //                                                 );
 
+//                                             const rentalDetails =
+//                                                 getRentalDetails(
+//                                                     product
+//                                                 );
+
+//                                             const rentalQuantity =
+//                                                 getRentalQuantity(
+//                                                     product
+//                                                 );
+
+//                                             const rentalStatus =
+//                                                 getRentalStatus(
+//                                                     product
+//                                                 );
 
 //                                             return (
 
@@ -633,21 +680,17 @@
 //                                                     }
 //                                                 >
 
-
 //                                                     {/* =================================================
 //                                                         NUMBER
 //                                                     ================================================= */}
 
 //                                                     <td>
-
 //                                                         {
 //                                                             firstIndex +
 //                                                             index +
 //                                                             1
 //                                                         }
-
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         IMAGE
@@ -668,6 +711,11 @@
 //                                                                 className="table-image1"
 //                                                                 onError={(e) => {
 
+//                                                                     console.error(
+//                                                                         "PRODUCT IMAGE ERROR:",
+//                                                                         imageUrl
+//                                                                     );
+
 //                                                                     e.target.style.display =
 //                                                                         "none";
 
@@ -677,15 +725,12 @@
 //                                                         ) : (
 
 //                                                             <div className="no-image1">
-
 //                                                                 No Image
-
 //                                                             </div>
 
 //                                                         )}
 
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         PRODUCT NAME
@@ -694,16 +739,13 @@
 //                                                     <td>
 
 //                                                         <strong>
-
 //                                                             {
 //                                                                 product.name ||
 //                                                                 "N/A"
 //                                                             }
-
 //                                                         </strong>
 
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         PRODUCT TYPE
@@ -715,23 +757,25 @@
 //                                                         "REFURBISHED" ? (
 
 //                                                             <span className="refurbished-badge">
-
 //                                                                 Refurbished
+//                                                             </span>
 
+//                                                         ) : productType ===
+//                                                         "RENTAL" ? (
+
+//                                                             <span className="rental-product-badge">
+//                                                                 Rental
 //                                                             </span>
 
 //                                                         ) : (
 
 //                                                             <span className="new-product-badge">
-
 //                                                                 New
-
 //                                                             </span>
 
 //                                                         )}
 
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         CATEGORY
@@ -747,7 +791,6 @@
 
 //                                                     </td>
 
-
 //                                                     {/* =================================================
 //                                                         SUBCATEGORY
 //                                                     ================================================= */}
@@ -761,7 +804,6 @@
 //                                                         }
 
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         BRAND
@@ -777,7 +819,6 @@
 
 //                                                     </td>
 
-
 //                                                     {/* =================================================
 //                                                         REFURBISHED DETAILS
 //                                                     ================================================= */}
@@ -792,7 +833,6 @@
 //                                                                 <div className="refurbished-details1">
 
 //                                                                     <div>
-
 //                                                                         <strong>
 //                                                                             Grade:
 //                                                                         </strong>{" "}
@@ -801,12 +841,9 @@
 //                                                                             refurbishedDetails.grade ||
 //                                                                             "N/A"
 //                                                                         }
-
 //                                                                     </div>
 
-
 //                                                                     <div>
-
 //                                                                         <strong>
 //                                                                             Battery:
 //                                                                         </strong>{" "}
@@ -818,9 +855,7 @@
 
 //                                                                     </div>
 
-
 //                                                                     <div>
-
 //                                                                         <strong>
 //                                                                             Warranty:
 //                                                                         </strong>{" "}
@@ -829,14 +864,10 @@
 //                                                                             refurbishedDetails.warrantyMonths ??
 //                                                                             0
 //                                                                         }{" "}
-
 //                                                                         months
-
 //                                                                     </div>
 
-
 //                                                                     <div>
-
 //                                                                         <strong>
 //                                                                             Testing:
 //                                                                         </strong>{" "}
@@ -845,7 +876,6 @@
 //                                                                             refurbishedDetails.testingStatus ||
 //                                                                             "N/A"
 //                                                                         }
-
 //                                                                     </div>
 
 //                                                                 </div>
@@ -861,15 +891,227 @@
 //                                                         ) : (
 
 //                                                             <span className="not-applicable1">
-
 //                                                                 N/A
-
 //                                                             </span>
 
 //                                                         )}
 
 //                                                     </td>
 
+//                                                     {/* =================================================
+//                                                         RENTAL DETAILS
+//                                                     ================================================= */}
+
+//                                                     <td>
+
+//                                                         {productType ===
+//                                                         "RENTAL" ? (
+
+//                                                             rentalDetails ? (
+
+//                                                                 <div className="rental-details1">
+
+//                                                                     {/* -----------------------------------------
+//                                                                         RENTAL STATUS
+//                                                                     ----------------------------------------- */}
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Rental:
+//                                                                         </strong>{" "}
+
+//                                                                         {rentalStatus ===
+//                                                                         "AVAILABLE" ? (
+
+//                                                                             <span className="rental-available1">
+//                                                                                 Available
+//                                                                             </span>
+
+//                                                                         ) : (
+
+//                                                                             <span className="rental-unavailable1">
+//                                                                                 Unavailable
+//                                                                             </span>
+
+//                                                                         )}
+
+//                                                                     </div>
+
+//                                                                     {/* -----------------------------------------
+//                                                                         MONTHLY RENT
+//                                                                     ----------------------------------------- */}
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Monthly:
+//                                                                         </strong>{" "}
+
+//                                                                         ₹
+//                                                                         {formatMoney(
+//                                                                             rentalDetails.monthlyRent
+//                                                                         )}
+
+//                                                                     </div>
+
+//                                                                     {/* -----------------------------------------
+//                                                                         SECURITY DEPOSIT
+//                                                                     ----------------------------------------- */}
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Deposit:
+//                                                                         </strong>{" "}
+
+//                                                                         ₹
+//                                                                         {formatMoney(
+//                                                                             rentalDetails.securityDeposit
+//                                                                         )}
+
+//                                                                     </div>
+
+//                                                                     {/* -----------------------------------------
+//                                                                         MINIMUM MONTHS
+//                                                                     ----------------------------------------- */}
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Minimum:
+//                                                                         </strong>{" "}
+
+//                                                                         {
+//                                                                             rentalDetails.minimumRentalMonths ??
+//                                                                             3
+//                                                                         }{" "}
+//                                                                         months
+
+//                                                                     </div>
+
+//                                                                     {/* -----------------------------------------
+//                                                                         GST
+//                                                                     ----------------------------------------- */}
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             GST:
+//                                                                         </strong>{" "}
+
+//                                                                         {
+//                                                                             rentalDetails.gst ??
+//                                                                             0
+//                                                                         }%
+
+//                                                                     </div>
+
+//                                                                     {/* -----------------------------------------
+//                                                                         QUANTITY
+//                                                                     ----------------------------------------- */}
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Available:
+//                                                                         </strong>{" "}
+
+//                                                                         {
+//                                                                             rentalQuantity?.available ??
+//                                                                             0
+//                                                                         }
+
+//                                                                     </div>
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Total:
+//                                                                         </strong>{" "}
+
+//                                                                         {
+//                                                                             rentalQuantity?.total ??
+//                                                                             0
+//                                                                         }
+
+//                                                                     </div>
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Rented:
+//                                                                         </strong>{" "}
+
+//                                                                         {
+//                                                                             rentalQuantity?.rented ??
+//                                                                             0
+//                                                                         }
+
+//                                                                     </div>
+
+//                                                                     {/* -----------------------------------------
+//                                                                         SOFTWARE
+//                                                                     ----------------------------------------- */}
+
+//                                                                     <div>
+
+//                                                                         <strong>
+//                                                                             Software:
+//                                                                         </strong>{" "}
+
+//                                                                         {rentalDetails.basicSoftwareInstalled ===
+//                                                                         true
+//                                                                             ? "Installed"
+//                                                                             : "Not Installed"}
+
+//                                                                     </div>
+
+//                                                                     {/* -----------------------------------------
+//                                                                         INCLUDED ITEMS
+//                                                                     ----------------------------------------- */}
+
+//                                                                     {Array.isArray(
+//                                                                         rentalDetails.includedItems
+//                                                                     ) &&
+//                                                                     rentalDetails.includedItems.length >
+//                                                                     0 ? (
+
+//                                                                         <div>
+
+//                                                                             <strong>
+//                                                                                 Included:
+//                                                                             </strong>{" "}
+
+//                                                                             {
+//                                                                                 rentalDetails.includedItems.join(
+//                                                                                     ", "
+//                                                                                 )
+//                                                                             }
+
+//                                                                         </div>
+
+//                                                                     ) : null}
+
+//                                                                 </div>
+
+//                                                             ) : (
+
+//                                                                 <span className="rental-not-configured1">
+//                                                                     Rental Not Configured
+//                                                                 </span>
+
+//                                                             )
+
+//                                                         ) : (
+
+//                                                             <span className="not-applicable1">
+//                                                                 N/A
+//                                                             </span>
+
+//                                                         )}
+
+//                                                     </td>
 
 //                                                     {/* =================================================
 //                                                         PURCHASE PRICE
@@ -880,13 +1122,13 @@
 //                                                         ₹{" "}
 
 //                                                         {
-//                                                             product.pricing
-//                                                                 ?.purchasePrice ??
-//                                                             0
+//                                                             formatMoney(
+//                                                                 product.pricing
+//                                                                     ?.purchasePrice
+//                                                             )
 //                                                         }
 
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         SELLING PRICE
@@ -897,13 +1139,13 @@
 //                                                         ₹{" "}
 
 //                                                         {
-//                                                             product.pricing
-//                                                                 ?.sellingPrice ??
-//                                                             0
+//                                                             formatMoney(
+//                                                                 product.pricing
+//                                                                     ?.sellingPrice
+//                                                             )
 //                                                         }
 
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         MRP
@@ -914,13 +1156,13 @@
 //                                                         ₹{" "}
 
 //                                                         {
-//                                                             product.pricing
-//                                                                 ?.mrp ??
-//                                                             0
+//                                                             formatMoney(
+//                                                                 product.pricing
+//                                                                     ?.mrp
+//                                                             )
 //                                                         }
 
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         DISCOUNT
@@ -936,7 +1178,6 @@
 
 //                                                     </td>
 
-
 //                                                     {/* =================================================
 //                                                         GST
 //                                                     ================================================= */}
@@ -951,7 +1192,6 @@
 
 //                                                     </td>
 
-
 //                                                     {/* =================================================
 //                                                         STOCK
 //                                                     ================================================= */}
@@ -961,11 +1201,11 @@
 //                                                         {
 //                                                             product.inventory
 //                                                                 ?.currentStock ??
+//                                                             product.stock ??
 //                                                             0
 //                                                         }
 
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         STATUS
@@ -977,23 +1217,18 @@
 //                                                         "ACTIVE" ? (
 
 //                                                             <span className="active-status">
-
 //                                                                 Active
-
 //                                                             </span>
 
 //                                                         ) : (
 
 //                                                             <span className="inactive-status">
-
 //                                                                 Inactive
-
 //                                                             </span>
 
 //                                                         )}
 
 //                                                     </td>
-
 
 //                                                     {/* =================================================
 //                                                         ACTIONS
@@ -1006,13 +1241,12 @@
 //                                                             className="delete-btn1"
 //                                                             onClick={() =>
 //                                                                 handleDelete(
-//                                                                     product._id
+//                                                                     product._id ||
+//                                                                     product.id
 //                                                                 )
 //                                                             }
 //                                                         >
-
 //                                                             Delete
-
 //                                                         </button>
 
 //                                                     </td>
@@ -1020,9 +1254,7 @@
 //                                                 </tr>
 
 //                                             );
-
 //                                         }
-
 //                                     )
 
 //                                 ) : (
@@ -1030,12 +1262,10 @@
 //                                     <tr>
 
 //                                         <td
-//                                             colSpan="16"
+//                                             colSpan="17"
 //                                             className="no-products1"
 //                                         >
-
 //                                             No Products Found
-
 //                                         </td>
 
 //                                     </tr>
@@ -1048,7 +1278,6 @@
 
 //                     </div>
 
-
 //                     {/* =================================================
 //                         PAGINATION
 //                     ================================================= */}
@@ -1056,7 +1285,6 @@
 //                     {totalPages > 1 && (
 
 //                         <div className="pagination1">
-
 
 //                             <button
 //                                 type="button"
@@ -1069,28 +1297,20 @@
 //                                     )
 //                                 }
 //                             >
-
 //                                 Previous
-
 //                             </button>
 
-
 //                             {[...Array(totalPages)].map(
-
 //                                 (_, index) => (
 
 //                                     <button
 //                                         type="button"
 //                                         key={index}
 //                                         className={
-
 //                                             currentPage ===
 //                                             index + 1
-
 //                                                 ? "active-page"
-
 //                                                 : ""
-
 //                                         }
 //                                         onClick={() =>
 //                                             setCurrentPage(
@@ -1098,17 +1318,13 @@
 //                                             )
 //                                         }
 //                                     >
-
 //                                         {
 //                                             index + 1
 //                                         }
-
 //                                     </button>
 
 //                                 )
-
 //                             )}
-
 
 //                             <button
 //                                 type="button"
@@ -1122,9 +1338,7 @@
 //                                     )
 //                                 }
 //                             >
-
 //                                 Next
-
 //                             </button>
 
 //                         </div>
@@ -1136,13 +1350,11 @@
 //             )}
 
 //         </div>
-
 //     );
-
 // };
 
-
 // export default ProductList;
+
 
 
 import React, { useEffect, useState } from "react";
@@ -1746,7 +1958,11 @@ const ProductList = () => {
                                     </th>
 
                                     <th>
-                                        Selling Price
+                                        Retail Price (Personal)
+                                    </th>
+
+                                    <th>
+                                        Wholesale Price (Business)
                                     </th>
 
                                     <th>
@@ -2278,7 +2494,7 @@ const ProductList = () => {
                                                     </td>
 
                                                     {/* =================================================
-                                                        SELLING PRICE
+                                                        RETAIL PRICE (PERSONAL CUSTOMERS)
                                                     ================================================= */}
 
                                                     <td>
@@ -2288,9 +2504,43 @@ const ProductList = () => {
                                                         {
                                                             formatMoney(
                                                                 product.pricing
-                                                                    ?.sellingPrice
+                                                                    ?.retailPrice
                                                             )
                                                         }
+
+                                                    </td>
+
+                                                    {/* =================================================
+                                                        WHOLESALE PRICE (BUSINESS CUSTOMERS)
+                                                    ================================================= */}
+
+                                                    <td>
+
+                                                        {product.pricing
+                                                            ?.wholesalePrice !==
+                                                            null &&
+                                                        product.pricing
+                                                            ?.wholesalePrice !==
+                                                            undefined ? (
+
+                                                            <>
+                                                                ₹{" "}
+
+                                                                {
+                                                                    formatMoney(
+                                                                        product.pricing
+                                                                            .wholesalePrice
+                                                                    )
+                                                                }
+                                                            </>
+
+                                                        ) : (
+
+                                                            <span className="not-applicable1">
+                                                                Not set
+                                                            </span>
+
+                                                        )}
 
                                                     </td>
 
@@ -2409,7 +2659,7 @@ const ProductList = () => {
                                     <tr>
 
                                         <td
-                                            colSpan="17"
+                                            colSpan="18"
                                             className="no-products1"
                                         >
                                             No Products Found

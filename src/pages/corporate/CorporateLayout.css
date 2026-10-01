@@ -1,4 +1,9 @@
-
+/* =====================================================
+   CORPORATE LAYOUT
+   Desktop  (> 900px)  : full sidebar, 240px, logout pinned to the bottom
+   Tablet   (<= 900px) : icon-only rail, 64px
+   Phone    (<= 640px) : bottom navigation bar, scrolls sideways
+===================================================== */
 
 .corp-layout {
   display: flex;
@@ -14,14 +19,19 @@
   box-sizing: border-box;
 }
 
-/* SIDEBAR */
+/* =====================================================
+   SIDEBAR
+===================================================== */
 
 .corp-sidebar {
   position: sticky;
   top: 0;
+  display: flex;
+  flex-direction: column;
   flex: 0 0 240px;
   width: 240px;
   height: 100vh;
+  height: 100dvh;
   padding: 1.25rem 0.75rem;
   background: #0f172a;
   overflow-y: auto;
@@ -30,10 +40,12 @@
 .corp-sidebar-menu {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
   gap: 2px;
 }
 
 .corp-menu-item {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -70,7 +82,64 @@
   font-size: 0.95rem;
 }
 
-/* CHILD PAGE */
+/* ---------- Unread badge (Notifications item) ---------- */
+
+.corp-menu-badge {
+  margin-left: auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ---------- Logout (pinned to the bottom) ---------- */
+
+.corp-sidebar-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 12px 0 4px;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.corp-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.7rem 0.75rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #fca5a5;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.corp-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.14);
+  color: #fecaca;
+}
+
+.corp-logout-btn:focus-visible {
+  outline: 2px solid #f87171;
+  outline-offset: 2px;
+}
+
+/* =====================================================
+   CHILD PAGE
+===================================================== */
 
 .corp-main {
   flex: 1;
@@ -78,7 +147,9 @@
   padding: 1.75rem 2rem;
 }
 
-/* SMALL SCREENS: icons only */
+/* =====================================================
+   TABLET: icon-only rail
+===================================================== */
 
 @media (max-width: 900px) {
   .corp-sidebar {
@@ -96,7 +167,127 @@
     padding: 0.75rem 0;
   }
 
+  /* badge floats over the icon instead of sitting in the row */
+  .corp-menu-badge {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    margin-left: 0;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    font-size: 0.65rem;
+  }
+
+  .corp-logout-btn {
+    justify-content: center;
+    padding: 0.75rem 0;
+  }
+
   .corp-main {
     padding: 1.25rem 1rem;
+  }
+}
+
+/* =====================================================
+   PHONE: bottom navigation bar
+   The menu scrolls sideways; Logout stays visible on
+   the right end of the bar.
+===================================================== */
+
+@media (max-width: 640px) {
+  .corp-layout {
+    flex-direction: column;
+  }
+
+  .corp-sidebar {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    flex: none;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    height: auto;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid rgba(148, 163, 184, 0.25);
+    overflow: hidden;
+  }
+
+  .corp-sidebar-menu {
+    flex-direction: row;
+    flex: 1 1 auto;
+    gap: 2px;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .corp-sidebar-menu::-webkit-scrollbar {
+    display: none;
+  }
+
+  .corp-menu-item {
+    flex: 0 0 auto;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    min-width: 66px;
+    min-height: 50px;
+    padding: 6px 8px;
+  }
+
+  .corp-menu-icon {
+    width: auto;
+    font-size: 1.05rem;
+  }
+
+  /* labels come back, small, under the icon */
+  .corp-menu-label {
+    display: block;
+    font-size: 0.65rem;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .corp-menu-badge {
+    top: 2px;
+    right: 10px;
+  }
+
+  .corp-sidebar-footer {
+    display: flex;
+    flex: 0 0 auto;
+    margin: 0 0 0 6px;
+    padding: 0 0 0 6px;
+    border-top: none;
+    border-left: 1px solid rgba(148, 163, 184, 0.25);
+  }
+
+  .corp-logout-btn {
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    width: auto;
+    min-width: 62px;
+    min-height: 50px;
+    padding: 6px 8px;
+  }
+
+  /* keep page content clear of the fixed bottom bar */
+  .corp-main {
+    padding: 1rem 0.75rem calc(86px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .corp-menu-item,
+  .corp-logout-btn {
+    transition: none;
   }
 }
