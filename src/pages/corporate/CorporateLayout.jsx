@@ -1,4 +1,3 @@
-
 import React, { useCallback, useEffect, useState } from "react";
 import {
   NavLink,
@@ -17,6 +16,8 @@ import {
   FaMapMarkerAlt,
   FaBell,
   FaSignOutAlt,
+  FaHeart,
+  FaLock,
 } from "react-icons/fa";
 
 import { getMyNotifications } from "../../services/notificationService";
@@ -64,6 +65,16 @@ const corporateMenu = [
     icon: <FaBoxOpen />,
   },
   {
+    label: "Wishlist",
+    path: "/corporate-dashboard/wishlist",
+    icon: <FaHeart />,
+  },
+  {
+    label: "Cart",
+    path: "/corporate-dashboard/cart",
+    icon: <FaShoppingCart />,
+  },
+  {
     label: "Invoices",
     path: "/corporate-dashboard/invoices",
     icon: <FaReceipt />,
@@ -77,6 +88,11 @@ const corporateMenu = [
     label: "Company Profile",
     path: "/corporate-dashboard/profile",
     icon: <FaBuilding />,
+  },
+  {
+    label: "Change Password",
+    path: "/corporate-dashboard/change-password",
+    icon: <FaLock />,
   },
 ];
 

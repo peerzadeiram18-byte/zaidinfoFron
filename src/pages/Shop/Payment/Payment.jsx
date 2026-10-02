@@ -1014,7 +1014,13 @@
 // export default Payment;
 
 
-import React, { useEffect, useState } from "react";
+
+import React, {
+    useEffect,
+    useMemo,
+    useState
+} from "react";
+
 import "./Payment.css";
 
 import {
@@ -1048,95 +1054,417 @@ const Payment = () => {
     } = location.state || {};
 
 
-    // ==========================================
-    // STATES
-    // ==========================================
-
     const [loading, setLoading] = useState(false);
 
     const [razorpayLoaded, setRazorpayLoaded] =
         useState(false);
 
 
-    // ==========================================
-    // PAYMENT SUMMARY
+    // =====================================================
+    // NUMBER HELPER
+    // =====================================================
+
+    const number = (
+        value,
+        fallback = 0
+    ) => {
+
+        const n = Number(value);
+
+        return Number.isFinite(n)
+            ? n
+            : fallback;
+
+    };
+
+
+    // =====================================================
+    // MONEY ROUNDING
+    // =====================================================
+
+    const roundMoney = (value) => {
+
+        return Math.round(
+            (Number(value) + Number.EPSILON) * 100
+        ) / 100;
+
+    };
+
+
+    // =====================================================
+    // PRODUCT SUBTOTAL
+    // =====================================================
+
+    const subtotal = useMemo(() => {
+
+        const value =
+            paymentSummary?.subtotal ??
+            order?.subtotal ??
+            order?.subTotal ??
+            order?.itemsSubtotal ??
+            order?.productSubtotal ??
+            0;
+
+        return Math.max(
+            roundMoney(number(value)),
+            0
+        );
+
+    }, [
+        paymentSummary,
+        order
+    ]);
+
+
+    // =====================================================
+    // OFFER DISCOUNT
+    // =====================================================
+
+    const offerDiscount = useMemo(() => {
+
+        const value =
+            paymentSummary?.offerDiscount ??
+            paymentSummary?.productDiscount ??
+            paymentSummary?.discountFromOffers ??
+            order?.offerDiscount ??
+            order?.productDiscount ??
+            order?.discountFromOffers ??
+            0;
+
+        return Math.max(
+            roundMoney(number(value)),
+            0
+        );
+
+    }, [
+        paymentSummary,
+        order
+    ]);
+
+
+    // =====================================================
+    // COUPON DISCOUNT
+    // =====================================================
+
+    const couponDiscount = useMemo(() => {
+
+        const value =
+            paymentSummary?.couponDiscount ??
+            paymentSummary?.couponDiscountAmount ??
+            order?.couponDiscount ??
+            order?.couponDiscountAmount ??
+            0;
+
+        return Math.max(
+            roundMoney(number(value)),
+            0
+        );
+
+    }, [
+        paymentSummary,
+        order
+    ]);
+
+
+    // =====================================================
+    // TOTAL DISCOUNT
+    // =====================================================
+
+    const totalDiscount = useMemo(() => {
+
+        return Math.min(
+            roundMoney(
+                offerDiscount +
+                couponDiscount
+            ),
+            subtotal
+        );
+
+    }, [
+        offerDiscount,
+        couponDiscount,
+        subtotal
+    ]);
+
+
+    // =====================================================
+    // TAXABLE AMOUNT
+    // =====================================================
+
+    const taxableAmount = useMemo(() => {
+
+        /*
+         * Checkout se exact taxable amount aaye
+         * to usko priority denge.
+         */
+
+        const checkoutTaxable =
+            paymentSummary?.taxableAmount ??
+            order?.taxableAmount;
+
+        if (
+            checkoutTaxable !== undefined &&
+            checkoutTaxable !== null &&
+            Number.isFinite(
+                Number(checkoutTaxable)
+            )
+        ) {
+
+            return Math.max(
+                roundMoney(
+                    number(checkoutTaxable)
+                ),
+                0
+            );
+
+        }
+
+
+        /*
+         * Fallback:
+         *
+         * Subtotal
+         * - Offer Discount
+         * - Coupon Discount
+         */
+
+        return Math.max(
+            roundMoney(
+                subtotal -
+                totalDiscount
+            ),
+            0
+        );
+
+    }, [
+        paymentSummary,
+        order,
+        subtotal,
+        totalDiscount
+    ]);
+
+
+    // =====================================================
+    // SHIPPING
+    // =====================================================
+
+    const shippingCharge = useMemo(() => {
+
+        const value =
+            paymentSummary?.shippingCharge ??
+            paymentSummary?.shipping ??
+            order?.shippingCharge ??
+            order?.shippingCost ??
+            order?.deliveryCharge ??
+            0;
+
+        return Math.max(
+            roundMoney(number(value)),
+            0
+        );
+
+    }, [
+        paymentSummary,
+        order
+    ]);
+
+
+    // =====================================================
+    // GST %
+    // =====================================================
+
+    const gstPercentage = useMemo(() => {
+
+        const value =
+            paymentSummary?.gstPercentage ??
+            order?.gstPercentage ??
+            order?.gstRate ??
+            18;
+
+        return Math.max(
+            number(value, 18),
+            0
+        );
+
+    }, [
+        paymentSummary,
+        order
+    ]);
+
+
+    // =====================================================
+    // GST AMOUNT
+    // =====================================================
+
+    const gstAmount = useMemo(() => {
+
+        /*
+         * Checkout ka exact GST priority hai.
+         */
+
+        const checkoutGST =
+            paymentSummary?.gstAmount ??
+            order?.gstAmount;
+
+        if (
+            checkoutGST !== undefined &&
+            checkoutGST !== null &&
+            Number.isFinite(
+                Number(checkoutGST)
+            )
+        ) {
+
+            return Math.max(
+                roundMoney(
+                    number(checkoutGST)
+                ),
+                0
+            );
+
+        }
+
+
+        /*
+         * Fallback GST calculation.
+         */
+
+        return Math.max(
+            roundMoney(
+                taxableAmount *
+                gstPercentage /
+                100
+            ),
+            0
+        );
+
+    }, [
+        paymentSummary,
+        order,
+        taxableAmount,
+        gstPercentage
+    ]);
+
+
+    // =====================================================
+    // CALCULATED GRAND TOTAL
     //
-    // Checkout se exact GST calculation
-    // yahan receive hogi.
-    // ==========================================
-
-    const subtotal = Number(
-        paymentSummary?.subtotal ??
-        order?.subtotal ??
-        0
-    );
-
-    const couponDiscount = Number(
-        paymentSummary?.couponDiscount ??
-        order?.couponDiscount ??
-        0
-    );
-
-    const taxableAmount = Number(
-        paymentSummary?.taxableAmount ??
-        Math.max(subtotal - couponDiscount, 0)
-    );
-
-    const shippingCharge = Number(
-        paymentSummary?.shippingCharge ??
-        order?.shippingCharge ??
-        100
-    );
-
-    const gstPercentage = Number(
-        paymentSummary?.gstPercentage ??
-        order?.gstPercentage ??
-        18
-    );
-
-    const gstAmount = Number(
-        paymentSummary?.gstAmount ??
-        order?.gstAmount ??
-        Math.round(
-            taxableAmount * gstPercentage / 100
-        )
-    );
-
-
-    // ==========================================
-    // IMPORTANT
+    // THIS IS THE IMPORTANT VALUE
     //
-    // Checkout ka grandTotal hi actual
-    // GST-inclusive payable amount hai.
+    // Taxable
+    // + Shipping
+    // + GST
+    // =====================================================
+
+    const calculatedGrandTotal = useMemo(() => {
+
+        return Math.max(
+            roundMoney(
+                taxableAmount +
+                shippingCharge +
+                gstAmount
+            ),
+            0
+        );
+
+    }, [
+        taxableAmount,
+        shippingCharge,
+        gstAmount
+    ]);
+
+
+    // =====================================================
+    // CHECKOUT FINAL TOTAL
+    // =====================================================
+
+    const checkoutFinalTotal = useMemo(() => {
+
+        const value =
+            paymentSummary?.total ??
+            paymentSummary?.grandTotal ??
+            paymentSummary?.finalAmount;
+
+        if (
+            value !== undefined &&
+            value !== null &&
+            Number.isFinite(Number(value))
+        ) {
+
+            return Math.max(
+                roundMoney(number(value)),
+                0
+            );
+
+        }
+
+        return 0;
+
+    }, [
+        paymentSummary
+    ]);
+
+
+    // =====================================================
+    // FINAL PAYABLE AMOUNT
     //
-    // order.totalAmount ko priority do.
-    // finalAmount ko payment amount ke liye
-    // use MAT karo.
-    // ==========================================
+    // IMPORTANT:
+    //
+    // First use the exact checkout total.
+    // If unavailable, calculate it.
+    //
+    // DO NOT USE PRODUCT SUBTOTAL HERE.
+    // =====================================================
 
-    const payableAmount = Number(
-        order?.totalAmount ??
-        paymentSummary?.total ??
-        payment?.amount ??
-        0
-    );
+    const payableAmount = useMemo(() => {
+
+        if (
+            checkoutFinalTotal > 0
+        ) {
+
+            return checkoutFinalTotal;
+
+        }
 
 
-    // ==========================================
-    // LOAD RAZORPAY SDK
-    // ==========================================
+        return calculatedGrandTotal;
+
+    }, [
+        checkoutFinalTotal,
+        calculatedGrandTotal
+    ]);
+
+
+    // =====================================================
+    // PAYMENT BREAKDOWN VALIDATION
+    // =====================================================
+
+    const breakdownTotal = useMemo(() => {
+
+        return roundMoney(
+            taxableAmount +
+            shippingCharge +
+            gstAmount
+        );
+
+    }, [
+        taxableAmount,
+        shippingCharge,
+        gstAmount
+    ]);
+
+
+    // =====================================================
+    // LOAD RAZORPAY
+    // =====================================================
 
     useEffect(() => {
 
         if (window.Razorpay) {
 
-            console.log(
-                "Razorpay SDK Already Loaded"
-            );
-
             setRazorpayLoaded(true);
 
             return;
+
         }
 
 
@@ -1151,25 +1479,19 @@ const Payment = () => {
 
         script.onload = () => {
 
-            console.log(
-                "Razorpay SDK Loaded Successfully"
-            );
-
             setRazorpayLoaded(true);
+
         };
 
 
         script.onerror = () => {
-
-            console.error(
-                "Razorpay SDK Failed To Load"
-            );
 
             setRazorpayLoaded(false);
 
             toast.error(
                 "Unable to load Razorpay. Please refresh the page."
             );
+
         };
 
 
@@ -1181,7 +1503,9 @@ const Payment = () => {
             if (
                 document.body.contains(script)
             ) {
+
                 document.body.removeChild(script);
+
             }
 
         };
@@ -1189,9 +1513,103 @@ const Payment = () => {
     }, []);
 
 
-    // ==========================================
+    // =====================================================
+    // DEBUG
+    // =====================================================
+
+    useEffect(() => {
+
+        console.log(
+            "=========================================="
+        );
+
+        console.log(
+            "PAYMENT PAGE FINAL CALCULATION"
+        );
+
+        console.log(
+            "Product Subtotal:",
+            subtotal
+        );
+
+        console.log(
+            "Offer Discount:",
+            offerDiscount
+        );
+
+        console.log(
+            "Coupon Discount:",
+            couponDiscount
+        );
+
+        console.log(
+            "Total Discount:",
+            totalDiscount
+        );
+
+        console.log(
+            "Taxable Amount:",
+            taxableAmount
+        );
+
+        console.log(
+            "Shipping:",
+            shippingCharge
+        );
+
+        console.log(
+            "GST Percentage:",
+            gstPercentage
+        );
+
+        console.log(
+            "GST Amount:",
+            gstAmount
+        );
+
+        console.log(
+            "Calculated Grand Total:",
+            calculatedGrandTotal
+        );
+
+        console.log(
+            "Checkout Final Total:",
+            checkoutFinalTotal
+        );
+
+        console.log(
+            "FINAL PAYABLE AMOUNT:",
+            payableAmount
+        );
+
+        console.log(
+            "BREAKDOWN TOTAL:",
+            breakdownTotal
+        );
+
+        console.log(
+            "=========================================="
+        );
+
+    }, [
+        subtotal,
+        offerDiscount,
+        couponDiscount,
+        totalDiscount,
+        taxableAmount,
+        shippingCharge,
+        gstPercentage,
+        gstAmount,
+        calculatedGrandTotal,
+        checkoutFinalTotal,
+        payableAmount,
+        breakdownTotal
+    ]);
+
+
+    // =====================================================
     // NO ORDER
-    // ==========================================
+    // =====================================================
 
     if (!order) {
 
@@ -1219,12 +1637,13 @@ const Payment = () => {
             </div>
 
         );
+
     }
 
 
-    // ==========================================
+    // =====================================================
     // HANDLE PAYMENT
-    // ==========================================
+    // =====================================================
 
     const handlePayment = async () => {
 
@@ -1238,87 +1657,67 @@ const Payment = () => {
             setLoading(true);
 
 
-            console.log(
-                "================================="
-            );
+            // =================================================
+            // FINAL AMOUNT
+            // =================================================
 
-            console.log(
-                "ONLINE PAYMENT STARTED"
-            );
-
-            console.log(
-                "ORDER:",
-                order
-            );
-
-            console.log(
-                "PAYMENT:",
-                payment
-            );
-
-            console.log(
-                "PAYMENT SUMMARY:",
-                paymentSummary
-            );
-
-
-            // ==========================================
-            // 1. VALIDATE ORDER
-            // ==========================================
-
-            if (!order?._id) {
-
-                throw new Error(
-                    "Order ID is missing"
+            const finalAmount =
+                roundMoney(
+                    payableAmount
                 );
-            }
-
-
-            // ==========================================
-            // 2. VALIDATE FINAL AMOUNT
-            //
-            // IMPORTANT:
-            // This amount already contains GST.
-            // ==========================================
-
-            const amount = Number(
-                order.totalAmount ??
-                paymentSummary?.total ??
-                payment?.amount ??
-                0
-            );
 
 
             if (
-                !Number.isFinite(amount) ||
-                amount <= 0
+                !Number.isFinite(finalAmount) ||
+                finalAmount <= 0
             ) {
 
                 throw new Error(
-                    "Invalid payment amount"
+                    "Invalid final payment amount"
                 );
+
             }
 
 
-            console.log(
-                "GST PERCENTAGE:",
-                gstPercentage
-            );
+            // =================================================
+            // IMPORTANT VALIDATION
+            // =================================================
 
-            console.log(
-                "GST AMOUNT:",
-                gstAmount
-            );
-
-            console.log(
-                "FINAL GST-INCLUSIVE PAYMENT:",
-                amount
-            );
+            const calculatedAmount =
+                roundMoney(
+                    taxableAmount +
+                    shippingCharge +
+                    gstAmount
+                );
 
 
-            // ==========================================
-            // 3. RAZORPAY KEY
-            // ==========================================
+            /*
+             * If checkout total exists and there is a small
+             * rounding difference, use checkout's exact total.
+             */
+
+            if (
+                checkoutFinalTotal > 0 &&
+                Math.abs(
+                    checkoutFinalTotal -
+                    calculatedAmount
+                ) > 1
+            ) {
+
+                console.warn(
+                    "CHECKOUT TOTAL AND BREAKDOWN DIFFER",
+                    {
+                        checkoutFinalTotal,
+                        calculatedAmount
+                    }
+                );
+
+            }
+
+
+            // =================================================
+            // RAZORPAY KEY
+            // =================================================
 
             const razorpayKey =
                 import.meta.env.VITE_RAZORPAY_KEY_ID;
@@ -1329,12 +1728,9 @@ const Payment = () => {
                 throw new Error(
                     "VITE_RAZORPAY_KEY_ID is missing in frontend .env"
                 );
+
             }
 
-
-            // ==========================================
-            // 4. RAZORPAY SDK CHECK
-            // ==========================================
 
             if (
                 !window.Razorpay ||
@@ -1344,57 +1740,108 @@ const Payment = () => {
                 throw new Error(
                     "Razorpay SDK is not loaded. Please refresh the page."
                 );
+
             }
 
 
-            // ==========================================
-            // 5. CREATE DATABASE PAYMENT
-            //
-            // IMPORTANT:
-            // GST-INCLUSIVE total amount.
-            // ==========================================
-
-            const paymentData = {
-
-                paymentFor: "ORDER",
-
-                referenceId: order._id,
-
-                amount: amount,
-
-                paymentMethod: "UPI"
-
-            };
-
+            // =================================================
+            // FINAL LOG
+            // =================================================
 
             console.log(
-                "DATABASE PAYMENT DATA:",
-                paymentData
+                "=========================================="
+            );
+
+            console.log(
+                "CREATING FINAL PAYMENT"
+            );
+
+            console.log(
+                "Order ID:",
+                order._id
+            );
+
+            console.log(
+                "Product Subtotal:",
+                subtotal
+            );
+
+            console.log(
+                "Offer Discount:",
+                offerDiscount
+            );
+
+            console.log(
+                "Coupon Discount:",
+                couponDiscount
+            );
+
+            console.log(
+                "Taxable Amount:",
+                taxableAmount
+            );
+
+            console.log(
+                "Shipping:",
+                shippingCharge
+            );
+
+            console.log(
+                "GST:",
+                gstAmount
+            );
+
+            console.log(
+                "FINAL AMOUNT:",
+                finalAmount
+            );
+
+            console.log(
+                "=========================================="
             );
 
 
+            // =================================================
+            // CREATE DATABASE PAYMENT
+            // =================================================
+
             const paymentResponse =
-                await createPayment(
-                    paymentData
-                );
+                await createPayment({
+
+                    paymentFor:
+                        "ORDER",
+
+                    referenceId:
+                        order._id,
+
+                    amount:
+                        finalAmount,
+
+                    currency:
+                        "INR",
+
+                    paymentMethod:
+                        "UPI"
+
+                });
 
 
             console.log(
-                "CREATE PAYMENT RESPONSE:",
+                "DATABASE PAYMENT RESPONSE:",
                 paymentResponse
             );
 
 
             if (
-                !paymentResponse ||
-                !paymentResponse.success ||
-                !paymentResponse.payment
+                !paymentResponse?.success ||
+                !paymentResponse?.payment
             ) {
 
                 throw new Error(
                     paymentResponse?.message ||
                     "Payment creation failed"
                 );
+
             }
 
 
@@ -1402,92 +1849,110 @@ const Payment = () => {
                 paymentResponse.payment;
 
 
-            console.log(
-                "CREATED DATABASE PAYMENT:",
-                createdPayment
-            );
-
-
-            // ==========================================
-            // 6. CREATE RAZORPAY ORDER
-            // ==========================================
+            // =================================================
+            // CREATE RAZORPAY ORDER
+            //
+            // IMPORTANT:
+            // finalAmount is explicitly sent.
+            // =================================================
 
             const razorpayResponse =
                 await createRazorpayOrder(
-                    order._id
+                    order._id,
+                    finalAmount
                 );
 
 
             console.log(
-                "RAZORPAY BACKEND RESPONSE:",
+                "RAZORPAY RESPONSE:",
                 razorpayResponse
             );
 
 
             if (
-                !razorpayResponse ||
-                !razorpayResponse.success
+                !razorpayResponse?.success
             ) {
 
                 throw new Error(
                     razorpayResponse?.message ||
                     "Unable to create Razorpay order"
                 );
+
             }
 
-
-            // ==========================================
-            // 7. GET RAZORPAY ORDER
-            // ==========================================
 
             const razorpayOrder =
                 razorpayResponse.order ||
                 razorpayResponse.data;
 
 
-            console.log(
-                "RAZORPAY ORDER:",
-                razorpayOrder
-            );
-
-
-            if (!razorpayOrder) {
+            if (!razorpayOrder?.id) {
 
                 throw new Error(
-                    "Razorpay order response is missing"
+                    "Razorpay Order ID not received"
                 );
+
             }
 
 
-            const razorpayOrderId =
-                razorpayOrder.id;
+            // =================================================
+            // RAZORPAY AMOUNT
+            // =================================================
 
-
-            if (!razorpayOrderId) {
-
-                throw new Error(
-                    "Razorpay Order ID not received from backend"
+            const razorpayAmount =
+                Number(
+                    razorpayOrder.amount
                 );
-            }
+
+
+            const expectedPaise =
+                Math.round(
+                    finalAmount * 100
+                );
 
 
             console.log(
-                "RAZORPAY ORDER ID:",
-                razorpayOrderId
+                "EXPECTED RAZORPAY PAISE:",
+                expectedPaise
+            );
+
+            console.log(
+                "ACTUAL RAZORPAY PAISE:",
+                razorpayAmount
             );
 
 
-            // ==========================================
-            // 8. RAZORPAY OPTIONS
-            // ==========================================
+            // =================================================
+            // HARD VALIDATION
+            // =================================================
+
+            if (
+                razorpayAmount !==
+                expectedPaise
+            ) {
+
+                throw new Error(
+                    `Razorpay amount mismatch. Expected ₹${finalAmount.toFixed(
+                        2
+                    )}, but Razorpay received ₹${(
+                        razorpayAmount / 100
+                    ).toFixed(2)}`
+                );
+
+            }
+
+
+            // =================================================
+            // RAZORPAY OPTIONS
+            // =================================================
 
             const options = {
 
-                key: razorpayKey,
+                key:
+                    razorpayKey,
 
-                // Backend Razorpay order amount
-                // is the final GST-inclusive amount.
-                amount: razorpayOrder.amount,
+                amount:
+                    expectedPaise,
 
                 currency:
                     razorpayOrder.currency ||
@@ -1500,56 +1965,39 @@ const Payment = () => {
                     `Payment for Order #${order._id}`,
 
                 order_id:
-                    razorpayOrderId,
+                    razorpayOrder.id,
 
 
-                // ======================================
+                // =================================================
                 // SUCCESS
-                // ======================================
+                // =================================================
 
                 handler:
                     async function (
-                        razorpayResponse
+                        response
                     ) {
-
-                        console.log(
-                            "================================="
-                        );
-
-                        console.log(
-                            "RAZORPAY PAYMENT SUCCESS"
-                        );
-
-                        console.log(
-                            "RAZORPAY RESPONSE:",
-                            razorpayResponse
-                        );
-
 
                         try {
 
                             setLoading(true);
 
 
-                            // ==================================
-                            // VALIDATE RAZORPAY RESPONSE
-                            // ==================================
-
                             if (
-                                !razorpayResponse?.razorpay_order_id ||
-                                !razorpayResponse?.razorpay_payment_id ||
-                                !razorpayResponse?.razorpay_signature
+                                !response?.razorpay_order_id ||
+                                !response?.razorpay_payment_id ||
+                                !response?.razorpay_signature
                             ) {
 
                                 throw new Error(
                                     "Invalid Razorpay payment response"
                                 );
+
                             }
 
 
-                            // ==================================
+                            // =========================================
                             // VERIFY PAYMENT
-                            // ==================================
+                            // =========================================
 
                             const verifyResponse =
                                 await verifyRazorpayPayment({
@@ -1558,67 +2006,43 @@ const Payment = () => {
                                         createdPayment._id,
 
                                     razorpayOrderId:
-                                        razorpayResponse.razorpay_order_id,
+                                        response.razorpay_order_id,
 
                                     razorpayPaymentId:
-                                        razorpayResponse.razorpay_payment_id,
+                                        response.razorpay_payment_id,
 
                                     razorpaySignature:
-                                        razorpayResponse.razorpay_signature
+                                        response.razorpay_signature
 
                                 });
 
 
                             console.log(
-                                "VERIFY RESPONSE =",
+                                "VERIFY RESPONSE:",
                                 verifyResponse
                             );
 
 
                             if (
-                                !verifyResponse ||
-                                !verifyResponse.success
+                                !verifyResponse?.success
                             ) {
 
                                 throw new Error(
                                     verifyResponse?.message ||
                                     "Payment verification failed"
                                 );
+
                             }
 
-
-                            // ==========================================
-                            // FINAL PAYMENT
-                            // ==========================================
 
                             const finalPayment =
                                 verifyResponse.payment ||
                                 createdPayment;
 
 
-                            console.log(
-                                "FINAL PAYMENT:",
-                                finalPayment
-                            );
-
-
-                            // ==========================================
-                            // CREATE ONLINE INVOICE
-                            // ==========================================
-
-                            console.log(
-                                "================================="
-                            );
-
-                            console.log(
-                                "CREATING ONLINE INVOICE"
-                            );
-
-                            console.log(
-                                "ORDER ID:",
-                                order._id
-                            );
-
+                            // =========================================
+                            // CREATE INVOICE
+                            // =========================================
 
                             const invoiceResponse =
                                 await createInvoice(
@@ -1627,20 +2051,20 @@ const Payment = () => {
 
 
                             console.log(
-                                "ONLINE INVOICE RESPONSE:",
+                                "INVOICE RESPONSE:",
                                 invoiceResponse
                             );
 
 
                             if (
-                                !invoiceResponse ||
-                                !invoiceResponse.success
+                                !invoiceResponse?.success
                             ) {
 
                                 throw new Error(
                                     invoiceResponse?.message ||
-                                    "Online invoice creation failed"
+                                    "Invoice creation failed"
                                 );
+
                             }
 
 
@@ -1648,20 +2072,14 @@ const Payment = () => {
                                 invoiceResponse.data;
 
 
-                            console.log(
-                                "ONLINE INVOICE CREATED:",
-                                createdInvoice
-                            );
-
-
-                            // ==========================================
-                            // SUCCESS
-                            // ==========================================
-
                             toast.success(
                                 "Payment successful and invoice generated!"
                             );
 
+
+                            // =========================================
+                            // ORDER SUCCESS
+                            // =========================================
 
                             navigate(
                                 "/order-success",
@@ -1678,24 +2096,34 @@ const Payment = () => {
 
                                         paymentSummary: {
 
-                                            subtotal,
+                                            subtotal:
+                                                subtotal,
 
-                                            couponDiscount,
+                                            offerDiscount:
+                                                offerDiscount,
 
-                                            taxableAmount,
+                                            couponDiscount:
+                                                couponDiscount,
 
-                                            shippingCharge,
+                                            taxableAmount:
+                                                taxableAmount,
 
-                                            gstPercentage,
+                                            shippingCharge:
+                                                shippingCharge,
 
-                                            gstAmount,
+                                            gstPercentage:
+                                                gstPercentage,
+
+                                            gstAmount:
+                                                gstAmount,
 
                                             total:
-                                                amount
+                                                finalAmount
 
                                         }
 
                                     }
+
                                 }
                             );
 
@@ -1703,17 +2131,8 @@ const Payment = () => {
                         catch (error) {
 
                             console.error(
-                                "================================="
-                            );
-
-                            console.error(
                                 "PAYMENT VERIFICATION ERROR:",
                                 error
-                            );
-
-                            console.error(
-                                "BACKEND RESPONSE:",
-                                error?.response?.data
                             );
 
 
@@ -1730,14 +2149,14 @@ const Payment = () => {
                             if (
                                 Array.isArray(
                                     backendData?.errors
-                                ) &&
-                                backendData.errors.length > 0
+                                )
                             ) {
 
                                 message =
                                     backendData.errors.join(
                                         "\n"
                                     );
+
                             }
 
 
@@ -1755,29 +2174,24 @@ const Payment = () => {
                     },
 
 
-                // ======================================
-                // PAYMENT MODAL
-                // ======================================
+                // =================================================
+                // MODAL
+                // =================================================
 
                 modal: {
 
-                    ondismiss:
-                        function () {
+                    ondismiss: () => {
 
-                            console.log(
-                                "Razorpay payment popup closed"
-                            );
+                        setLoading(false);
 
-                            setLoading(false);
-
-                        }
+                    }
 
                 },
 
 
-                // ======================================
+                // =================================================
                 // PREFILL
-                // ======================================
+                // =================================================
 
                 prefill: {
 
@@ -1798,17 +2212,32 @@ const Payment = () => {
                 },
 
 
-                // ======================================
+                // =================================================
                 // NOTES
-                // ======================================
+                // =================================================
 
                 notes: {
 
                     orderId:
-                        order._id,
+                        String(order._id),
 
                     orderSource:
                         "ONLINE",
+
+                    subtotal:
+                        String(subtotal),
+
+                    offerDiscount:
+                        String(offerDiscount),
+
+                    couponDiscount:
+                        String(couponDiscount),
+
+                    taxableAmount:
+                        String(taxableAmount),
+
+                    shippingCharge:
+                        String(shippingCharge),
 
                     gstPercentage:
                         String(gstPercentage),
@@ -1816,18 +2245,11 @@ const Payment = () => {
                     gstAmount:
                         String(gstAmount),
 
-                    taxableAmount:
-                        String(taxableAmount),
-
                     totalAmount:
-                        String(amount)
+                        String(finalAmount)
 
                 },
 
-
-                // ======================================
-                // THEME
-                // ======================================
 
                 theme: {
 
@@ -1839,15 +2261,9 @@ const Payment = () => {
             };
 
 
-            console.log(
-                "RAZORPAY OPTIONS:",
-                options
-            );
-
-
-            // ==========================================
-            // 9. CREATE RAZORPAY INSTANCE
-            // ==========================================
+            // =================================================
+            // RAZORPAY
+            // =================================================
 
             const razorpay =
                 new window.Razorpay(
@@ -1855,15 +2271,15 @@ const Payment = () => {
                 );
 
 
-            // ==========================================
+            // =================================================
             // PAYMENT FAILED
-            // ==========================================
+            // =================================================
 
             razorpay.on(
                 "payment.failed",
-                async function (
+                async (
                     response
-                ) {
+                ) => {
 
                     console.error(
                         "RAZORPAY PAYMENT FAILED:",
@@ -1885,6 +2301,7 @@ const Payment = () => {
                                         "Razorpay payment failed"
                                 }
                             );
+
                         }
 
                     }
@@ -1906,9 +2323,9 @@ const Payment = () => {
             );
 
 
-            // ==========================================
-            // 10. OPEN RAZORPAY
-            // ==========================================
+            // =================================================
+            // OPEN RAZORPAY
+            // =================================================
 
             razorpay.open();
 
@@ -1916,7 +2333,7 @@ const Payment = () => {
         catch (error) {
 
             console.error(
-                "================================="
+                "=========================================="
             );
 
             console.error(
@@ -1925,37 +2342,15 @@ const Payment = () => {
             );
 
             console.error(
-                "BACKEND RESPONSE:",
+                "BACKEND ERROR:",
                 error?.response?.data
             );
 
 
-            const backendData =
-                error?.response?.data;
-
-
-            let message =
-                backendData?.message ||
-                error?.message ||
-                "Unable to start payment";
-
-
-            if (
-                Array.isArray(
-                    backendData?.errors
-                ) &&
-                backendData.errors.length > 0
-            ) {
-
-                message =
-                    backendData.errors.join(
-                        "\n"
-                    );
-            }
-
-
             toast.error(
-                message
+                error?.response?.data?.message ||
+                error?.message ||
+                "Unable to start payment"
             );
 
 
@@ -1966,9 +2361,9 @@ const Payment = () => {
     };
 
 
-    // ==========================================
+    // =====================================================
     // CANCEL PAYMENT
-    // ==========================================
+    // =====================================================
 
     const cancelPayment = async () => {
 
@@ -2017,28 +2412,33 @@ const Payment = () => {
     };
 
 
-    // ==========================================
-    // FORMAT MONEY
-    // ==========================================
+    // =====================================================
+    // MONEY FORMAT
+    // =====================================================
 
-    const money = (value) => {
+    const money = (
+        value
+    ) => {
 
         return Number(
             value || 0
         ).toLocaleString(
             "en-IN",
             {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                minimumFractionDigits:
+                    2,
+
+                maximumFractionDigits:
+                    2
             }
         );
 
     };
 
 
-    // ==========================================
+    // =====================================================
     // UI
-    // ==========================================
+    // =====================================================
 
     return (
 
@@ -2051,9 +2451,9 @@ const Payment = () => {
                 </h1>
 
 
-                {/* =====================================
-                    PAYMENT SUMMARY
-                ===================================== */}
+                {/* ==========================================
+                    ORDER SUMMARY
+                ========================================== */}
 
                 <div className="payment-summary">
 
@@ -2062,12 +2462,12 @@ const Payment = () => {
                     </h3>
 
 
-                    {/* SUBTOTAL */}
+                    {/* PRODUCT SUBTOTAL */}
 
                     <div className="payment-summary-row">
 
                         <span>
-                            Subtotal
+                            Product Subtotal
                         </span>
 
                         <span>
@@ -2077,7 +2477,30 @@ const Payment = () => {
                     </div>
 
 
-                    {/* COUPON */}
+                    {/* OFFER DISCOUNT */}
+
+                    {offerDiscount > 0 && (
+
+                        <div className="payment-summary-row">
+
+                            <span>
+                                Offer Discount
+                            </span>
+
+                            <span>
+                                - ₹ {
+                                    money(
+                                        offerDiscount
+                                    )
+                                }
+                            </span>
+
+                        </div>
+
+                    )}
+
+
+                    {/* COUPON DISCOUNT */}
 
                     {couponDiscount > 0 && (
 
@@ -2088,7 +2511,11 @@ const Payment = () => {
                             </span>
 
                             <span>
-                                - ₹ {money(couponDiscount)}
+                                - ₹ {
+                                    money(
+                                        couponDiscount
+                                    )
+                                }
                             </span>
 
                         </div>
@@ -2096,7 +2523,7 @@ const Payment = () => {
                     )}
 
 
-                    {/* TAXABLE AMOUNT */}
+                    {/* TAXABLE */}
 
                     <div className="payment-summary-row">
 
@@ -2105,7 +2532,11 @@ const Payment = () => {
                         </span>
 
                         <span>
-                            ₹ {money(taxableAmount)}
+                            ₹ {
+                                money(
+                                    taxableAmount
+                                )
+                            }
                         </span>
 
                     </div>
@@ -2120,7 +2551,15 @@ const Payment = () => {
                         </span>
 
                         <span>
-                            ₹ {money(shippingCharge)}
+
+                            {
+                                shippingCharge === 0
+                                    ? "FREE"
+                                    : `₹ ${money(
+                                        shippingCharge
+                                    )}`
+                            }
+
                         </span>
 
                     </div>
@@ -2135,7 +2574,11 @@ const Payment = () => {
                         </span>
 
                         <span>
-                            ₹ {money(gstAmount)}
+                            ₹ {
+                                money(
+                                    gstAmount
+                                )
+                            }
                         </span>
 
                     </div>
@@ -2144,7 +2587,7 @@ const Payment = () => {
                     <hr />
 
 
-                    {/* TOTAL */}
+                    {/* TOTAL PAYABLE */}
 
                     <div className="payment-summary-total">
 
@@ -2153,7 +2596,11 @@ const Payment = () => {
                         </strong>
 
                         <strong>
-                            ₹ {money(payableAmount)}
+                            ₹ {
+                                money(
+                                    payableAmount
+                                )
+                            }
                         </strong>
 
                     </div>
@@ -2161,103 +2608,138 @@ const Payment = () => {
                 </div>
 
 
-                {/* =====================================
+                {/* ==========================================
                     PAYMENT INFO
-                ===================================== */}
+                ========================================== */}
 
                 <div className="payment-info">
 
                     <p>
-
                         <strong>
-                            Receipt :
+                            Product Amount:
+                        </strong>{" "}
+                        ₹ {
+                            money(
+                                subtotal
+                            )
+                        }
+                    </p>
+
+
+                    {offerDiscount > 0 && (
+
+                        <p>
+                            <strong>
+                                Offer:
+                            </strong>{" "}
+                            - ₹ {
+                                money(
+                                    offerDiscount
+                                )
+                            }
+                        </p>
+
+                    )}
+
+
+                    {couponDiscount > 0 && (
+
+                        <p>
+                            <strong>
+                                Coupon:
+                            </strong>{" "}
+                            - ₹ {
+                                money(
+                                    couponDiscount
+                                )
+                            }
+                        </p>
+
+                    )}
+
+
+                    <p>
+                        <strong>
+                            Taxable:
+                        </strong>{" "}
+                        ₹ {
+                            money(
+                                taxableAmount
+                            )
+                        }
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Shipping:
                         </strong>{" "}
 
-                        {payment?.receiptNumber ||
-                            "-"}
+                        {
+                            shippingCharge === 0
+                                ? "FREE"
+                                : `₹ ${money(
+                                    shippingCharge
+                                )}`
+                        }
 
                     </p>
 
 
                     <p>
-
                         <strong>
-                            GST :
+                            GST:
                         </strong>{" "}
-
-                        {gstPercentage}%
-
+                        ₹ {
+                            money(
+                                gstAmount
+                            )
+                        }
                     </p>
 
 
                     <p>
-
                         <strong>
-                            GST Amount :
+                            Final Payment:
                         </strong>{" "}
-
-                        ₹ {money(gstAmount)}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Payment Amount :
-                        </strong>{" "}
-
-                        ₹ {money(payableAmount)}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Payment Method :
-                        </strong>{" "}
-
-                        UPI
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Status :
-                        </strong>{" "}
-
-                        {payment?.paymentStatus ||
-                            "PENDING"}
-
+                        ₹ {
+                            money(
+                                payableAmount
+                            )
+                        }
                     </p>
 
                 </div>
 
 
-                {/* =====================================
+                {/* ==========================================
                     PAY BUTTON
-                ===================================== */}
+                ========================================== */}
 
                 <button
                     type="button"
                     className="pay-btn"
                     onClick={handlePayment}
-                    disabled={loading}
+                    disabled={
+                        loading ||
+                        payableAmount <= 0
+                    }
                 >
 
-                    {loading
-                        ? "Processing..."
-                        : `Pay ₹ ${money(payableAmount)}`}
+                    {
+                        loading
+                            ? "Processing..."
+                            : `Pay ₹ ${money(
+                                payableAmount
+                            )}`
+                    }
 
                 </button>
 
 
-                {/* =====================================
+                {/* ==========================================
                     CANCEL
-                ===================================== */}
+                ========================================== */}
 
                 <button
                     type="button"
@@ -2265,9 +2747,7 @@ const Payment = () => {
                     onClick={cancelPayment}
                     disabled={loading}
                 >
-
                     Cancel
-
                 </button>
 
             </div>
@@ -2280,3 +2760,4 @@ const Payment = () => {
 
 
 export default Payment;
+

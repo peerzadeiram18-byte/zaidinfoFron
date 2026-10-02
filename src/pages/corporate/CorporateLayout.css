@@ -1,15 +1,15 @@
 /* =====================================================
    CORPORATE LAYOUT
-   Desktop  (> 900px)  : full sidebar, 240px, logout pinned to the bottom
-   Tablet   (<= 900px) : icon-only rail, 64px
-   Phone    (<= 640px) : bottom navigation bar, scrolls sideways
+   Desktop  (> 900px)  : fixed sidebar, always visible
+   Tablet   (<= 900px) : fixed icon-only rail
+   Phone    (<= 640px) : fixed bottom navigation bar
 ===================================================== */
 
 .corp-layout {
   display: flex;
   min-height: 100vh;
   width: 100%;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   background: #f1f5f9;
 }
 
@@ -24,18 +24,27 @@
 ===================================================== */
 
 .corp-sidebar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  z-index: 1000;
+
   display: flex;
   flex-direction: column;
-  flex: 0 0 240px;
+
   width: 240px;
   height: 100vh;
   height: 100dvh;
+
   padding: 1.25rem 0.75rem;
+
   background: #0f172a;
   overflow-y: auto;
 }
+
+/* =====================================================
+   SIDEBAR MENU
+===================================================== */
 
 .corp-sidebar-menu {
   display: flex;
@@ -46,15 +55,21 @@
 
 .corp-menu-item {
   position: relative;
+
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
   padding: 0.7rem 0.75rem;
+
   border-radius: 8px;
+
   color: #cbd5e1;
   font-size: 0.875rem;
   font-weight: 500;
+
   text-decoration: none;
+
   transition: background 0.15s ease, color 0.15s ease;
 }
 
@@ -78,34 +93,48 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
   width: 20px;
+
   font-size: 0.95rem;
 }
 
-/* ---------- Unread badge (Notifications item) ---------- */
+/* =====================================================
+   UNREAD BADGE
+===================================================== */
 
 .corp-menu-badge {
   margin-left: auto;
+
   min-width: 20px;
   height: 20px;
+
   padding: 0 6px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   border-radius: 999px;
+
   background: #ef4444;
   color: #ffffff;
+
   font-size: 0.7rem;
   font-weight: 700;
   line-height: 1;
 }
 
-/* ---------- Logout (pinned to the bottom) ---------- */
+/* =====================================================
+   LOGOUT
+===================================================== */
 
 .corp-sidebar-footer {
   flex-shrink: 0;
+
   margin-top: auto;
   padding: 12px 0 4px;
+
   border-top: 1px solid rgba(148, 163, 184, 0.2);
 }
 
@@ -113,17 +142,25 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
   width: 100%;
+
   padding: 0.7rem 0.75rem;
+
   border: none;
   border-radius: 8px;
+
   background: transparent;
   color: #fca5a5;
+
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 600;
+
   text-align: left;
+
   cursor: pointer;
+
   transition: background 0.15s ease, color 0.15s ease;
 }
 
@@ -139,22 +176,29 @@
 
 /* =====================================================
    CHILD PAGE
+
+   IMPORTANT:
+   Sidebar is fixed, so main content gets a left margin.
+   This prevents the sidebar from covering the page content.
 ===================================================== */
 
 .corp-main {
   flex: 1;
   min-width: 0;
+
+  margin-left: 240px;
+
   padding: 1.75rem 2rem;
 }
 
 /* =====================================================
-   TABLET: icon-only rail
+   TABLET: fixed icon-only rail
 ===================================================== */
 
 @media (max-width: 900px) {
   .corp-sidebar {
-    flex: 0 0 64px;
     width: 64px;
+
     padding: 1rem 0.5rem;
   }
 
@@ -167,15 +211,19 @@
     padding: 0.75rem 0;
   }
 
-  /* badge floats over the icon instead of sitting in the row */
   .corp-menu-badge {
     position: absolute;
+
     top: 2px;
     right: 4px;
+
     margin-left: 0;
+
     min-width: 18px;
     height: 18px;
+
     padding: 0 5px;
+
     font-size: 0.65rem;
   }
 
@@ -185,14 +233,16 @@
   }
 
   .corp-main {
+    margin-left: 64px;
     padding: 1.25rem 1rem;
   }
 }
 
 /* =====================================================
-   PHONE: bottom navigation bar
-   The menu scrolls sideways; Logout stays visible on
-   the right end of the bar.
+   PHONE: fixed bottom navigation bar
+
+   On mobile the sidebar becomes a bottom navigation,
+   so the left margin is removed.
 ===================================================== */
 
 @media (max-width: 640px) {
@@ -202,29 +252,43 @@
 
   .corp-sidebar {
     position: fixed;
+
     top: auto;
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 50;
-    flex: none;
+
+    z-index: 1000;
+
+    display: flex;
     flex-direction: row;
     align-items: stretch;
+
     width: 100%;
     height: auto;
-    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+
+    padding: 6px 6px
+      calc(6px + env(safe-area-inset-bottom, 0px));
+
     border-top: 1px solid rgba(148, 163, 184, 0.25);
+
     overflow: hidden;
   }
 
   .corp-sidebar-menu {
     flex-direction: row;
+
     flex: 1 1 auto;
+
     gap: 2px;
+
     min-width: 0;
+
     overflow-x: auto;
     overflow-y: hidden;
+
     -webkit-overflow-scrolling: touch;
+
     scrollbar-width: none;
   }
 
@@ -234,11 +298,15 @@
 
   .corp-menu-item {
     flex: 0 0 auto;
+
     flex-direction: column;
     justify-content: center;
+
     gap: 3px;
+
     min-width: 66px;
     min-height: 50px;
+
     padding: 6px 8px;
   }
 
@@ -247,11 +315,12 @@
     font-size: 1.05rem;
   }
 
-  /* labels come back, small, under the icon */
   .corp-menu-label {
     display: block;
+
     font-size: 0.65rem;
     line-height: 1.1;
+
     white-space: nowrap;
   }
 
@@ -262,9 +331,12 @@
 
   .corp-sidebar-footer {
     display: flex;
+
     flex: 0 0 auto;
+
     margin: 0 0 0 6px;
     padding: 0 0 0 6px;
+
     border-top: none;
     border-left: 1px solid rgba(148, 163, 184, 0.25);
   }
@@ -272,18 +344,28 @@
   .corp-logout-btn {
     flex-direction: column;
     justify-content: center;
+
     gap: 3px;
+
     width: auto;
+
     min-width: 62px;
     min-height: 50px;
+
     padding: 6px 8px;
   }
 
-  /* keep page content clear of the fixed bottom bar */
   .corp-main {
-    padding: 1rem 0.75rem calc(86px + env(safe-area-inset-bottom, 0px));
+    margin-left: 0;
+
+    padding: 1rem 0.75rem
+      calc(86px + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .corp-menu-item,

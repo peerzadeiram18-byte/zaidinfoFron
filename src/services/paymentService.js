@@ -1,3 +1,669 @@
+// // import axios from "axios";
+
+// // const API =
+// //     `${import.meta.env.VITE_API_URL}/payments`;
+
+
+// // // =====================================================
+// // // GET TOKEN
+// // // =====================================================
+
+// // const getToken = () => {
+
+// //     return (
+// //         localStorage.getItem("token") ||
+// //         localStorage.getItem("accessToken") ||
+// //         ""
+// //     );
+
+// // };
+
+
+// // // =====================================================
+// // // GET HEADERS
+// // // =====================================================
+
+// // const getHeaders = () => {
+
+// //     const token =
+// //         getToken();
+
+// //     return {
+
+// //         ...(token
+// //             ? {
+// //                 Authorization:
+// //                     `Bearer ${token}`,
+// //             }
+// //             : {}),
+
+// //         "Content-Type":
+// //             "application/json",
+
+// //     };
+
+// // };
+
+
+// // // =====================================================
+// // // CREATE DATABASE PAYMENT
+// // // =====================================================
+
+// // export const createPayment = async (data) => {
+
+// //     try {
+
+// //         if (!data) {
+
+// //             throw new Error(
+// //                 "Payment data is required"
+// //             );
+
+// //         }
+
+// //         console.log(
+// //             "================================"
+// //         );
+
+// //         console.log(
+// //             "CREATE PAYMENT REQUEST"
+// //         );
+
+// //         console.log(
+// //             "PAYLOAD:",
+// //             data
+// //         );
+
+// //         console.log(
+// //             "================================"
+// //         );
+
+// //         const res =
+// //             await axios.post(
+
+// //                 API,
+
+// //                 data,
+
+// //                 {
+// //                     headers:
+// //                         getHeaders(),
+// //                 }
+
+// //             );
+
+// //         console.log(
+// //             "CREATE PAYMENT RESPONSE:",
+// //             res.data
+// //         );
+
+// //         return res.data;
+
+// //     } catch (error) {
+
+// //         console.error(
+// //             "CREATE PAYMENT ERROR:",
+// //             error?.response?.data ||
+// //             error?.message
+// //         );
+
+// //         throw (
+// //             error?.response?.data || {
+// //                 success: false,
+// //                 message:
+// //                     error?.message ||
+// //                     "Payment creation failed",
+// //             }
+// //         );
+
+// //     }
+
+// // };
+
+
+// // // =====================================================
+// // // CREATE RENTAL SECURITY DEPOSIT PAYMENT
+// // // =====================================================
+
+// // export const createRentalDepositPayment = async ({
+// //     rentalId,
+// //     amount,
+// //     paymentMethod = "CASH",
+// // }) => {
+
+// //     try {
+
+// //         if (!rentalId) {
+
+// //             throw new Error(
+// //                 "Rental ID is required"
+// //             );
+
+// //         }
+
+// //         if (
+// //             amount === undefined ||
+// //             amount === null ||
+// //             Number(amount) <= 0
+// //         ) {
+
+// //             throw new Error(
+// //                 "Valid deposit amount is required"
+// //             );
+
+// //         }
+
+// //         /*
+// //          * IMPORTANT
+// //          *
+// //          * paymentFor ki exact value tumhare backend
+// //          * PAYMENT_FOR constant par depend karti hai.
+// //          *
+// //          * Agar tumhare PAYMENT_FOR mein RENTAL hai:
+// //          *
+// //          * paymentFor: "RENTAL"
+// //          *
+// //          * Agar tumhare constant mein RENTALS hai,
+// //          * to wahi exact value use karna.
+// //          */
+
+// //         const paymentData = {
+
+// //             paymentFor: "RENTAL",
+
+// //             paymentType:
+// //                 "SECURITY_DEPOSIT",
+
+// //             referenceId:
+// //                 rentalId,
+
+// //             amount:
+// //                 Number(amount),
+
+// //             currency:
+// //                 "INR",
+
+// //             paymentMethod:
+// //                 paymentMethod,
+
+// //             paymentStatus:
+// //                 "SUCCESS",
+
+// //             paymentDate:
+// //                 new Date(),
+
+// //             paidAt:
+// //                 new Date(),
+
+// //         };
+
+
+// //         console.log(
+// //             "================================"
+// //         );
+
+// //         console.log(
+// //             "CREATE RENTAL DEPOSIT PAYMENT"
+// //         );
+
+// //         console.log(
+// //             "RENTAL ID:",
+// //             rentalId
+// //         );
+
+// //         console.log(
+// //             "AMOUNT:",
+// //             amount
+// //         );
+
+// //         console.log(
+// //             "PAYMENT METHOD:",
+// //             paymentMethod
+// //         );
+
+// //         console.log(
+// //             "PAYMENT DATA:",
+// //             paymentData
+// //         );
+
+// //         console.log(
+// //             "================================"
+// //         );
+
+
+// //         const response =
+// //             await createPayment(
+// //                 paymentData
+// //             );
+
+
+// //         console.log(
+// //             "RENTAL DEPOSIT PAYMENT RESPONSE:",
+// //             response
+// //         );
+
+
+// //         return response;
+
+// //     } catch (error) {
+
+// //         console.error(
+// //             "RENTAL DEPOSIT PAYMENT ERROR:",
+// //             error?.response?.data ||
+// //             error
+// //         );
+
+// //         throw (
+// //             error?.response?.data || {
+// //                 success: false,
+// //                 message:
+// //                     error?.message ||
+// //                     "Rental deposit payment failed",
+// //             }
+// //         );
+
+// //     }
+
+// // };
+
+
+// // // =====================================================
+// // // CREATE RAZORPAY ORDER
+// // // =====================================================
+
+// // export const createRazorpayOrder = async (
+// //     orderId
+// // ) => {
+
+// //     try {
+
+// //         if (!orderId) {
+
+// //             throw new Error(
+// //                 "Order ID is required"
+// //             );
+
+// //         }
+
+// //         console.log(
+// //             "CREATE RAZORPAY ORDER - ORDER ID =",
+// //             orderId
+// //         );
+
+
+// //         const response =
+// //             await axios.post(
+
+// //                 `${API}/razorpay/order`,
+
+// //                 {
+// //                     orderId:
+// //                         orderId
+// //                 },
+
+// //                 {
+// //                     headers:
+// //                         getHeaders(),
+// //                 }
+
+// //             );
+
+
+// //         console.log(
+// //             "CREATE RAZORPAY ORDER RESPONSE =",
+// //             response.data
+// //         );
+
+
+// //         return response.data;
+
+// //     }
+
+// //     catch (error) {
+
+// //         console.error(
+// //             "CREATE RAZORPAY ORDER ERROR =",
+// //             error?.response?.data ||
+// //             error?.message
+// //         );
+
+// //         throw (
+// //             error?.response?.data || {
+// //                 success: false,
+// //                 message:
+// //                     error?.message ||
+// //                     "Unable to create Razorpay order",
+// //             }
+// //         );
+
+// //     }
+
+// // };
+
+
+// // // =====================================================
+// // // VERIFY RAZORPAY PAYMENT
+// // // =====================================================
+
+// // export const verifyRazorpayPayment = async (
+// //     data
+// // ) => {
+
+// //     try {
+
+// //         const res =
+// //             await axios.post(
+
+// //                 `${API}/razorpay/verify`,
+
+// //                 data,
+
+// //                 {
+// //                     headers:
+// //                         getHeaders(),
+// //                 }
+
+// //             );
+
+// //         return res.data;
+
+// //     } catch (error) {
+
+// //         console.error(
+// //             "VERIFY RAZORPAY PAYMENT ERROR:",
+// //             error?.response?.data ||
+// //             error?.message
+// //         );
+
+// //         throw (
+// //             error?.response?.data || {
+// //                 success: false,
+// //                 message:
+// //                     error?.message ||
+// //                     "Razorpay verification failed",
+// //             }
+// //         );
+
+// //     }
+
+// // };
+
+
+// // // =====================================================
+// // // GET MY PAYMENTS
+// // // =====================================================
+
+// // export const getMyPayments = async () => {
+
+// //     try {
+
+// //         const res =
+// //             await axios.get(
+
+// //                 `${API}/my`,
+
+// //                 {
+// //                     headers:
+// //                         getHeaders(),
+// //                 }
+
+// //             );
+
+// //         return res.data;
+
+// //     } catch (error) {
+
+// //         throw (
+// //             error?.response?.data || {
+// //                 success: false,
+// //                 message:
+// //                     error?.message ||
+// //                     "Failed to load payments",
+// //             }
+// //         );
+
+// //     }
+
+// // };
+
+
+// // // =====================================================
+// // // GET SINGLE PAYMENT
+// // // =====================================================
+
+// // export const getPayment = async (
+// //     id
+// // ) => {
+
+// //     try {
+
+// //         if (!id) {
+
+// //             throw new Error(
+// //                 "Payment ID is required"
+// //             );
+
+// //         }
+
+// //         const res =
+// //             await axios.get(
+
+// //                 `${API}/${id}`,
+
+// //                 {
+// //                     headers:
+// //                         getHeaders(),
+// //                 }
+
+// //             );
+
+// //         return res.data;
+
+// //     } catch (error) {
+
+// //         throw (
+// //             error?.response?.data || {
+// //                 success: false,
+// //                 message:
+// //                     error?.message ||
+// //                     "Failed to load payment",
+// //             }
+// //         );
+
+// //     }
+
+// // };
+
+
+// // // =====================================================
+// // // GET PAYMENTS FOR RENTAL
+// // // =====================================================
+
+// // export const getRentalPayments = async (
+// //     rentalId
+// // ) => {
+
+// //     try {
+
+// //         if (!rentalId) {
+
+// //             throw new Error(
+// //                 "Rental ID is required"
+// //             );
+
+// //         }
+
+// //         /*
+// //          * Existing backend getPaymentByReference()
+// //          * service exists, but current controller/router
+// //          * does not expose a dedicated rental-reference route.
+// //          *
+// //          * Therefore we intentionally do NOT invent
+// //          * an endpoint here.
+// //          *
+// //          * This function is kept for future backend route:
+// //          *
+// //          * GET /payments/reference/RENTAL/:rentalId
+// //          */
+
+// //         throw new Error(
+// //             "Rental payment reference API is not available in the current backend routes"
+// //         );
+
+// //     } catch (error) {
+
+// //         console.error(
+// //             "GET RENTAL PAYMENTS ERROR:",
+// //             error
+// //         );
+
+// //         throw (
+// //             error?.response?.data || {
+// //                 success: false,
+// //                 message:
+// //                     error?.message ||
+// //                     "Failed to load rental payments",
+// //             }
+// //         );
+
+// //     }
+
+// // };
+
+
+// // // =====================================================
+// // // PAYMENT SUCCESS
+// // // =====================================================
+
+// // export const paymentSuccess = async (
+// //     id,
+// //     data
+// // ) => {
+
+// //     const res =
+// //         await axios.patch(
+
+// //             `${API}/${id}/success`,
+
+// //             data,
+
+// //             {
+// //                 headers:
+// //                     getHeaders(),
+// //             }
+
+// //         );
+
+// //     return res.data;
+
+// // };
+
+
+// // // =====================================================
+// // // PAYMENT FAILED
+// // // =====================================================
+
+// // export const paymentFailed = async (
+// //     id,
+// //     data
+// // ) => {
+
+// //     const res =
+// //         await axios.patch(
+
+// //             `${API}/${id}/failed`,
+
+// //             data,
+
+// //             {
+// //                 headers:
+// //                     getHeaders(),
+// //             }
+
+// //         );
+
+// //     return res.data;
+
+// // };
+
+
+// // // =====================================================
+// // // REFUND PAYMENT
+// // // =====================================================
+
+// // export const refundPayment = async (
+// //     id,
+// //     data
+// // ) => {
+
+// //     try {
+
+// //         const res =
+// //             await axios.patch(
+
+// //                 `${API}/${id}/refund`,
+
+// //                 data,
+
+// //                 {
+// //                     headers:
+// //                         getHeaders(),
+// //                 }
+
+// //             );
+
+// //         return res.data;
+
+// //     } catch (error) {
+
+// //         throw (
+// //             error?.response?.data || {
+// //                 success: false,
+// //                 message:
+// //                     error?.message ||
+// //                     "Refund failed",
+// //             }
+// //         );
+
+// //     }
+
+// // };
+
+
+// // // =====================================================
+// // // DEFAULT EXPORT
+// // // =====================================================
+
+// // const paymentApi = {
+
+// //     createPayment,
+
+// //     createRentalDepositPayment,
+
+// //     createRazorpayOrder,
+
+// //     verifyRazorpayPayment,
+
+// //     getMyPayments,
+
+// //     getPayment,
+
+// //     getRentalPayments,
+
+// //     paymentSuccess,
+
+// //     paymentFailed,
+
+// //     refundPayment,
+
+// // };
+
+// // export default paymentApi;
+
+
+
+
+
 // import axios from "axios";
 
 // const API =
@@ -10,7 +676,11 @@
 
 // const getToken = () => {
 
-//     return localStorage.getItem("token");
+//     return (
+//         localStorage.getItem("token") ||
+//         localStorage.getItem("accessToken") ||
+//         ""
+//     );
 
 // };
 
@@ -26,8 +696,12 @@
 
 //     return {
 
-//         Authorization:
-//             `Bearer ${token}`,
+//         ...(token
+//             ? {
+//                 Authorization:
+//                     `Bearer ${token}`,
+//             }
+//             : {}),
 
 //         "Content-Type":
 //             "application/json",
@@ -41,81 +715,261 @@
 // // CREATE DATABASE PAYMENT
 // // =====================================================
 
-// export const createPayment = async (data) => {
+// // export const createPayment = async (data) => {
 
-//     const res =
-//         await axios.post(
+// //     try {
 
-//             API,
+// //         if (!data) {
 
-//             data,
+// //             throw new Error(
+// //                 "Payment data is required"
+// //             );
 
-//             {
-//                 headers:
-//                     getHeaders(),
-//             }
+// //         }
 
-//         );
 
-//     return res.data;
+// //         console.log(
+// //             "================================"
+// //         );
 
-// };
+// //         console.log(
+// //             "CREATE PAYMENT REQUEST"
+// //         );
 
+// //         console.log(
+// //             "PAYLOAD:",
+// //             data
+// //         );
+
+// //         console.log(
+// //             "================================"
+// //         );
+
+
+// //         const res =
+// //             await axios.post(
+
+// //                 API,
+
+// //                 data,
+
+// //                 {
+// //                     headers:
+// //                         getHeaders(),
+// //                 }
+
+// //             );
+
+
+// //         console.log(
+// //             "CREATE PAYMENT RESPONSE:",
+// //             res.data
+// //         );
+
+
+// //         return res.data;
+
+// //     }
+
+// //     catch (error) {
+
+// //         console.error(
+// //             "CREATE PAYMENT ERROR:",
+// //             error?.response?.data ||
+// //             error?.message
+// //         );
+
+
+// //         throw (
+// //             error?.response?.data || {
+
+// //                 success: false,
+
+// //                 message:
+// //                     error?.message ||
+// //                     "Payment creation failed",
+
+// //             }
+// //         );
+
+// //     }
+
+// // };
 
 // // =====================================================
-// // CREATE RAZORPAY ORDER
+// // CREATE DATABASE PAYMENT
 // // =====================================================
 
-// export const createRazorpayOrder = async (
-//     orderId
-// ) => {
+// export const createPayment = async (paymentData) => {
 
 //     try {
 
-//         // ==========================================
-//         // VALIDATE ORDER ID
-//         // ==========================================
+//         // =================================================
+//         // VALIDATION
+//         // =================================================
 
-//         if (!orderId) {
+//         if (!paymentData) {
 
 //             throw new Error(
-//                 "Order ID is required"
+//                 "Payment data is required"
 //             );
 
 //         }
 
+
+//         if (!paymentData.paymentFor) {
+
+//             throw new Error(
+//                 "Payment For is required"
+//             );
+
+//         }
+
+
+//         if (!paymentData.referenceId) {
+
+//             throw new Error(
+//                 "Reference ID is required"
+//             );
+
+//         }
+
+
+//         if (
+//             paymentData.amount === undefined ||
+//             paymentData.amount === null ||
+//             !Number.isFinite(Number(paymentData.amount)) ||
+//             Number(paymentData.amount) <= 0
+//         ) {
+
+//             throw new Error(
+//                 "Valid payment amount is required"
+//             );
+
+//         }
+
+
+//         if (!paymentData.paymentMethod) {
+
+//             throw new Error(
+//                 "Payment method is required"
+//             );
+
+//         }
+
+
+//         // =================================================
+//         // CLEAN PAYMENT DATA
+//         // =================================================
+
+//         const cleanPaymentData = {
+
+//             ...paymentData,
+
+//             amount:
+//                 Math.round(
+//                     Number(paymentData.amount) * 100
+//                 ) / 100,
+
+//             currency:
+//                 paymentData.currency || "INR"
+
+//         };
+
+
+//         // =================================================
+//         // DEBUG
+//         // =================================================
+
 //         console.log(
-//             "CREATE RAZORPAY ORDER - ORDER ID =",
-//             orderId
+//             "================================"
+//         );
+
+//         console.log(
+//             "CREATE PAYMENT REQUEST"
+//         );
+
+//         console.log(
+//             "PAYMENT API:",
+//             API
+//         );
+
+//         console.log(
+//             "PAYLOAD:",
+//             cleanPaymentData
+//         );
+
+//         console.log(
+//             "================================"
 //         );
 
 
-//         // ==========================================
-//         // API REQUEST
-//         // ==========================================
+//         // =================================================
+//         // CREATE PAYMENT
+//         //
+//         // IMPORTANT:
+//         //
+//         // API already contains:
+//         // /api/payments
+//         //
+//         // Therefore DO NOT add /payments again.
+//         // =================================================
 
 //         const response =
 //             await axios.post(
 
-//                 `${API}/razorpay/order`,
+//                 API,
 
-//                 {
-//                     orderId:
-//                         orderId
-//                 },
+//                 cleanPaymentData,
 
 //                 {
 //                     headers:
-//                         getHeaders(),
+//                         getHeaders()
 //                 }
 
 //             );
 
 
+//         // =================================================
+//         // RESPONSE
+//         // =================================================
+
 //         console.log(
-//             "CREATE RAZORPAY ORDER RESPONSE =",
+//             "================================"
+//         );
+
+//         console.log(
+//             "CREATE PAYMENT RESPONSE"
+//         );
+
+//         console.log(
 //             response.data
 //         );
+
+//         console.log(
+//             "================================"
+//         );
+
+
+//         if (!response?.data) {
+
+//             throw new Error(
+//                 "Empty payment response from server"
+//             );
+
+//         }
+
+
+//         if (
+//             response.data.success === false
+//         ) {
+
+//             throw new Error(
+//                 response.data.message ||
+//                 "Payment creation failed"
+//             );
+
+//         }
 
 
 //         return response.data;
@@ -125,12 +979,442 @@
 //     catch (error) {
 
 //         console.error(
-//             "CREATE RAZORPAY ORDER ERROR =",
-//             error.response?.data ||
-//             error.message
+//             "================================"
 //         );
 
-//         throw error;
+//         console.error(
+//             "CREATE PAYMENT ERROR"
+//         );
+
+//         console.error(
+//             "ERROR:",
+//             error
+//         );
+
+//         console.error(
+//             "STATUS:",
+//             error?.response?.status
+//         );
+
+//         console.error(
+//             "BACKEND RESPONSE:",
+//             error?.response?.data
+//         );
+
+//         console.error(
+//             "MESSAGE:",
+//             error?.message
+//         );
+
+//         console.error(
+//             "================================"
+//         );
+
+
+//         // Preserve backend response if available
+//         if (
+//             error?.response?.data
+//         ) {
+
+//             throw error.response.data;
+
+//         }
+
+
+//         throw {
+
+//             success: false,
+
+//             message:
+//                 error?.message ||
+//                 "Unable to create payment"
+
+//         };
+
+//     }
+
+// };  
+
+
+// // =====================================================
+// // CREATE RENTAL SECURITY DEPOSIT PAYMENT
+// // =====================================================
+
+// export const createRentalDepositPayment = async ({
+//     rentalId,
+//     amount,
+//     paymentMethod = "CASH",
+// }) => {
+
+//     try {
+
+//         if (!rentalId) {
+
+//             throw new Error(
+//                 "Rental ID is required"
+//             );
+
+//         }
+
+
+//         if (
+//             amount === undefined ||
+//             amount === null ||
+//             Number(amount) <= 0
+//         ) {
+
+//             throw new Error(
+//                 "Valid deposit amount is required"
+//             );
+
+//         }
+
+
+//         const paymentData = {
+
+//             paymentFor:
+//                 "RENTAL",
+
+//             paymentType:
+//                 "SECURITY_DEPOSIT",
+
+//             referenceId:
+//                 rentalId,
+
+//             amount:
+//                 Number(amount),
+
+//             currency:
+//                 "INR",
+
+//             paymentMethod:
+//                 paymentMethod,
+
+//             paymentStatus:
+//                 "SUCCESS",
+
+//             paymentDate:
+//                 new Date(),
+
+//             paidAt:
+//                 new Date(),
+
+//         };
+
+
+//         console.log(
+//             "================================"
+//         );
+
+//         console.log(
+//             "CREATE RENTAL DEPOSIT PAYMENT"
+//         );
+
+//         console.log(
+//             "RENTAL ID:",
+//             rentalId
+//         );
+
+//         console.log(
+//             "AMOUNT:",
+//             amount
+//         );
+
+//         console.log(
+//             "PAYMENT METHOD:",
+//             paymentMethod
+//         );
+
+//         console.log(
+//             "PAYMENT DATA:",
+//             paymentData
+//         );
+
+//         console.log(
+//             "================================"
+//         );
+
+
+//         const response =
+//             await createPayment(
+//                 paymentData
+//             );
+
+
+//         console.log(
+//             "RENTAL DEPOSIT PAYMENT RESPONSE:",
+//             response
+//         );
+
+
+//         return response;
+
+//     }
+
+//     catch (error) {
+
+//         console.error(
+//             "RENTAL DEPOSIT PAYMENT ERROR:",
+//             error?.response?.data ||
+//             error
+//         );
+
+
+//         throw (
+//             error?.response?.data || {
+
+//                 success: false,
+
+//                 message:
+//                     error?.message ||
+//                     "Rental deposit payment failed",
+
+//             }
+//         );
+
+//     }
+
+// };
+
+
+// // =====================================================
+// // CREATE RAZORPAY ORDER
+// //
+// // IMPORTANT
+// //
+// // orderId = database order ID
+// //
+// // finalAmount = FINAL CHECKOUT AMOUNT
+// //
+// // Example:
+// //
+// // Product       = 10000
+// // Offer         = -1000
+// // Coupon        = -500
+// // Taxable       = 8500
+// // Shipping      = 100
+// // GST           = 1530
+// // -----------------------
+// // Final Total   = 10130
+// //
+// // finalAmount = 10130
+// //
+// // Backend Razorpay order MUST use this final amount.
+// // =====================================================
+
+// export const createRazorpayOrder = async (
+//     orderId,
+//     finalAmount
+// ) => {
+
+//     try {
+
+//         // =================================================
+//         // ORDER ID VALIDATION
+//         // =================================================
+
+//         if (!orderId) {
+
+//             throw new Error(
+//                 "Order ID is required"
+//             );
+
+//         }
+
+
+//         // =================================================
+//         // FINAL AMOUNT VALIDATION
+//         // =================================================
+
+//         if (
+//             finalAmount === undefined ||
+//             finalAmount === null
+//         ) {
+
+//             throw new Error(
+//                 "Final payment amount is required"
+//             );
+
+//         }
+
+
+//         const amount =
+//             Number(finalAmount);
+
+
+//         if (
+//             !Number.isFinite(amount) ||
+//             amount <= 0
+//         ) {
+
+//             throw new Error(
+//                 "Invalid final payment amount"
+//             );
+
+//         }
+
+
+//         // =================================================
+//         // ROUND TO 2 DECIMAL PLACES
+//         // =================================================
+
+//         const cleanAmount =
+//             Math.round(
+//                 amount * 100
+//             ) / 100;
+
+
+//         console.log(
+//             "=========================================="
+//         );
+
+//         console.log(
+//             "CREATE RAZORPAY ORDER"
+//         );
+
+//         console.log(
+//             "ORDER ID:",
+//             orderId
+//         );
+
+//         console.log(
+//             "FINAL PAYMENT AMOUNT:",
+//             cleanAmount
+//         );
+
+//         console.log(
+//             "FINAL PAYMENT PAISE:",
+//             Math.round(
+//                 cleanAmount * 100
+//             )
+//         );
+
+//         console.log(
+//             "=========================================="
+//         );
+
+
+//         // =================================================
+//         // SEND FINAL AMOUNT TO BACKEND
+//         // =================================================
+
+//         const response =
+//             await axios.post(
+
+//                 `${API}/razorpay/order`,
+
+//                 {
+
+//                     orderId:
+//                         orderId,
+
+//                     amount:
+//                         cleanAmount,
+
+//                     finalAmount:
+//                         cleanAmount,
+
+//                 },
+
+//                 {
+
+//                     headers:
+//                         getHeaders(),
+
+//                 }
+
+//             );
+
+
+//         console.log(
+//             "=========================================="
+//         );
+
+//         console.log(
+//             "CREATE RAZORPAY ORDER RESPONSE"
+//         );
+
+//         console.log(
+//             response.data
+//         );
+
+//         console.log(
+//             "=========================================="
+//         );
+
+
+//         // =================================================
+//         // BASIC RESPONSE VALIDATION
+//         // =================================================
+
+//         if (
+//             !response?.data
+//         ) {
+
+//             throw new Error(
+//                 "Empty Razorpay order response"
+//             );
+
+//         }
+
+
+//         if (
+//             response.data.success === false
+//         ) {
+
+//             throw new Error(
+//                 response.data.message ||
+//                 "Unable to create Razorpay order"
+//             );
+
+//         }
+
+
+//         return response.data;
+
+//     }
+
+//     catch (error) {
+
+//         console.error(
+//             "=========================================="
+//         );
+
+//         console.error(
+//             "CREATE RAZORPAY ORDER ERROR"
+//         );
+
+//         console.error(
+//             "STATUS:",
+//             error?.response?.status
+//         );
+
+//         console.error(
+//             "BACKEND RESPONSE:",
+//             error?.response?.data
+//         );
+
+//         console.error(
+//             "MESSAGE:",
+//             error?.message
+//         );
+
+//         console.error(
+//             "=========================================="
+//         );
+
+
+//         throw (
+//             error?.response?.data || {
+
+//                 success: false,
+
+//                 message:
+//                     error?.message ||
+//                     "Unable to create Razorpay order",
+
+//             }
+//         );
 
 //     }
 
@@ -145,21 +1429,82 @@
 //     data
 // ) => {
 
-//     const res =
-//         await axios.post(
+//     try {
 
-//             `${API}/razorpay/verify`,
+//         if (!data) {
 
-//             data,
+//             throw new Error(
+//                 "Razorpay verification data is required"
+//             );
 
-//             {
-//                 headers:
-//                     getHeaders(),
-//             }
+//         }
 
+
+//         console.log(
+//             "================================"
 //         );
 
-//     return res.data;
+//         console.log(
+//             "VERIFY RAZORPAY PAYMENT"
+//         );
+
+//         console.log(
+//             "VERIFY DATA:",
+//             data
+//         );
+
+//         console.log(
+//             "================================"
+//         );
+
+
+//         const res =
+//             await axios.post(
+
+//                 `${API}/razorpay/verify`,
+
+//                 data,
+
+//                 {
+//                     headers:
+//                         getHeaders(),
+//                 }
+
+//             );
+
+
+//         console.log(
+//             "VERIFY RAZORPAY RESPONSE:",
+//             res.data
+//         );
+
+
+//         return res.data;
+
+//     }
+
+//     catch (error) {
+
+//         console.error(
+//             "VERIFY RAZORPAY PAYMENT ERROR:",
+//             error?.response?.data ||
+//             error?.message
+//         );
+
+
+//         throw (
+//             error?.response?.data || {
+
+//                 success: false,
+
+//                 message:
+//                     error?.message ||
+//                     "Razorpay verification failed",
+
+//             }
+//         );
+
+//     }
 
 // };
 
@@ -170,19 +1515,40 @@
 
 // export const getMyPayments = async () => {
 
-//     const res =
-//         await axios.get(
+//     try {
 
-//             `${API}/my`,
+//         const res =
+//             await axios.get(
 
-//             {
-//                 headers:
-//                     getHeaders(),
+//                 `${API}/my`,
+
+//                 {
+//                     headers:
+//                         getHeaders(),
+//                 }
+
+//             );
+
+
+//         return res.data;
+
+//     }
+
+//     catch (error) {
+
+//         throw (
+//             error?.response?.data || {
+
+//                 success: false,
+
+//                 message:
+//                     error?.message ||
+//                     "Failed to load payments",
+
 //             }
-
 //         );
 
-//     return res.data;
+//     }
 
 // };
 
@@ -195,19 +1561,107 @@
 //     id
 // ) => {
 
-//     const res =
-//         await axios.get(
+//     try {
 
-//             `${API}/${id}`,
+//         if (!id) {
 
-//             {
-//                 headers:
-//                     getHeaders(),
+//             throw new Error(
+//                 "Payment ID is required"
+//             );
+
+//         }
+
+
+//         const res =
+//             await axios.get(
+
+//                 `${API}/${id}`,
+
+//                 {
+//                     headers:
+//                         getHeaders(),
+//                 }
+
+//             );
+
+
+//         return res.data;
+
+//     }
+
+//     catch (error) {
+
+//         throw (
+//             error?.response?.data || {
+
+//                 success: false,
+
+//                 message:
+//                     error?.message ||
+//                     "Failed to load payment",
+
 //             }
-
 //         );
 
-//     return res.data;
+//     }
+
+// };
+
+
+// // =====================================================
+// // GET PAYMENTS FOR RENTAL
+// // =====================================================
+
+// export const getRentalPayments = async (
+//     rentalId
+// ) => {
+
+//     try {
+
+//         if (!rentalId) {
+
+//             throw new Error(
+//                 "Rental ID is required"
+//             );
+
+//         }
+
+
+//         /*
+//          * Current backend routes mein rental-reference
+//          * API available nahi hai.
+//          *
+//          * Isliye koi fake endpoint call nahi kar rahe.
+//          */
+
+
+//         throw new Error(
+//             "Rental payment reference API is not available in the current backend routes"
+//         );
+
+//     }
+
+//     catch (error) {
+
+//         console.error(
+//             "GET RENTAL PAYMENTS ERROR:",
+//             error
+//         );
+
+
+//         throw (
+//             error?.response?.data || {
+
+//                 success: false,
+
+//                 message:
+//                     error?.message ||
+//                     "Failed to load rental payments",
+
+//             }
+//         );
+
+//     }
 
 // };
 
@@ -221,21 +1675,51 @@
 //     data
 // ) => {
 
-//     const res =
-//         await axios.patch(
+//     try {
 
-//             `${API}/${id}/success`,
+//         if (!id) {
 
-//             data,
+//             throw new Error(
+//                 "Payment ID is required"
+//             );
 
-//             {
-//                 headers:
-//                     getHeaders(),
+//         }
+
+
+//         const res =
+//             await axios.patch(
+
+//                 `${API}/${id}/success`,
+
+//                 data,
+
+//                 {
+//                     headers:
+//                         getHeaders(),
+//                 }
+
+//             );
+
+
+//         return res.data;
+
+//     }
+
+//     catch (error) {
+
+//         throw (
+//             error?.response?.data || {
+
+//                 success: false,
+
+//                 message:
+//                     error?.message ||
+//                     "Payment success update failed",
+
 //             }
-
 //         );
 
-//     return res.data;
+//     }
 
 // };
 
@@ -249,23 +1733,143 @@
 //     data
 // ) => {
 
-//     const res =
-//         await axios.patch(
+//     try {
 
-//             `${API}/${id}/failed`,
+//         if (!id) {
 
-//             data,
+//             throw new Error(
+//                 "Payment ID is required"
+//             );
 
-//             {
-//                 headers:
-//                     getHeaders(),
+//         }
+
+
+//         const res =
+//             await axios.patch(
+
+//                 `${API}/${id}/failed`,
+
+//                 data,
+
+//                 {
+//                     headers:
+//                         getHeaders(),
+//                 }
+
+//             );
+
+
+//         return res.data;
+
+//     }
+
+//     catch (error) {
+
+//         throw (
+//             error?.response?.data || {
+
+//                 success: false,
+
+//                 message:
+//                     error?.message ||
+//                     "Payment failed update failed",
+
 //             }
-
 //         );
 
-//     return res.data;
+//     }
 
 // };
+
+
+// // =====================================================
+// // REFUND PAYMENT
+// // =====================================================
+
+// export const refundPayment = async (
+//     id,
+//     data
+// ) => {
+
+//     try {
+
+//         if (!id) {
+
+//             throw new Error(
+//                 "Payment ID is required"
+//             );
+
+//         }
+
+
+//         const res =
+//             await axios.patch(
+
+//                 `${API}/${id}/refund`,
+
+//                 data,
+
+//                 {
+//                     headers:
+//                         getHeaders(),
+//                 }
+
+//             );
+
+
+//         return res.data;
+
+//     }
+
+//     catch (error) {
+
+//         throw (
+//             error?.response?.data || {
+
+//                 success: false,
+
+//                 message:
+//                     error?.message ||
+//                     "Refund failed",
+
+//             }
+//         );
+
+//     }
+
+// };
+
+
+// // =====================================================
+// // DEFAULT EXPORT
+// // =====================================================
+
+// const paymentApi = {
+
+//     createPayment,
+
+//     createRentalDepositPayment,
+
+//     createRazorpayOrder,
+
+//     verifyRazorpayPayment,
+
+//     getMyPayments,
+
+//     getPayment,
+
+//     getRentalPayments,
+
+//     paymentSuccess,
+
+//     paymentFailed,
+
+//     refundPayment,
+
+// };
+
+
+// export default paymentApi;
 
 
 
@@ -320,17 +1924,88 @@ const getHeaders = () => {
 // CREATE DATABASE PAYMENT
 // =====================================================
 
-export const createPayment = async (data) => {
+export const createPayment = async (paymentData) => {
 
     try {
 
-        if (!data) {
+        // =================================================
+        // VALIDATION
+        // =================================================
+
+        if (!paymentData) {
 
             throw new Error(
                 "Payment data is required"
             );
 
         }
+
+
+        if (!paymentData.paymentFor) {
+
+            throw new Error(
+                "Payment For is required"
+            );
+
+        }
+
+
+        if (!paymentData.referenceId) {
+
+            throw new Error(
+                "Reference ID is required"
+            );
+
+        }
+
+
+        if (
+            paymentData.amount === undefined ||
+            paymentData.amount === null ||
+            !Number.isFinite(
+                Number(paymentData.amount)
+            ) ||
+            Number(paymentData.amount) <= 0
+        ) {
+
+            throw new Error(
+                "Valid payment amount is required"
+            );
+
+        }
+
+
+        if (!paymentData.paymentMethod) {
+
+            throw new Error(
+                "Payment method is required"
+            );
+
+        }
+
+
+        // =================================================
+        // CLEAN PAYMENT DATA
+        // =================================================
+
+        const cleanPaymentData = {
+
+            ...paymentData,
+
+            amount:
+                Math.round(
+                    Number(paymentData.amount) * 100
+                ) / 100,
+
+            currency:
+                paymentData.currency || "INR"
+
+        };
+
+
+        // =================================================
+        // DEBUG
+        // =================================================
 
         console.log(
             "================================"
@@ -341,51 +2016,150 @@ export const createPayment = async (data) => {
         );
 
         console.log(
+            "PAYMENT API:",
+            API
+        );
+
+        console.log(
             "PAYLOAD:",
-            data
+            cleanPaymentData
+        );
+
+        console.log(
+            "HEADERS:",
+            {
+                hasToken: Boolean(getToken())
+            }
         );
 
         console.log(
             "================================"
         );
 
-        const res =
+
+        // =================================================
+        // CREATE PAYMENT
+        // =================================================
+
+        const response =
             await axios.post(
 
                 API,
 
-                data,
+                cleanPaymentData,
 
                 {
                     headers:
-                        getHeaders(),
+                        getHeaders()
                 }
 
             );
 
+
+        // =================================================
+        // RESPONSE
+        // =================================================
+
         console.log(
-            "CREATE PAYMENT RESPONSE:",
-            res.data
+            "================================"
         );
 
-        return res.data;
+        console.log(
+            "CREATE PAYMENT RESPONSE"
+        );
 
-    } catch (error) {
+        console.log(
+            response.data
+        );
+
+        console.log(
+            "================================"
+        );
+
+
+        if (!response?.data) {
+
+            throw new Error(
+                "Empty payment response from server"
+            );
+
+        }
+
+
+        if (
+            response.data.success === false
+        ) {
+
+            throw new Error(
+                response.data.message ||
+                "Payment creation failed"
+            );
+
+        }
+
+
+        return response.data;
+
+    }
+
+    catch (error) {
 
         console.error(
-            "CREATE PAYMENT ERROR:",
-            error?.response?.data ||
+            "================================"
+        );
+
+        console.error(
+            "CREATE PAYMENT ERROR"
+        );
+
+        console.error(
+            "STATUS:",
+            error?.response?.status
+        );
+
+        console.error(
+            "BACKEND RESPONSE:",
+            error?.response?.data
+        );
+
+        console.error(
+            "BACKEND MESSAGE:",
+            error?.response?.data?.message
+        );
+
+        console.error(
+            "BACKEND ERRORS:",
+            error?.response?.data?.errors
+        );
+
+        console.error(
+            "AXIOS MESSAGE:",
             error?.message
         );
 
-        throw (
-            error?.response?.data || {
-                success: false,
-                message:
-                    error?.message ||
-                    "Payment creation failed",
-            }
+        console.error(
+            "================================"
         );
+
+
+        if (
+            error?.response?.data
+        ) {
+
+            throw error.response.data;
+
+        }
+
+
+        throw {
+
+            success: false,
+
+            message:
+                error?.message ||
+                "Unable to create payment"
+
+        };
 
     }
 
@@ -412,6 +2186,7 @@ export const createRentalDepositPayment = async ({
 
         }
 
+
         if (
             amount === undefined ||
             amount === null ||
@@ -424,23 +2199,11 @@ export const createRentalDepositPayment = async ({
 
         }
 
-        /*
-         * IMPORTANT
-         *
-         * paymentFor ki exact value tumhare backend
-         * PAYMENT_FOR constant par depend karti hai.
-         *
-         * Agar tumhare PAYMENT_FOR mein RENTAL hai:
-         *
-         * paymentFor: "RENTAL"
-         *
-         * Agar tumhare constant mein RENTALS hai,
-         * to wahi exact value use karna.
-         */
 
         const paymentData = {
 
-            paymentFor: "RENTAL",
+            paymentFor:
+                "RENTAL",
 
             paymentType:
                 "SECURITY_DEPOSIT",
@@ -478,21 +2241,6 @@ export const createRentalDepositPayment = async ({
         );
 
         console.log(
-            "RENTAL ID:",
-            rentalId
-        );
-
-        console.log(
-            "AMOUNT:",
-            amount
-        );
-
-        console.log(
-            "PAYMENT METHOD:",
-            paymentMethod
-        );
-
-        console.log(
             "PAYMENT DATA:",
             paymentData
         );
@@ -508,28 +2256,27 @@ export const createRentalDepositPayment = async ({
             );
 
 
-        console.log(
-            "RENTAL DEPOSIT PAYMENT RESPONSE:",
-            response
-        );
-
-
         return response;
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "RENTAL DEPOSIT PAYMENT ERROR:",
-            error?.response?.data ||
             error
         );
 
+
         throw (
             error?.response?.data || {
+
                 success: false,
+
                 message:
                     error?.message ||
                     "Rental deposit payment failed",
+
             }
         );
 
@@ -543,7 +2290,8 @@ export const createRentalDepositPayment = async ({
 // =====================================================
 
 export const createRazorpayOrder = async (
-    orderId
+    orderId,
+    finalAmount
 ) => {
 
     try {
@@ -556,9 +2304,68 @@ export const createRazorpayOrder = async (
 
         }
 
+
+        if (
+            finalAmount === undefined ||
+            finalAmount === null
+        ) {
+
+            throw new Error(
+                "Final payment amount is required"
+            );
+
+        }
+
+
+        const amount =
+            Number(finalAmount);
+
+
+        if (
+            !Number.isFinite(amount) ||
+            amount <= 0
+        ) {
+
+            throw new Error(
+                "Invalid final payment amount"
+            );
+
+        }
+
+
+        const cleanAmount =
+            Math.round(
+                amount * 100
+            ) / 100;
+
+
         console.log(
-            "CREATE RAZORPAY ORDER - ORDER ID =",
+            "=========================================="
+        );
+
+        console.log(
+            "CREATE RAZORPAY ORDER"
+        );
+
+        console.log(
+            "ORDER ID:",
             orderId
+        );
+
+        console.log(
+            "FINAL PAYMENT AMOUNT:",
+            cleanAmount
+        );
+
+        console.log(
+            "FINAL PAYMENT PAISE:",
+            Math.round(
+                cleanAmount * 100
+            )
+        );
+
+        console.log(
+            "=========================================="
         );
 
 
@@ -568,22 +2375,55 @@ export const createRazorpayOrder = async (
                 `${API}/razorpay/order`,
 
                 {
+
                     orderId:
-                        orderId
+                        orderId,
+
+                    amount:
+                        cleanAmount,
+
+                    finalAmount:
+                        cleanAmount,
+
                 },
 
                 {
+
                     headers:
                         getHeaders(),
+
                 }
 
             );
 
 
         console.log(
-            "CREATE RAZORPAY ORDER RESPONSE =",
+            "CREATE RAZORPAY ORDER RESPONSE:",
             response.data
         );
+
+
+        if (
+            !response?.data
+        ) {
+
+            throw new Error(
+                "Empty Razorpay order response"
+            );
+
+        }
+
+
+        if (
+            response.data.success === false
+        ) {
+
+            throw new Error(
+                response.data.message ||
+                "Unable to create Razorpay order"
+            );
+
+        }
 
 
         return response.data;
@@ -593,17 +2433,21 @@ export const createRazorpayOrder = async (
     catch (error) {
 
         console.error(
-            "CREATE RAZORPAY ORDER ERROR =",
+            "CREATE RAZORPAY ORDER ERROR:",
             error?.response?.data ||
             error?.message
         );
 
+
         throw (
             error?.response?.data || {
+
                 success: false,
+
                 message:
                     error?.message ||
                     "Unable to create Razorpay order",
+
             }
         );
 
@@ -622,6 +2466,15 @@ export const verifyRazorpayPayment = async (
 
     try {
 
+        if (!data) {
+
+            throw new Error(
+                "Razorpay verification data is required"
+            );
+
+        }
+
+
         const res =
             await axios.post(
 
@@ -636,9 +2489,12 @@ export const verifyRazorpayPayment = async (
 
             );
 
+
         return res.data;
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "VERIFY RAZORPAY PAYMENT ERROR:",
@@ -646,12 +2502,16 @@ export const verifyRazorpayPayment = async (
             error?.message
         );
 
+
         throw (
             error?.response?.data || {
+
                 success: false,
+
                 message:
                     error?.message ||
                     "Razorpay verification failed",
+
             }
         );
 
@@ -680,16 +2540,22 @@ export const getMyPayments = async () => {
 
             );
 
+
         return res.data;
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         throw (
             error?.response?.data || {
+
                 success: false,
+
                 message:
                     error?.message ||
                     "Failed to load payments",
+
             }
         );
 
@@ -716,6 +2582,7 @@ export const getPayment = async (
 
         }
 
+
         const res =
             await axios.get(
 
@@ -728,16 +2595,22 @@ export const getPayment = async (
 
             );
 
+
         return res.data;
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         throw (
             error?.response?.data || {
+
                 success: false,
+
                 message:
                     error?.message ||
                     "Failed to load payment",
+
             }
         );
 
@@ -764,38 +2637,30 @@ export const getRentalPayments = async (
 
         }
 
-        /*
-         * Existing backend getPaymentByReference()
-         * service exists, but current controller/router
-         * does not expose a dedicated rental-reference route.
-         *
-         * Therefore we intentionally do NOT invent
-         * an endpoint here.
-         *
-         * This function is kept for future backend route:
-         *
-         * GET /payments/reference/RENTAL/:rentalId
-         */
 
         throw new Error(
             "Rental payment reference API is not available in the current backend routes"
         );
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "GET RENTAL PAYMENTS ERROR:",
             error
         );
 
-        throw (
-            error?.response?.data || {
-                success: false,
-                message:
-                    error?.message ||
-                    "Failed to load rental payments",
-            }
-        );
+
+        throw {
+
+            success: false,
+
+            message:
+                error?.message ||
+                "Failed to load rental payments",
+
+        };
 
     }
 
@@ -811,21 +2676,51 @@ export const paymentSuccess = async (
     data
 ) => {
 
-    const res =
-        await axios.patch(
+    try {
 
-            `${API}/${id}/success`,
+        if (!id) {
 
-            data,
+            throw new Error(
+                "Payment ID is required"
+            );
 
-            {
-                headers:
-                    getHeaders(),
+        }
+
+
+        const res =
+            await axios.patch(
+
+                `${API}/${id}/success`,
+
+                data,
+
+                {
+                    headers:
+                        getHeaders(),
+                }
+
+            );
+
+
+        return res.data;
+
+    }
+
+    catch (error) {
+
+        throw (
+            error?.response?.data || {
+
+                success: false,
+
+                message:
+                    error?.message ||
+                    "Payment success update failed",
+
             }
-
         );
 
-    return res.data;
+    }
 
 };
 
@@ -839,21 +2734,51 @@ export const paymentFailed = async (
     data
 ) => {
 
-    const res =
-        await axios.patch(
+    try {
 
-            `${API}/${id}/failed`,
+        if (!id) {
 
-            data,
+            throw new Error(
+                "Payment ID is required"
+            );
 
-            {
-                headers:
-                    getHeaders(),
+        }
+
+
+        const res =
+            await axios.patch(
+
+                `${API}/${id}/failed`,
+
+                data,
+
+                {
+                    headers:
+                        getHeaders(),
+                }
+
+            );
+
+
+        return res.data;
+
+    }
+
+    catch (error) {
+
+        throw (
+            error?.response?.data || {
+
+                success: false,
+
+                message:
+                    error?.message ||
+                    "Payment failed update failed",
+
             }
-
         );
 
-    return res.data;
+    }
 
 };
 
@@ -869,6 +2794,15 @@ export const refundPayment = async (
 
     try {
 
+        if (!id) {
+
+            throw new Error(
+                "Payment ID is required"
+            );
+
+        }
+
+
         const res =
             await axios.patch(
 
@@ -883,16 +2817,22 @@ export const refundPayment = async (
 
             );
 
+
         return res.data;
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         throw (
             error?.response?.data || {
+
                 success: false,
+
                 message:
                     error?.message ||
                     "Refund failed",
+
             }
         );
 
@@ -929,5 +2869,5 @@ const paymentApi = {
 
 };
 
-export default paymentApi;
 
+export default paymentApi;
