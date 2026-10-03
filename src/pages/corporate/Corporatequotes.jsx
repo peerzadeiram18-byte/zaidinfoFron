@@ -58,7 +58,7 @@ import { FaFileInvoiceDollar } from "react-icons/fa";
 import { createQuoteOrder } from "../../services/orderService";
 import { createPayment } from "../../services/paymentService";
 
-import "./CorporateQuotes.css";
+import "./Corporatequotes.css";
 
 const API = import.meta.env.VITE_API_URL;
 const QUOTATIONS_API = `${API}/quotations`;
