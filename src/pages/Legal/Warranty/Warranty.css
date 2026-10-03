@@ -1,0 +1,22 @@
+.legal-page {
+  width: 100%;
+  padding: 60px 20px;
+}
+
+.legal-container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.legal-container h1 {
+  margin-bottom: 30px;
+}
+
+.legal-container h2 {
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+.legal-container p {
+  line-height: 1.7;
+}
