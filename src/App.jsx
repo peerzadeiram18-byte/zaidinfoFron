@@ -4730,7 +4730,7 @@ import Corporate from "./pages/corporate/Corporate";
 import Terms from "./pages/Legal/Terms/Terms";
 import Privacy from "./pages/Legal/Privacy/Privacy";
 import ReturnsRefunds from "./pages/Legal/ReturnsRefunds/ReturnsRefunds";
-import Warranty from "./pages/Legal/Warranty/Warranty";
+import Warranty from "./pages/Legal/Warranty/warranty";
 import Shipping from "./pages/Legal/Shipping/Shipping";
 import RentalTerms from "./pages/Legal/RentalTerms/RentalTerms";
 import RepairTerms from "./pages/Legal/RepairTerms/RepairTerms";
