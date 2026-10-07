@@ -1180,11 +1180,11 @@ const NAV_SECTIONS = [
         icon: FaShoppingBag,
         path: `${BASE}/orders`,
       },
-      {
-        name: "Quotations",
-        icon: FaFileAlt,
-        path: `${BASE}/quotations`,
-      },
+      // {
+      //   name: "Quotations",
+      //   icon: FaFileAlt,
+      //   path: `${BASE}/quotations`,
+      // },
       {
         name: "Invoices",
         icon: FaFileInvoice,
