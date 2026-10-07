@@ -1,24 +1,39 @@
 // import { useEffect, useMemo, useState } from "react";
 // import { useLocation, useNavigate, useParams } from "react-router-dom";
-// import {
-//     ArrowLeft,
-//     Printer,
-//     RefreshCw,
-// } from "lucide-react";
+// import { ArrowLeft, Printer, RefreshCw, X } from "lucide-react";
 
 // import { getRentalById } from "../../services/rentalApi";
 // import "./WalkInRentalInvoice.css";
 
-// function WalkInRentalInvoice() {
-//     const { rentalId } = useParams();
+// /*
+//  * Props (all optional - used by Admin Invoices page):
+//  *  rentalData     -> rental object already loaded by admin page
+//  *  isAdminPreview -> true when shown inside admin modal
+//  *  onAdminClose   -> function to close admin modal
+//  */
+
+// function WalkInRentalInvoice({
+//     rentalData = null,
+//     isAdminPreview = false,
+//     onAdminClose = null,
+// }) {
+//     const { rentalId: routeRentalId } = useParams();
 //     const navigate = useNavigate();
 //     const location = useLocation();
 
-//     const [rental, setRental] = useState(
-//         location.state?.rental || null
-//     );
+//     const initialRental =
+//         rentalData || location.state?.rental || null;
 
-//     const [loading, setLoading] = useState(!location.state?.rental);
+//     // id can come from route OR from admin passed data
+//     const rentalId =
+//         routeRentalId ||
+//         rentalData?._id ||
+//         rentalData?.id ||
+//         rentalData?.rentalId ||
+//         "";
+
+//     const [rental, setRental] = useState(initialRental);
+//     const [loading, setLoading] = useState(!initialRental);
 //     const [error, setError] = useState("");
 
 //     // =====================================================
@@ -26,6 +41,14 @@
 //     // =====================================================
 
 //     useEffect(() => {
+//         // Admin gave full data -> use it directly, no API call
+//         if (rentalData) {
+//             setRental(rentalData);
+//             setLoading(false);
+//             setError("");
+//             return;
+//         }
+
 //         if (!rentalId) {
 //             setError("Rental ID is missing");
 //             setLoading(false);
@@ -34,83 +57,56 @@
 
 //         loadRental();
 //         // eslint-disable-next-line react-hooks/exhaustive-deps
-//     }, [rentalId]);
+//     }, [rentalId, rentalData]);
 
 //     const loadRental = async () => {
 //         try {
 //             setLoading(true);
 //             setError("");
 
-//             console.log("================================");
-//             console.log("LOADING RENTAL INVOICE");
-//             console.log("RENTAL ID:", rentalId);
-//             console.log("================================");
+//             if (!rentalId) {
+//                 throw new Error("Rental ID is missing");
+//             }
 
 //             const response = await getRentalById(rentalId);
 
-//             console.log("RENTAL INVOICE RESPONSE:", response);
-
-//             let rentalData = null;
-
-//             /*
-//              * Support all common backend response structures.
-//              */
+//             let rentalObj = null;
 
 //             if (response?.data?.data?.rental) {
-//                 rentalData = response.data.data.rental;
+//                 rentalObj = response.data.data.rental;
 //             } else if (response?.data?.data) {
-//                 rentalData = response.data.data;
+//                 rentalObj = response.data.data;
 //             } else if (response?.data?.rental) {
-//                 rentalData = response.data.rental;
+//                 rentalObj = response.data.rental;
 //             } else if (response?.rental) {
-//                 rentalData = response.rental;
+//                 rentalObj = response.rental;
 //             } else if (response?.data) {
-//                 rentalData = response.data;
+//                 rentalObj = response.data;
 //             } else if (response?._id) {
-//                 rentalData = response;
+//                 rentalObj = response;
 //             }
-
-//             /*
-//              * Axios can sometimes return:
-//              *
-//              * {
-//              *   data: {
-//              *      success: true,
-//              *      rental: {...}
-//              *   }
-//              * }
-//              */
 
 //             if (
-//                 rentalData &&
-//                 rentalData.rental &&
-//                 typeof rentalData.rental === "object"
+//                 rentalObj &&
+//                 rentalObj.rental &&
+//                 typeof rentalObj.rental === "object"
 //             ) {
-//                 rentalData = rentalData.rental;
+//                 rentalObj = rentalObj.rental;
 //             }
 
-//             if (!rentalData) {
-//                 throw new Error(
-//                     "Rental details could not be found"
-//                 );
+//             if (!rentalObj) {
+//                 throw new Error("Rental details could not be found");
 //             }
 
-//             console.log("FINAL RENTAL:", rentalData);
-
-//             setRental(rentalData);
+//             setRental(rentalObj);
 //         } catch (err) {
-//             console.error(
-//                 "RENTAL INVOICE ERROR:",
-//                 err
-//             );
+//             console.error("RENTAL INVOICE ERROR:", err);
 
-//             /*
-//              * If rental was already passed through navigate state,
-//              * keep using it when API fails.
-//              */
+//             // If data already available (state / admin), keep using it
+//             const fallback = rentalData || location.state?.rental;
 
-//             if (location.state?.rental) {
-//                 setRental(location.state.rental);
+//             if (fallback) {
+//                 setRental(fallback);
 //                 setError("");
 //             } else {
 //                 setError(
@@ -139,10 +135,7 @@
 //     };
 
 //     const getCustomerType = () => {
-//         return String(
-//             rental?.customerType ||
-//             "INDIVIDUAL"
-//         ).toUpperCase();
+//         return String(rental?.customerType || "INDIVIDUAL").toUpperCase();
 //     };
 
 //     const getCustomerName = () => {
@@ -165,10 +158,7 @@
 //     };
 
 //     const getCompanyName = () => {
-//         return (
-//             rental?.companyDetails?.companyName ||
-//             ""
-//         );
+//         return rental?.companyDetails?.companyName || "";
 //     };
 
 //     const getPhone = () => {
@@ -253,16 +243,10 @@
 //     const getBrandName = () => {
 //         const product = getProduct();
 
-//         const brand =
-//             product?.brand ||
-//             rental?.brand;
+//         const brand = product?.brand || rental?.brand;
 
-//         if (typeof brand === "object") {
-//             return (
-//                 brand?.name ||
-//                 brand?.title ||
-//                 "-"
-//             );
+//         if (brand && typeof brand === "object") {
+//             return brand?.name || brand?.title || "-";
 //         }
 
 //         return brand || "-";
@@ -306,13 +290,30 @@
 //         );
 //     };
 
+//     const getDurationType = () => {
+//         return String(
+//             rental?.rentalDurationType || "MONTHS"
+//         ).toUpperCase();
+//     };
+
 //     const getRentalMonths = () => {
 //         return Number(
+//             rental?.rentalDuration ??
 //             rental?.rentalMonths ??
 //             rental?.durationMonths ??
 //             rental?.months ??
 //             1
 //         );
+//     };
+
+//     const getDurationLabel = () => {
+//         const value = getRentalMonths();
+
+//         if (getDurationType() === "DAYS") {
+//             return `${value} ${value === 1 ? "Day" : "Days"}`;
+//         }
+
+//         return `${value} ${value === 1 ? "Month" : "Months"}`;
 //     };
 
 //     const getSecurityDeposit = () => {
@@ -335,35 +336,24 @@
 //     };
 
 //     const getRentalAmount = () => {
-//         return (
-//             getMonthlyRent() *
-//             getRentalMonths()
-//         );
+//         if (getDurationType() === "DAYS") {
+//             return (getMonthlyRent() / 30) * getRentalMonths();
+//         }
+
+//         return getMonthlyRent() * getRentalMonths();
 //     };
 
-//     const getGSTAmount = () => {
-//         return (
-//             getRentalAmount() *
-//             getGSTPercentage()
-//         ) / 100;
-//     };
+//     const getGSTAmount = () =>
+//         (getRentalAmount() * getGSTPercentage()) / 100;
 
-//     const getGrandTotal = () => {
-//         return (
-//             getRentalAmount() +
-//             getGSTAmount()
-//         );
-//     };
+//     const getGrandTotal = () => getRentalAmount() + getGSTAmount();
 
 //     // =====================================================
 //     // STATUS / PAYMENT
 //     // =====================================================
 
 //     const getStatus = () => {
-//         return String(
-//             rental?.status ||
-//             "PENDING"
-//         ).toUpperCase();
+//         return String(rental?.status || "PENDING").toUpperCase();
 //     };
 
 //     const getPaymentMethod = () => {
@@ -371,6 +361,7 @@
 //             rental?.paymentMethod ||
 //             rental?.depositPaymentMethod ||
 //             rental?.payment?.method ||
+//             rental?.payment?.paymentMethod ||
 //             "-"
 //         );
 //     };
@@ -382,13 +373,10 @@
 //     const formatMoney = (value) => {
 //         const number = Number(value || 0);
 
-//         return number.toLocaleString(
-//             "en-IN",
-//             {
-//                 minimumFractionDigits: 2,
-//                 maximumFractionDigits: 2,
-//             }
-//         );
+//         return number.toLocaleString("en-IN", {
+//             minimumFractionDigits: 2,
+//             maximumFractionDigits: 2,
+//         });
 //     };
 
 //     const formatDate = (value) => {
@@ -402,14 +390,11 @@
 //             return "-";
 //         }
 
-//         return date.toLocaleDateString(
-//             "en-IN",
-//             {
-//                 day: "2-digit",
-//                 month: "2-digit",
-//                 year: "numeric",
-//             }
-//         );
+//         return date.toLocaleDateString("en-IN", {
+//             day: "2-digit",
+//             month: "2-digit",
+//             year: "numeric",
+//         });
 //     };
 
 //     // =====================================================
@@ -427,7 +412,11 @@
 //         }
 
 //         const id = String(
-//             getRentalId() || ""
+//             rental?._id ||
+//             rental?.id ||
+//             rental?.rentalId ||
+//             rentalId ||
+//             ""
 //         );
 
 //         return `RENT-${id.slice(-8).toUpperCase()}`;
@@ -437,23 +426,27 @@
 //     // PRINT
 //     // =====================================================
 
-//    const handlePrint = () => {
-//     // Make sure browser finishes rendering invoice
-//     requestAnimationFrame(() => {
-//         setTimeout(() => {
-//             window.print();
-//         }, 300);
-//     });
-// };
+//     const handlePrint = () => {
+//         requestAnimationFrame(() => {
+//             setTimeout(() => {
+//                 window.print();
+//             }, 300);
+//         });
+//     };
 
 //     // =====================================================
-//     // BACK
+//     // BACK / CLOSE
 //     // =====================================================
 
 //     const handleBack = () => {
-//         navigate(
-//             "/receptionist-dashboard/rental/orders"
-//         );
+//         if (isAdminPreview) {
+//             if (typeof onAdminClose === "function") {
+//                 onAdminClose();
+//             }
+//             return;
+//         }
+
+//         navigate("/receptionist-dashboard/rental/orders");
 //     };
 
 //     // =====================================================
@@ -465,14 +458,9 @@
 //             <div className="rental-invoice-loading">
 //                 <div className="invoice-loading-spinner" />
 
-//                 <h3>
-//                     Loading Rental Invoice...
-//                 </h3>
+//                 <h3>Loading Rental Invoice...</h3>
 
-//                 <p>
-//                     Please wait while rental details
-//                     are being loaded.
-//                 </p>
+//                 <p>Please wait while rental details are being loaded.</p>
 //             </div>
 //         );
 //     }
@@ -484,29 +472,19 @@
 //     if (error && !rental) {
 //         return (
 //             <div className="rental-invoice-error">
-//                 <h2>
-//                     Unable to Load Invoice
-//                 </h2>
+//                 <h2>Unable to Load Invoice</h2>
 
-//                 <p>
-//                     {error}
-//                 </p>
+//                 <p>{error}</p>
 
 //                 <div className="invoice-error-actions">
-//                     <button
-//                         type="button"
-//                         onClick={loadRental}
-//                     >
+//                     <button type="button" onClick={loadRental}>
 //                         <RefreshCw size={17} />
 //                         Retry
 //                     </button>
 
-//                     <button
-//                         type="button"
-//                         onClick={handleBack}
-//                     >
+//                     <button type="button" onClick={handleBack}>
 //                         <ArrowLeft size={17} />
-//                         Back to Rentals
+//                         {isAdminPreview ? "Close" : "Back to Rentals"}
 //                     </button>
 //                 </div>
 //             </div>
@@ -516,16 +494,11 @@
 //     if (!rental) {
 //         return (
 //             <div className="rental-invoice-error">
-//                 <h2>
-//                     Rental Not Found
-//                 </h2>
+//                 <h2>Rental Not Found</h2>
 
-//                 <button
-//                     type="button"
-//                     onClick={handleBack}
-//                 >
+//                 <button type="button" onClick={handleBack}>
 //                     <ArrowLeft size={17} />
-//                     Back to Rentals
+//                     {isAdminPreview ? "Close" : "Back to Rentals"}
 //                 </button>
 //             </div>
 //         );
@@ -547,9 +520,7 @@
 //     return (
 //         <div className="rental-invoice-page">
 
-//             {/* =================================================
-//                 ACTION BAR
-//             ================================================= */}
+//             {/* ACTION BAR */}
 
 //             <div className="invoice-topbar no-print">
 
@@ -558,36 +529,40 @@
 //                     className="invoice-back-btn"
 //                     onClick={handleBack}
 //                 >
-//                     <ArrowLeft size={18} />
-//                     Back to Rentals
+//                     {isAdminPreview ? (
+//                         <X size={18} />
+//                     ) : (
+//                         <ArrowLeft size={18} />
+//                     )}
+//                     {isAdminPreview ? "Close" : "Back to Rentals"}
 //                 </button>
 
 //                 <div className="invoice-top-actions">
 
+//                     {!isAdminPreview && (
+//                         <button
+//                             type="button"
+//                             className="invoice-refresh-btn"
+//                             onClick={loadRental}
+//                         >
+//                             <RefreshCw size={17} />
+//                             Refresh
+//                         </button>
+//                     )}
+
 //                     <button
 //                         type="button"
-//                         className="invoice-refresh-btn"
-//                         onClick={loadRental}
+//                         className="invoice-print-btn"
+//                         onClick={handlePrint}
 //                     >
-//                         <RefreshCw size={17} />
-//                         Refresh
+//                         <Printer size={18} />
+//                         Print Invoice
 //                     </button>
-
-//                 <button
-//     type="button"
-//     className="invoice-print-btn"
-//     onClick={handlePrint}
-// >
-//     <Printer size={18} />
-//     Print Invoice
-// </button>
 
 //                 </div>
 //             </div>
 
-//             {/* =================================================
-//                 PRINT AREA
-//             ================================================= */}
+//             {/* PRINT AREA */}
 
 //             <main className="rental-invoice-print-area">
 
@@ -599,41 +574,25 @@
 
 //                         <div className="invoice-company">
 
-//                             <h1>
-//                                 ZAID INFOTECH
-//                             </h1>
+//                             <h1>ZAID INFOTECH</h1>
 
-//                             <p>
-//                                 Laptop Rental &amp;
-//                                 Technology Solutions
-//                             </p>
+//                             <p>Laptop Rental &amp; Technology Solutions</p>
 
-//                             <p>
-//                                 Maharashtra, India
-//                             </p>
+//                             <p>Maharashtra, India</p>
 
 //                         </div>
 
 //                         <div className="invoice-title-box">
 
-//                             <h2>
-//                                 RENTAL INVOICE
-//                             </h2>
+//                             <h2>RENTAL INVOICE</h2>
 
 //                             <div className="invoice-number">
-//                                 <span>
-//                                     Invoice No.
-//                                 </span>
-
-//                                 <strong>
-//                                     {invoiceNumber}
-//                                 </strong>
+//                                 <span>Invoice No.</span>
+//                                 <strong>{invoiceNumber}</strong>
 //                             </div>
 
 //                             <div className="invoice-date">
-//                                 <span>
-//                                     Invoice Date
-//                                 </span>
+//                                 <span>Invoice Date</span>
 
 //                                 <strong>
 //                                     {formatDate(
@@ -656,59 +615,42 @@
 
 //                         <div className="invoice-info-card">
 
-//                             <h3>
-//                                 BILL TO
-//                             </h3>
+//                             <h3>BILL TO</h3>
 
 //                             <strong className="invoice-customer-name">
 //                                 {getCustomerName()}
 //                             </strong>
 
-//                             {getCompanyName() && (
-//                                 <p>
-//                                     {getCompanyName()}
-//                                 </p>
-//                             )}
+//                             {getCompanyName() && <p>{getCompanyName()}</p>}
 
 //                             <p>
-//                                 <b>Phone:</b>{" "}
-//                                 {getPhone()}
+//                                 <b>Phone:</b> {getPhone()}
 //                             </p>
 
 //                             <p>
-//                                 <b>Email:</b>{" "}
-//                                 {getEmail()}
+//                                 <b>Email:</b> {getEmail()}
 //                             </p>
 
 //                             <p>
-//                                 <b>Address:</b>{" "}
-//                                 {getAddress()}
+//                                 <b>Address:</b> {getAddress()}
 //                             </p>
 
 //                         </div>
 
 //                         <div className="invoice-info-card">
 
-//                             <h3>
-//                                 RENTAL DETAILS
-//                             </h3>
+//                             <h3>RENTAL DETAILS</h3>
 
 //                             <p>
-//                                 <b>Rental ID:</b>{" "}
-//                                 #{String(
-//                                     getRentalId()
-//                                 ).slice(-8)}
+//                                 <b>Rental ID:</b> #
+//                                 {String(getRentalId()).slice(-8)}
 //                             </p>
 
 //                             <p>
 //                                 <b>Source:</b>{" "}
 //                                 {String(
-//                                     rental?.rentalSource ||
-//                                     "WALK_IN"
-//                                 ).replace(
-//                                     /_/g,
-//                                     " "
-//                                 )}
+//                                     rental?.rentalSource || "WALK_IN"
+//                                 ).replace(/_/g, " ")}
 //                             </p>
 
 //                             <p>
@@ -721,8 +663,7 @@
 //                             </p>
 
 //                             <p>
-//                                 <b>Payment:</b>{" "}
-//                                 {getPaymentMethod()}
+//                                 <b>Payment:</b> {getPaymentMethod()}
 //                             </p>
 
 //                         </div>
@@ -755,49 +696,31 @@
 
 //                                 <tr>
 
-//                                     <td>
-//                                         1
-//                                     </td>
+//                                     <td>1</td>
 
 //                                     <td>
-//                                         <strong>
-//                                             {getProductName()}
-//                                         </strong>
+//                                         <strong>{getProductName()}</strong>
 
 //                                         <small className="invoice-product-sub">
-//                                             Serial No:{" "}
-//                                             {getSerialNumber()}
+//                                             Serial No: {getSerialNumber()}
 //                                         </small>
 //                                     </td>
 
+//                                     <td>{getBrandName()}</td>
+
+//                                     <td>{getModelName()}</td>
+
 //                                     <td>
-//                                         {getBrandName()}
+//                                         {getDurationLabel()}
 //                                     </td>
 
 //                                     <td>
-//                                         {getModelName()}
-//                                     </td>
-
-//                                     <td>
-//                                         {getRentalMonths()}{" "}
-//                                         {getRentalMonths() === 1
-//                                             ? "Month"
-//                                             : "Months"}
-//                                     </td>
-
-//                                     <td>
-//                                         ₹{" "}
-//                                         {formatMoney(
-//                                             getMonthlyRent()
-//                                         )}
+//                                         ₹ {formatMoney(getMonthlyRent())}
 //                                     </td>
 
 //                                     <td>
 //                                         <strong>
-//                                             ₹{" "}
-//                                             {formatMoney(
-//                                                 rentalAmount
-//                                             )}
+//                                             ₹ {formatMoney(rentalAmount)}
 //                                         </strong>
 //                                     </td>
 
@@ -815,21 +738,17 @@
 
 //                         <div className="invoice-notes">
 
-//                             <h3>
-//                                 NOTES
-//                             </h3>
+//                             <h3>NOTES</h3>
 
 //                             <p>
-//                                 This invoice is generated
-//                                 for the above walk-in rental
-//                                 transaction.
+//                                 This invoice is generated for the above
+//                                 walk-in rental transaction.
 //                             </p>
 
 //                             <p>
-//                                 Security deposit is
-//                                 refundable subject to rental
-//                                 return conditions and
-//                                 applicable deductions.
+//                                 Security deposit is refundable subject to
+//                                 rental return conditions and applicable
+//                                 deductions.
 //                             </p>
 
 //                         </div>
@@ -837,71 +756,30 @@
 //                         <div className="invoice-total-box">
 
 //                             <div className="invoice-total-row">
-
-//                                 <span>
-//                                     Rental Amount
-//                                 </span>
-
-//                                 <strong>
-//                                     ₹{" "}
-//                                     {formatMoney(
-//                                         rentalAmount
-//                                     )}
-//                                 </strong>
-
+//                                 <span>Rental Amount</span>
+//                                 <strong>₹ {formatMoney(rentalAmount)}</strong>
 //                             </div>
 
 //                             <div className="invoice-total-row">
-
-//                                 <span>
-//                                     GST ({getGSTPercentage()}%)
-//                                 </span>
-
-//                                 <strong>
-//                                     ₹{" "}
-//                                     {formatMoney(
-//                                         gstAmount
-//                                     )}
-//                                 </strong>
-
+//                                 <span>GST ({getGSTPercentage()}%)</span>
+//                                 <strong>₹ {formatMoney(gstAmount)}</strong>
 //                             </div>
 
 //                             <div className="invoice-total-row deposit-row">
-
-//                                 <span>
-//                                     Security Deposit
-//                                 </span>
-
-//                                 <strong>
-//                                     ₹{" "}
-//                                     {formatMoney(
-//                                         securityDeposit
-//                                     )}
-//                                 </strong>
-
+//                                 <span>Security Deposit</span>
+//                                 <strong>₹ {formatMoney(securityDeposit)}</strong>
 //                             </div>
 
 //                             <div className="invoice-total-divider" />
 
 //                             <div className="invoice-grand-total">
-
-//                                 <span>
-//                                     TOTAL RENT
-//                                 </span>
-
-//                                 <strong>
-//                                     ₹{" "}
-//                                     {formatMoney(
-//                                         grandTotal
-//                                     )}
-//                                 </strong>
-
+//                                 <span>TOTAL RENT</span>
+//                                 <strong>₹ {formatMoney(grandTotal)}</strong>
 //                             </div>
 
 //                             <div className="invoice-deposit-note">
-//                                 Security deposit is shown
-//                                 separately and is not included
-//                                 in Total Rent.
+//                                 Security deposit is shown separately and is
+//                                 not included in Total Rent.
 //                             </div>
 
 //                         </div>
@@ -915,14 +793,10 @@
 //                         <div>
 
 //                             <strong>
-//                                 Thank you for choosing
-//                                 Zaid Infotech.
+//                                 Thank you for choosing Zaid Infotech.
 //                             </strong>
 
-//                             <p>
-//                                 Please keep this invoice
-//                                 for your records.
-//                             </p>
+//                             <p>Please keep this invoice for your records.</p>
 
 //                         </div>
 
@@ -930,9 +804,7 @@
 
 //                             <div className="signature-line" />
 
-//                             <span>
-//                                 Authorized Signature
-//                             </span>
+//                             <span>Authorized Signature</span>
 
 //                         </div>
 
@@ -948,6 +820,8 @@
 // export default WalkInRentalInvoice;
 
 
+
+
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Printer, RefreshCw, X } from "lucide-react";
@@ -956,10 +830,11 @@ import { getRentalById } from "../../services/rentalApi";
 import "./WalkInRentalInvoice.css";
 
 /*
- * Props (all optional - used by Admin Invoices page):
- *  rentalData     -> rental object already loaded by admin page
- *  isAdminPreview -> true when shown inside admin modal
- *  onAdminClose   -> function to close admin modal
+ * Props:
+ *
+ * rentalData     -> rental object already loaded by admin page
+ * isAdminPreview -> true when shown inside admin modal
+ * onAdminClose   -> function to close admin modal
  */
 
 function WalkInRentalInvoice({
@@ -974,7 +849,10 @@ function WalkInRentalInvoice({
     const initialRental =
         rentalData || location.state?.rental || null;
 
-    // id can come from route OR from admin passed data
+    // =====================================================
+    // RENTAL ID
+    // =====================================================
+
     const rentalId =
         routeRentalId ||
         rentalData?._id ||
@@ -991,7 +869,6 @@ function WalkInRentalInvoice({
     // =====================================================
 
     useEffect(() => {
-        // Admin gave full data -> use it directly, no API call
         if (rentalData) {
             setRental(rentalData);
             setLoading(false);
@@ -1006,6 +883,7 @@ function WalkInRentalInvoice({
         }
 
         loadRental();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rentalId, rentalData]);
 
@@ -1045,15 +923,21 @@ function WalkInRentalInvoice({
             }
 
             if (!rentalObj) {
-                throw new Error("Rental details could not be found");
+                throw new Error(
+                    "Rental details could not be found"
+                );
             }
 
             setRental(rentalObj);
         } catch (err) {
-            console.error("RENTAL INVOICE ERROR:", err);
+            console.error(
+                "RENTAL INVOICE ERROR:",
+                err
+            );
 
-            // If data already available (state / admin), keep using it
-            const fallback = rentalData || location.state?.rental;
+            const fallback =
+                rentalData ||
+                location.state?.rental;
 
             if (fallback) {
                 setRental(fallback);
@@ -1061,8 +945,8 @@ function WalkInRentalInvoice({
             } else {
                 setError(
                     err?.response?.data?.message ||
-                    err?.message ||
-                    "Failed to load rental invoice"
+                        err?.message ||
+                        "Failed to load rental invoice"
                 );
             }
         } finally {
@@ -1071,7 +955,7 @@ function WalkInRentalInvoice({
     };
 
     // =====================================================
-    // HELPERS
+    // BASIC HELPERS
     // =====================================================
 
     const getRentalId = () => {
@@ -1085,21 +969,33 @@ function WalkInRentalInvoice({
     };
 
     const getCustomerType = () => {
-        return String(rental?.customerType || "INDIVIDUAL").toUpperCase();
+        return String(
+            rental?.customerType ||
+                "INDIVIDUAL"
+        ).toUpperCase();
     };
 
+    // =====================================================
+    // CUSTOMER
+    // =====================================================
+
     const getCustomerName = () => {
-        if (getCustomerType() === "COMPANY") {
+        if (
+            getCustomerType() === "COMPANY"
+        ) {
             return (
-                rental?.companyDetails?.contactPerson ||
-                rental?.companyDetails?.companyName ||
+                rental?.companyDetails
+                    ?.contactPerson ||
+                rental?.companyDetails
+                    ?.companyName ||
                 rental?.customer?.name ||
                 "Company Customer"
             );
         }
 
         return (
-            rental?.individualDetails?.fullName ||
+            rental?.individualDetails
+                ?.fullName ||
             rental?.customer?.name ||
             rental?.customer?.fullName ||
             rental?.customerName ||
@@ -1108,20 +1004,27 @@ function WalkInRentalInvoice({
     };
 
     const getCompanyName = () => {
-        return rental?.companyDetails?.companyName || "";
+        return (
+            rental?.companyDetails
+                ?.companyName || ""
+        );
     };
 
     const getPhone = () => {
-        if (getCustomerType() === "COMPANY") {
+        if (
+            getCustomerType() === "COMPANY"
+        ) {
             return (
-                rental?.companyDetails?.phone ||
+                rental?.companyDetails
+                    ?.phone ||
                 rental?.customer?.phone ||
                 "-"
             );
         }
 
         return (
-            rental?.individualDetails?.phone ||
+            rental?.individualDetails
+                ?.phone ||
             rental?.customer?.phone ||
             rental?.phone ||
             "-"
@@ -1129,16 +1032,20 @@ function WalkInRentalInvoice({
     };
 
     const getEmail = () => {
-        if (getCustomerType() === "COMPANY") {
+        if (
+            getCustomerType() === "COMPANY"
+        ) {
             return (
-                rental?.companyDetails?.email ||
+                rental?.companyDetails
+                    ?.email ||
                 rental?.customer?.email ||
                 "-"
             );
         }
 
         return (
-            rental?.individualDetails?.email ||
+            rental?.individualDetails
+                ?.email ||
             rental?.customer?.email ||
             rental?.email ||
             "-"
@@ -1146,16 +1053,20 @@ function WalkInRentalInvoice({
     };
 
     const getAddress = () => {
-        if (getCustomerType() === "COMPANY") {
+        if (
+            getCustomerType() === "COMPANY"
+        ) {
             return (
-                rental?.companyDetails?.address ||
+                rental?.companyDetails
+                    ?.address ||
                 rental?.customer?.address ||
                 "-"
             );
         }
 
         return (
-            rental?.individualDetails?.address ||
+            rental?.individualDetails
+                ?.address ||
             rental?.customer?.address ||
             rental?.address ||
             "-"
@@ -1186,17 +1097,26 @@ function WalkInRentalInvoice({
             product?.name ||
             product?.title ||
             rental?.productName ||
-            "Rental Laptop"
+            "Rental Product"
         );
     };
 
     const getBrandName = () => {
         const product = getProduct();
 
-        const brand = product?.brand || rental?.brand;
+        const brand =
+            product?.brand ||
+            rental?.brand;
 
-        if (brand && typeof brand === "object") {
-            return brand?.name || brand?.title || "-";
+        if (
+            brand &&
+            typeof brand === "object"
+        ) {
+            return (
+                brand?.name ||
+                brand?.title ||
+                "-"
+            );
         }
 
         return brand || "-";
@@ -1227,84 +1147,448 @@ function WalkInRentalInvoice({
     };
 
     // =====================================================
-    // AMOUNTS
+    // RENTAL TYPE
+    // =====================================================
+
+    /*
+     * IMPORTANT
+     *
+     * We check all possible backend field names.
+     *
+     * Examples:
+     *
+     * MONTH
+     * MONTHLY
+     * MONTHS
+     * DAILY
+     * DAY
+     * DAYS
+     *
+     * Everything is normalized to:
+     *
+     * "MONTHS"
+     * or
+     * "DAYS"
+     */
+
+    const getDurationType = () => {
+        const rawType =
+            rental?.rentalDurationType ??
+            rental?.durationType ??
+            rental?.billingCycle ??
+            rental?.rentalType ??
+            rental?.rentType ??
+            rental?.pricingType ??
+            rental?.rateType ??
+            "";
+
+        const type = String(rawType)
+            .trim()
+            .toUpperCase()
+            .replace(/[\s_-]+/g, "");
+
+        if (
+            [
+                "DAY",
+                "DAYS",
+                "DAILY",
+                "PERDAY",
+                "DAILYRENT",
+            ].includes(type)
+        ) {
+            return "DAYS";
+        }
+
+        if (
+            [
+                "MONTH",
+                "MONTHS",
+                "MONTHLY",
+                "PERMONTH",
+                "MONTHLYRENT",
+            ].includes(type)
+        ) {
+            return "MONTHS";
+        }
+
+        /*
+         * If backend has a direct boolean,
+         * support that also.
+         */
+
+        if (
+            rental?.isDaily === true ||
+            rental?.dailyRental === true
+        ) {
+            return "DAYS";
+        }
+
+        if (
+            rental?.isMonthly === true ||
+            rental?.monthlyRental === true
+        ) {
+            return "MONTHS";
+        }
+
+        /*
+         * DO NOT blindly assume 3 months.
+         *
+         * If backend doesn't provide type,
+         * infer from available pricing fields.
+         */
+
+        const dailyRent = Number(
+            rental?.dailyRent ??
+                rental?.rentPerDay ??
+                rental?.pricing?.dailyRent ??
+                rental?.pricing?.rentPerDay ??
+                rental?.dailyRate ??
+                0
+        );
+
+        const monthlyRent = Number(
+            rental?.monthlyRent ??
+                rental?.rentPerMonth ??
+                rental?.pricing?.monthlyRent ??
+                rental?.pricing?.rentPerMonth ??
+                rental?.monthlyRate ??
+                0
+        );
+
+        if (
+            dailyRent > 0 &&
+            monthlyRent <= 0
+        ) {
+            return "DAYS";
+        }
+
+        /*
+         * Existing monthly rent means monthly.
+         */
+
+        if (monthlyRent > 0) {
+            return "MONTHS";
+        }
+
+        /*
+         * Final safe default.
+         *
+         * This is only used if backend does not
+         * send any duration/rate information.
+         */
+
+        return "DAYS";
+    };
+
+    // =====================================================
+    // DURATION VALUE
+    // =====================================================
+
+    const getRentalDurationValue = () => {
+        const duration = Number(
+            rental?.rentalDuration ??
+                rental?.duration ??
+                rental?.rentalMonths ??
+                rental?.durationMonths ??
+                rental?.months ??
+                rental?.rentalDays ??
+                rental?.days ??
+                1
+        );
+
+        if (
+            !Number.isFinite(duration) ||
+            duration <= 0
+        ) {
+            return 1;
+        }
+
+        return duration;
+    };
+
+    // =====================================================
+    // MONTHLY RENT
     // =====================================================
 
     const getMonthlyRent = () => {
-        return Number(
+        const value =
             rental?.monthlyRent ??
-            rental?.rentalProduct?.monthlyRent ??
             rental?.rentPerMonth ??
             rental?.pricing?.monthlyRent ??
-            0
-        );
+            rental?.pricing?.rentPerMonth ??
+            rental?.monthlyRate ??
+            0;
+
+        const number = Number(value);
+
+        return Number.isFinite(number)
+            ? Math.max(number, 0)
+            : 0;
     };
 
-    const getDurationType = () => {
-        return String(
-            rental?.rentalDurationType || "MONTHS"
-        ).toUpperCase();
-    };
+    // =====================================================
+    // DAILY RENT
+    // =====================================================
 
-    const getRentalMonths = () => {
-        return Number(
-            rental?.rentalDuration ??
-            rental?.rentalMonths ??
-            rental?.durationMonths ??
-            rental?.months ??
-            1
-        );
-    };
+    const getDailyRent = () => {
+        const value =
+            rental?.dailyRent ??
+            rental?.rentPerDay ??
+            rental?.pricing?.dailyRent ??
+            rental?.pricing?.rentPerDay ??
+            rental?.dailyRate ??
+            0;
 
-    const getDurationLabel = () => {
-        const value = getRentalMonths();
+        const number = Number(value);
 
-        if (getDurationType() === "DAYS") {
-            return `${value} ${value === 1 ? "Day" : "Days"}`;
+        if (
+            Number.isFinite(number) &&
+            number > 0
+        ) {
+            return number;
         }
 
-        return `${value} ${value === 1 ? "Month" : "Months"}`;
+        /*
+         * IMPORTANT:
+         *
+         * Only calculate daily rent from monthly rent
+         * when daily rent is not supplied.
+         *
+         * This keeps existing monthly rentals working.
+         */
+
+        const monthlyRent =
+            getMonthlyRent();
+
+        if (monthlyRent > 0) {
+            return monthlyRent / 30;
+        }
+
+        return 0;
     };
 
+    // =====================================================
+    // DURATION LABEL
+    // =====================================================
+
+    const getDurationLabel = () => {
+        const type =
+            getDurationType();
+
+        const value =
+            getRentalDurationValue();
+
+        if (type === "DAYS") {
+            return `${value} ${
+                value === 1
+                    ? "Day"
+                    : "Days"
+            }`;
+        }
+
+        return `${value} ${
+            value === 1
+                ? "Month"
+                : "Months"
+        }`;
+    };
+
+    // =====================================================
+    // SECURITY DEPOSIT
+    // =====================================================
+
     const getSecurityDeposit = () => {
-        return Number(
+        const value =
             rental?.securityDeposit ??
             rental?.depositAmount ??
             rental?.securityDepositAmount ??
-            0
-        );
+            0;
+
+        const number = Number(value);
+
+        return Number.isFinite(number)
+            ? Math.max(number, 0)
+            : 0;
     };
 
+    // =====================================================
+    // GST
+    // =====================================================
+
     const getGSTPercentage = () => {
-        return Number(
+        const value =
             rental?.gstPercentage ??
             rental?.gst ??
             rental?.taxPercentage ??
             rental?.pricing?.gstPercentage ??
-            0
+            rental?.pricing?.gst ??
+            0;
+
+        const number = Number(value);
+
+        return Number.isFinite(number)
+            ? Math.max(number, 0)
+            : 0;
+    };
+
+    // =====================================================
+    // RENTAL AMOUNT
+    // =====================================================
+
+    const getRentalAmount = () => {
+        const type =
+            getDurationType();
+
+        const duration =
+            getRentalDurationValue();
+
+        /*
+         * DAILY RENTAL
+         *
+         * Example:
+         *
+         * Daily rent = ₹500
+         * Duration = 3 days
+         *
+         * 500 × 3 = ₹1500
+         */
+
+        if (type === "DAYS") {
+            return (
+                getDailyRent() *
+                duration
+            );
+        }
+
+        /*
+         * MONTHLY RENTAL
+         *
+         * Example:
+         *
+         * Monthly rent = ₹10,000
+         * Duration = 3 months
+         *
+         * 10,000 × 3 = ₹30,000
+         */
+
+        return (
+            getMonthlyRent() *
+            duration
         );
     };
 
-    const getRentalAmount = () => {
-        if (getDurationType() === "DAYS") {
-            return (getMonthlyRent() / 30) * getRentalMonths();
-        }
+    // =====================================================
+    // GST AMOUNT
+    // =====================================================
 
-        return getMonthlyRent() * getRentalMonths();
+    const getGSTAmount = () => {
+        const rentalAmount =
+            getRentalAmount();
+
+        const gstPercentage =
+            getGSTPercentage();
+
+        return (
+            rentalAmount *
+            gstPercentage
+        ) / 100;
     };
 
-    const getGSTAmount = () =>
-        (getRentalAmount() * getGSTPercentage()) / 100;
+    // =====================================================
+    // GRAND TOTAL
+    // =====================================================
 
-    const getGrandTotal = () => getRentalAmount() + getGSTAmount();
+    const getGrandTotal = () => {
+        return (
+            getRentalAmount() +
+            getGSTAmount()
+        );
+    };
 
     // =====================================================
-    // STATUS / PAYMENT
+    // PAYMENT STATUS
+    // =====================================================
+
+    const getPaymentStatus = () => {
+        const total =
+            getGrandTotal();
+
+        const paid = Number(
+            rental?.paidAmount ??
+                rental?.amountPaid ??
+                rental?.paymentAmount ??
+                rental?.payment?.amount ??
+                rental?.payment?.paidAmount ??
+                rental?.depositAmountPaid ??
+                0
+        );
+
+        const rawStatus = String(
+            rental?.paymentStatus ??
+                rental?.paymentState ??
+                rental?.payment?.status ??
+                ""
+        )
+            .trim()
+            .toUpperCase();
+
+        if (
+            rawStatus === "REFUNDED"
+        ) {
+            return "REFUNDED";
+        }
+
+        if (
+            rawStatus === "FAILED"
+        ) {
+            return "FAILED";
+        }
+
+        if (
+            rawStatus === "CANCELLED"
+        ) {
+            return "CANCELLED";
+        }
+
+        if (
+            total > 0 &&
+            paid >= total
+        ) {
+            return "PAID";
+        }
+
+        if (
+            paid > 0 &&
+            paid < total
+        ) {
+            return "PARTIAL";
+        }
+
+        if (
+            rawStatus === "PAID" ||
+            rawStatus === "SUCCESS" ||
+            rawStatus === "COMPLETED"
+        ) {
+            return "PAID";
+        }
+
+        return "PENDING";
+    };
+
+    // =====================================================
+    // RENTAL STATUS
     // =====================================================
 
     const getStatus = () => {
-        return String(rental?.status || "PENDING").toUpperCase();
+        return String(
+            rental?.status ||
+                "PENDING"
+        ).toUpperCase();
     };
+
+    // =====================================================
+    // PAYMENT METHOD
+    // =====================================================
 
     const getPaymentMethod = () => {
         return (
@@ -1317,60 +1601,119 @@ function WalkInRentalInvoice({
     };
 
     // =====================================================
-    // FORMATTERS
+    // PAID AMOUNT
+    // =====================================================
+
+    const getPaidAmount = () => {
+        const value =
+            rental?.paidAmount ??
+            rental?.amountPaid ??
+            rental?.paymentAmount ??
+            rental?.payment?.paidAmount ??
+            rental?.payment?.amount ??
+            0;
+
+        const number = Number(value);
+
+        return Number.isFinite(number)
+            ? Math.max(number, 0)
+            : 0;
+    };
+
+    // =====================================================
+    // BALANCE
+    // =====================================================
+
+    const getBalanceAmount = () => {
+        const total =
+            getGrandTotal();
+
+        const paid =
+            getPaidAmount();
+
+        return Math.max(
+            total - paid,
+            0
+        );
+    };
+
+    // =====================================================
+    // FORMAT MONEY
     // =====================================================
 
     const formatMoney = (value) => {
-        const number = Number(value || 0);
+        const number =
+            Number(value || 0);
 
-        return number.toLocaleString("en-IN", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        });
+        return number.toLocaleString(
+            "en-IN",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            }
+        );
     };
+
+    // =====================================================
+    // DATE
+    // =====================================================
 
     const formatDate = (value) => {
         if (!value) {
             return "-";
         }
 
-        const date = new Date(value);
+        const date =
+            new Date(value);
 
-        if (Number.isNaN(date.getTime())) {
+        if (
+            Number.isNaN(
+                date.getTime()
+            )
+        ) {
             return "-";
         }
 
-        return date.toLocaleDateString("en-IN", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        });
+        return date.toLocaleDateString(
+            "en-IN",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            }
+        );
     };
 
     // =====================================================
     // INVOICE NUMBER
     // =====================================================
 
-    const invoiceNumber = useMemo(() => {
-        const existingInvoice =
-            rental?.invoiceNumber ||
-            rental?.invoiceNo ||
-            rental?.invoice?.invoiceNumber;
+    const invoiceNumber =
+        useMemo(() => {
+            const existingInvoice =
+                rental?.invoiceNumber ||
+                rental?.invoiceNo ||
+                rental?.invoice
+                    ?.invoiceNumber;
 
-        if (existingInvoice) {
-            return String(existingInvoice);
-        }
+            if (existingInvoice) {
+                return String(
+                    existingInvoice
+                );
+            }
 
-        const id = String(
-            rental?._id ||
-            rental?.id ||
-            rental?.rentalId ||
-            rentalId ||
-            ""
-        );
+            const id = String(
+                rental?._id ||
+                    rental?.id ||
+                    rental?.rentalId ||
+                    rentalId ||
+                    ""
+            );
 
-        return `RENT-${id.slice(-8).toUpperCase()}`;
-    }, [rental, rentalId]);
+            return `RENT-${id
+                .slice(-8)
+                .toUpperCase()}`;
+        }, [rental, rentalId]);
 
     // =====================================================
     // PRINT
@@ -1390,13 +1733,19 @@ function WalkInRentalInvoice({
 
     const handleBack = () => {
         if (isAdminPreview) {
-            if (typeof onAdminClose === "function") {
+            if (
+                typeof onAdminClose ===
+                "function"
+            ) {
                 onAdminClose();
             }
+
             return;
         }
 
-        navigate("/receptionist-dashboard/rental/orders");
+        navigate(
+            "/receptionist-dashboard/rental/orders"
+        );
     };
 
     // =====================================================
@@ -1408,9 +1757,14 @@ function WalkInRentalInvoice({
             <div className="rental-invoice-loading">
                 <div className="invoice-loading-spinner" />
 
-                <h3>Loading Rental Invoice...</h3>
+                <h3>
+                    Loading Rental Invoice...
+                </h3>
 
-                <p>Please wait while rental details are being loaded.</p>
+                <p>
+                    Please wait while rental
+                    details are being loaded.
+                </p>
             </div>
         );
     }
@@ -1422,33 +1776,56 @@ function WalkInRentalInvoice({
     if (error && !rental) {
         return (
             <div className="rental-invoice-error">
-                <h2>Unable to Load Invoice</h2>
+                <h2>
+                    Unable to Load Invoice
+                </h2>
 
                 <p>{error}</p>
 
                 <div className="invoice-error-actions">
-                    <button type="button" onClick={loadRental}>
+                    <button
+                        type="button"
+                        onClick={loadRental}
+                    >
                         <RefreshCw size={17} />
                         Retry
                     </button>
 
-                    <button type="button" onClick={handleBack}>
+                    <button
+                        type="button"
+                        onClick={handleBack}
+                    >
                         <ArrowLeft size={17} />
-                        {isAdminPreview ? "Close" : "Back to Rentals"}
+
+                        {isAdminPreview
+                            ? "Close"
+                            : "Back to Rentals"}
                     </button>
                 </div>
             </div>
         );
     }
 
+    // =====================================================
+    // RENTAL NOT FOUND
+    // =====================================================
+
     if (!rental) {
         return (
             <div className="rental-invoice-error">
-                <h2>Rental Not Found</h2>
+                <h2>
+                    Rental Not Found
+                </h2>
 
-                <button type="button" onClick={handleBack}>
+                <button
+                    type="button"
+                    onClick={handleBack}
+                >
                     <ArrowLeft size={17} />
-                    {isAdminPreview ? "Close" : "Back to Rentals"}
+
+                    {isAdminPreview
+                        ? "Close"
+                        : "Back to Rentals"}
                 </button>
             </div>
         );
@@ -1458,10 +1835,41 @@ function WalkInRentalInvoice({
     // CALCULATIONS
     // =====================================================
 
-    const rentalAmount = getRentalAmount();
-    const gstAmount = getGSTAmount();
-    const grandTotal = getGrandTotal();
-    const securityDeposit = getSecurityDeposit();
+    const durationType =
+        getDurationType();
+
+    const durationValue =
+        getRentalDurationValue();
+
+    const dailyRent =
+        getDailyRent();
+
+    const monthlyRent =
+        getMonthlyRent();
+
+    const rentalAmount =
+        getRentalAmount();
+
+    const gstPercentage =
+        getGSTPercentage();
+
+    const gstAmount =
+        getGSTAmount();
+
+    const grandTotal =
+        getGrandTotal();
+
+    const securityDeposit =
+        getSecurityDeposit();
+
+    const paidAmount =
+        getPaidAmount();
+
+    const balanceAmount =
+        getBalanceAmount();
+
+    const paymentStatus =
+        getPaymentStatus();
 
     // =====================================================
     // RENDER
@@ -1470,7 +1878,9 @@ function WalkInRentalInvoice({
     return (
         <div className="rental-invoice-page">
 
-            {/* ACTION BAR */}
+            {/* =================================================
+                ACTION BAR
+            ================================================= */}
 
             <div className="invoice-topbar no-print">
 
@@ -1484,7 +1894,10 @@ function WalkInRentalInvoice({
                     ) : (
                         <ArrowLeft size={18} />
                     )}
-                    {isAdminPreview ? "Close" : "Back to Rentals"}
+
+                    {isAdminPreview
+                        ? "Close"
+                        : "Back to Rentals"}
                 </button>
 
                 <div className="invoice-top-actions">
@@ -1512,43 +1925,63 @@ function WalkInRentalInvoice({
                 </div>
             </div>
 
-            {/* PRINT AREA */}
+            {/* =================================================
+                PRINT AREA
+            ================================================= */}
 
             <main className="rental-invoice-print-area">
 
                 <div className="rental-invoice-paper">
 
-                    {/* HEADER */}
+                    {/* =================================================
+                        HEADER
+                    ================================================= */}
 
                     <div className="invoice-header">
 
                         <div className="invoice-company">
 
-                            <h1>ZAID INFOTECH</h1>
+                            <h1>
+                                ZAID INFOTECH
+                            </h1>
 
-                            <p>Laptop Rental &amp; Technology Solutions</p>
+                            <p>
+                                Laptop Rental &amp;
+                                Technology Solutions
+                            </p>
 
-                            <p>Maharashtra, India</p>
+                            <p>
+                                Maharashtra, India
+                            </p>
 
                         </div>
 
                         <div className="invoice-title-box">
 
-                            <h2>RENTAL INVOICE</h2>
+                            <h2>
+                                RENTAL INVOICE
+                            </h2>
 
                             <div className="invoice-number">
-                                <span>Invoice No.</span>
-                                <strong>{invoiceNumber}</strong>
+                                <span>
+                                    Invoice No.
+                                </span>
+
+                                <strong>
+                                    {invoiceNumber}
+                                </strong>
                             </div>
 
                             <div className="invoice-date">
-                                <span>Invoice Date</span>
+                                <span>
+                                    Invoice Date
+                                </span>
 
                                 <strong>
                                     {formatDate(
                                         rental?.createdAt ||
-                                        rental?.createdDate ||
-                                        rental?.date
+                                            rental?.createdDate ||
+                                            rental?.date
                                     )}
                                 </strong>
                             </div>
@@ -1559,52 +1992,88 @@ function WalkInRentalInvoice({
 
                     <div className="invoice-divider" />
 
-                    {/* CUSTOMER + RENTAL */}
+                    {/* =================================================
+                        CUSTOMER + RENTAL
+                    ================================================= */}
 
                     <div className="invoice-info-grid">
 
                         <div className="invoice-info-card">
 
-                            <h3>BILL TO</h3>
+                            <h3>
+                                BILL TO
+                            </h3>
 
                             <strong className="invoice-customer-name">
                                 {getCustomerName()}
                             </strong>
 
-                            {getCompanyName() && <p>{getCompanyName()}</p>}
+                            {getCompanyName() && (
+                                <p>
+                                    {getCompanyName()}
+                                </p>
+                            )}
 
                             <p>
-                                <b>Phone:</b> {getPhone()}
+                                <b>Phone:</b>{" "}
+                                {getPhone()}
                             </p>
 
                             <p>
-                                <b>Email:</b> {getEmail()}
+                                <b>Email:</b>{" "}
+                                {getEmail()}
                             </p>
 
                             <p>
-                                <b>Address:</b> {getAddress()}
+                                <b>Address:</b>{" "}
+                                {getAddress()}
                             </p>
 
                         </div>
 
                         <div className="invoice-info-card">
 
-                            <h3>RENTAL DETAILS</h3>
+                            <h3>
+                                RENTAL DETAILS
+                            </h3>
 
                             <p>
-                                <b>Rental ID:</b> #
-                                {String(getRentalId()).slice(-8)}
+                                <b>Rental ID:</b>{" "}
+                                #
+                                {String(
+                                    getRentalId()
+                                ).slice(-8)}
                             </p>
 
                             <p>
                                 <b>Source:</b>{" "}
                                 {String(
-                                    rental?.rentalSource || "WALK_IN"
-                                ).replace(/_/g, " ")}
+                                    rental?.rentalSource ||
+                                        "WALK_IN"
+                                ).replace(
+                                    /_/g,
+                                    " "
+                                )}
+                            </p>
+
+                            <p>
+                                <b>Rental Type:</b>{" "}
+                                <strong>
+                                    {durationType ===
+                                    "DAYS"
+                                        ? "DAILY"
+                                        : "MONTHLY"}
+                                </strong>
+                            </p>
+
+                            <p>
+                                <b>Duration:</b>{" "}
+                                {getDurationLabel()}
                             </p>
 
                             <p>
                                 <b>Status:</b>{" "}
+
                                 <span
                                     className={`invoice-status ${getStatus().toLowerCase()}`}
                                 >
@@ -1613,14 +2082,27 @@ function WalkInRentalInvoice({
                             </p>
 
                             <p>
-                                <b>Payment:</b> {getPaymentMethod()}
+                                <b>Payment Status:</b>{" "}
+
+                                <span
+                                    className={`invoice-status ${paymentStatus.toLowerCase()}`}
+                                >
+                                    {paymentStatus}
+                                </span>
+                            </p>
+
+                            <p>
+                                <b>Payment:</b>{" "}
+                                {getPaymentMethod()}
                             </p>
 
                         </div>
 
                     </div>
 
-                    {/* PRODUCT */}
+                    {/* =================================================
+                        PRODUCT
+                    ================================================= */}
 
                     <div className="invoice-section-title">
                         RENTAL PRODUCT
@@ -1631,47 +2113,96 @@ function WalkInRentalInvoice({
                         <table className="invoice-table">
 
                             <thead>
+
                                 <tr>
+
                                     <th>#</th>
-                                    <th>Description</th>
-                                    <th>Brand</th>
-                                    <th>Model</th>
-                                    <th>Duration</th>
-                                    <th>Monthly Rent</th>
-                                    <th>Amount</th>
+
+                                    <th>
+                                        Description
+                                    </th>
+
+                                    <th>
+                                        Brand
+                                    </th>
+
+                                    <th>
+                                        Model
+                                    </th>
+
+                                    <th>
+                                        Duration
+                                    </th>
+
+                                    <th>
+                                        {durationType ===
+                                        "DAYS"
+                                            ? "Daily Rent"
+                                            : "Monthly Rent"}
+                                    </th>
+
+                                    <th>
+                                        Amount
+                                    </th>
+
                                 </tr>
+
                             </thead>
 
                             <tbody>
 
                                 <tr>
 
-                                    <td>1</td>
-
                                     <td>
-                                        <strong>{getProductName()}</strong>
-
-                                        <small className="invoice-product-sub">
-                                            Serial No: {getSerialNumber()}
-                                        </small>
+                                        1
                                     </td>
 
-                                    <td>{getBrandName()}</td>
+                                    <td>
 
-                                    <td>{getModelName()}</td>
+                                        <strong>
+                                            {getProductName()}
+                                        </strong>
+
+                                        <small className="invoice-product-sub">
+                                            Serial No:{" "}
+                                            {getSerialNumber()}
+                                        </small>
+
+                                    </td>
+
+                                    <td>
+                                        {getBrandName()}
+                                    </td>
+
+                                    <td>
+                                        {getModelName()}
+                                    </td>
 
                                     <td>
                                         {getDurationLabel()}
                                     </td>
 
                                     <td>
-                                        ₹ {formatMoney(getMonthlyRent())}
+
+                                        ₹{" "}
+                                        {formatMoney(
+                                            durationType ===
+                                                "DAYS"
+                                                ? dailyRent
+                                                : monthlyRent
+                                        )}
+
                                     </td>
 
                                     <td>
+
                                         <strong>
-                                            ₹ {formatMoney(rentalAmount)}
+                                            ₹{" "}
+                                            {formatMoney(
+                                                rentalAmount
+                                            )}
                                         </strong>
+
                                     </td>
 
                                 </tr>
@@ -1682,22 +2213,31 @@ function WalkInRentalInvoice({
 
                     </div>
 
-                    {/* SUMMARY */}
+                    {/* =================================================
+                        SUMMARY
+                    ================================================= */}
 
                     <div className="invoice-summary-area">
 
                         <div className="invoice-notes">
 
-                            <h3>NOTES</h3>
+                            <h3>
+                                NOTES
+                            </h3>
 
                             <p>
-                                This invoice is generated for the above
-                                walk-in rental transaction.
+                                This invoice is
+                                generated for the
+                                above walk-in
+                                rental transaction.
                             </p>
 
                             <p>
-                                Security deposit is refundable subject to
-                                rental return conditions and applicable
+                                Security deposit is
+                                refundable subject to
+                                rental return
+                                conditions and
+                                applicable
                                 deductions.
                             </p>
 
@@ -1705,48 +2245,158 @@ function WalkInRentalInvoice({
 
                         <div className="invoice-total-box">
 
-                            <div className="invoice-total-row">
-                                <span>Rental Amount</span>
-                                <strong>₹ {formatMoney(rentalAmount)}</strong>
-                            </div>
+                            {/* RENTAL AMOUNT */}
 
                             <div className="invoice-total-row">
-                                <span>GST ({getGSTPercentage()}%)</span>
-                                <strong>₹ {formatMoney(gstAmount)}</strong>
+
+                                <span>
+                                    {durationType ===
+                                    "DAYS"
+                                        ? `Daily Rent × ${durationValue} ${
+                                              durationValue ===
+                                              1
+                                                  ? "Day"
+                                                  : "Days"
+                                          }`
+                                        : `Monthly Rent × ${durationValue} ${
+                                              durationValue ===
+                                              1
+                                                  ? "Month"
+                                                  : "Months"
+                                          }`}
+                                </span>
+
+                                <strong>
+                                    ₹{" "}
+                                    {formatMoney(
+                                        rentalAmount
+                                    )}
+                                </strong>
+
                             </div>
+
+                            {/* GST */}
+
+                            <div className="invoice-total-row">
+
+                                <span>
+                                    GST (
+                                    {
+                                        gstPercentage
+                                    }
+                                    %)
+                                </span>
+
+                                <strong>
+                                    ₹{" "}
+                                    {formatMoney(
+                                        gstAmount
+                                    )}
+                                </strong>
+
+                            </div>
+
+                            {/* SECURITY DEPOSIT */}
 
                             <div className="invoice-total-row deposit-row">
-                                <span>Security Deposit</span>
-                                <strong>₹ {formatMoney(securityDeposit)}</strong>
+
+                                <span>
+                                    Security Deposit
+                                </span>
+
+                                <strong>
+                                    ₹{" "}
+                                    {formatMoney(
+                                        securityDeposit
+                                    )}
+                                </strong>
+
                             </div>
 
                             <div className="invoice-total-divider" />
 
+                            {/* GRAND TOTAL */}
+
                             <div className="invoice-grand-total">
-                                <span>TOTAL RENT</span>
-                                <strong>₹ {formatMoney(grandTotal)}</strong>
+
+                                <span>
+                                    TOTAL RENT
+                                </span>
+
+                                <strong>
+                                    ₹{" "}
+                                    {formatMoney(
+                                        grandTotal
+                                    )}
+                                </strong>
+
+                            </div>
+
+                            {/* PAID */}
+
+                            <div className="invoice-total-row">
+
+                                <span>
+                                    Paid Amount
+                                </span>
+
+                                <strong>
+                                    ₹{" "}
+                                    {formatMoney(
+                                        paidAmount
+                                    )}
+                                </strong>
+
+                            </div>
+
+                            {/* BALANCE */}
+
+                            <div className="invoice-total-row">
+
+                                <span>
+                                    Balance Amount
+                                </span>
+
+                                <strong>
+                                    ₹{" "}
+                                    {formatMoney(
+                                        balanceAmount
+                                    )}
+                                </strong>
+
                             </div>
 
                             <div className="invoice-deposit-note">
-                                Security deposit is shown separately and is
-                                not included in Total Rent.
+
+                                Security deposit is
+                                shown separately
+                                and is not included
+                                in Total Rent.
+
                             </div>
 
                         </div>
 
                     </div>
 
-                    {/* FOOTER */}
+                    {/* =================================================
+                        FOOTER
+                    ================================================= */}
 
                     <div className="invoice-footer">
 
                         <div>
 
                             <strong>
-                                Thank you for choosing Zaid Infotech.
+                                Thank you for choosing
+                                Zaid Infotech.
                             </strong>
 
-                            <p>Please keep this invoice for your records.</p>
+                            <p>
+                                Please keep this
+                                invoice for your
+                                records.
+                            </p>
 
                         </div>
 
@@ -1754,7 +2404,9 @@ function WalkInRentalInvoice({
 
                             <div className="signature-line" />
 
-                            <span>Authorized Signature</span>
+                            <span>
+                                Authorized Signature
+                            </span>
 
                         </div>
 
@@ -1763,9 +2415,9 @@ function WalkInRentalInvoice({
                 </div>
 
             </main>
+
         </div>
     );
 }
 
 export default WalkInRentalInvoice;
-
