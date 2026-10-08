@@ -1045,7 +1045,11 @@ import "./SalaryModal.css";
 
 import { toast } from "react-toastify";
 
+import axios from "axios";
+
 import BankDetails from "./BankDetails";
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL;
 
 const SalaryModal = ({
   employeeId,
@@ -1328,59 +1332,120 @@ const SalaryModal = ({
     };
 
 
-    const getSalaryRecordId = () => {
-  const history =
-    Array.isArray(salaryData?.salaryHistory)
-      ? salaryData.salaryHistory
-      : [];
+const getSalaryRecordId = () => {
+  const history = Array.isArray(salaryData?.salaryHistory)
+    ? salaryData.salaryHistory
+    : [];
+
+  console.log("====================================");
+  console.log("SALARY HISTORY:", history);
+  console.log("PAY FORM MONTH:", payForm.month);
+  console.log("====================================");
 
   if (!history.length) {
+    console.error("NO SALARY HISTORY FOUND");
     return null;
   }
 
-  // First try exact month match
-  const exactMatch = history.find(
-    (record) =>
-      String(record?.month || "").trim() ===
-      String(payForm.month || "").trim()
-  );
+  // --------------------------------------------------
+  // 1. First try current month
+  // --------------------------------------------------
 
-  if (
-    exactMatch &&
-    exactMatch.status === "PENDING"
-  ) {
-    return exactMatch._id;
+  const now = new Date();
+
+  const currentMonth =
+    `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+  console.log("CURRENT MONTH:", currentMonth);
+
+  const currentPendingRecord = history.find((record) => {
+    const recordMonth = String(record?.month || "").trim();
+    const recordStatus = String(record?.status || "").toUpperCase();
+
+    return (
+      recordMonth === currentMonth &&
+      recordStatus === "PENDING"
+    );
+  });
+
+  if (currentPendingRecord?._id) {
+    console.log(
+      "CURRENT MONTH PENDING RECORD:",
+      currentPendingRecord
+    );
+
+    return currentPendingRecord._id;
   }
 
-  // Convert "September 2026" -> "2026-09"
-  const parsedDate = new Date(
-    `${payForm.month} 1`
-  );
+  // --------------------------------------------------
+  // 2. Convert "October 2026" -> "2026-10"
+  // --------------------------------------------------
 
-  if (!Number.isNaN(parsedDate.getTime())) {
-    const year =
-      parsedDate.getFullYear();
+  const inputMonth = String(payForm.month || "").trim();
 
-    const month =
-      String(
-        parsedDate.getMonth() + 1
-      ).padStart(2, "0");
+  if (inputMonth) {
+    const parsedDate = new Date(`${inputMonth} 1`);
 
-    const normalizedMonth =
-      `${year}-${month}`;
+    if (!Number.isNaN(parsedDate.getTime())) {
+      const normalizedMonth =
+        `${parsedDate.getFullYear()}-${String(
+          parsedDate.getMonth() + 1
+        ).padStart(2, "0")}`;
 
-    const normalizedMatch =
-      history.find(
-        (record) =>
-          String(record?.month || "")
-            .trim() === normalizedMonth &&
-          record?.status === "PENDING"
+      console.log(
+        "NORMALIZED PAYMENT MONTH:",
+        normalizedMonth
       );
 
-    if (normalizedMatch) {
-      return normalizedMatch._id;
+      const matchedRecord = history.find((record) => {
+        const recordMonth = String(record?.month || "").trim();
+        const recordStatus =
+          String(record?.status || "").toUpperCase();
+
+        return (
+          recordMonth === normalizedMonth &&
+          recordStatus === "PENDING"
+        );
+      });
+
+      if (matchedRecord?._id) {
+        console.log(
+          "MATCHED PENDING SALARY RECORD:",
+          matchedRecord
+        );
+
+        return matchedRecord._id;
+      }
     }
   }
+
+  // --------------------------------------------------
+  // 3. Last fallback: latest PENDING record
+  // --------------------------------------------------
+
+  const pendingRecords = history.filter(
+    (record) =>
+      String(record?.status || "").toUpperCase() === "PENDING"
+  );
+
+  console.log(
+    "ALL PENDING RECORDS:",
+    pendingRecords
+  );
+
+  if (pendingRecords.length > 0) {
+    const latestPending =
+      pendingRecords[pendingRecords.length - 1];
+
+    console.log(
+      "USING LATEST PENDING RECORD:",
+      latestPending
+    );
+
+    return latestPending?._id || null;
+  }
+
+  console.error("NO PENDING SALARY RECORD FOUND");
 
   return null;
 };
@@ -1543,186 +1608,392 @@ const SalaryModal = ({
 
   //   };
 
+const handleSalaryPayment = async (event) => {
+  event.preventDefault();
 
-  const handleSalaryPayment =
-  async (event) => {
+  try {
+    if (!employeeId) {
+      toast.error("Employee ID is missing.");
+      return;
+    }
 
-    event.preventDefault();
+    if (!payForm.paymentDate) {
+      toast.error("Please select payment date.");
+      return;
+    }
 
-    try {
+    if (!payForm.paymentMode) {
+      toast.error("Please select payment mode.");
+      return;
+    }
 
-      const amount =
-        Number(
-          payForm.amount || 0
-        );
+    const allowedPaymentModes = [
+      "BANK",
+      "UPI",
+      "CASH",
+    ];
 
-      if (amount <= 0) {
+    if (
+      !allowedPaymentModes.includes(
+        payForm.paymentMode
+      )
+    ) {
+      toast.error("Invalid payment mode.");
+      return;
+    }
 
-        toast.error(
-          "Please enter valid salary amount"
-        );
+    // =====================================================
+    // FIND EXISTING PENDING RECORD
+    // =====================================================
 
-        return;
-      }
+    let recordId = getSalaryRecordId();
 
-      if (!payForm.month?.trim()) {
+    console.log(
+      "INITIAL SALARY RECORD ID:",
+      recordId
+    );
 
-        toast.error(
-          "Please enter salary month"
-        );
+    // =====================================================
+    // IF NO PENDING RECORD -> AUTO CALCULATE
+    // =====================================================
 
-        return;
-      }
-
-      if (!payForm.paymentDate) {
-
-        toast.error(
-          "Please select payment date"
-        );
-
-        return;
-      }
-
-
-      // ==================================================
-      // FIND PENDING SALARY RECORD
-      // ==================================================
-
-      const recordId =
-        getSalaryRecordId();
-
-
-      if (!recordId) {
-
-        toast.error(
-          "No pending salary record found. Please calculate salary first."
-        );
-
-        return;
-      }
-
-
+    if (!recordId) {
       console.log(
-        "Salary Record ID:",
-        recordId
+        "NO PENDING RECORD FOUND."
       );
 
+      console.log(
+        "AUTO CALCULATING SALARY..."
+      );
 
-      // ==================================================
-      // BANK DETAILS CHECK
-      // ==================================================
+      const now = new Date();
 
-      if (
-        payForm.paymentMode === "BANK"
-      ) {
+      const month =
+        now.getMonth() + 1;
 
-        const bank =
-          salaryData?.bankDetails;
+      const year =
+        now.getFullYear();
 
-        if (!bank) {
+      const token =
+        localStorage.getItem("token") ||
+        localStorage.getItem("accessToken");
 
-          toast.error(
-            "Employee bank details are not available"
-          );
-
-          setActiveTab("bank");
-
-          return;
-        }
-
-        if (
-          !bank?.accountHolderName ||
-          !bank?.accountNumber ||
-          !bank?.ifscCode ||
-          !bank?.bankName
-        ) {
-
-          toast.error(
-            "Complete bank details are required for bank salary payment"
-          );
-
-          setActiveTab("bank");
-
-          return;
-        }
+      if (!token) {
+        toast.error(
+          "Authentication token missing."
+        );
+        return;
       }
 
-
-      // ==================================================
-      // PAYMENT API
-      // ==================================================
-
-      const response =
-        await updateSalaryPayment(
-          employeeId,
+      const calculateResponse =
+        await axios.post(
+          `${API_BASE_URL}/salary/calculate/${employeeId}`,
           {
-
-            recordId,
-
-            month:
-              payForm.month.trim(),
-
-            amount,
-
-            paymentDate:
-              payForm.paymentDate,
-
-            paymentMode:
-              payForm.paymentMode,
-
-            status:
-              "PAID",
-
-            remark:
-              payForm.remark?.trim() || "",
-
+            month,
+            year,
+          },
+          {
+            headers: {
+              "Content-Type":
+                "application/json",
+              Authorization:
+                `Bearer ${token}`,
+            },
           }
         );
 
-
       console.log(
-        "Salary payment response:",
-        response
+        "AUTO CALCULATE SALARY RESPONSE:",
+        calculateResponse.data
       );
 
-
-      toast.success(
-        "Salary Paid Successfully"
-      );
-
+      // =====================================================
+      // REFRESH SALARY DATA
+      // =====================================================
 
       await fetchSalary();
 
+      // =====================================================
+      // GET NEWLY CREATED PENDING RECORD
+      // =====================================================
 
-      setActiveTab(
-        "overview"
+      const calculatedRecordId =
+        calculateResponse?.data?.data
+          ?.salaryRecordId ||
+        calculateResponse?.data
+          ?.salaryRecordId ||
+        null;
+
+      if (calculatedRecordId) {
+        recordId =
+          calculatedRecordId;
+      } else {
+        // Try again from refreshed salary data
+        recordId =
+          getSalaryRecordId();
+      }
+
+      console.log(
+        "RECORD ID AFTER CALCULATION:",
+        recordId
       );
 
-
-    } catch (err) {
-
-      console.error(
-        "Salary payment error:",
-        err
-      );
-
-      console.error(
-        "Salary payment response:",
-        err?.response?.data
-      );
-
-
-      toast.error(
-        err?.response?.data?.message ||
-        err?.response?.data?.error ||
-        err?.message ||
-        "Payment Failed"
-      );
-
+      if (!recordId) {
+        toast.error(
+          "Salary was calculated, but pending salary record was not created."
+        );
+        return;
+      }
     }
 
-  };
+    // =====================================================
+    // FIND SALARY HISTORY
+    // =====================================================
 
+    const salaryHistory =
+      Array.isArray(
+        salaryData?.salaryHistory
+      )
+        ? salaryData.salaryHistory
+        : [];
+
+    let salaryRecord =
+      salaryHistory.find(
+        (record) =>
+          String(record?._id) ===
+          String(recordId)
+      );
+
+    // =====================================================
+    // IF FRONTEND DATA IS OLD, REFRESH AGAIN
+    // =====================================================
+
+    if (!salaryRecord) {
+      console.log(
+        "SALARY RECORD NOT FOUND IN OLD STATE."
+      );
+
+      await fetchSalary();
+
+      const refreshedHistory =
+        Array.isArray(
+          salaryData?.salaryHistory
+        )
+          ? salaryData.salaryHistory
+          : [];
+
+      salaryRecord =
+        refreshedHistory.find(
+          (record) =>
+            String(record?._id) ===
+            String(recordId)
+        );
+    }
+
+    // =====================================================
+    // STILL NOT FOUND
+    // =====================================================
+
+    if (!salaryRecord) {
+      toast.error(
+        "Salary record not found. Please refresh the page."
+      );
+      return;
+    }
+
+    console.log(
+      "FINAL SALARY RECORD:",
+      salaryRecord
+    );
+
+    // =====================================================
+    // ALREADY PAID
+    // =====================================================
+
+    if (
+      String(
+        salaryRecord.status || ""
+      ).toUpperCase() === "PAID"
+    ) {
+      toast.error(
+        "This salary is already paid."
+      );
+      return;
+    }
+
+    // =====================================================
+    // SALARY AMOUNT
+    // =====================================================
+
+    const amount = Number(
+      salaryRecord.amount ??
+      payForm.amount ??
+      0
+    );
+
+    if (
+      !Number.isFinite(amount) ||
+      amount <= 0
+    ) {
+      toast.error(
+        "Invalid salary amount."
+      );
+      return;
+    }
+
+    // =====================================================
+    // BANK VALIDATION
+    // =====================================================
+
+    if (
+      payForm.paymentMode === "BANK"
+    ) {
+      const bank =
+        salaryData?.bankDetails;
+
+      if (!bank) {
+        toast.error(
+          "Employee bank details are not available."
+        );
+
+        setActiveTab("bank");
+        return;
+      }
+
+      if (
+        !bank.accountHolderName ||
+        !bank.accountNumber ||
+        !bank.ifscCode ||
+        !bank.bankName
+      ) {
+        toast.error(
+          "Complete bank details are required for bank salary payment."
+        );
+
+        setActiveTab("bank");
+        return;
+      }
+    }
+
+    // =====================================================
+    // FINAL PAYMENT
+    // =====================================================
+
+    console.log(
+      "===================================="
+    );
+
+    console.log(
+      "PAYING SALARY"
+    );
+
+    console.log(
+      "EMPLOYEE ID:",
+      employeeId
+    );
+
+    console.log(
+      "RECORD ID:",
+      recordId
+    );
+
+    console.log(
+      "MONTH:",
+      salaryRecord.month
+    );
+
+    console.log(
+      "AMOUNT:",
+      amount
+    );
+
+    console.log(
+      "PAYMENT MODE:",
+      payForm.paymentMode
+    );
+
+    console.log(
+      "===================================="
+    );
+
+    const response =
+      await updateSalaryPayment(
+        employeeId,
+        {
+          recordId,
+
+          month:
+            salaryRecord.month ||
+            payForm.month?.trim() ||
+            "",
+
+          amount,
+
+          paymentDate:
+            payForm.paymentDate,
+
+          paymentMode:
+            payForm.paymentMode,
+
+          status: "PAID",
+
+          remark:
+            payForm.remark?.trim() ||
+            "",
+        }
+      );
+
+    console.log(
+      "SALARY PAYMENT RESPONSE:",
+      response
+    );
+
+    toast.success(
+      "Salary Paid Successfully"
+    );
+
+    // =====================================================
+    // REFRESH
+    // =====================================================
+
+    await fetchSalary();
+
+    setPayForm((prev) => ({
+      ...prev,
+      amount: "",
+      remark: "",
+    }));
+
+    setActiveTab("overview");
+
+  } catch (error) {
+
+    console.error(
+      "===================================="
+    );
+
+    console.error(
+      "SALARY PAYMENT ERROR:",
+      error
+    );
+
+    console.error(
+      "BACKEND RESPONSE:",
+      error?.response?.data
+    );
+
+    console.error(
+      "===================================="
+    );
+
+    toast.error(
+      error?.response?.data?.message ||
+      error?.response?.data?.error ||
+      error?.message ||
+      "Salary payment failed."
+    );
+  }
+};
 
   // ======================================================
   // LOADING
