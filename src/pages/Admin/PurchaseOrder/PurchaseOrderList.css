@@ -1,6 +1,14 @@
+/* ==========================================================
+   PURCHASE ORDER LIST
+   Breakpoints: desktop (> 900px), tablet (641-900px),
+   mobile (640px and below)
+========================================================== */
+
 .po-list-page {
-    padding: 24px 28px;
+    width: 100%;
     max-width: 1200px;
+    padding: 24px 28px;
+    box-sizing: border-box;
 }
 
 /* Header */
@@ -48,13 +56,14 @@
     outline-offset: 2px;
 }
 
-/* Status tabs */
+/* Status tabs (scroll sideways on narrow screens) */
 .po-list-tabs {
     display: flex;
     gap: 6px;
     margin-bottom: 16px;
     border-bottom: 1px solid #e5e7eb;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .po-list-tab {
@@ -106,9 +115,12 @@
     color: #111827;
 }
 
-/* Table */
+/* Table
+   The table scrolls inside this box, never on the page. */
 .po-list-table-wrapper {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -142,12 +154,19 @@
     cursor: pointer;
 }
 
-.po-list-table tbody tr:hover {
-    background: #f9fafb;
+/* hover only on devices that really hover (mouse), so it
+   does not stay stuck after a tap on a touch screen */
+@media (hover: hover) {
+    .po-list-table tbody tr:hover {
+        background: #f9fafb;
+    }
 }
 
-.po-list-table tbody tr:last-child td {
-    border-bottom: none;
+/* only for the real table layout (not the mobile cards) */
+@media (min-width: 641px) {
+    .po-list-table tbody tr:last-child td {
+        border-bottom: none;
+    }
 }
 
 .po-list-table .num {
@@ -207,8 +226,159 @@
     color: #b91c1c;
 }
 
-@media (max-width: 600px) {
+/* ==========================================================
+   TABLET  (641px - 900px)
+   Same table, tighter spacing. It keeps a min-width so the
+   columns stay readable and scrolls inside its wrapper.
+========================================================== */
+
+@media (max-width: 900px) {
+
     .po-list-page {
-        padding: 16px;
+        padding: 20px;
+    }
+
+    .po-list-header h1 {
+        font-size: 24px;
+    }
+
+    .po-list-table {
+        min-width: 760px;
+    }
+
+    .po-list-table th,
+    .po-list-table td {
+        padding: 11px 12px;
+    }
+}
+
+/* ==========================================================
+   MOBILE  (640px and below)
+   Each table row becomes a card. Labels come from CSS, in the
+   same order as the <th> cells, so no JSX change is needed.
+========================================================== */
+
+@media (max-width: 640px) {
+
+    .po-list-page {
+        padding: 12px;
+    }
+
+    .po-list-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    .po-list-header h1 {
+        font-size: 22px;
+    }
+
+    .po-list-create {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .po-list-tab {
+        min-height: 44px;
+    }
+
+    /* 16px stops iOS Safari from zooming in on focus */
+    .po-list-toolbar input {
+        max-width: none;
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    /* ----- table -> cards ----- */
+
+    .po-list-table-wrapper {
+        overflow-x: visible;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+    }
+
+    .po-list-table,
+    .po-list-table tbody,
+    .po-list-table tr,
+    .po-list-table td {
+        display: block;
+        box-sizing: border-box;
+    }
+
+    .po-list-table {
+        min-width: 0;
+    }
+
+    /* header row is hidden visually but kept for screen readers */
+    .po-list-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .po-list-table tbody tr {
+        margin-bottom: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        overflow: hidden;
+    }
+
+    /* label on the left (margin-right: auto), value on the right */
+    .po-list-table td {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-bottom: 1px solid #f3f4f6;
+        white-space: normal;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .po-list-table td:last-child {
+        border-bottom: none;
+    }
+
+    .po-list-table td::before {
+        margin-right: auto;
+        padding-right: 8px;
+        flex-shrink: 0;
+        font-weight: 600;
+        font-size: 13px;
+        color: #6b7280;
+        text-align: left;
+    }
+
+    /* labels (keep in the same order as the <th> cells) */
+    .po-list-table td:nth-child(2)::before { content: "Vendor"; }
+    .po-list-table td:nth-child(3)::before { content: "Items"; }
+    .po-list-table td:nth-child(4)::before { content: "Total"; }
+    .po-list-table td:nth-child(5)::before { content: "Expected delivery"; }
+    .po-list-table td:nth-child(6)::before { content: "Status"; }
+    .po-list-table td:nth-child(7)::before { content: "Created"; }
+
+    /* PO number acts as the card title, so it has no label */
+    .po-list-table td:first-child {
+        justify-content: flex-start;
+        text-align: left;
+        font-size: 15px;
+        background: #f9fafb;
+    }
+
+    .po-list-table td:first-child::before {
+        content: none;
+    }
+
+    /* the flex gap already spaces the Overdue badge */
+    .po-list-overdue {
+        margin-left: 0;
     }
 }

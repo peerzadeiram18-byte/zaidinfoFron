@@ -4,11 +4,18 @@
 
 .purchase-bill-details-page {
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   padding: 24px;
   background: #f5f7f9;
   box-sizing: border-box;
   color: #1f2937;
+}
+
+.purchase-bill-details-page *,
+.purchase-bill-details-page *::before,
+.purchase-bill-details-page *::after {
+  box-sizing: border-box;          /* NEW: consistent sizing for every element on this page */
 }
 
 
@@ -24,11 +31,16 @@
   margin-bottom: 24px;
 }
 
+.purchase-bill-details-header > div:first-child {
+  min-width: 0;                    /* NEW: lets long titles wrap instead of pushing buttons out */
+}
+
 .purchase-bill-details-header h1 {
   margin: 8px 0 6px;
   font-size: 28px;
   font-weight: 700;
   color: #111827;
+  overflow-wrap: anywhere;
 }
 
 .purchase-bill-details-subtitle {
@@ -40,6 +52,7 @@
 .purchase-bill-details-header-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;                 /* NEW: buttons wrap on narrow widths */
   gap: 10px;
 }
 
@@ -73,6 +86,7 @@
   border-radius: 12px;
   padding: 22px;
   margin-bottom: 20px;
+  min-width: 0;                    /* NEW: stops wide children from stretching the card */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
@@ -96,8 +110,28 @@
    HEADER ACTIONS
    ====================================================== */
 
+/* NEW: View Invoice button (outlined, sits beside Verify Bill) */
+.purchase-bill-details-invoice-btn {
+  border: 1px solid #15803d;
+  border-radius: 8px;
+  padding: 10px 18px;
+  background: #ffffff;
+  color: #15803d;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: 0.2s ease;
+}
+
+.purchase-bill-details-invoice-btn:hover {
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #166534;
+}
+
 .purchase-bill-details-verify-btn {
-  border: none;
+  border: 1px solid #15803d;       /* FIX: same border as the invoice button so both are equal height */
   border-radius: 8px;
   padding: 10px 18px;
   background: #15803d;
@@ -105,16 +139,28 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  white-space: nowrap;
   transition: 0.2s ease;
 }
 
 .purchase-bill-details-verify-btn:hover {
   background: #166534;
+  border-color: #166534;
 }
 
 .purchase-bill-details-verify-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* NEW: visible keyboard focus on every button and link */
+.purchase-bill-details-invoice-btn:focus-visible,
+.purchase-bill-details-verify-btn:focus-visible,
+.purchase-bill-details-back-btn:focus-visible,
+.purchase-bill-details-payment-btn:focus-visible,
+.purchase-bill-details-secondary-btn:focus-visible {
+  outline: 3px solid rgba(21, 128, 61, 0.35);
+  outline-offset: 2px;
 }
 
 
@@ -139,6 +185,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.3px;
+  white-space: nowrap;
 }
 
 .purchase-bill-details-badge-success {
@@ -164,6 +211,24 @@
 .purchase-bill-details-payment-paid {
   background: #dcfce7;
   color: #166534;
+}
+
+/* FIX: badge versions are written as ".badge.status" so they never
+   collide with the "Payment completed" box that shares the
+   "payment-success" class name. FAILED and REVERSED are new. */
+.purchase-bill-details-badge.purchase-bill-details-payment-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.purchase-bill-details-badge.purchase-bill-details-payment-failed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.purchase-bill-details-badge.purchase-bill-details-payment-reversed {
+  background: #e5e7eb;
+  color: #374151;
 }
 
 
@@ -194,6 +259,7 @@
   color: #111827;
   font-size: 14px;
   font-weight: 600;
+  overflow-wrap: anywhere;         /* FIX: long IDs (e.g. Purchase Order) can no longer overflow */
   word-break: break-word;
 }
 
@@ -206,11 +272,13 @@
   color: #6b7280;
   font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .purchase-bill-details-table-wrapper {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;   /* NEW: smooth sideways scroll on iOS */
 }
 
 .purchase-bill-details-table {
@@ -259,12 +327,57 @@
   color: #4b5563;
   font-size: 11px;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .purchase-bill-details-total-cell {
   color: #111827 !important;
   font-weight: 700;
   white-space: nowrap;
+}
+
+
+/* ======================================================
+   PAYMENT HISTORY: TRANSACTION DETAILS   (NEW)
+   ====================================================== */
+
+.purchase-bill-details-payment-history-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+
+.purchase-bill-details-payment-history-details > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.purchase-bill-details-payment-history-details span {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.purchase-bill-details-payment-history-details strong {
+  color: #111827;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.purchase-bill-details-payment-history-details a {
+  color: #15803d;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.purchase-bill-details-payment-history-details a:hover {
+  text-decoration: underline;
 }
 
 
@@ -289,7 +402,7 @@
 
 .purchase-bill-details-summary-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(340px, 0.7fr);
+  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
   gap: 20px;
 }
 
@@ -373,7 +486,7 @@
 
 
 /* ======================================================
-   VERIFICATION INFORMATION
+   SECTION DESCRIPTION
    ====================================================== */
 
 .purchase-bill-details-section-description {
@@ -406,7 +519,9 @@
   font-size: 13px;
 }
 
-.purchase-bill-details-payment-success {
+/* FIX: ":not(.purchase-bill-details-badge)" keeps this box style off the
+   SUCCESS status badge in Payment History, which uses the same class name */
+.purchase-bill-details-payment-success:not(.purchase-bill-details-badge) {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -417,11 +532,11 @@
   color: #166534;
 }
 
-.purchase-bill-details-payment-success strong {
+.purchase-bill-details-payment-success:not(.purchase-bill-details-badge) strong {
   font-size: 14px;
 }
 
-.purchase-bill-details-payment-success span {
+.purchase-bill-details-payment-success:not(.purchase-bill-details-badge) span {
   font-size: 13px;
 }
 
@@ -447,6 +562,7 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   background: #f9fafb;
+  min-width: 0;
 }
 
 .purchase-bill-details-payment-info span {
@@ -461,6 +577,7 @@
   color: #111827;
   font-size: 16px;
   font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .purchase-bill-details-form-grid {
@@ -473,6 +590,11 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
+  min-width: 0;                    /* NEW: stops long inputs from stretching the grid */
+}
+
+.purchase-bill-details-form-group-full {
+  width: 100%;                     /* NEW: Payment Notes spans the full form width */
 }
 
 .purchase-bill-details-form-group label {
@@ -482,11 +604,11 @@
 }
 
 .purchase-bill-details-form-group input,
-.purchase-bill-details-form-group select {
+.purchase-bill-details-form-group select,
+.purchase-bill-details-form-group textarea {   /* NEW: textarea now matches the inputs */
   width: 100%;
   min-height: 42px;
   padding: 9px 11px;
-  box-sizing: border-box;
   border: 1px solid #d1d5db;
   border-radius: 7px;
   background: #ffffff;
@@ -497,14 +619,69 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.purchase-bill-details-form-group textarea {
+  resize: vertical;
+  min-height: 84px;
+  line-height: 1.5;
+}
+
 .purchase-bill-details-form-group input:focus,
-.purchase-bill-details-form-group select:focus {
+.purchase-bill-details-form-group select:focus,
+.purchase-bill-details-form-group textarea:focus {
   border-color: #15803d;
   box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.1);
 }
 
-.purchase-bill-details-form-group input::placeholder {
+.purchase-bill-details-form-group input::placeholder,
+.purchase-bill-details-form-group textarea::placeholder {
   color: #9ca3af;
+}
+
+/* NEW: file input (payment slip) */
+.purchase-bill-details-form-group input[type="file"] {
+  padding: 7px 9px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.purchase-bill-details-form-group input[type="file"]::file-selector-button {
+  margin-right: 10px;
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f9fafb;
+  color: #374151;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.purchase-bill-details-form-group input[type="file"]::file-selector-button:hover {
+  background: #f3f4f6;
+}
+
+/* NEW: helper text under the payment slip field */
+.purchase-bill-details-form-group small {
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+/* NEW: UPI / Bank / Cheque / Cash blocks */
+.purchase-bill-details-payment-extra-section {
+  padding: 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.purchase-bill-details-payment-extra-section h3 {
+  margin: 0 0 14px;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .purchase-bill-details-payment-actions {
@@ -574,6 +751,7 @@
   margin: 0 0 20px;
   color: #6b7280;
   font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
 .purchase-bill-details-secondary-btn {
@@ -593,7 +771,7 @@
 
 
 /* ======================================================
-   RESPONSIVE - TABLET
+   RESPONSIVE - TABLET  (up to 1024px)
    ====================================================== */
 
 @media (max-width: 1024px) {
@@ -620,7 +798,7 @@
 
 
 /* ======================================================
-   RESPONSIVE - MOBILE
+   RESPONSIVE - MOBILE  (up to 700px)
    ====================================================== */
 
 @media (max-width: 700px) {
@@ -631,14 +809,21 @@
   .purchase-bill-details-header {
     flex-direction: column;
     align-items: stretch;
+    gap: 14px;
   }
 
   .purchase-bill-details-header h1 {
     font-size: 23px;
   }
 
+  /* buttons share the row, or stack if there is no room */
   .purchase-bill-details-header-actions {
-    justify-content: flex-start;
+    justify-content: stretch;
+  }
+
+  .purchase-bill-details-header-actions > button {
+    flex: 1 1 140px;
+    min-height: 44px;              /* comfortable tap target */
   }
 
   .purchase-bill-details-card {
@@ -665,12 +850,17 @@
     grid-template-columns: 1fr;
   }
 
+  .purchase-bill-details-payment-extra-section {
+    padding: 14px;
+  }
+
   .purchase-bill-details-payment-actions {
     justify-content: stretch;
   }
 
   .purchase-bill-details-payment-btn {
     width: 100%;
+    min-height: 44px;
   }
 
   .purchase-bill-details-status-group {
@@ -680,11 +870,18 @@
   .purchase-bill-details-summary-layout {
     gap: 0;
   }
+
+  /* 16px inputs stop iOS Safari from zooming in when a field is focused */
+  .purchase-bill-details-form-group input,
+  .purchase-bill-details-form-group select,
+  .purchase-bill-details-form-group textarea {
+    font-size: 16px;
+  }
 }
 
 
 /* ======================================================
-   SMALL MOBILE
+   SMALL MOBILE  (up to 420px)
    ====================================================== */
 
 @media (max-width: 420px) {
@@ -705,7 +902,12 @@
     padding: 10px;
   }
 
-  .purchase-bill-details-verify-btn {
-    width: 100%;
+  .purchase-bill-details-header-actions > button {
+    flex: 1 1 100%;                /* one button per row */
+  }
+
+  .purchase-bill-details-amount-list > div {
+    gap: 10px;
+    font-size: 13px;
   }
 }

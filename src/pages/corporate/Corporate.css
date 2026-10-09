@@ -1,110 +1,153 @@
-/* ===== Base / layout ===== */
+/* =========================================================
+   Corporate page
+   Structure: tokens -> base -> container/section -> icons ->
+   buttons -> hero -> headings -> benefits -> steps -> CTA
+   ========================================================= */
+
+/* ===== Tokens (one place to change colour, spacing, motion) ===== */
 .corp-page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #ffffff;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: clip;
+  --corp-accent: #10b981;
+  --corp-accent-strong: #059669;
+  --corp-accent-soft: #34d399;
+  --corp-ink: #020617;
+  --corp-text: #111827;
+  --corp-muted: #6b7280;
+  --corp-page-bg: #ffffff;
+  --corp-surface: #ffffff;
+  --corp-surface-alt: #f9fafb;
+  --corp-border: #e5e7eb;
+
+  --corp-gutter: clamp(1rem, 4vw, 3rem);        /* fluid side padding */
+  --corp-section-y: clamp(3.5rem, 8vw, 6rem);   /* fluid vertical rhythm */
+  --corp-max: 1280px;                           /* content width cap */
+  --corp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   .corp-page {
-    background-color: #020617;
+    --corp-text: #ffffff;
+    --corp-muted: #94a3b8;
+    --corp-page-bg: #020617;
+    --corp-surface: #0f172a;
+    --corp-surface-alt: rgba(15, 23, 42, 0.4);
+    --corp-border: #1e293b;
   }
 }
 
-.corp-main {
-  flex-grow: 1;
-}
-
-.corp-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 1rem;
+/* ===== Base / layout ===== */
+.corp-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;               /* fallback */
+  min-height: 100dvh;              /* no jump when the mobile URL bar collapses */
+  background-color: var(--corp-page-bg);
+  color: var(--corp-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: clip;
   box-sizing: border-box;
 }
 
-@media (min-width: 640px) {
-  .corp-container {
-    padding: 0 2rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .corp-container {
-    padding: 0 3rem;
-  }
-}
-
-/* =========================================================
-   FULL WIDTH SECTIONS
-   Used for:
-   1. Why Businesses Choose Zaid Infotech
-   2. How The Quote Process Works
-   3. Ready to get started?
-   ========================================================= */
-
-.corp-full-width-container {
+/* Resets the global "main { margin-left: 240px; padding-left: 32px }" sidebar
+   offset. ".corp-page .corp-main" (0,2,0) beats a plain "main" rule (0,0,1).
+   If the global rule uses !important or a higher-specificity selector,
+   add !important to margin/padding below. */
+.corp-page .corp-main {
+  flex-grow: 1;
   width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
   max-width: none;
-  margin-left: 0;
-  margin-right: 0;
+  float: none;
+  box-sizing: border-box;
+}
+
+/* ===== Container + section =====
+   Container owns the HORIZONTAL padding and max-width.
+   Section owns the VERTICAL padding only, so the two never
+   fight over the same property regardless of source order. */
+.corp-container {
+  width: 100%;
+  max-width: calc(var(--corp-max) + 2 * var(--corp-gutter));
+  margin-inline: auto;
+  padding-inline: max(
+    var(--corp-gutter),
+    env(safe-area-inset-left),
+    env(safe-area-inset-right)
+  );
   box-sizing: border-box;
 }
 
 .corp-section {
-  padding: 4rem 1rem;
-}
-
-@media (min-width: 640px) {
-  .corp-section {
-    padding: 5rem 2rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .corp-section {
-    padding: 5rem 3rem;
-  }
+  padding-block: var(--corp-section-y);
 }
 
 /* ===== Icons ===== */
 .corp-icon-sm {
   width: 1rem;
   height: 1rem;
+  flex-shrink: 0;
 }
 
 .corp-icon-md {
   width: 1.25rem;
   height: 1.25rem;
+  flex-shrink: 0;
 }
 
 .corp-icon-accent {
-  color: #10b981;
+  color: var(--corp-accent);
 }
 
 /* ===== Buttons ===== */
 .corp-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
+  min-height: 44px;                /* comfortable touch target */
   font-weight: 700;
+  font-size: 0.95rem;
   padding: 0.75rem 1.5rem;
   border-radius: 9999px;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-  font-size: 0.95rem;
+  transition:
+    background-color 0.2s var(--corp-ease),
+    border-color 0.2s var(--corp-ease),
+    transform 0.2s var(--corp-ease),
+    box-shadow 0.2s var(--corp-ease);
+}
+
+.corp-btn .corp-icon-sm {
+  transition: transform 0.2s var(--corp-ease);
+}
+
+.corp-btn:hover .corp-icon-sm {
+  transform: translateX(3px);
+}
+
+.corp-btn:active {
+  transform: scale(0.97);
+}
+
+.corp-btn:focus-visible {
+  outline: 2px solid var(--corp-accent-soft);
+  outline-offset: 3px;
 }
 
 .corp-btn-primary {
-  background-color: #10b981;
-  color: #020617;
+  background-color: var(--corp-accent);
+  color: var(--corp-ink);
 }
 
 .corp-btn-primary:hover {
-  background-color: #059669;
+  background-color: var(--corp-accent-strong);
+  box-shadow: 0 8px 24px -8px rgba(16, 185, 129, 0.6);
 }
 
 .corp-btn-outline {
@@ -118,104 +161,110 @@
   border-color: #ffffff;
 }
 
-/* ===== Hero ===== */
+/* ===== Hero (always dark) ===== */
 .corp-hero {
   position: relative;
-  background-color: #020617;
+  background-color: var(--corp-ink);
   color: #ffffff;
   overflow: hidden;
-
-  /* break out of any parent padding/max-width and use the full screen width */
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  width: 100%;
   box-sizing: border-box;
 }
 
 .corp-hero-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to bottom right,
-    rgba(2, 44, 34, 0.4),
-    #020617,
-    #020617
-  );
+  background:
+    radial-gradient(60% 70% at 85% 45%, rgba(16, 185, 129, 0.14), transparent 70%),
+    linear-gradient(to bottom right, rgba(2, 44, 34, 0.4), #020617, #020617);
+  pointer-events: none;
 }
 
+/* Text column. On desktop the image panel is absolutely positioned on the
+   right half of the hero, so the text is simply capped to the left half. */
 .corp-hero-inner {
   position: relative;
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  z-index: 1;                       /* text always above the image panel */
+  /* --corp-nav-offset: set on .corp-page to your navbar height if it
+     overlaps the page (e.g. .corp-page { --corp-nav-offset: 96px; }) */
+  padding-top: calc(clamp(1.5rem, 3vw, 2.25rem) + var(--corp-nav-offset, 0px));
+  padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
 }
 
-@media (min-width: 640px) {
+.corp-hero-content {
+  min-width: 0;
+  max-width: 36rem;
+}
+
+@media (min-width: 1024px) {
+  .corp-hero-content {
+    /* Never wider than 34rem, and never wider than the space left of the
+       panel (52vw) minus both gutters, so it can't slide under the image.
+       Uses the same viewport basis as the panel, and keeps the gutters. */
+    width: min(34rem, calc(52vw - 2 * var(--corp-gutter)));
+    max-width: none;
+  }
+}
+
+/* Image follows the text on small screens, so trim the gap below the copy */
+@media (max-width: 1023px) {
   .corp-hero-inner {
-    padding-top: 7rem;
-    padding-bottom: 7rem;
+    padding-bottom: 1.5rem;
   }
 }
 
 .corp-hero-eyebrow {
-  color: #34d399;
-  font-size: 0.75rem;
+  margin: 0 0 0.625rem;
+  color: var(--corp-accent-soft);
+  font-size: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  margin-bottom: 1rem;
-}
-
-@media (min-width: 640px) {
-  .corp-hero-eyebrow {
-    font-size: 0.875rem;
-  }
 }
 
 .corp-hero-title {
-  font-size: 2.25rem;
+  margin: 0;                                       /* neutralise global h1 margin */
+  font-size: clamp(2rem, 1rem + 2.8vw, 3.25rem);      /* fluid, no breakpoints */
   font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-  max-width: 42rem;
-}
-
-@media (min-width: 640px) {
-  .corp-hero-title {
-    font-size: 3rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .corp-hero-title {
-    font-size: 3.75rem;
-  }
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  max-width: 18ch;
+  text-wrap: balance;
 }
 
 .corp-hero-title-accent {
-  color: #34d399;
+  color: var(--corp-accent-soft);
 }
 
 .corp-hero-desc {
-  margin-top: 1.5rem;
+  margin: 0.875rem 0 0;
   color: #cbd5e1;
-  font-size: 1rem;
+  font-size: clamp(0.9375rem, 0.9rem + 0.3vw, 1.0625rem);
+  line-height: 1.6;
   max-width: 36rem;
-}
-
-@media (min-width: 640px) {
-  .corp-hero-desc {
-    font-size: 1.125rem;
-  }
+  text-wrap: pretty;
 }
 
 .corp-hero-actions {
-  margin-top: 2rem;
+  margin-top: 1.25rem;
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
+/* Buttons share a row when there is room, stack full-width on phones */
+.corp-hero-actions .corp-btn {
+  flex: 1 1 14rem;
+}
+
+@media (min-width: 640px) {
+  .corp-hero-actions .corp-btn {
+    flex: 0 0 auto;
+  }
+}
+
 .corp-trust-strip {
-  margin-top: 2.5rem;
+  margin-top: 1.25rem;
   display: flex;
   flex-wrap: wrap;
   column-gap: 2rem;
@@ -230,10 +279,65 @@
   gap: 0.5rem;
 }
 
+/* ===== Hero image =====
+   The photo has a white studio backdrop, so instead of a floating rounded
+   card it is a full-bleed panel: it touches the hero's edges and has a
+   slanted cut, so it reads as part of the layout rather than a sticker. */
+.corp-hero-media {
+  position: relative;
+  z-index: 0;
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background-color: #ffffff;
+  /* Mobile: slanted top edge, image runs edge-to-edge below the text */
+  clip-path: polygon(0 7%, 100% 0, 100% 100%, 0 100%);
+}
+
+.corp-hero-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% center;
+}
+
+/* Darkens the edge that touches the hero so the white eases in */
+.corp-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(2, 6, 23, 0.45), transparent 35%);
+  pointer-events: none;
+}
+
+/* Tablet: wider, shorter crop */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .corp-hero-media {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* Desktop: right-half panel, full hero height, slanted left edge */
+@media (min-width: 1024px) {
+  .corp-hero-media {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 48%;
+    aspect-ratio: auto;
+    clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .corp-hero-media::after {
+    background: linear-gradient(to right, rgba(2, 6, 23, 0.4), transparent 30%);
+  }
+}
+
 /* ===== Section headings ===== */
 .corp-section-heading-wrap {
-  overflow: hidden;
-  padding: 0.25rem 0;
   margin-bottom: 2.5rem;
 }
 
@@ -242,61 +346,52 @@
 }
 
 .corp-section-heading {
-  font-size: 1.5rem;
+  margin: 0;
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
   font-weight: 800;
-  color: #111827;
+  color: var(--corp-text);
   text-align: center;
-}
-
-@media (min-width: 640px) {
-  .corp-section-heading {
-    font-size: 1.875rem;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .corp-section-heading {
-    color: #ffffff;
-  }
+  text-wrap: balance;
 }
 
 /* ===== Benefits grid ===== */
 .corp-benefits-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
   width: 100%;
 }
 
 @media (min-width: 640px) {
   .corp-benefits-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
   .corp-benefits-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 .corp-benefit-card {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--corp-border);
   border-radius: 1rem;
   padding: 1.5rem;
-  background-color: #ffffff;
-  transition: box-shadow 0.2s ease;
+  background-color: var(--corp-surface);
   box-sizing: border-box;
+  transition:
+    transform 0.25s var(--corp-ease),
+    box-shadow 0.25s var(--corp-ease),
+    border-color 0.25s var(--corp-ease);
 }
 
-.corp-benefit-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-@media (prefers-color-scheme: dark) {
-  .corp-benefit-card {
-    border-color: #1e293b;
-    background-color: #0f172a;
+/* Hover lift only where a real pointer exists (no sticky hover on touch) */
+@media (hover: hover) {
+  .corp-benefit-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--corp-accent);
+    box-shadow: 0 12px 32px -12px rgba(16, 185, 129, 0.35);
   }
 }
 
@@ -304,7 +399,7 @@
   width: 3rem;
   height: 3rem;
   border-radius: 9999px;
-  border: 2px solid #10b981;
+  border: 2px solid var(--corp-accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -312,53 +407,30 @@
 }
 
 .corp-benefit-title {
+  margin: 0 0 0.375rem;
   font-weight: 700;
-  color: #111827;
   font-size: 1rem;
-  margin-bottom: 0.375rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .corp-benefit-title {
-    color: #ffffff;
-  }
+  color: var(--corp-text);
 }
 
 .corp-benefit-desc {
-  font-size: 0.875rem;
-  color: #6b7280;
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--corp-muted);
   line-height: 1.6;
-}
-
-@media (prefers-color-scheme: dark) {
-  .corp-benefit-desc {
-    color: #94a3b8;
-  }
 }
 
 /* ===== How it works ===== */
 .corp-how-section {
-  background-color: #f9fafb;
-  padding: 4rem 0;
+  background-color: var(--corp-surface-alt);
+  padding-block: var(--corp-section-y);
   width: 100%;
   box-sizing: border-box;
 }
 
-@media (min-width: 640px) {
-  .corp-how-section {
-    padding: 5rem 0;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .corp-how-section {
-    background-color: rgba(15, 23, 42, 0.4);
-  }
-}
-
 .corp-steps-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 2rem;
   position: relative;
   width: 100%;
@@ -366,13 +438,13 @@
 
 @media (min-width: 640px) {
   .corp-steps-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
   .corp-steps-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
@@ -388,8 +460,8 @@
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 9999px;
-  background-color: #10b981;
-  color: #020617;
+  background-color: var(--corp-accent);
+  color: var(--corp-ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -404,47 +476,30 @@
 }
 
 .corp-step-title {
+  margin: 0 0 0.375rem;
   font-weight: 700;
-  color: #111827;
-  font-size: 0.875rem;
-  margin-bottom: 0.375rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  .corp-step-title {
-    color: #ffffff;
-  }
+  font-size: 1rem;                 /* was 14px */
+  color: var(--corp-text);
 }
 
 .corp-step-desc {
-  font-size: 0.75rem;
-  color: #6b7280;
+  margin: 0;
+  font-size: 0.875rem;             /* was 12px, too small on mobile */
+  color: var(--corp-muted);
   line-height: 1.6;
-  max-width: 200px;
-}
-
-@media (prefers-color-scheme: dark) {
-  .corp-step-desc {
-    color: #94a3b8;
-  }
+  max-width: 24ch;
 }
 
 /* ===== Final CTA card ===== */
 .corp-cta-card {
   position: relative;
-  background-color: #020617;
+  background-color: var(--corp-ink);
   border-radius: 1.5rem;
   border: 1px solid #1e293b;
-  padding: 2.5rem;
+  padding: clamp(2rem, 5vw, 3.5rem);
   overflow: hidden;
   width: 100%;
   box-sizing: border-box;
-}
-
-@media (min-width: 640px) {
-  .corp-cta-card {
-    padding: 3.5rem;
-  }
 }
 
 .corp-cta-card-bg {
@@ -456,18 +511,20 @@
     #020617,
     #020617
   );
+  pointer-events: none;
 }
 
 .corp-cta-inner {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: space-between;
   gap: 2rem;
 }
 
-@media (min-width: 640px) {
+/* 768px (not 640px): text + nowrap button needs the extra room on tablets */
+@media (min-width: 768px) {
   .corp-cta-inner {
     flex-direction: row;
     align-items: center;
@@ -475,32 +532,41 @@
 }
 
 .corp-cta-title {
+  margin: 0 0 0.5rem;
   color: #ffffff;
-  font-size: 1.5rem;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 1.875rem);
   font-weight: 800;
-  margin-bottom: 0.5rem;
-}
-
-@media (min-width: 640px) {
-  .corp-cta-title {
-    font-size: 1.875rem;
-  }
+  text-wrap: balance;
 }
 
 .corp-cta-desc {
+  margin: 0;
   color: #cbd5e1;
-  font-size: 0.875rem;
+  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+  line-height: 1.6;
   max-width: 28rem;
-}
-
-@media (min-width: 640px) {
-  .corp-cta-desc {
-    font-size: 1rem;
-  }
 }
 
 .corp-cta-btn {
   padding: 0.875rem 1.75rem;
   white-space: nowrap;
   flex-shrink: 0;
+  width: 100%;                     /* full-width tap target on mobile */
+}
+
+@media (min-width: 768px) {
+  .corp-cta-btn {
+    width: auto;
+  }
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .corp-page *,
+  .corp-page *::before,
+  .corp-page *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

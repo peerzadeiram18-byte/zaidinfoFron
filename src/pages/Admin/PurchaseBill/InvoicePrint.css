@@ -31,6 +31,7 @@
   margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
+  gap: 8px;                       /* RESPONSIVE: space between the buttons */
 }
 
 .invoice-toolbar button {
@@ -129,38 +130,47 @@
   min-width: 300px;
   max-width: 300px;
   box-sizing: border-box;
+  overflow: hidden;              /* nothing can spill out of the box */
+  display: flex;                 /* lets the table stretch to the full box height */
+  flex-direction: column;
 }
 
-.meta-table {
+/* scoped under .invoice-sheet so outside CSS cannot override it */
+.invoice-sheet .meta-table {
   width: 100%;
+  min-width: 0;                  /* cancels any global table min-width */
+  max-width: 100%;
+  flex: 1 1 auto;                /* table grows to fill the box height */
+  height: 100%;                  /* spare height is shared evenly between the 4 rows */
   border-collapse: collapse;
   table-layout: fixed;
 }
 
-.meta-table tr {
-  border-bottom: 1px solid #000000;
-}
-
-.meta-table tr:last-child {
-  border-bottom: none;
-}
-
-.meta-table td {
+.invoice-sheet .meta-table td {
+  min-width: 0;
+  white-space: normal;
   padding: 6px 8px;
   font-size: 11px;
   color: #000000 !important;
+  vertical-align: middle;        /* text stays centred in the taller rows */
+  border-bottom: 1px solid #000000;
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-all;
 }
 
-.meta-table td:first-child {
+/* last row has no line of its own; the box's bottom border is the line under PO No. */
+.invoice-sheet .meta-table tr:last-child td {
+  border-bottom: none;
+}
+
+.invoice-sheet .meta-table td:first-child {
   width: 40%;
   font-weight: bold;
   border-right: 1px solid #000000;
 }
 
-.meta-table td:last-child {
+.invoice-sheet .meta-table td:last-child {
   width: 60%;
   text-align: right;
   font-weight: 500;
@@ -169,6 +179,17 @@
 /* ==========================================================
    TABLES (ITEMS, TOTALS, HSN)
 ========================================================== */
+
+/* RESPONSIVE: wrapper around the wide tables (added in the JSX).
+   On desktop it does nothing; on mobile it scrolls sideways. */
+.table-scroll {
+  width: 100%;
+  margin-bottom: -1px;
+}
+
+.table-scroll > table {
+  margin-bottom: 0;
+}
 
 .items-table,
 .totals-table,
@@ -264,7 +285,7 @@
 }
 
 /* ==========================================================
-   DECLARATION + SIGNATURE
+   DECLARATION + BANK DETAILS + SIGNATURE
 ========================================================== */
 
 .declaration-signature-grid {
@@ -286,9 +307,30 @@
   margin: 0 0 4px 0;
 }
 
+/* NEW: right-hand column holding bank details above the signatory */
+.bank-signature-box {
+  width: 300px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* NEW */
+.bank-details {
+  padding: 8px;
+  border-bottom: 1px solid #000000;
+}
+
+/* NEW */
+.bank-details p {
+  margin: 2px 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* CHANGED: now sits inside .bank-signature-box (flex: 1 instead of fixed width) */
 .signature-box {
-  width: 260px;
-  min-width: 260px;
+  flex: 1;
   padding: 8px;
   text-align: center;
   display: flex;
@@ -306,6 +348,129 @@
   font-size: 11px;
   color: #374151;
   margin: 8px 0 0 0;
+}
+
+/* ==========================================================
+   RESPONSIVE: TABLET  (641px - 900px)
+   "screen" keeps these rules out of the printed invoice
+========================================================== */
+
+@media screen and (max-width: 900px) {
+  .invoice-print-page {
+    padding: 12px;
+  }
+
+  .invoice-toolbar,
+  .invoice-sheet,
+  .invoice-state {
+    max-width: 100%;
+  }
+
+  /* narrower meta box so the seller/buyer side keeps room */
+  .invoice-meta-right {
+    width: 260px;
+    min-width: 260px;
+    max-width: 260px;
+  }
+
+  /* CHANGED: was .signature-box; the bank column now holds the signature */
+  .bank-signature-box {
+    width: 260px;
+    min-width: 260px;
+  }
+}
+
+/* ==========================================================
+   RESPONSIVE: MOBILE  (640px and below)
+========================================================== */
+
+@media screen and (max-width: 640px) {
+  .invoice-print-page {
+    padding: 8px;
+  }
+
+  /* bigger, easier tap targets; buttons share the row */
+  .invoice-toolbar button {
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .invoice-sheet {
+    padding: 8px;
+    overflow-x: auto;             /* safety net: sheet scrolls instead of the whole page */
+  }
+
+  .invoice-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  /* stack: seller + buyer on top, invoice details underneath */
+  .invoice-meta-grid {
+    flex-direction: column;
+  }
+
+  .invoice-meta-left {
+    border-right: none;
+    border-bottom: 1px solid #000000;
+  }
+
+  .invoice-meta-right {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .invoice-sheet .meta-table {
+    height: auto;                 /* rows keep their natural height when stacked */
+  }
+
+  .invoice-sheet .meta-table td {
+    padding: 8px;
+  }
+
+  /* wide tables scroll sideways inside their own box */
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-scroll > .items-table {
+    min-width: 600px;
+  }
+
+  .table-scroll > .hsn-summary-table {
+    min-width: 520px;
+  }
+
+  /* totals table is only two columns, so it just narrows */
+  .totals-table .label-cell {
+    width: 60%;
+  }
+
+  /* E. & O.E sits under the heading instead of overlapping the text */
+  .amount-words .eoe {
+    position: static;
+    display: block;
+    text-align: right;
+  }
+
+  /* declaration on top, bank details + signature underneath */
+  .declaration-signature-grid {
+    flex-direction: column;
+  }
+
+  .declaration-box {
+    border-right: none;
+    border-bottom: 1px solid #000000;
+  }
+
+  /* CHANGED: was .signature-box */
+  .bank-signature-box {
+    width: 100%;
+    min-width: 0;
+  }
 }
 
 /* ==========================================================
@@ -341,6 +506,11 @@
     box-shadow: none !important;
     margin: 0 !important;
     padding: 12px !important;
+    overflow: visible !important;
+  }
+
+  .table-scroll {
+    overflow: visible !important;
   }
 
   .invoice-toolbar {

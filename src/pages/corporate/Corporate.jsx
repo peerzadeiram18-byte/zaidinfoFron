@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Building2,
   FileText,
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import Footer from "../../components/Footer/Footer";
+import bulkImg from "../../assets/images/bulk.jpg";
 
 import "./Corporate.css";
 
@@ -84,19 +85,34 @@ const isLoggedIn = () => Boolean(localStorage.getItem("token"));
 
 const Corporate = () => {
   const navigate = useNavigate();
+  const reduceMotion = useReducedMotion();
+
+  const isBusinessUser = isLoggedIn() && isBusinessCustomer();
 
   const handlePrimaryCta = () => {
-    if (isLoggedIn() && isBusinessCustomer()) {
-      navigate("/corporate-dashboard");
-    } else {
-      navigate("/register");
-    }
+    navigate(isBusinessUser ? "/corporate-dashboard" : "/register");
   };
 
-  const primaryCtaLabel =
-    isLoggedIn() && isBusinessCustomer()
-      ? "Go to Dashboard"
-      : "Register as Business Customer";
+  const primaryCtaLabel = isBusinessUser
+    ? "Go to Dashboard"
+    : "Register as Business Customer";
+
+  /* Hero is already on screen at load, so it animates on mount (`animate`)
+     instead of waiting for an intersection (`whileInView`), which caused a
+     flash of empty content. Users who prefer reduced motion get no movement. */
+  const heroMotion = (delay = 0, y = 20) => ({
+    initial: reduceMotion ? false : { opacity: 0, y },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, delay },
+  });
+
+  /* Below-the-fold headings fade/scale in once when scrolled into view. */
+  const headingMotion = {
+    initial: reduceMotion ? false : { opacity: 0.6, scale: 0.95 },
+    whileInView: { opacity: 1, scale: 1 },
+    viewport: { once: true },
+    transition: { duration: 0.6 },
+  };
 
   return (
     <div className="corp-page">
@@ -107,100 +123,89 @@ const Corporate = () => {
           <div className="corp-hero-bg" />
 
           <div className="corp-container corp-hero-inner">
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="corp-hero-eyebrow"
-            >
-              Solutions For Business
-            </motion.p>
+            {/* ---- left: text ---- */}
+            <div className="corp-hero-content">
+              <motion.p {...heroMotion(0, 10)} className="corp-hero-eyebrow">
+                Solutions For Business
+              </motion.p>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="corp-hero-title"
-            >
-              Bulk Laptop Procurement.{" "}
-              <span className="corp-hero-title-accent">
-                Built For Your Business.
-              </span>
-            </motion.h1>
+              <motion.h1 {...heroMotion(0)} className="corp-hero-title">
+                Bulk Laptop Procurement.{" "}
+                <span className="corp-hero-title-accent">
+                  Built For Your Business.
+                </span>
+              </motion.h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="corp-hero-desc"
-            >
-              Partner with Zaid Infotech for wholesale pricing, GST
-              invoicing, and dedicated support on every bulk order —
-              with a simple quote-based buying process built just for
-              businesses.
-            </motion.p>
+              <motion.p {...heroMotion(0.1)} className="corp-hero-desc">
+                Partner with Zaid Infotech for wholesale pricing, GST
+                invoicing, and dedicated support on every bulk order —
+                with a simple quote-based buying process built just for
+                businesses.
+              </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="corp-hero-actions"
-            >
-              <button
-                onClick={handlePrimaryCta}
-                className="corp-btn corp-btn-primary"
-              >
-                {primaryCtaLabel}
-                <ArrowRight className="corp-icon-sm" />
-              </button>
+              <motion.div {...heroMotion(0.2)} className="corp-hero-actions">
+                <button
+                  type="button"
+                  onClick={handlePrimaryCta}
+                  className="corp-btn corp-btn-primary"
+                >
+                  {primaryCtaLabel}
+                  <ArrowRight className="corp-icon-sm" aria-hidden="true" />
+                </button>
 
-              <button
-                onClick={() => navigate("/contact")}
-                className="corp-btn corp-btn-outline"
-              >
-                Talk to Sales
-              </button>
-            </motion.div>
+                <button
+                  type="button"
+                  onClick={() => navigate("/contact")}
+                  className="corp-btn corp-btn-outline"
+                >
+                  Talk to Sales
+                </button>
+              </motion.div>
 
-            {/* trust strip */}
-            <div className="corp-trust-strip">
-              <span className="corp-trust-item">
-                <Wallet className="corp-icon-sm corp-icon-accent" />
-                Wholesale Pricing
-              </span>
+              {/* trust strip */}
+              <div className="corp-trust-strip">
+                <span className="corp-trust-item">
+                  <Wallet className="corp-icon-sm corp-icon-accent" aria-hidden="true" />
+                  Wholesale Pricing
+                </span>
 
-              <span className="corp-trust-item">
-                <FileText className="corp-icon-sm corp-icon-accent" />
-                GST Invoicing
-              </span>
+                <span className="corp-trust-item">
+                  <FileText className="corp-icon-sm corp-icon-accent" aria-hidden="true" />
+                  GST Invoicing
+                </span>
 
-              <span className="corp-trust-item">
-                <Headset className="corp-icon-sm corp-icon-accent" />
-                Dedicated Support
-              </span>
+                <span className="corp-trust-item">
+                  <Headset className="corp-icon-sm corp-icon-accent" aria-hidden="true" />
+                  Dedicated Support
+                </span>
 
-              <span className="corp-trust-item">
-                <BadgeCheck className="corp-icon-sm corp-icon-accent" />
-                Flexible Terms
-              </span>
+                <span className="corp-trust-item">
+                  <BadgeCheck className="corp-icon-sm corp-icon-accent" aria-hidden="true" />
+                  Flexible Terms
+                </span>
+              </div>
             </div>
           </div>
+
+          {/* ---- image panel: sibling of the container so it can bleed
+               to the hero's edges instead of floating inside the grid ---- */}
+          <motion.div {...heroMotion(0.25, 0)} className="corp-hero-media">
+            <img
+              src={bulkImg}
+              alt="Rows of laptops ready for bulk business orders"
+              className="corp-hero-img"
+              width="1920"
+              height="1300"
+              loading="eager"
+              decoding="async"
+            />
+          </motion.div>
         </section>
 
         {/* ================= WHY BUY FROM US ================= */}
-        <section className="corp-container corp-section corp-full-width-container">
+        <section className="corp-container corp-section">
           <div className="corp-section-heading-wrap">
-            <motion.h2
-              initial={{ opacity: 0.6, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="corp-section-heading"
-            >
+            <motion.h2 {...headingMotion} className="corp-section-heading">
               Why Businesses Choose Zaid Infotech
             </motion.h2>
           </div>
@@ -209,16 +214,12 @@ const Corporate = () => {
             {benefits.map(({ icon: Icon, title, desc }) => (
               <div key={title} className="corp-benefit-card">
                 <div className="corp-benefit-icon-circle">
-                  <Icon className="corp-icon-md corp-icon-accent" />
+                  <Icon className="corp-icon-md corp-icon-accent" aria-hidden="true" />
                 </div>
 
-                <h3 className="corp-benefit-title">
-                  {title}
-                </h3>
+                <h3 className="corp-benefit-title">{title}</h3>
 
-                <p className="corp-benefit-desc">
-                  {desc}
-                </p>
+                <p className="corp-benefit-desc">{desc}</p>
               </div>
             ))}
           </div>
@@ -226,15 +227,9 @@ const Corporate = () => {
 
         {/* ================= HOW IT WORKS ================= */}
         <section className="corp-how-section">
-          <div className="corp-container corp-full-width-container">
+          <div className="corp-container">
             <div className="corp-section-heading-wrap corp-how-heading-wrap">
-              <motion.h2
-                initial={{ opacity: 0.6, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="corp-section-heading"
-              >
+              <motion.h2 {...headingMotion} className="corp-section-heading">
                 How The Quote Process Works
               </motion.h2>
             </div>
@@ -242,19 +237,16 @@ const Corporate = () => {
             <div className="corp-steps-grid">
               {steps.map(({ icon: Icon, title, desc }, index) => (
                 <div key={title} className="corp-step">
-                  <div className="corp-step-number">
-                    {index + 1}
-                  </div>
+                  <div className="corp-step-number">{index + 1}</div>
 
-                  <Icon className="corp-icon-md corp-icon-accent corp-step-icon" />
+                  <Icon
+                    className="corp-icon-md corp-icon-accent corp-step-icon"
+                    aria-hidden="true"
+                  />
 
-                  <h3 className="corp-step-title">
-                    {title}
-                  </h3>
+                  <h3 className="corp-step-title">{title}</h3>
 
-                  <p className="corp-step-desc">
-                    {desc}
-                  </p>
+                  <p className="corp-step-desc">{desc}</p>
                 </div>
               ))}
             </div>
@@ -262,15 +254,13 @@ const Corporate = () => {
         </section>
 
         {/* ================= FINAL CTA CARD ================= */}
-        <section className="corp-container corp-section corp-full-width-container">
+        <section className="corp-container corp-section">
           <div className="corp-cta-card">
             <div className="corp-cta-card-bg" />
 
             <div className="corp-cta-inner">
               <div>
-                <h3 className="corp-cta-title">
-                  Ready to get started?
-                </h3>
+                <h3 className="corp-cta-title">Ready to get started?</h3>
 
                 <p className="corp-cta-desc">
                   Register your business with Zaid Infotech today and
@@ -279,11 +269,12 @@ const Corporate = () => {
               </div>
 
               <button
+                type="button"
                 onClick={handlePrimaryCta}
                 className="corp-btn corp-btn-primary corp-cta-btn"
               >
                 {primaryCtaLabel}
-                <ArrowRight className="corp-icon-sm" />
+                <ArrowRight className="corp-icon-sm" aria-hidden="true" />
               </button>
             </div>
           </div>

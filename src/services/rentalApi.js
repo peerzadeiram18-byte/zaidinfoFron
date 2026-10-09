@@ -3052,172 +3052,282 @@ export const getRentalInventory =
  * rentalDocumentUpload.single("document")
  */
 
-export const uploadRentalDocument =
-    async (
-        rentalId,
-        documentType,
-        file
-    ) => {
-        try {
-            if (!rentalId) {
-                throw new Error(
-                    "Rental ID is required"
-                );
-            }
+// export const uploadRentalDocument =
+//     async (
+//         rentalId,
+//         documentType,
+//         file
+//     ) => {
+//         try {
+//             if (!rentalId) {
+//                 throw new Error(
+//                     "Rental ID is required"
+//                 );
+//             }
 
-            if (!documentType) {
-                throw new Error(
-                    "Document type is required"
-                );
-            }
+//             if (!documentType) {
+//                 throw new Error(
+//                     "Document type is required"
+//                 );
+//             }
 
-            if (!file) {
-                throw new Error(
-                    "Document file is required"
-                );
-            }
+//             if (!file) {
+//                 throw new Error(
+//                     "Document file is required"
+//                 );
+//             }
 
-            const formData =
-                new FormData();
+//             const formData =
+//                 new FormData();
 
-            formData.append(
-                "documentType",
-                String(documentType)
-                    .trim()
-                    .toUpperCase()
-            );
+//             formData.append(
+//                 "documentType",
+//                 String(documentType)
+//                     .trim()
+//                     .toUpperCase()
+//             );
 
-            formData.append(
-                "document",
-                file,
-                file.name
-            );
+//             formData.append(
+//                 "document",
+//                 file,
+//                 file.name
+//             );
 
-            console.log(
-                "================================"
-            );
+//             console.log(
+//                 "================================"
+//             );
 
-            console.log(
-                "UPLOADING RENTAL DOCUMENT"
-            );
+//             console.log(
+//                 "UPLOADING RENTAL DOCUMENT"
+//             );
 
-            console.log(
-                "Rental ID:",
-                rentalId
-            );
+//             console.log(
+//                 "Rental ID:",
+//                 rentalId
+//             );
 
-            console.log(
-                "Document Type:",
-                documentType
-            );
+//             console.log(
+//                 "Document Type:",
+//                 documentType
+//             );
 
-            console.log(
-                "File:",
-                file.name
-            );
+//             console.log(
+//                 "File:",
+//                 file.name
+//             );
 
-            console.log(
-                "File Type:",
-                file.type
-            );
+//             console.log(
+//                 "File Type:",
+//                 file.type
+//             );
 
-            console.log(
-                "File Size:",
-                file.size
-            );
+//             console.log(
+//                 "File Size:",
+//                 file.size
+//             );
 
-            console.log(
-                "================================"
-            );
+//             console.log(
+//                 "================================"
+//             );
 
-            for (
-                const [
-                    key,
-                    value
-                ]
-                of formData.entries()
-            ) {
-                if (
-                    typeof File !==
-                        "undefined" &&
-                    value instanceof File
-                ) {
-                    console.log(
-                        "FORM DATA:",
-                        key,
-                        "=> FILE",
-                        value.name,
-                        value.type,
-                        value.size
-                    );
-                } else {
-                    console.log(
-                        "FORM DATA:",
-                        key,
-                        "=>",
-                        value
-                    );
-                }
-            }
+//             for (
+//                 const [
+//                     key,
+//                     value
+//                 ]
+//                 of formData.entries()
+//             ) {
+//                 if (
+//                     typeof File !==
+//                         "undefined" &&
+//                     value instanceof File
+//                 ) {
+//                     console.log(
+//                         "FORM DATA:",
+//                         key,
+//                         "=> FILE",
+//                         value.name,
+//                         value.type,
+//                         value.size
+//                     );
+//                 } else {
+//                     console.log(
+//                         "FORM DATA:",
+//                         key,
+//                         "=>",
+//                         value
+//                     );
+//                 }
+//             }
 
-            const response =
-                await rentalAxios.post(
-                    `/${rentalId}/documents`,
-                    formData
-                );
+//             const response =
+//                 await rentalAxios.post(
+//                     `/${rentalId}/documents`,
+//                     formData
+//                 );
 
-            console.log(
-                "================================"
-            );
+//             console.log(
+//                 "================================"
+//             );
 
-            console.log(
-                "RENTAL DOCUMENT UPLOAD RESPONSE:",
-                response.data
-            );
+//             console.log(
+//                 "RENTAL DOCUMENT UPLOAD RESPONSE:",
+//                 response.data
+//             );
 
-            console.log(
-                "================================"
-            );
+//             console.log(
+//                 "================================"
+//             );
 
-            return response.data;
-        } catch (error) {
-            console.error(
-                "================================"
-            );
+//             return response.data;
+//         } catch (error) {
+//             console.error(
+//                 "================================"
+//             );
 
-            console.error(
-                "RENTAL DOCUMENT UPLOAD ERROR"
-            );
+//             console.error(
+//                 "RENTAL DOCUMENT UPLOAD ERROR"
+//             );
 
-            console.error(
-                "Status:",
-                error?.response?.status
-            );
+//             console.error(
+//                 "Status:",
+//                 error?.response?.status
+//             );
 
-            console.error(
-                "Response:",
-                error?.response?.data
-            );
+//             console.error(
+//                 "Response:",
+//                 error?.response?.data
+//             );
 
-            console.error(
-                "Message:",
-                error?.message
-            );
+//             console.error(
+//                 "Message:",
+//                 error?.message
+//             );
 
-            console.error(
-                "================================"
-            );
+//             console.error(
+//                 "================================"
+//             );
 
-            throw (
-                error?.response?.data || {
-                    success: false,
-                    message:
-                        error?.message ||
-                        "Rental document upload failed",
-                }
-            );
-        }
-    };
+//             throw (
+//                 error?.response?.data || {
+//                     success: false,
+//                     message:
+//                         error?.message ||
+//                         "Rental document upload failed",
+//                 }
+//             );
+//         }
+//     };
+
+
+// export const uploadRentalDocument = async (rentalId, formData) => {
+//     try {
+//         if (!rentalId) {
+//             throw new Error("Rental ID is required");
+//         }
+
+//         if (!(formData instanceof FormData)) {
+//             throw new Error("Document upload requires FormData");
+//         }
+
+//         const file = formData.get("document");
+//         const documentType = formData.get("documentType");
+
+//         if (!(file instanceof File)) {
+//             throw new Error(
+//                 'Document file missing. FormData field must be "document".'
+//             );
+//         }
+
+//         if (!documentType) {
+//             throw new Error("Document type is required");
+//         }
+
+//         console.log("UPLOADING RENTAL DOCUMENT", {
+//             rentalId,
+//             documentType,
+//             fileName: file.name,
+//             fileType: file.type,
+//             fileSize: file.size,
+//         });
+
+//         const response = await rentalAxios.post(
+//             `/${rentalId}/documents`,
+//             formData
+//         );
+
+//         console.log("DOCUMENT UPLOAD SUCCESS:", response.data);
+
+//         return response.data;
+//     } catch (error) {
+//         console.error(
+//             "DOCUMENT UPLOAD FAILED:",
+//             error?.response?.status,
+//             error?.response?.data || error.message
+//         );
+
+//         throw error;
+//     }
+// };
+
+
+
+/* =========================================================
+   RENTAL DOCUMENT UPLOAD
+   POST /api/rentals/:rentalId/documents
+========================================================= */
+
+export const uploadRentalDocument = async (
+  rentalId,
+  documentType,
+  file
+) => {
+  if (!rentalId) {
+    throw new Error("Rental ID is required");
+  }
+
+  if (!documentType) {
+    throw new Error("Document type is required");
+  }
+
+  if (!(file instanceof File)) {
+    throw new Error("Please select a valid document file");
+  }
+
+  const formData = new FormData();
+
+  formData.append("document", file);
+  formData.append("documentType", documentType);
+
+  console.log("UPLOADING RENTAL DOCUMENT:", {
+    rentalId,
+    documentType,
+    fileName: file.name,
+    fileSize: file.size,
+  });
+
+  try {
+    const response = await rentalAxios.post(
+      `/${rentalId}/documents`,
+      formData
+    );
+
+    console.log(
+      "RENTAL DOCUMENT UPLOAD RESPONSE:",
+      response.data
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "RENTAL DOCUMENT UPLOAD ERROR:",
+      error.response?.data || error.message
+    );
+
+    throw error;
+  }
+};
+
 
 /* =========================================================
    GET RENTAL DOCUMENTS
@@ -3369,7 +3479,122 @@ export const markRentalDepositReceived = async (
         return handleError(error);
     }
 };
+// =====================================================
+// RENTAL PAYMENT APIs
+// IMPORTANT:
+// rentalAxios ka baseURL already:
+// ${VITE_API_URL}/rentals
+// =====================================================
 
+/* =========================================================
+   RENTAL PAYMENT APIs
+   Existing rentalAxios base URL:
+   ${VITE_API_URL}/rentals
+========================================================= */
+
+/**
+ * GET
+ * /api/rentals/:rentalId/payments
+ *
+ * One rental's month-wise payment schedule.
+ */
+export const getRentalPaymentSchedule = async (rentalId) => {
+    try {
+        if (!rentalId) {
+            throw new Error("Rental ID is required");
+        }
+
+        const response = await rentalAxios.get(
+            `/${encodeURIComponent(rentalId)}/payments`
+        );
+
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
+/**
+ * PATCH
+ * /api/rentals/payments/:paymentId/pay
+ *
+ * payload example:
+ * {
+ *   amount: 1000,
+ *   paymentMethod: "CASH",
+ *   reference: ""
+ * }
+ */
+export const payRentalInstallment = async (
+    paymentId,
+    payload = {}
+) => {
+    try {
+        if (!paymentId) {
+            throw new Error("Payment ID is required");
+        }
+
+        const response = await rentalAxios.patch(
+            `/payments/${encodeURIComponent(paymentId)}/pay`,
+            payload
+        );
+
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
+/**
+ * GET
+ * /api/rentals/payments/due?scope=overdue
+ *
+ * scope: "overdue" | "upcoming"
+ */
+export const getDueRentInstallments = async (
+    scope = "overdue"
+) => {
+    try {
+        const validScope =
+            scope === "upcoming" ? "upcoming" : "overdue";
+
+        const response = await rentalAxios.get(
+            "/payments/due",
+            {
+                params: {
+                    scope: validScope,
+                },
+            }
+        );
+
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
+/**
+ * GET
+ * /api/rentals/:rentalId/return-preview
+ *
+ * Return form preview:
+ * pending rent, held deposit, etc.
+ */
+export const getRentalReturnPreview = async (rentalId) => {
+    try {
+        if (!rentalId) {
+            throw new Error("Rental ID is required");
+        }
+
+        const response = await rentalAxios.get(
+            `/${encodeURIComponent(rentalId)}/return-preview`
+        );
+
+        return response.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
 
 
 /* =========================================================
@@ -3417,6 +3642,11 @@ const rentalApi = {
     uploadRentalDocument,
     getRentalDocuments,
     verifyRentalDocument,
+
+    getRentalPaymentSchedule,
+    payRentalInstallment,
+    getDueRentInstallments,
+    getRentalReturnPreview,
 };
 
 export default rentalApi;

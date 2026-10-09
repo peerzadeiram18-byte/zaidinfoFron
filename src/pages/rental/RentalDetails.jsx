@@ -1759,7 +1759,7 @@ function WalkInRentalDetails() {
             className="wir-btn wir-btn-secondary"
             onClick={() =>
               navigate(
-                "/receptionist/rental/walkin-orders"
+                "/receptionist-dashboard/rental/new-orders"
               )
             }
           >
@@ -3360,7 +3360,7 @@ function WalkInRentalDetails() {
           className="wir-btn wir-btn-primary"
           onClick={() =>
             navigate(
-              "/receptionist/rental/walkin"
+              "/receptionist-dashboard/rental/new"
             )
           }
         >

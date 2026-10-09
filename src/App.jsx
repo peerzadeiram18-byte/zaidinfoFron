@@ -4481,6 +4481,9 @@ import Checkout from "./pages/Shop/Checkout/Checkout";
 import SelectAddress from "./pages/Shop/SelectAddress/SelectAddress";
 import OrderSuccess from "./pages/Shop/OrderSuccess/OrderSuccess";
 import MyOrders from "./pages/Shop/MyOrders/MyOrders";
+
+// import OrderDetails from "../../../Shop/OrderDetails/OrderDetails";
+
 import OrderDetails from "./pages/Shop/OrderDetails/OrderDetails";
 import TrackOrder from "./pages/Shop/TrackOrder/TrackOrder";
 
@@ -4930,8 +4933,16 @@ function App() {
   // FINAL ADMIN CHECK
   // =====================================================
 
-  const hideGlobalHeader = isAdminLayoutRoute || isDynamicAdminRoute;
+  // const hideGlobalHeader = isAdminLayoutRoute || isDynamicAdminRoute;
 
+  
+const isOrderDetailsRoute =
+  location.pathname.startsWith("/order/");
+
+const hideGlobalHeader =
+  isAdminLayoutRoute ||
+  isDynamicAdminRoute ||
+  isOrderDetailsRoute;
   // =====================================================
   // DASHBOARD ROUTES (NO WEBSITE HEADER)
   //

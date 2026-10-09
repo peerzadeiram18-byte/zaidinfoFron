@@ -3485,15 +3485,45 @@ const TECHNICIAN_URL =
   `${API_URL}/newRepair/technicians`;
 
 
+  const getTodayLocalDate = () => {
+  const today = new Date();
+  const offset = today.getTimezoneOffset();
+
+  return new Date(
+    today.getTime() - offset * 60 * 1000
+  )
+    .toISOString()
+    .slice(0, 10);
+};
+
 // =====================================================
 // INITIAL FORM
 // =====================================================
+
+// const initialForm = {
+//   customerName: "",
+//   customerPhone: "",
+//   customerEmail: "",
+//   deviceModel: "",
+//   issueDescription: "",
+//   estimatedCompletionDate: "",
+//   repairCost: "",
+//   technicianName: "",
+//   assignedTechnician: "",
+//   remarks: "",
+// };
+
 
 const initialForm = {
   customerName: "",
   customerPhone: "",
   customerEmail: "",
+
+  jobDate: getTodayLocalDate(),
+
+  deviceType: "",
   deviceModel: "",
+
   issueDescription: "",
   estimatedCompletionDate: "",
   repairCost: "",
@@ -3501,7 +3531,6 @@ const initialForm = {
   assignedTechnician: "",
   remarks: "",
 };
-
 
 // =====================================================
 // COMPONENT
@@ -3768,18 +3797,31 @@ const CusromerTicket = () => {
     // Name, Phone, Device Model, Issue Description
     // =================================================
 
+    // if (
+    //   !form.customerName.trim() ||
+    //   !form.customerPhone.trim() ||
+    //   !form.deviceModel.trim() ||
+    //   !form.issueDescription.trim()
+    // ) {
+
+    //   return toast.error(
+    //     "Please fill in all mandatory fields."
+    //   );
+
+    // }
+
     if (
-      !form.customerName.trim() ||
-      !form.customerPhone.trim() ||
-      !form.deviceModel.trim() ||
-      !form.issueDescription.trim()
-    ) {
-
-      return toast.error(
-        "Please fill in all mandatory fields."
-      );
-
-    }
+  !form.customerName.trim() ||
+  !form.customerPhone.trim() ||
+  !form.jobDate ||
+  !form.deviceType.trim() ||
+  !form.deviceModel.trim() ||
+  !form.issueDescription.trim()
+) {
+  return toast.error(
+    "Please fill in all mandatory fields."
+  );
+}
 
 
     try {
@@ -3799,6 +3841,11 @@ const CusromerTicket = () => {
 
         customerPhone:
           form.customerPhone.trim(),
+
+          jobDate: form.jobDate,
+
+         deviceType: form.deviceType.trim(),
+
 
         deviceModel:
           form.deviceModel.trim(),
@@ -4929,7 +4976,7 @@ const CusromerTicket = () => {
 
                             </span>
 
-                            <span className="rc-device-tag">
+                            {/* <span className="rc-device-tag">
 
                               {
                                 latestRepair?.deviceModel ||
@@ -4937,7 +4984,29 @@ const CusromerTicket = () => {
                                 "Standard Device"
                               }
 
-                            </span>
+                            </span> */}
+
+                            <span className="rc-device-tag">
+  Device: {latestRepair?.deviceType || "N/A"}
+</span>
+
+<span className="rc-device-tag">
+  Hardware: {
+    latestRepair?.deviceModel ||
+    latestRepair?.laptopModel ||
+    "N/A"
+  }
+</span>
+
+<span className="rc-device-tag">
+  Job Date: {
+    latestRepair?.jobDate
+      ? new Date(latestRepair.jobDate).toLocaleDateString("en-IN")
+      : latestRepair?.createdAt
+        ? new Date(latestRepair.createdAt).toLocaleDateString("en-IN")
+        : "N/A"
+  }
+</span>
 
                           </div>
 
@@ -5233,6 +5302,20 @@ const CusromerTicket = () => {
 
                   </div>
 
+                  <div className="rc-input-field">
+  <label>
+    Job Date <span>*</span>
+  </label>
+
+  <input
+    type="date"
+    name="jobDate"
+    value={form.jobDate}
+    onChange={handleChange}
+    required
+  />
+</div>
+
 
                   <div className="rc-input-field">
 
@@ -5267,7 +5350,7 @@ const CusromerTicket = () => {
 
                 <div className="rc-grid-3">
 
-                  <div className="rc-input-field">
+                  {/* <div className="rc-input-field">
 
                     <label>
                       Device / Hardware Model{" "}
@@ -5287,7 +5370,45 @@ const CusromerTicket = () => {
                       required
                     />
 
-                  </div>
+                  </div> */}
+
+                  <div className="rc-input-field">
+  <label>
+    Device <span>*</span>
+  </label>
+
+  <select
+    name="deviceType"
+    value={form.deviceType}
+    onChange={handleChange}
+    className="rc-select"
+    required
+  >
+    <option value="">-- Select Device --</option>
+    <option value="Laptop">Laptop</option>
+    <option value="Desktop">Desktop</option>
+    <option value="Printer">Printer</option>
+    <option value="Monitor">Monitor</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
+<div className="rc-input-field">
+  <label>
+    Hardware Model <span>*</span>
+  </label>
+
+  <input
+    type="text"
+    name="deviceModel"
+    value={form.deviceModel}
+    onChange={handleChange}
+    placeholder="e.g. ThinkPad E14 Gen 4"
+    required
+  />
+</div>
+
+
 
 
                   <div className="rc-input-field">

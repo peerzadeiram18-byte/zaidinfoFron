@@ -2065,23 +2065,23 @@ function Sidebar({
           path: "/repairs",
         },
 
-        {
-          name: "Add Repairs",
-          icon: <MdBuild />,
-          path: "/add-repair",
-        },
+        // {
+        //   name: "Add Repairs",
+        //   icon: <MdBuild />,
+        //   path: "/add-repair",
+        // },
 
-        {
-          name: "Rentals",
-          icon: <MdBuild />,
-          path: "/rentals",
-        },
+        // {
+        //   name: "Rentals",
+        //   icon: <MdBuild />,
+        //   path: "/rentals",
+        // },
 
-        {
-          name: "Add Rentals",
-          icon: <MdBuild />,
-          path: "/add-rental",
-        },
+        // {
+        //   name: "Add Rentals",
+        //   icon: <MdBuild />,
+        //   path: "/add-rental",
+        // },
 
       ],
     },
@@ -2254,11 +2254,11 @@ function Sidebar({
 
       links: [
 
-        {
-          name: "Reports",
-          icon: <MdArticle />,
-          path: "/reports",
-        },
+        // {
+        //   name: "Reports",
+        //   icon: <MdArticle />,
+        //   path: "/reports",
+        // },
 
         {
           name: "Settings",
@@ -2854,17 +2854,27 @@ function Sidebar({
                   {section.links.map(
                     (item) => {
 
-                      const isActive =
-                        location.pathname ===
-                        item.path ||
-                        (
-                          item.path !==
-                            "/admin-dashboard" &&
-                          location.pathname.startsWith(
-                            `${item.path}/`
-                          )
-                        );
+                      // const isActive =
+                      //   location.pathname ===
+                      //   item.path ||
+                      //   (
+                      //     item.path !==
+                      //       "/admin-dashboard" &&
+                      //     location.pathname.startsWith(
+                      //       `${item.path}/`
+                      //     )
+                      //   );
 
+const isActive =
+                        item.path === "/admin/leaves"
+                          ? location.pathname === "/admin/leaves"
+                          : item.path === "/admin/leaves/policies"
+                            ? location.pathname === "/admin/leaves/policies"
+                            : location.pathname === item.path ||
+                            (
+                              item.path !== "/admin-dashboard" &&
+                              location.pathname.startsWith(`${item.path}/`)
+                            );
 
                       return (
 

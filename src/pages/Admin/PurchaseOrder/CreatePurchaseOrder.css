@@ -1,6 +1,14 @@
+/* ==========================================================
+   CREATE PURCHASE ORDER
+   Breakpoints: desktop (> 900px), tablet (641-900px),
+   mobile (640px and below)
+========================================================== */
+
 .po-create-page {
-    padding: 24px 28px;
+    width: 100%;
     max-width: 1100px;
+    padding: 24px 28px;
+    box-sizing: border-box;
 }
 
 .po-header h1 {
@@ -23,6 +31,7 @@
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
+    box-sizing: border-box;
 }
 
 .po-card-title {
@@ -35,7 +44,8 @@
 /* Fields */
 .po-fields {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    /* min(240px, 100%) lets a field shrink below 240px on small screens */
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
     gap: 16px;
     margin-bottom: 16px;
 }
@@ -44,6 +54,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;                  /* lets grid children shrink */
 }
 
 .po-field span {
@@ -77,18 +88,22 @@
     outline-offset: 1px;
 }
 
-/* Item rows */
+/* Item rows
+   The scroll happens inside .po-rows, never on the page. */
 .po-rows {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
 }
 
-/* Type | Item | HSN | Qty | Price | GST % | Line total | Remove */
+/* Type | Item | HSN | Qty | Price | GST % | Line total | Remove
+   Columns add up to 850px plus 70px of gaps = 920px */
 .po-row {
     display: grid;
     grid-template-columns: 120px minmax(180px, 1fr) 90px 80px 110px 80px 120px 70px;
     gap: 10px;
     align-items: center;
-    min-width: 980px;
+    min-width: 920px;
     padding: 8px 0;
 }
 
@@ -98,10 +113,16 @@
     color: #6b7280;
 }
 
+/* line total header lines up with the right-aligned amounts */
+.po-row-head span:nth-child(7) {
+    text-align: right;
+}
+
 .po-line-total {
     font-size: 14px;
     color: #111827;
     text-align: right;
+    white-space: nowrap;
 }
 
 .po-remove {
@@ -149,6 +170,7 @@
     justify-content: space-between;
     gap: 24px;
     width: 240px;
+    max-width: 100%;
     font-size: 14px;
     color: #6b7280;
 }
@@ -172,6 +194,7 @@
     padding: 10px 14px;
     border-radius: 6px;
     font-size: 14px;
+    overflow-wrap: anywhere;
 }
 
 .po-alert-error {
@@ -230,8 +253,104 @@
     color: #b91c1c;
 }
 
-@media (max-width: 600px) {
+/* ==========================================================
+   TABLET  (641px - 900px)
+   Tighter spacing and columns. The items grid still scrolls
+   inside its own box if the card is narrower than min-width.
+========================================================== */
+
+@media (max-width: 900px) {
+
     .po-create-page {
+        padding: 20px;
+    }
+
+    .po-card {
         padding: 16px;
+    }
+
+    /* 600px of columns + 56px of gaps (8px x 7) */
+    .po-row {
+        grid-template-columns: 100px minmax(150px, 1fr) 80px 70px 100px 70px 110px 70px;
+        gap: 8px;
+        min-width: 810px;
+    }
+}
+
+/* ==========================================================
+   MOBILE  (640px and below)
+========================================================== */
+
+@media (max-width: 640px) {
+
+    .po-create-page {
+        padding: 12px;
+    }
+
+    .po-header h1 {
+        font-size: 22px;
+    }
+
+    .po-header p {
+        margin-bottom: 16px;
+    }
+
+    .po-card {
+        margin-bottom: 14px;
+        padding: 14px;
+    }
+
+    /* single column form */
+    .po-fields {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    /* 16px stops iOS Safari from zooming in on focus;
+       44px height gives a comfortable tap target, and also
+       stops the iOS date input from rendering shorter */
+    .po-create-page select,
+    .po-create-page input,
+    .po-create-page textarea {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .po-create-page textarea {
+        min-height: 88px;
+    }
+
+    /* items grid scrolls sideways inside its own box */
+    .po-row {
+        min-width: 780px;
+    }
+
+    .po-add-row,
+    .po-remove {
+        min-height: 44px;
+    }
+
+    .po-add-row {
+        width: 100%;
+    }
+
+    /* totals use the full card width */
+    .po-total-breakdown {
+        align-items: stretch;
+    }
+
+    .po-total-row {
+        width: 100%;
+    }
+
+    /* buttons stack, Save on top */
+    .po-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .po-btn {
+        width: 100%;
+        min-height: 44px;
     }
 }

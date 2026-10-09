@@ -25,6 +25,7 @@ import {
   FiRefreshCw,
   FiActivity,
 } from "react-icons/fi";
+import { FaRupeeSign } from "react-icons/fa";
 import "./TechnicianDashboardAnalytic.css";
 
 // const BASE_URL = "http://localhost:5000/api/newRepair";
@@ -217,7 +218,7 @@ export default function TechnicianDashboardAnalytic() {
         <div className="tkpi-card">
           <div className="tkpi-card-top">
             <span className="tkpi-title">Generated Labor Value</span>
-            <div className="tkpi-icon icon-purple"><FiDollarSign /></div>
+            <div className="tkpi-icon icon-purple"><FaRupeeSign /></div>
           </div>
           <div className="tkpi-val-wrap">
             <strong className="tkpi-metric">₹{totalRevenue.toLocaleString()}</strong>

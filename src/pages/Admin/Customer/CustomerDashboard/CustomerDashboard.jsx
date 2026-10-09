@@ -931,6 +931,7 @@ import {
 import {
   useLocation,
   useNavigate,
+  useParams,
 } from "react-router-dom";
 
 import "./CustomerDashboard.css";
@@ -967,6 +968,7 @@ const SERVER_URL = API.replace(/\/api\/?$/, "");
 const CustomerDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { id: orderId } = useParams();
 
   // ===================================================
   // ACTIVE MENU
@@ -1236,6 +1238,15 @@ const CustomerDashboard = () => {
 
       case "orders":
         return <MyOrders />;
+
+        
+// case "order-details":
+//   return <OrderDetails />;
+
+case "order-details":
+  return orderId
+    ? <OrderDetails orderId={orderId} />
+    : <p>Order ID not found.</p>;
 
       // -----------------------------------------------
       // WISHLIST

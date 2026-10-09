@@ -4507,31 +4507,90 @@ const extractRental = (response) => {
 // EXTRACT DOCUMENTS
 // ============================================================
 
+// const extractDocuments = (response) => {
+//   if (!response) {
+//     return [];
+//   }
+
+//   const data = response?.data;
+
+//   if (Array.isArray(data)) {
+//     return data;
+//   }
+
+//   if (Array.isArray(data?.documents)) {
+//     return data.documents;
+//   }
+
+//   if (Array.isArray(data?.data)) {
+//     return data.data;
+//   }
+
+//   if (Array.isArray(data?.data?.documents)) {
+//     return data.data.documents;
+//   }
+
+//   if (Array.isArray(response?.documents)) {
+//     return response.documents;
+//   }
+
+//   return [];
+// };
+
+
 const extractDocuments = (response) => {
-  if (!response) {
-    return [];
-  }
+  if (!response) return [];
 
-  const data = response?.data;
+  // Axios response ya direct API response
+  let current = response?.data ?? response;
 
-  if (Array.isArray(data)) {
-    return data;
-  }
+  // Nested API response support
+  for (let i = 0; i < 6 && current; i++) {
+    if (Array.isArray(current)) {
+      return current;
+    }
 
-  if (Array.isArray(data?.documents)) {
-    return data.documents;
-  }
+    if (typeof current !== "object") {
+      return [];
+    }
 
-  if (Array.isArray(data?.data)) {
-    return data.data;
-  }
+    // Different backend field names
+    const keys = [
+      "documents",
+      "customerDocuments",
+      "uploadedDocuments",
+      "rentalDocuments",
+      "files",
+      "results",
+    ];
 
-  if (Array.isArray(data?.data?.documents)) {
-    return data.data.documents;
-  }
+    for (const key of keys) {
+      if (Array.isArray(current[key])) {
+        return current[key];
+      }
+    }
 
-  if (Array.isArray(response?.documents)) {
-    return response.documents;
+    if (current.document) {
+      current = current.document;
+      continue;
+    }
+
+    if (current.data !== undefined) {
+      current = current.data;
+      continue;
+    }
+
+    if (current.result !== undefined) {
+      current = current.result;
+      continue;
+    }
+
+    if (current.rental) {
+      current = current.rental;
+      continue;
+    }
+
+    break;
   }
 
   return [];
@@ -4952,68 +5011,159 @@ function WalkInRentalDetails() {
   // LOAD CUSTOMER DOCUMENTS
   // ==========================================================
 
-  const loadDocuments = useCallback(
-    async () => {
-      if (!rentalId) {
-        setDocuments([]);
-        return;
-      }
+  // const loadDocuments = useCallback(
+  //   async () => {
+  //     if (!rentalId) {
+  //       setDocuments([]);
+  //       return;
+  //     }
 
-      try {
-        setDocumentsLoading(true);
-        setDocumentsError("");
+  //     try {
+  //       setDocumentsLoading(true);
+  //       setDocumentsError("");
 
-        console.log(
-          "========== RENTAL DOCUMENTS =========="
-        );
+  //       console.log(
+  //         "========== RENTAL DOCUMENTS =========="
+  //       );
 
-        console.log(
-          "Loading documents for rental:",
-          rentalId
-        );
+  //       console.log(
+  //         "Loading documents for rental:",
+  //         rentalId
+  //       );
 
-        const response =
-          await getRentalDocuments(
-            rentalId
-          );
+  //       const response =
+  //         await getRentalDocuments(
+  //           rentalId
+  //         );
 
-        console.log(
-          "Rental Documents Response:",
-          response
-        );
+  //       console.log(
+  //         "Rental Documents Response:",
+  //         response
+  //       );
 
-        const documentList =
-          extractDocuments(response);
+  //       const documentList =
+  //         extractDocuments(response);
 
-        console.log(
-          "Normalized Documents:",
-          documentList
-        );
+  //       console.log(
+  //         "Normalized Documents:",
+  //         documentList
+  //       );
 
-        setDocuments(
-          Array.isArray(documentList)
-            ? documentList
-            : []
-        );
-      } catch (err) {
-        console.error(
-          "GET RENTAL DOCUMENTS ERROR:",
-          err
-        );
+  //       setDocuments(
+  //         Array.isArray(documentList)
+  //           ? documentList
+  //           : []
+  //       );
+  //     } catch (err) {
+  //       console.error(
+  //         "GET RENTAL DOCUMENTS ERROR:",
+  //         err
+  //       );
 
-        setDocumentsError(
-          err?.response?.data?.message ||
-            err?.message ||
-            "Failed to load customer documents."
-        );
+  //       setDocumentsError(
+  //         err?.response?.data?.message ||
+  //           err?.message ||
+  //           "Failed to load customer documents."
+  //       );
 
-        setDocuments([]);
-      } finally {
-        setDocumentsLoading(false);
-      }
-    },
-    [rentalId]
-  );
+  //       setDocuments([]);
+  //     } finally {
+  //       setDocumentsLoading(false);
+  //     }
+  //   },
+  //   [rentalId]
+  // );
+
+  
+const loadDocuments = useCallback(async () => {
+  if (!rentalId) {
+    setDocuments([]);
+    setDocumentsError("Rental ID is missing.");
+    return;
+  }
+
+  try {
+    setDocumentsLoading(true);
+    setDocumentsError("");
+
+    console.log("Loading documents for rental:", rentalId);
+
+    const response = await getRentalDocuments(rentalId);
+
+    // Actual API response inspect karne ke liye
+    console.log(
+      "RAW RENTAL DOCUMENT RESPONSE:",
+      JSON.stringify(response, null, 2)
+    );
+
+    const documentList = extractDocuments(response);
+
+    // Normalize common file field names
+    const normalizedDocuments = documentList
+      .filter((doc) => doc && typeof doc === "object")
+      .map((doc, index) => {
+        const fileUrl =
+          doc.fileUrl ||
+          doc.url ||
+          doc.path ||
+          doc.filePath ||
+          doc.documentUrl ||
+          doc.imageUrl ||
+          doc.secure_url ||
+          doc.location ||
+          "";
+
+        return {
+          ...doc,
+          _id: doc._id || doc.id || `document-${index}`,
+          documentType:
+            doc.documentType ||
+            doc.type ||
+            doc.name ||
+            doc.fileName ||
+            "CUSTOMER_DOCUMENT",
+          fileName:
+            doc.fileName ||
+            doc.originalName ||
+            doc.originalname ||
+            doc.name ||
+            "Uploaded document",
+          fileUrl,
+          mimeType:
+            doc.mimeType ||
+            doc.mimetype ||
+            doc.contentType ||
+            doc.fileType ||
+            "",
+        };
+      });
+
+    console.log(
+      "NORMALIZED RENTAL DOCUMENTS:",
+      normalizedDocuments
+    );
+
+    setDocuments(normalizedDocuments);
+
+    if (normalizedDocuments.length === 0) {
+      console.warn(
+        "No documents found in the documents API response."
+      );
+    }
+  } catch (err) {
+    console.error("GET RENTAL DOCUMENTS ERROR:", err);
+
+    setDocumentsError(
+      err?.response?.data?.message ||
+        err?.message ||
+        "Unable to load customer documents."
+    );
+
+    setDocuments([]);
+  } finally {
+    setDocumentsLoading(false);
+  }
+}, [rentalId]);
 
   // ==========================================================
   // INITIAL LOAD
@@ -5770,7 +5920,7 @@ function WalkInRentalDetails() {
             className="wir-btn wir-btn-secondary"
             onClick={() =>
               navigate(
-                "/receptionist/rental/walkin-orders"
+                "/receptionist-dashboard/rental/new-orders"
               )
             }
           >
@@ -7371,7 +7521,7 @@ function WalkInRentalDetails() {
           className="wir-btn wir-btn-primary"
           onClick={() =>
             navigate(
-              "/receptionist/rental/walkin"
+              "/receptionist-dashboard/rental/new"
             )
           }
         >

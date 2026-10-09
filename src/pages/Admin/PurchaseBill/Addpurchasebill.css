@@ -1,8 +1,14 @@
-
+/* ==========================================================
+   ADD PURCHASE BILL
+   Breakpoints: desktop (> 900px), tablet (641-900px),
+   mobile (640px and below)
+========================================================== */
 
 .apb-page {
-    padding: 24px 28px;
+    width: 100%;
     max-width: 1150px;
+    padding: 24px 28px;
+    box-sizing: border-box;
 }
 
 .apb-header h1 {
@@ -25,6 +31,7 @@
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
+    box-sizing: border-box;
 }
 
 .apb-card-title {
@@ -37,6 +44,8 @@
 /* Bill source toggle */
 .apb-modes {
     display: inline-flex;
+    flex-wrap: wrap;               /* labels can wrap instead of overflowing */
+    max-width: 100%;
     margin-bottom: 16px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
@@ -65,7 +74,8 @@
 /* Fields */
 .apb-fields {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    /* min(240px, 100%) lets a field shrink below 240px on very small screens */
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
     gap: 16px;
 }
 
@@ -73,6 +83,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-width: 0;                  /* lets grid children shrink */
 }
 
 .apb-field span {
@@ -112,18 +123,24 @@
     color: #6b7280;
 }
 
-/* Item rows */
+/* Item rows
+   The scroll happens inside .apb-rows, never on the page. */
 .apb-rows {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
 }
 
+/* FIX: 8 columns for the 8 cells in each row
+   (type, item, quantity, HSN, price, GST, line total, remove).
+   The old rule had 7 columns, so the 8th cell wrapped onto a new row. */
 .apb-row {
     display: grid;
     grid-template-columns:
-        130px minmax(200px, 1fr) 90px 120px 90px 130px 80px;
+        120px minmax(180px, 1fr) 80px 100px 110px 90px 120px 80px;
     gap: 10px;
     align-items: center;
-    min-width: 900px;
+    min-width: 950px;
     padding: 8px 0;
 }
 
@@ -133,15 +150,23 @@
     color: #6b7280;
 }
 
+/* line total header lines up with the right-aligned amounts */
+.apb-row-head span:nth-child(7) {
+    text-align: right;
+}
+
 .apb-text {
     font-size: 14px;
     color: #111827;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .apb-line-total {
     font-size: 14px;
     color: #111827;
     text-align: right;
+    white-space: nowrap;
 }
 
 .apb-remove {
@@ -186,6 +211,7 @@
 .apb-totals > div {
     display: flex;
     justify-content: space-between;
+    gap: 12px;
     padding: 4px 0;
     font-size: 14px;
     color: #374151;
@@ -211,6 +237,7 @@
     padding: 10px 14px;
     border-radius: 6px;
     font-size: 14px;
+    overflow-wrap: anywhere;
 }
 
 .apb-alert-error {
@@ -266,8 +293,116 @@
     color: #4b5563;
 }
 
-@media (max-width: 600px) {
+/* ==========================================================
+   TABLET  (641px - 900px)
+   Tighter spacing and columns. The items grid still scrolls
+   inside its own box if the card is narrower than min-width.
+========================================================== */
+
+@media (max-width: 900px) {
     .apb-page {
+        padding: 20px;
+    }
+
+    .apb-card {
         padding: 16px;
+    }
+
+    .apb-row {
+        grid-template-columns:
+            100px minmax(150px, 1fr) 70px 90px 100px 80px 110px 70px;
+        gap: 8px;
+        min-width: 830px;
+    }
+}
+
+/* ==========================================================
+   MOBILE  (640px and below)
+========================================================== */
+
+@media (max-width: 640px) {
+    .apb-page {
+        padding: 12px;
+    }
+
+    .apb-header h1 {
+        font-size: 22px;
+    }
+
+    .apb-header p {
+        margin-bottom: 16px;
+    }
+
+    .apb-card {
+        margin-bottom: 14px;
+        padding: 14px;
+    }
+
+    /* toggle: two full-width stacked buttons */
+    .apb-modes {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .apb-mode {
+        width: 100%;
+        padding: 12px 14px;
+        text-align: left;
+    }
+
+    .apb-mode + .apb-mode {
+        border-left: none;
+        border-top: 1px solid #d1d5db;
+    }
+
+    /* single column form */
+    .apb-fields {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    /* 16px stops iOS Safari from zooming in on focus;
+       44px height gives a comfortable tap target */
+    .apb-page select,
+    .apb-page input,
+    .apb-page textarea {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .apb-page textarea {
+        min-height: 88px;
+    }
+
+    /* items grid scrolls sideways inside its own box */
+    .apb-row {
+        min-width: 780px;
+    }
+
+    .apb-add-row,
+    .apb-remove {
+        min-height: 44px;
+    }
+
+    .apb-add-row {
+        width: 100%;
+    }
+
+    /* totals use the full card width */
+    .apb-totals {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    /* buttons stack, Save on top */
+    .apb-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .apb-btn {
+        width: 100%;
+        min-height: 44px;
     }
 }
