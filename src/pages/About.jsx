@@ -1,60 +1,8 @@
-// import React from "react";
-// import "./About.css";
-// import TopBar from "../components/TopBar/TopBar";
-// import Header from "../components/Header/Header";
-// import AboutSection from "../components/AboutSection/AboutSection";
-// import AboutServices from "../components/AboutServices/AboutServices";
-// import AdvantagesSection from "../components/AdvantageSection/AdvantageSection";
-// import CTASection from "../components/CTASection/CTASection";
-// import Footer from "../components/Footer/Footer";
-// import AboutHeroSection from "../components/AboutHeroSection/AboutHeroSection"
-// import KeyDifferentiators from "../components/KeyDifferentiator/KeyDifferentiators"
-// import ServicePortfolio from "../components/ServicePortfolio/ServicePortfolio"
-
-// const About = () => {
-//   return (
-//     <div className="about-page-wrapper">
-//       {/* Header / Navigation */}
-//       {/* <TopBar />
-//       <Header /> */}
-
-//       {/* Main Page Content */}
-//       <main className="about-main-content">
-//         {/* Main About Text & Image Section */}
-//         <AboutHeroSection />
-
-//         {/* Services List Section */}
-//         <AboutServices />
-
-
-//         <KeyDifferentiators/>
-
-//         <ServicePortfolio/>
-
-        
-
-//         {/* Advantages Section */}
-//         <AdvantagesSection />
-
-//         {/* Call to Action Section */}
-//         <CTASection />
-//       </main>
-
-//       {/* Footer */}
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default About;
-
-
-
-
 import React from "react";
 // import TopBar from "../components/TopBar/TopBar";
 // import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
+import heroImage from "../assets/images/aboutUs.jpg";
 import "./About.css";
 
 /* ---------- Inline icon components ---------- */
@@ -144,6 +92,19 @@ const IconDiscount = (props) => (
   </svg>
 );
 
+const IconMapPin = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M20 10c0 6 -8 12 -8 12s-8 -6 -8 -12a8 8 0 0 1 16 0z" />
+    <circle cx="12" cy="10" r="3" />
+  </svg>
+);
+
+const IconPhone = (props) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M22 16.92v3a2 2 0 0 1 -2.18 2a19.8 19.8 0 0 1 -8.63 -3.07a19.5 19.5 0 0 1 -6 -6a19.8 19.8 0 0 1 -3.07 -8.67a2 2 0 0 1 2 -2.18h3a2 2 0 0 1 2 1.72c0.13 0.96 0.36 1.9 0.7 2.81a2 2 0 0 1 -0.45 2.11l-1.27 1.27a16 16 0 0 0 6 6l1.27 -1.27a2 2 0 0 1 2.11 -0.45c0.91 0.34 1.85 0.57 2.81 0.7a2 2 0 0 1 1.72 2z" />
+  </svg>
+);
+
 /* ---------- Content data ---------- */
 
 const services = [
@@ -199,6 +160,61 @@ const journey = [
   { title: "Today", desc: "Laptops, rentals and repairs under one roof" },
 ];
 
+const stores = [
+  {
+    name: "Zaid Infotech",
+    tag: "Corporate Office & Main Branch",
+    address: "232, 1st Floor, M.K.N Road, Alandur, Chennai - 600016",
+    phones: ["+91 90925 90725"],
+  },
+  {
+    name: "Zaid Exclusive Store",
+    tag: "Retail Store",
+    address: "229, 1st Floor, M.K.N Road, Alandur, Chennai - 600016",
+    phones: ["+91 97871 93871"],
+  },
+  {
+    name: "Zaid Infotech Warehouse",
+    tag: "Warehouse & Service Centre",
+    address:
+      "New No. 36, Old No. 44, Ponni Amman Koil Street, Alandur, Chennai - 600016",
+    phones: ["+91 99626 20202", "+91 70106 27010"],
+  },
+  {
+    name: "Zaid Infotech Service Centre",
+    tag: "Mount Road",
+    address:
+      "Old No. 20, New No. 41, R.A. Complex, 2nd Floor, Meeran Sahib Street, Mount Road, Chennai - 600002",
+    phones: ["+91 84280 58428", "+91 84281 58428"],
+  },
+];
+
+const supportLines = [
+  {
+    icon: IconHeadset,
+    title: "Service & Warranty",
+    desc: "Repairs, warranty claims and technical help for your device.",
+    phones: ["+91 70106 27010"],
+  },
+  {
+    icon: IconLaptop,
+    title: "Laptop Rentals & Bulk Orders",
+    desc: "Monthly rentals, team plans and bulk requirements.",
+    phones: ["+91 97871 92871", "+91 97871 93871"],
+  },
+];
+
+/* ---------- Helpers ---------- */
+
+// "+91 90925 90725" -> "tel:+919092590725"
+const telHref = (phone) => `tel:${phone.replace(/\s/g, "")}`;
+
+// Opens Google Maps with a search for the address
+const mapHref = (address) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    address
+  )}`;
+
 /* ---------- Component ---------- */
 
 export default function About() {
@@ -211,10 +227,15 @@ export default function About() {
         <section className="about-hero">
           <div className="about-hero__grid">
             <div className="about-hero__content">
-              <div className="about-breadcrumb">
-                Home <span className="about-breadcrumb__sep">/</span>{" "}
-                <span className="about-breadcrumb__active">About Us</span>
-              </div>
+              <nav className="about-breadcrumb" aria-label="Breadcrumb">
+                <a href="/">Home</a>{" "}
+                <span className="about-breadcrumb__sep" aria-hidden="true">
+                  /
+                </span>{" "}
+                <span className="about-breadcrumb__active" aria-current="page">
+                  About Us
+                </span>
+              </nav>
               <span className="about-badge">Who We Are</span>
               <h1 className="about-hero__title">
                 Engineering trust,
@@ -243,26 +264,34 @@ export default function About() {
               </div>
             </div>
 
-            <div className="about-hero__panel">
-              <div className="about-hero__icon-circle">
-                <IconLaptop className="about-icon about-icon--lg" />
-              </div>
-              <div className="about-hero__badges">
-                <div className="about-hero__badge-item">
-                  <IconShieldCheck className="about-icon about-icon--sm" />
-                  <span>100% genuine</span>
-                </div>
-                <div className="about-hero__badge-item">
-                  <IconAward className="about-icon about-icon--sm" />
-                  <span>1 year warranty</span>
-                </div>
-                <div className="about-hero__badge-item">
-                  <IconCreditCard className="about-icon about-icon--sm" />
-                  <span>EMI available</span>
-                </div>
-                <div className="about-hero__badge-item">
-                  <IconFileInvoice className="about-icon about-icon--sm" />
-                  <span>GST invoice</span>
+            {/* Photo with trust badges overlaid */}
+            <div className="about-hero__visual">
+              <img
+                className="about-hero__img"
+                src={heroImage}
+                width={1200}
+                height={675}
+                decoding="async"
+                alt="Acer, Lenovo, Dell XPS, Asus and HP laptops on display"
+              />
+              <div className="about-hero__panel">
+                <div className="about-hero__badges">
+                  <div className="about-hero__badge-item">
+                    <IconShieldCheck className="about-icon about-icon--sm" />
+                    <span>100% genuine</span>
+                  </div>
+                  <div className="about-hero__badge-item">
+                    <IconAward className="about-icon about-icon--sm" />
+                    <span>1 year warranty</span>
+                  </div>
+                  <div className="about-hero__badge-item">
+                    <IconCreditCard className="about-icon about-icon--sm" />
+                    <span>EMI available</span>
+                  </div>
+                  <div className="about-hero__badge-item">
+                    <IconFileInvoice className="about-icon about-icon--sm" />
+                    <span>GST invoice</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -303,9 +332,9 @@ export default function About() {
 
         {/* What We Do */}
         <section className="about-section">
-          <h3 className="about-section__title about-section__title--center">
+          <h2 className="about-section__title about-section__title--center">
             What We Do
-          </h3>
+          </h2>
           <div className="about-divider about-divider--center" />
           <div className="about-cards-grid">
             {services.map(({ icon: Icon, title, desc }) => (
@@ -313,7 +342,7 @@ export default function About() {
                 <div className="about-card__icon-circle">
                   <Icon className="about-icon about-icon--md" />
                 </div>
-                <h4 className="about-card__title">{title}</h4>
+                <h3 className="about-card__title">{title}</h3>
                 <p className="about-card__desc">{desc}</p>
               </div>
             ))}
@@ -326,9 +355,9 @@ export default function About() {
             <span className="about-eyebrow about-eyebrow--center">
               Advantages
             </span>
-            <h3 className="about-section__title about-section__title--center">
+            <h2 className="about-section__title about-section__title--center">
               Why We Are Best
-            </h3>
+            </h2>
             <p className="about-section__subtitle">
               Zaid Infotech leads with genuine IT products, ensuring unmatched
               quality and reliability.
@@ -340,7 +369,7 @@ export default function About() {
                 <div className="about-advantage-card__icon-circle">
                   <Icon className="about-icon about-icon--lg" />
                 </div>
-                <h4 className="about-card__title">{title}</h4>
+                <h3 className="about-card__title">{title}</h3>
                 <p className="about-card__desc">{desc}</p>
               </div>
             ))}
@@ -349,9 +378,9 @@ export default function About() {
 
         {/* Our Journey */}
         <section className="about-section">
-          <h3 className="about-section__title about-section__title--center">
+          <h2 className="about-section__title about-section__title--center">
             Our Journey
-          </h3>
+          </h2>
           <div className="about-divider about-divider--center" />
           <div className="about-journey-grid">
             {journey.map(({ title, desc }) => (
@@ -363,11 +392,115 @@ export default function About() {
           </div>
         </section>
 
+        {/* Our Stores */}
+        <section
+          className="about-section about-section--muted"
+          id="stores"
+          aria-labelledby="stores-heading"
+        >
+          <div className="about-section__intro">
+            <span className="about-eyebrow about-eyebrow--center">
+              Locations
+            </span>
+            <h2
+              id="stores-heading"
+              className="about-section__title about-section__title--center"
+            >
+              Visit Our Stores
+            </h2>
+            <p className="about-section__subtitle">
+              Walk in for demos, purchases, repairs and pickups at any of our
+              Chennai locations.
+            </p>
+          </div>
+
+          <div className="about-locations-grid">
+            {stores.map((store) => (
+              <article className="about-location-card" key={store.name}>
+                <span className="about-location-card__tag">{store.tag}</span>
+                <h3 className="about-location-card__name">{store.name}</h3>
+
+                <div className="about-location-card__row">
+                  <span className="about-location-card__icon" aria-hidden="true">
+                    <IconMapPin className="about-icon about-icon--md" />
+                  </span>
+                  <p className="about-location-card__address">
+                    {store.address}
+                  </p>
+                </div>
+
+                <div className="about-location-card__row">
+                  <span className="about-location-card__icon" aria-hidden="true">
+                    <IconPhone className="about-icon about-icon--md" />
+                  </span>
+                  <div className="about-location-card__phones">
+                    {store.phones.map((phone) => (
+                      <a key={phone} href={telHref(phone)}>
+                        {phone}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+
+                <a
+                  className="about-location-card__directions"
+                  href={mapHref(store.address)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Get directions <span aria-hidden="true">&rarr;</span>
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* Customer Support */}
+        <section
+          className="about-section"
+          id="support"
+          aria-labelledby="support-heading"
+        >
+          <div className="about-section__intro">
+            <span className="about-eyebrow about-eyebrow--center">
+              Help &amp; Support
+            </span>
+            <h2
+              id="support-heading"
+              className="about-section__title about-section__title--center"
+            >
+              Customer Support
+            </h2>
+            <p className="about-section__subtitle">
+              Reach the right team directly. We're one call away.
+            </p>
+          </div>
+
+          <div className="about-support-grid">
+            {supportLines.map(({ icon: Icon, title, desc, phones }) => (
+              <div className="about-support-card" key={title}>
+                <div className="about-support-card__icon-circle">
+                  <Icon className="about-icon about-icon--lg" />
+                </div>
+                <h3 className="about-card__title">{title}</h3>
+                <p className="about-card__desc">{desc}</p>
+                <div className="about-support-card__phones">
+                  {phones.map((phone) => (
+                    <a key={phone} href={telHref(phone)}>
+                      {phone}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="about-cta">
-          <h3 className="about-cta__title">
+          <h2 className="about-cta__title">
             Ready to experience the difference?
-          </h3>
+          </h2>
           <p className="about-cta__subtitle">
             Buy, rent, or repair — all under one roof.
           </p>
