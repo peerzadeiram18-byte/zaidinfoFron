@@ -1614,3 +1614,54 @@ tbody tr:hover td {
     top: 70px;
   }
 }
+
+
+/* ZAID INFOTECH — Admin Dashboard responsive styles */
+.admin-app{--ad-bg:#f5f7fb;--ad-card:#fff;--ad-text:#17243b;--ad-muted:#64748b;--ad-line:#e2e8f0;--ad-blue:#2563eb;background:var(--ad-bg);color:var(--ad-text);min-height:100vh;width:100%;min-width:0}
+.admin-app,.admin-app *{box-sizing:border-box}
+.admin-main{width:100%;min-width:0;min-height:100vh}
+.admin-main>.content{width:100%;max-width:1600px;margin:0 auto;padding:28px clamp(14px,2.5vw,36px);min-width:0}
+.dashboard-header{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:26px;min-width:0}
+.dashboard-header-left{min-width:0}.dashboard-title{font-size:clamp(24px,2.4vw,34px);line-height:1.2;font-weight:750;letter-spacing:-.7px;margin:0 0 6px;color:var(--ad-text)}
+.dashboard-subtitle{font-size:14px;line-height:1.5;color:var(--ad-muted);margin:0}
+.dashboard-header-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;min-width:0}
+.dashboard-header-icon{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;background:#fff;border:1px solid var(--ad-line);border-radius:11px;color:#334155;cursor:pointer;transition:background .18s,transform .18s,box-shadow .18s;position:relative}
+.dashboard-header-icon:hover{background:#eff6ff;color:var(--ad-blue);transform:translateY(-1px);box-shadow:0 4px 12px #1e293b12}.dashboard-header-icon:disabled{opacity:.55;cursor:wait}
+.dashboard-header-icon:focus-visible,.admin-switch-trigger:focus-visible,.admin-switch-item:focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
+/* Switch dashboard dropdown: names match the uploaded JSX */
+.admin-switch-wrapper{position:relative;display:inline-flex;align-items:center;min-width:0;z-index:120}
+.admin-switch-trigger{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:42px;padding:9px 14px;background:var(--ad-blue);border:1px solid var(--ad-blue);border-radius:11px;color:#fff;font:600 13px/1.35 inherit;font-size:13px;font-weight:650;white-space:nowrap;cursor:pointer;box-shadow:0 3px 12px #2563eb24;transition:background .18s,transform .18s}
+.admin-switch-trigger:hover{background:#1d4ed8;transform:translateY(-1px)}.admin-switch-trigger svg{flex-shrink:0}
+.admin-switch-backdrop{position:fixed;inset:0;background:transparent;border:0;padding:0;z-index:120;cursor:default}
+.admin-switch-menu{position:absolute;right:0;top:calc(100% + 9px);width:min(275px,calc(100vw - 28px));max-height:min(440px,70vh);overflow-y:auto;overscroll-behavior:contain;background:#fff;border:1px solid var(--ad-line);border-radius:14px;padding:7px;box-shadow:0 18px 44px #0f172a2b;z-index:121;animation:admin-menu-in .16s ease both}
+@keyframes admin-menu-in{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.admin-switch-item{display:block;width:100%;padding:12px 13px;text-align:left;border:0;border-radius:9px;background:transparent;color:#334155;font:inherit;font-size:13px;font-weight:550;cursor:pointer;line-height:1.4;transition:background .15s,color .15s}
+.admin-switch-item:hover,.admin-switch-item:focus-visible{background:#eff6ff;color:#1d4ed8}
+.admin-switch-menu::-webkit-scrollbar,.dashboard-notification-list::-webkit-scrollbar{width:6px}.admin-switch-menu::-webkit-scrollbar-thumb,.dashboard-notification-list::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px}
+/* Notifications */
+.dashboard-notification-wrapper{position:relative;display:inline-flex;z-index:110}.dashboard-notification-badge{position:absolute;top:-6px;right:-6px;display:grid;place-items:center;min-width:19px;height:19px;padding:0 4px;background:#ef4444;color:#fff;border:2px solid #fff;border-radius:999px;font-size:10px;font-weight:700;line-height:1}
+.dashboard-bell-has-notification{color:#2563eb}.dashboard-notification-panel{position:absolute;right:0;top:calc(100% + 12px);width:min(380px,calc(100vw - 28px));max-height:min(550px,75vh);display:flex;flex-direction:column;overflow:hidden;background:#fff;border:1px solid var(--ad-line);border-radius:15px;box-shadow:0 18px 48px #0f172a29;z-index:115}
+.dashboard-notification-panel-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px;border-bottom:1px solid var(--ad-line)}.dashboard-notification-panel-header h3{font-size:16px;margin:0 0 3px}.dashboard-notification-panel-header span{font-size:12px;color:var(--ad-muted)}
+.dashboard-notification-close{display:grid;place-items:center;width:30px;height:30px;border:0;border-radius:8px;background:#f1f5f9;color:#475569;cursor:pointer}
+.dashboard-mark-all-read,.dashboard-view-all-notifications{width:100%;padding:11px 16px;display:flex;align-items:center;justify-content:center;gap:7px;border:0;background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:650;cursor:pointer}.dashboard-view-all-notifications{border-top:1px solid var(--ad-line);background:#fff}
+.dashboard-notification-list{overflow-y:auto;min-height:0;flex:1}.dashboard-notification-item{display:flex;align-items:flex-start;gap:10px;width:100%;padding:13px 15px;background:#fff;border:0;border-bottom:1px solid #f1f5f9;text-align:left;cursor:pointer}.dashboard-notification-item:hover{background:#f8fafc}.dashboard-notification-unread{background:#eff6ff88}.dashboard-notification-dot-wrapper{width:9px;flex:0 0 9px;padding-top:6px}.dashboard-notification-dot{display:block;width:7px;height:7px;border-radius:50%;background:transparent}.dashboard-notification-dot-unread{background:#2563eb}
+.dashboard-notification-content{min-width:0;flex:1}.dashboard-notification-content strong{display:block;font-size:13px;overflow-wrap:anywhere}.dashboard-notification-content p{margin:4px 0;font-size:12px;color:#64748b;line-height:1.5;overflow-wrap:anywhere}.dashboard-notification-content small{font-size:11px;color:#94a3b8}.dashboard-notification-empty{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;min-height:160px;padding:24px;text-align:center;color:#64748b;font-size:12px}.dashboard-notification-empty strong{color:#334155;font-size:14px}
+@keyframes admin-spin{to{transform:rotate(360deg)}}.dashboard-refreshing,.dashboard-notification-loading-icon{animation:admin-spin 1s linear infinite}
+/* Statistics cards: DashboardCard component retains its own internal styles */
+.admin-app .stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;margin:0 0 22px;min-width:0}.admin-app .stats>*{min-width:0;max-width:100%}.admin-app .stats *{overflow-wrap:break-word}
+/* Chart and product panels */
+.admin-app .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:22px;min-width:0}.admin-app .grid-2>*{min-width:0}
+.admin-app .panel{background:var(--ad-card);border:1px solid var(--ad-line);border-radius:15px;box-shadow:0 4px 16px #0f172a08;min-width:0}.admin-app .panel-pad{padding:20px}.admin-app .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.admin-app .panel-title{font-size:16px;font-weight:700;color:#17243b;line-height:1.4}.admin-app .panel-sub{font-size:12px;color:#64748b;margin-top:5px;line-height:1.5}
+.admin-app .chart-wrap{width:100%;height:205px;min-width:0;margin-top:20px;overflow:hidden}.admin-app .chart-wrap svg{display:block;width:100%;height:100%}.admin-app .chart-grid-line{stroke:#e2e8f0;stroke-width:1}.admin-app .revenue-area{fill:#2563eb;fill-opacity:.09}.admin-app .revenue-line{stroke:#2563eb;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}.admin-app .orders-line{stroke:#10b981;stroke-width:2;stroke-dasharray:5 4;vector-effect:non-scaling-stroke}
+.admin-app .legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px;color:#64748b;font-size:11px;line-height:1.5}.admin-app .legend span{display:inline-flex;align-items:center;gap:6px}.admin-app .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;flex-shrink:0}.admin-app .legend-revenue{background:#2563eb}.admin-app .legend-orders{background:#10b981}.admin-app .dashboard-trend-labels{display:flex;justify-content:space-between;gap:10px;color:#94a3b8;font-size:11px;margin-top:12px}
+.admin-app .dashboard-data-note{margin-top:18px;padding:16px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:11px;color:#475569;font-size:13px;overflow-wrap:anywhere}.admin-app .dashboard-data-note p{margin:0 0 14px}.admin-app .dashboard-link-button{background:#2563eb;color:#fff;border:0;border-radius:9px;padding:10px 14px;font-size:12px;font-weight:650;cursor:pointer;max-width:100%}.admin-app .dashboard-link-button:hover{background:#1d4ed8}
+/* Table component safety: horizontal scroll on narrow screens */
+.admin-app .content>table,.admin-app .content>.dashboard-table{max-width:100%}.admin-app table{border-collapse:collapse}.admin-app th,.admin-app td{overflow-wrap:anywhere}
+@media(max-width:1250px){.admin-app .stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){.admin-app .stats{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-app .grid-2{grid-template-columns:minmax(0,1fr)}.admin-main>.content{padding:22px 18px}}
+@media(max-width:650px){.dashboard-header{align-items:flex-start;flex-direction:column;gap:14px}.dashboard-header-actions{width:100%;justify-content:flex-start}.admin-main>.content{padding:18px 12px}.admin-app .stats{gap:11px}.admin-app .panel-pad{padding:15px}.admin-app .chart-wrap{height:175px}.dashboard-title{font-size:25px}}
+@media(max-width:420px){.dashboard-header-actions{gap:7px}.dashboard-header-icon{width:39px;height:39px}.admin-switch-trigger{min-height:39px;padding:8px 10px;font-size:12px;gap:6px}.admin-app .stats{grid-template-columns:minmax(0,1fr)}.admin-app .grid-2{gap:12px}.admin-app .chart-wrap{height:155px}.admin-app .legend{gap:8px}.dashboard-notification-panel{right:-45px;width:min(340px,calc(100vw - 24px))}}
+@media(max-width:350px){.admin-switch-trigger{font-size:11px}.dashboard-header-actions{gap:5px}.dashboard-header-icon{width:36px;height:36px}.dashboard-notification-panel{right:-41px}}
+@media(prefers-reduced-motion:reduce){.admin-app *, .admin-app *::before,.admin-app *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+.admin-switch-item.active{background:#dbeafe;color:#1d4ed8;font-weight:700}
