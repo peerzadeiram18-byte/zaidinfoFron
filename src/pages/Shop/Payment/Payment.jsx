@@ -1,4 +1,9 @@
-// import React, { useEffect, useState } from "react";
+// import React, {
+//     useEffect,
+//     useMemo,
+//     useState
+// } from "react";
+
 // import "./Payment.css";
 
 // import {
@@ -27,12 +32,10 @@
 
 //     const {
 //         order,
-//         payment
+//         payment,
+//         paymentSummary
 //     } = location.state || {};
 
-//     // ==========================================
-//     // STATES
-//     // ==========================================
 
 //     const [loading, setLoading] = useState(false);
 
@@ -40,23 +43,413 @@
 //         useState(false);
 
 
-//     // ==========================================
-//     // LOAD RAZORPAY SDK
-//     // ==========================================
+//     // =====================================================
+//     // NUMBER HELPER
+//     // =====================================================
+
+//     const number = (
+//         value,
+//         fallback = 0
+//     ) => {
+
+//         const n = Number(value);
+
+//         return Number.isFinite(n)
+//             ? n
+//             : fallback;
+
+//     };
+
+
+//     // =====================================================
+//     // MONEY ROUNDING
+//     // =====================================================
+
+//     const roundMoney = (value) => {
+
+//         return Math.round(
+//             (Number(value) + Number.EPSILON) * 100
+//         ) / 100;
+
+//     };
+
+
+//     // =====================================================
+//     // PRODUCT SUBTOTAL
+//     // =====================================================
+
+//     const subtotal = useMemo(() => {
+
+//         const value =
+//             paymentSummary?.subtotal ??
+//             order?.subtotal ??
+//             order?.subTotal ??
+//             order?.itemsSubtotal ??
+//             order?.productSubtotal ??
+//             0;
+
+//         return Math.max(
+//             roundMoney(number(value)),
+//             0
+//         );
+
+//     }, [
+//         paymentSummary,
+//         order
+//     ]);
+
+
+//     // =====================================================
+//     // OFFER DISCOUNT
+//     // =====================================================
+
+//     const offerDiscount = useMemo(() => {
+
+//         const value =
+//             paymentSummary?.offerDiscount ??
+//             paymentSummary?.productDiscount ??
+//             paymentSummary?.discountFromOffers ??
+//             order?.offerDiscount ??
+//             order?.productDiscount ??
+//             order?.discountFromOffers ??
+//             0;
+
+//         return Math.max(
+//             roundMoney(number(value)),
+//             0
+//         );
+
+//     }, [
+//         paymentSummary,
+//         order
+//     ]);
+
+
+//     // =====================================================
+//     // COUPON DISCOUNT
+//     // =====================================================
+
+//     const couponDiscount = useMemo(() => {
+
+//         const value =
+//             paymentSummary?.couponDiscount ??
+//             paymentSummary?.couponDiscountAmount ??
+//             order?.couponDiscount ??
+//             order?.couponDiscountAmount ??
+//             0;
+
+//         return Math.max(
+//             roundMoney(number(value)),
+//             0
+//         );
+
+//     }, [
+//         paymentSummary,
+//         order
+//     ]);
+
+
+//     // =====================================================
+//     // TOTAL DISCOUNT
+//     // =====================================================
+
+//     const totalDiscount = useMemo(() => {
+
+//         return Math.min(
+//             roundMoney(
+//                 offerDiscount +
+//                 couponDiscount
+//             ),
+//             subtotal
+//         );
+
+//     }, [
+//         offerDiscount,
+//         couponDiscount,
+//         subtotal
+//     ]);
+
+
+//     // =====================================================
+//     // TAXABLE AMOUNT
+//     // =====================================================
+
+//     const taxableAmount = useMemo(() => {
+
+//         /*
+//          * Checkout se exact taxable amount aaye
+//          * to usko priority denge.
+//          */
+
+//         const checkoutTaxable =
+//             paymentSummary?.taxableAmount ??
+//             order?.taxableAmount;
+
+//         if (
+//             checkoutTaxable !== undefined &&
+//             checkoutTaxable !== null &&
+//             Number.isFinite(
+//                 Number(checkoutTaxable)
+//             )
+//         ) {
+
+//             return Math.max(
+//                 roundMoney(
+//                     number(checkoutTaxable)
+//                 ),
+//                 0
+//             );
+
+//         }
+
+
+//         /*
+//          * Fallback:
+//          *
+//          * Subtotal
+//          * - Offer Discount
+//          * - Coupon Discount
+//          */
+
+//         return Math.max(
+//             roundMoney(
+//                 subtotal -
+//                 totalDiscount
+//             ),
+//             0
+//         );
+
+//     }, [
+//         paymentSummary,
+//         order,
+//         subtotal,
+//         totalDiscount
+//     ]);
+
+
+//     // =====================================================
+//     // SHIPPING
+//     // =====================================================
+
+//     const shippingCharge = useMemo(() => {
+
+//         const value =
+//             paymentSummary?.shippingCharge ??
+//             paymentSummary?.shipping ??
+//             order?.shippingCharge ??
+//             order?.shippingCost ??
+//             order?.deliveryCharge ??
+//             0;
+
+//         return Math.max(
+//             roundMoney(number(value)),
+//             0
+//         );
+
+//     }, [
+//         paymentSummary,
+//         order
+//     ]);
+
+
+//     // =====================================================
+//     // GST %
+//     // =====================================================
+
+//     const gstPercentage = useMemo(() => {
+
+//         const value =
+//             paymentSummary?.gstPercentage ??
+//             order?.gstPercentage ??
+//             order?.gstRate ??
+//             18;
+
+//         return Math.max(
+//             number(value, 18),
+//             0
+//         );
+
+//     }, [
+//         paymentSummary,
+//         order
+//     ]);
+
+
+//     // =====================================================
+//     // GST AMOUNT
+//     // =====================================================
+
+//     const gstAmount = useMemo(() => {
+
+//         /*
+//          * Checkout ka exact GST priority hai.
+//          */
+
+//         const checkoutGST =
+//             paymentSummary?.gstAmount ??
+//             order?.gstAmount;
+
+//         if (
+//             checkoutGST !== undefined &&
+//             checkoutGST !== null &&
+//             Number.isFinite(
+//                 Number(checkoutGST)
+//             )
+//         ) {
+
+//             return Math.max(
+//                 roundMoney(
+//                     number(checkoutGST)
+//                 ),
+//                 0
+//             );
+
+//         }
+
+
+//         /*
+//          * Fallback GST calculation.
+//          */
+
+//         return Math.max(
+//             roundMoney(
+//                 taxableAmount *
+//                 gstPercentage /
+//                 100
+//             ),
+//             0
+//         );
+
+//     }, [
+//         paymentSummary,
+//         order,
+//         taxableAmount,
+//         gstPercentage
+//     ]);
+
+
+//     // =====================================================
+//     // CALCULATED GRAND TOTAL
+//     //
+//     // THIS IS THE IMPORTANT VALUE
+//     //
+//     // Taxable
+//     // + Shipping
+//     // + GST
+//     // =====================================================
+
+//     const calculatedGrandTotal = useMemo(() => {
+
+//         return Math.max(
+//             roundMoney(
+//                 taxableAmount +
+//                 shippingCharge +
+//                 gstAmount
+//             ),
+//             0
+//         );
+
+//     }, [
+//         taxableAmount,
+//         shippingCharge,
+//         gstAmount
+//     ]);
+
+
+//     // =====================================================
+//     // CHECKOUT FINAL TOTAL
+//     // =====================================================
+
+//     const checkoutFinalTotal = useMemo(() => {
+
+//         const value =
+//             paymentSummary?.total ??
+//             paymentSummary?.grandTotal ??
+//             paymentSummary?.finalAmount;
+
+//         if (
+//             value !== undefined &&
+//             value !== null &&
+//             Number.isFinite(Number(value))
+//         ) {
+
+//             return Math.max(
+//                 roundMoney(number(value)),
+//                 0
+//             );
+
+//         }
+
+//         return 0;
+
+//     }, [
+//         paymentSummary
+//     ]);
+
+
+//     // =====================================================
+//     // FINAL PAYABLE AMOUNT
+//     //
+//     // IMPORTANT:
+//     //
+//     // First use the exact checkout total.
+//     // If unavailable, calculate it.
+//     //
+//     // DO NOT USE PRODUCT SUBTOTAL HERE.
+//     // =====================================================
+
+//     const payableAmount = useMemo(() => {
+
+//         if (
+//             checkoutFinalTotal > 0
+//         ) {
+
+//             return checkoutFinalTotal;
+
+//         }
+
+
+//         return calculatedGrandTotal;
+
+//     }, [
+//         checkoutFinalTotal,
+//         calculatedGrandTotal
+//     ]);
+
+
+//     // =====================================================
+//     // PAYMENT BREAKDOWN VALIDATION
+//     // =====================================================
+
+//     const breakdownTotal = useMemo(() => {
+
+//         return roundMoney(
+//             taxableAmount +
+//             shippingCharge +
+//             gstAmount
+//         );
+
+//     }, [
+//         taxableAmount,
+//         shippingCharge,
+//         gstAmount
+//     ]);
+
+
+//     // =====================================================
+//     // LOAD RAZORPAY
+//     // =====================================================
 
 //     useEffect(() => {
 
 //         if (window.Razorpay) {
-
-//             console.log(
-//                 "Razorpay SDK Already Loaded"
-//             );
 
 //             setRazorpayLoaded(true);
 
 //             return;
 
 //         }
+
 
 //         const script =
 //             document.createElement("script");
@@ -66,21 +459,15 @@
 
 //         script.async = true;
 
-//         script.onload = () => {
 
-//             console.log(
-//                 "Razorpay SDK Loaded Successfully"
-//             );
+//         script.onload = () => {
 
 //             setRazorpayLoaded(true);
 
 //         };
 
-//         script.onerror = () => {
 
-//             console.error(
-//                 "Razorpay SDK Failed To Load"
-//             );
+//         script.onerror = () => {
 
 //             setRazorpayLoaded(false);
 
@@ -90,14 +477,122 @@
 
 //         };
 
+
 //         document.body.appendChild(script);
+
+
+//         return () => {
+
+//             if (
+//                 document.body.contains(script)
+//             ) {
+
+//                 document.body.removeChild(script);
+
+//             }
+
+//         };
 
 //     }, []);
 
 
-//     // ==========================================
+//     // =====================================================
+//     // DEBUG
+//     // =====================================================
+
+//     useEffect(() => {
+
+//         console.log(
+//             "=========================================="
+//         );
+
+//         console.log(
+//             "PAYMENT PAGE FINAL CALCULATION"
+//         );
+
+//         console.log(
+//             "Product Subtotal:",
+//             subtotal
+//         );
+
+//         console.log(
+//             "Offer Discount:",
+//             offerDiscount
+//         );
+
+//         console.log(
+//             "Coupon Discount:",
+//             couponDiscount
+//         );
+
+//         console.log(
+//             "Total Discount:",
+//             totalDiscount
+//         );
+
+//         console.log(
+//             "Taxable Amount:",
+//             taxableAmount
+//         );
+
+//         console.log(
+//             "Shipping:",
+//             shippingCharge
+//         );
+
+//         console.log(
+//             "GST Percentage:",
+//             gstPercentage
+//         );
+
+//         console.log(
+//             "GST Amount:",
+//             gstAmount
+//         );
+
+//         console.log(
+//             "Calculated Grand Total:",
+//             calculatedGrandTotal
+//         );
+
+//         console.log(
+//             "Checkout Final Total:",
+//             checkoutFinalTotal
+//         );
+
+//         console.log(
+//             "FINAL PAYABLE AMOUNT:",
+//             payableAmount
+//         );
+
+//         console.log(
+//             "BREAKDOWN TOTAL:",
+//             breakdownTotal
+//         );
+
+//         console.log(
+//             "=========================================="
+//         );
+
+//     }, [
+//         subtotal,
+//         offerDiscount,
+//         couponDiscount,
+//         totalDiscount,
+//         taxableAmount,
+//         shippingCharge,
+//         gstPercentage,
+//         gstAmount,
+//         calculatedGrandTotal,
+//         checkoutFinalTotal,
+//         payableAmount,
+//         breakdownTotal
+//     ]);
+
+
+//     // =====================================================
 //     // NO ORDER
-//     // ==========================================
+//     // =====================================================
 
 //     if (!order) {
 
@@ -115,7 +610,9 @@
 
 //                 <button
 //                     type="button"
-//                     onClick={() => navigate("/cart")}
+//                     onClick={() =>
+//                         navigate("/cart")
+//                     }
 //                 >
 //                     Go To Cart
 //                 </button>
@@ -127,9 +624,9 @@
 //     }
 
 
-//     // ==========================================
+//     // =====================================================
 //     // HANDLE PAYMENT
-//     // ==========================================
+//     // =====================================================
 
 //     const handlePayment = async () => {
 
@@ -137,82 +634,77 @@
 //             return;
 //         }
 
+
 //         try {
 
 //             setLoading(true);
 
-//             console.log(
-//                 "================================="
-//             );
 
-//             console.log(
-//                 "ONLINE PAYMENT STARTED"
-//             );
+//             // =================================================
+//             // FINAL AMOUNT
+//             // =================================================
 
-//             console.log(
-//                 "ORDER:",
-//                 order
-//             );
-
-//             console.log(
-//                 "PAYMENT FROM CHECKOUT:",
-//                 payment
-//             );
-
-
-//             // ==========================================
-//             // 1. VALIDATE ORDER
-//             // ==========================================
-
-//             if (!order?._id) {
-
-//                 throw new Error(
-//                     "Order ID is missing"
+//             const finalAmount =
+//                 roundMoney(
+//                     payableAmount
 //                 );
 
-//             }
-
-
-//             // ==========================================
-//             // 2. PAYMENT AMOUNT
-//             // ==========================================
-
-//             // const amount = Number(
-//             //     order.totalAmount ??
-//             //     payment?.amount ??
-//             //     0
-//             // );
-
-// const amount = Number(
-//     order.finalAmount ??
-//     payment?.amount ??
-//     order.totalAmount ??
-//     0
-// );
 
 //             if (
-//                 !Number.isFinite(amount) ||
-//                 amount <= 0
+//                 !Number.isFinite(finalAmount) ||
+//                 finalAmount <= 0
 //             ) {
 
 //                 throw new Error(
-//                     "Invalid payment amount"
+//                     "Invalid final payment amount"
 //                 );
 
 //             }
 
-//             console.log(
-//                 "ONLINE PAYMENT AMOUNT:",
-//                 amount
-//             );
+
+//             // =================================================
+//             // IMPORTANT VALIDATION
+//             // =================================================
+
+//             const calculatedAmount =
+//                 roundMoney(
+//                     taxableAmount +
+//                     shippingCharge +
+//                     gstAmount
+//                 );
 
 
-//             // ==========================================
-//             // 3. RAZORPAY KEY
-//             // ==========================================
+//             /*
+//              * If checkout total exists and there is a small
+//              * rounding difference, use checkout's exact total.
+//              */
+
+//             if (
+//                 checkoutFinalTotal > 0 &&
+//                 Math.abs(
+//                     checkoutFinalTotal -
+//                     calculatedAmount
+//                 ) > 1
+//             ) {
+
+//                 console.warn(
+//                     "CHECKOUT TOTAL AND BREAKDOWN DIFFER",
+//                     {
+//                         checkoutFinalTotal,
+//                         calculatedAmount
+//                     }
+//                 );
+
+//             }
+
+
+//             // =================================================
+//             // RAZORPAY KEY
+//             // =================================================
 
 //             const razorpayKey =
 //                 import.meta.env.VITE_RAZORPAY_KEY_ID;
+
 
 //             if (!razorpayKey) {
 
@@ -222,10 +714,6 @@
 
 //             }
 
-
-//             // ==========================================
-//             // 4. RAZORPAY SDK CHECK
-//             // ==========================================
 
 //             if (
 //                 !window.Razorpay ||
@@ -239,62 +727,97 @@
 //             }
 
 
-//             // ==========================================
-//             // 5. CREATE DATABASE PAYMENT
-//             // ==========================================
-
-//             // const paymentData = {
-
-//             //     paymentFor:
-//             //         "ORDER",
-
-//             //     referenceId:
-//             //         order._id,
-
-//             //     amount:
-//             //         amount,
-
-//             //     paymentMethod:
-//             //         "UPI"
-
-//             // };
-
-//             const paymentData = {
-
-//     paymentFor: "ORDER",
-
-//     referenceId: order._id,
-
-//     amount: Number(
-//         order.finalAmount ??
-//         order.totalAmount
-//     ),
-
-//     paymentMethod: "UPI"
-
-// };
+//             // =================================================
+//             // FINAL LOG
+//             // =================================================
 
 //             console.log(
-//                 "DATABASE PAYMENT DATA:",
-//                 paymentData
+//                 "=========================================="
+//             );
+
+//             console.log(
+//                 "CREATING FINAL PAYMENT"
+//             );
+
+//             console.log(
+//                 "Order ID:",
+//                 order._id
+//             );
+
+//             console.log(
+//                 "Product Subtotal:",
+//                 subtotal
+//             );
+
+//             console.log(
+//                 "Offer Discount:",
+//                 offerDiscount
+//             );
+
+//             console.log(
+//                 "Coupon Discount:",
+//                 couponDiscount
+//             );
+
+//             console.log(
+//                 "Taxable Amount:",
+//                 taxableAmount
+//             );
+
+//             console.log(
+//                 "Shipping:",
+//                 shippingCharge
+//             );
+
+//             console.log(
+//                 "GST:",
+//                 gstAmount
+//             );
+
+//             console.log(
+//                 "FINAL AMOUNT:",
+//                 finalAmount
+//             );
+
+//             console.log(
+//                 "=========================================="
 //             );
 
 
+//             // =================================================
+//             // CREATE DATABASE PAYMENT
+//             // =================================================
+
 //             const paymentResponse =
-//                 await createPayment(
-//                     paymentData
-//                 );
+//                 await createPayment({
+
+//                     paymentFor:
+//                         "ORDER",
+
+//                     referenceId:
+//                         order._id,
+
+//                     amount:
+//                         finalAmount,
+
+//                     currency:
+//                         "INR",
+
+//                     paymentMethod:
+//                         "UPI"
+
+//                 });
+
 
 //             console.log(
-//                 "CREATE PAYMENT RESPONSE:",
+//                 "DATABASE PAYMENT RESPONSE:",
 //                 paymentResponse
 //             );
 
 
 //             if (
-//                 !paymentResponse ||
-//                 !paymentResponse.success ||
-//                 !paymentResponse.payment
+//                 !paymentResponse?.success ||
+//                 !paymentResponse?.payment
 //             ) {
 
 //                 throw new Error(
@@ -309,31 +832,28 @@
 //                 paymentResponse.payment;
 
 
-//             console.log(
-//                 "CREATED DATABASE PAYMENT:",
-//                 createdPayment
-//             );
-
-
-//             // ==========================================
-//             // 6. CREATE RAZORPAY ORDER
-//             // ==========================================
+//             // =================================================
+//             // CREATE RAZORPAY ORDER
+//             //
+//             // IMPORTANT:
+//             // finalAmount is explicitly sent.
+//             // =================================================
 
 //             const razorpayResponse =
 //                 await createRazorpayOrder(
-//                     order._id
+//                     order._id,
+//                     finalAmount
 //                 );
 
 
 //             console.log(
-//                 "RAZORPAY BACKEND RESPONSE:",
+//                 "RAZORPAY RESPONSE:",
 //                 razorpayResponse
 //             );
 
 
 //             if (
-//                 !razorpayResponse ||
-//                 !razorpayResponse.success
+//                 !razorpayResponse?.success
 //             ) {
 
 //                 throw new Error(
@@ -344,52 +864,70 @@
 //             }
 
 
-//             // ==========================================
-//             // 7. GET RAZORPAY ORDER
-//             // ==========================================
-
 //             const razorpayOrder =
 //                 razorpayResponse.order ||
 //                 razorpayResponse.data;
 
 
-//             console.log(
-//                 "RAZORPAY ORDER:",
-//                 razorpayOrder
-//             );
-
-
-//             if (!razorpayOrder) {
+//             if (!razorpayOrder?.id) {
 
 //                 throw new Error(
-//                     "Razorpay order response is missing"
+//                     "Razorpay Order ID not received"
 //                 );
 
 //             }
 
 
-//             const razorpayOrderId =
-//                 razorpayOrder.id;
+//             // =================================================
+//             // RAZORPAY AMOUNT
+//             // =================================================
+
+//             const razorpayAmount =
+//                 Number(
+//                     razorpayOrder.amount
+//                 );
 
 
-//             if (!razorpayOrderId) {
+//             const expectedPaise =
+//                 Math.round(
+//                     finalAmount * 100
+//                 );
+
+
+//             console.log(
+//                 "EXPECTED RAZORPAY PAISE:",
+//                 expectedPaise
+//             );
+
+//             console.log(
+//                 "ACTUAL RAZORPAY PAISE:",
+//                 razorpayAmount
+//             );
+
+
+//             // =================================================
+//             // HARD VALIDATION
+//             // =================================================
+
+//             if (
+//                 razorpayAmount !==
+//                 expectedPaise
+//             ) {
 
 //                 throw new Error(
-//                     "Razorpay Order ID not received from backend"
+//                     `Razorpay amount mismatch. Expected ₹${finalAmount.toFixed(
+//                         2
+//                     )}, but Razorpay received ₹${(
+//                         razorpayAmount / 100
+//                     ).toFixed(2)}`
 //                 );
 
 //             }
 
 
-//             console.log(
-//                 "RAZORPAY ORDER ID:",
-//                 razorpayOrderId
-//             );
-
-
-//             // ==========================================
-//             // 8. RAZORPAY OPTIONS
-//             // ==========================================
+//             // =================================================
+//             // RAZORPAY OPTIONS
+//             // =================================================
 
 //             const options = {
 
@@ -397,7 +935,7 @@
 //                     razorpayKey,
 
 //                 amount:
-//                     razorpayOrder.amount,
+//                     expectedPaise,
 
 //                 currency:
 //                     razorpayOrder.currency ||
@@ -410,45 +948,27 @@
 //                     `Payment for Order #${order._id}`,
 
 //                 order_id:
-//                     razorpayOrderId,
+//                     razorpayOrder.id,
 
 
-//                 // ======================================
+//                 // =================================================
 //                 // SUCCESS
-//                 // ======================================
+//                 // =================================================
 
 //                 handler:
 //                     async function (
-//                         razorpayResponse
+//                         response
 //                     ) {
-
-//                         console.log(
-//                             "================================="
-//                         );
-
-//                         console.log(
-//                             "RAZORPAY PAYMENT SUCCESS"
-//                         );
-
-//                         console.log(
-//                             "RAZORPAY RESPONSE:",
-//                             razorpayResponse
-//                         );
-
 
 //                         try {
 
 //                             setLoading(true);
 
 
-//                             // ==================================
-//                             // VALIDATE RAZORPAY RESPONSE
-//                             // ==================================
-
 //                             if (
-//                                 !razorpayResponse?.razorpay_order_id ||
-//                                 !razorpayResponse?.razorpay_payment_id ||
-//                                 !razorpayResponse?.razorpay_signature
+//                                 !response?.razorpay_order_id ||
+//                                 !response?.razorpay_payment_id ||
+//                                 !response?.razorpay_signature
 //                             ) {
 
 //                                 throw new Error(
@@ -458,130 +978,144 @@
 //                             }
 
 
-//                             // ==================================
+//                             // =========================================
 //                             // VERIFY PAYMENT
-//                             // ==================================
+//                             // =========================================
 
-//                            const verifyResponse =
-//     await verifyRazorpayPayment({
-//         paymentId:
-//             createdPayment._id,
+//                             const verifyResponse =
+//                                 await verifyRazorpayPayment({
 
-//         razorpayOrderId:
-//             razorpayResponse.razorpay_order_id,
+//                                     paymentId:
+//                                         createdPayment._id,
 
-//         razorpayPaymentId:
-//             razorpayResponse.razorpay_payment_id,
+//                                     razorpayOrderId:
+//                                         response.razorpay_order_id,
 
-//         razorpaySignature:
-//             razorpayResponse.razorpay_signature,
-//     });
+//                                     razorpayPaymentId:
+//                                         response.razorpay_payment_id,
 
-// console.log(
-//     "VERIFY RESPONSE =",
-//     verifyResponse
-// );
+//                                     razorpaySignature:
+//                                         response.razorpay_signature
 
-// if (
-//     !verifyResponse ||
-//     !verifyResponse.success
-// ) {
-//     throw new Error(
-//         verifyResponse?.message ||
-//         "Payment verification failed"
-//     );
-// }
+//                                 });
 
-// // ==========================================
-// // FINAL PAYMENT
-// // ==========================================
 
-// const finalPayment =
-//     verifyResponse.payment ||
-//     createdPayment;
-
-// console.log(
-//     "FINAL PAYMENT:",
-//     finalPayment
-// );
-
-// // ==========================================
-// // CREATE ONLINE INVOICE
-// // ==========================================
-
-// console.log(
-//     "================================="
-// );
-
-// console.log(
-//     "CREATING ONLINE INVOICE"
-// );
-
-// console.log(
-//     "ORDER ID:",
-//     order._id
-// );
-
-// const invoiceResponse =
-//     await createInvoice(order._id);
-
-// console.log(
-//     "ONLINE INVOICE RESPONSE:",
-//     invoiceResponse
-// );
-
-// if (
-//     !invoiceResponse ||
-//     !invoiceResponse.success
-// ) {
-//     throw new Error(
-//         invoiceResponse?.message ||
-//         "Online invoice creation failed"
-//     );
-// }
-
-// const createdInvoice =
-//     invoiceResponse.data;
-
-// console.log(
-//     "ONLINE INVOICE CREATED:",
-//     createdInvoice
-// );
-
-// // ==========================================
-// // SUCCESS
-// // ==========================================
-
-// toast.success(
-//     "Payment successful and invoice generated!"
-// );
-
-// navigate(
-//     "/order-success",
-//     {
-//         state: {
-//             order,
-//             payment: finalPayment,
-//             invoice: createdInvoice,
-//         },
-//     }
-// );
-//                         }
-
-//                         catch (error) {
-
-//                             console.error(
-//                                 "================================="
+//                             console.log(
+//                                 "VERIFY RESPONSE:",
+//                                 verifyResponse
 //                             );
+
+
+//                             if (
+//                                 !verifyResponse?.success
+//                             ) {
+
+//                                 throw new Error(
+//                                     verifyResponse?.message ||
+//                                     "Payment verification failed"
+//                                 );
+
+//                             }
+
+
+//                             const finalPayment =
+//                                 verifyResponse.payment ||
+//                                 createdPayment;
+
+
+//                             // =========================================
+//                             // CREATE INVOICE
+//                             // =========================================
+
+//                             const invoiceResponse =
+//                                 await createInvoice(
+//                                     order._id
+//                                 );
+
+
+//                             console.log(
+//                                 "INVOICE RESPONSE:",
+//                                 invoiceResponse
+//                             );
+
+
+//                             if (
+//                                 !invoiceResponse?.success
+//                             ) {
+
+//                                 throw new Error(
+//                                     invoiceResponse?.message ||
+//                                     "Invoice creation failed"
+//                                 );
+
+//                             }
+
+
+//                             const createdInvoice =
+//                                 invoiceResponse.data;
+
+
+//                             toast.success(
+//                                 "Payment successful and invoice generated!"
+//                             );
+
+
+//                             // =========================================
+//                             // ORDER SUCCESS
+//                             // =========================================
+
+//                             navigate(
+//                                 "/order-success",
+//                                 {
+//                                     state: {
+
+//                                         order,
+
+//                                         payment:
+//                                             finalPayment,
+
+//                                         invoice:
+//                                             createdInvoice,
+
+//                                         paymentSummary: {
+
+//                                             subtotal:
+//                                                 subtotal,
+
+//                                             offerDiscount:
+//                                                 offerDiscount,
+
+//                                             couponDiscount:
+//                                                 couponDiscount,
+
+//                                             taxableAmount:
+//                                                 taxableAmount,
+
+//                                             shippingCharge:
+//                                                 shippingCharge,
+
+//                                             gstPercentage:
+//                                                 gstPercentage,
+
+//                                             gstAmount:
+//                                                 gstAmount,
+
+//                                             total:
+//                                                 finalAmount
+
+//                                         }
+
+//                                     }
+
+//                                 }
+//                             );
+
+//                         }
+//                         catch (error) {
 
 //                             console.error(
 //                                 "PAYMENT VERIFICATION ERROR:",
 //                                 error
-//                             );
-
-//                             console.error(
-//                                 "BACKEND RESPONSE:",
-//                                 error?.response?.data
 //                             );
 
 
@@ -598,8 +1132,7 @@
 //                             if (
 //                                 Array.isArray(
 //                                     backendData?.errors
-//                                 ) &&
-//                                 backendData.errors.length > 0
+//                                 )
 //                             ) {
 
 //                                 message =
@@ -615,7 +1148,6 @@
 //                             );
 
 //                         }
-
 //                         finally {
 
 //                             setLoading(false);
@@ -625,29 +1157,24 @@
 //                     },
 
 
-//                 // ======================================
-//                 // PAYMENT MODAL
-//                 // ======================================
+//                 // =================================================
+//                 // MODAL
+//                 // =================================================
 
 //                 modal: {
 
-//                     ondismiss:
-//                         function () {
+//                     ondismiss: () => {
 
-//                             console.log(
-//                                 "Razorpay payment popup closed"
-//                             );
+//                         setLoading(false);
 
-//                             setLoading(false);
-
-//                         }
+//                     }
 
 //                 },
 
 
-//                 // ======================================
+//                 // =================================================
 //                 // PREFILL
-//                 // ======================================
+//                 // =================================================
 
 //                 prefill: {
 
@@ -668,24 +1195,44 @@
 //                 },
 
 
-//                 // ======================================
+//                 // =================================================
 //                 // NOTES
-//                 // ======================================
+//                 // =================================================
 
 //                 notes: {
 
 //                     orderId:
-//                         order._id,
+//                         String(order._id),
 
 //                     orderSource:
-//                         "ONLINE"
+//                         "ONLINE",
+
+//                     subtotal:
+//                         String(subtotal),
+
+//                     offerDiscount:
+//                         String(offerDiscount),
+
+//                     couponDiscount:
+//                         String(couponDiscount),
+
+//                     taxableAmount:
+//                         String(taxableAmount),
+
+//                     shippingCharge:
+//                         String(shippingCharge),
+
+//                     gstPercentage:
+//                         String(gstPercentage),
+
+//                     gstAmount:
+//                         String(gstAmount),
+
+//                     totalAmount:
+//                         String(finalAmount)
 
 //                 },
 
-
-//                 // ======================================
-//                 // THEME
-//                 // ======================================
 
 //                 theme: {
 
@@ -697,15 +1244,9 @@
 //             };
 
 
-//             console.log(
-//                 "RAZORPAY OPTIONS:",
-//                 options
-//             );
-
-
-//             // ==========================================
-//             // 9. CREATE RAZORPAY INSTANCE
-//             // ==========================================
+//             // =================================================
+//             // RAZORPAY
+//             // =================================================
 
 //             const razorpay =
 //                 new window.Razorpay(
@@ -713,15 +1254,15 @@
 //                 );
 
 
-//             // ==========================================
+//             // =================================================
 //             // PAYMENT FAILED
-//             // ==========================================
+//             // =================================================
 
 //             razorpay.on(
 //                 "payment.failed",
-//                 async function (
+//                 async (
 //                     response
-//                 ) {
+//                 ) => {
 
 //                     console.error(
 //                         "RAZORPAY PAYMENT FAILED:",
@@ -736,23 +1277,17 @@
 //                         ) {
 
 //                             await paymentFailed(
-
 //                                 createdPayment._id,
-
 //                                 {
-
 //                                     failureReason:
 //                                         response?.error?.description ||
 //                                         "Razorpay payment failed"
-
 //                                 }
-
 //                             );
 
 //                         }
 
 //                     }
-
 //                     catch (error) {
 
 //                         console.error(
@@ -761,7 +1296,6 @@
 //                         );
 
 //                     }
-
 //                     finally {
 
 //                         setLoading(false);
@@ -772,18 +1306,17 @@
 //             );
 
 
-//             // ==========================================
-//             // 10. OPEN RAZORPAY
-//             // ==========================================
+//             // =================================================
+//             // OPEN RAZORPAY
+//             // =================================================
 
 //             razorpay.open();
 
 //         }
-
 //         catch (error) {
 
 //             console.error(
-//                 "================================="
+//                 "=========================================="
 //             );
 
 //             console.error(
@@ -792,38 +1325,15 @@
 //             );
 
 //             console.error(
-//                 "BACKEND RESPONSE:",
+//                 "BACKEND ERROR:",
 //                 error?.response?.data
 //             );
 
 
-//             const backendData =
-//                 error?.response?.data;
-
-
-//             let message =
-//                 backendData?.message ||
-//                 error?.message ||
-//                 "Unable to start payment";
-
-
-//             if (
-//                 Array.isArray(
-//                     backendData?.errors
-//                 ) &&
-//                 backendData.errors.length > 0
-//             ) {
-
-//                 message =
-//                     backendData.errors.join(
-//                         "\n"
-//                     );
-
-//             }
-
-
 //             toast.error(
-//                 message
+//                 error?.response?.data?.message ||
+//                 error?.message ||
+//                 "Unable to start payment"
 //             );
 
 
@@ -834,9 +1344,9 @@
 //     };
 
 
-//     // ==========================================
+//     // =====================================================
 //     // CANCEL PAYMENT
-//     // ==========================================
+//     // =====================================================
 
 //     const cancelPayment = async () => {
 
@@ -853,27 +1363,19 @@
 //             if (payment?._id) {
 
 //                 await paymentFailed(
-
 //                     payment._id,
-
 //                     {
-
 //                         failureReason:
 //                             "Cancelled By User"
-
 //                     }
-
 //                 );
 
 //             }
 
 
-//             navigate(
-//                 "/cart"
-//             );
+//             navigate("/cart");
 
 //         }
-
 //         catch (error) {
 
 //             console.error(
@@ -881,12 +1383,9 @@
 //                 error
 //             );
 
-//             navigate(
-//                 "/cart"
-//             );
+//             navigate("/cart");
 
 //         }
-
 //         finally {
 
 //             setLoading(false);
@@ -896,9 +1395,33 @@
 //     };
 
 
-//     // ==========================================
+//     // =====================================================
+//     // MONEY FORMAT
+//     // =====================================================
+
+//     const money = (
+//         value
+//     ) => {
+
+//         return Number(
+//             value || 0
+//         ).toLocaleString(
+//             "en-IN",
+//             {
+//                 minimumFractionDigits:
+//                     2,
+
+//                 maximumFractionDigits:
+//                     2
+//             }
+//         );
+
+//     };
+
+
+//     // =====================================================
 //     // UI
-//     // ==========================================
+//     // =====================================================
 
 //     return (
 
@@ -911,85 +1434,295 @@
 //                 </h1>
 
 
+//                 {/* ==========================================
+//                     ORDER SUMMARY
+//                 ========================================== */}
+
+//                 <div className="payment-summary">
+
+//                     <h3>
+//                         Order Summary
+//                     </h3>
+
+
+//                     {/* PRODUCT SUBTOTAL */}
+
+//                     <div className="payment-summary-row">
+
+//                         <span>
+//                             Product Subtotal
+//                         </span>
+
+//                         <span>
+//                             ₹ {money(subtotal)}
+//                         </span>
+
+//                     </div>
+
+
+//                     {/* OFFER DISCOUNT */}
+
+//                     {offerDiscount > 0 && (
+
+//                         <div className="payment-summary-row">
+
+//                             <span>
+//                                 Offer Discount
+//                             </span>
+
+//                             <span>
+//                                 - ₹ {
+//                                     money(
+//                                         offerDiscount
+//                                     )
+//                                 }
+//                             </span>
+
+//                         </div>
+
+//                     )}
+
+
+//                     {/* COUPON DISCOUNT */}
+
+//                     {couponDiscount > 0 && (
+
+//                         <div className="payment-summary-row">
+
+//                             <span>
+//                                 Coupon Discount
+//                             </span>
+
+//                             <span>
+//                                 - ₹ {
+//                                     money(
+//                                         couponDiscount
+//                                     )
+//                                 }
+//                             </span>
+
+//                         </div>
+
+//                     )}
+
+
+//                     {/* TAXABLE */}
+
+//                     <div className="payment-summary-row">
+
+//                         <span>
+//                             Taxable Amount
+//                         </span>
+
+//                         <span>
+//                             ₹ {
+//                                 money(
+//                                     taxableAmount
+//                                 )
+//                             }
+//                         </span>
+
+//                     </div>
+
+
+//                     {/* SHIPPING */}
+
+//                     <div className="payment-summary-row">
+
+//                         <span>
+//                             Shipping
+//                         </span>
+
+//                         <span>
+
+//                             {
+//                                 shippingCharge === 0
+//                                     ? "FREE"
+//                                     : `₹ ${money(
+//                                         shippingCharge
+//                                     )}`
+//                             }
+
+//                         </span>
+
+//                     </div>
+
+
+//                     {/* GST */}
+
+//                     <div className="payment-summary-row gst-row">
+
+//                         <span>
+//                             GST ({gstPercentage}%)
+//                         </span>
+
+//                         <span>
+//                             ₹ {
+//                                 money(
+//                                     gstAmount
+//                                 )
+//                             }
+//                         </span>
+
+//                     </div>
+
+
+//                     <hr />
+
+
+//                     {/* TOTAL PAYABLE */}
+
+//                     <div className="payment-summary-total">
+
+//                         <strong>
+//                             Total Payable
+//                         </strong>
+
+//                         <strong>
+//                             ₹ {
+//                                 money(
+//                                     payableAmount
+//                                 )
+//                             }
+//                         </strong>
+
+//                     </div>
+
+//                 </div>
+
+
+//                 {/* ==========================================
+//                     PAYMENT INFO
+//                 ========================================== */}
+
 //                 <div className="payment-info">
 
-//                     {/* <p>
-
+//                     <p>
 //                         <strong>
-//                             Order ID :
+//                             Product Amount:
 //                         </strong>{" "}
+//                         ₹ {
+//                             money(
+//                                 subtotal
+//                             )
+//                         }
+//                     </p>
 
-//                         {order?._id || "-"}
 
-//                     </p> */}
+//                     {offerDiscount > 0 && (
+
+//                         <p>
+//                             <strong>
+//                                 Offer:
+//                             </strong>{" "}
+//                             - ₹ {
+//                                 money(
+//                                     offerDiscount
+//                                 )
+//                             }
+//                         </p>
+
+//                     )}
+
+
+//                     {couponDiscount > 0 && (
+
+//                         <p>
+//                             <strong>
+//                                 Coupon:
+//                             </strong>{" "}
+//                             - ₹ {
+//                                 money(
+//                                     couponDiscount
+//                                 )
+//                             }
+//                         </p>
+
+//                     )}
 
 
 //                     <p>
-
 //                         <strong>
-//                             Receipt :
+//                             Taxable:
+//                         </strong>{" "}
+//                         ₹ {
+//                             money(
+//                                 taxableAmount
+//                             )
+//                         }
+//                     </p>
+
+
+//                     <p>
+//                         <strong>
+//                             Shipping:
 //                         </strong>{" "}
 
-//                         {payment?.receiptNumber || "-"}
+//                         {
+//                             shippingCharge === 0
+//                                 ? "FREE"
+//                                 : `₹ ${money(
+//                                     shippingCharge
+//                                 )}`
+//                         }
 
 //                     </p>
 
 
 //                     <p>
-
 //                         <strong>
-//                             Amount :
+//                             GST:
 //                         </strong>{" "}
-
-//                         ₹{" "}
-
-//                         {Number(
-//                             order?.totalAmount ??
-//                             payment?.amount ??
-//                             0
-//                         ).toLocaleString("en-IN")}
-
+//                         ₹ {
+//                             money(
+//                                 gstAmount
+//                             )
+//                         }
 //                     </p>
 
 
 //                     <p>
-
 //                         <strong>
-//                             Payment Method :
+//                             Final Payment:
 //                         </strong>{" "}
-
-//                         UPI
-
-//                     </p>
-
-
-//                     <p>
-
-//                         <strong>
-//                             Status :
-//                         </strong>{" "}
-
-//                         {payment?.paymentStatus ||
-//                             "PENDING"}
-
+//                         ₹ {
+//                             money(
+//                                 payableAmount
+//                             )
+//                         }
 //                     </p>
 
 //                 </div>
 
 
+//                 {/* ==========================================
+//                     PAY BUTTON
+//                 ========================================== */}
+
 //                 <button
 //                     type="button"
 //                     className="pay-btn"
 //                     onClick={handlePayment}
-//                     disabled={loading}
+//                     disabled={
+//                         loading ||
+//                         payableAmount <= 0
+//                     }
 //                 >
 
-//                     {loading
-//                         ? "Processing..."
-//                         : "Pay Now"}
+//                     {
+//                         loading
+//                             ? "Processing..."
+//                             : `Pay ₹ ${money(
+//                                 payableAmount
+//                             )}`
+//                     }
 
 //                 </button>
 
+
+//                 {/* ==========================================
+//                     CANCEL
+//                 ========================================== */}
 
 //                 <button
 //                     type="button"
@@ -997,9 +1730,7 @@
 //                     onClick={cancelPayment}
 //                     disabled={loading}
 //                 >
-
 //                     Cancel
-
 //                 </button>
 
 //             </div>
@@ -1030,11 +1761,11 @@ import {
 
 import { toast } from "react-toastify";
 
+// The backend creates the Payment inside /razorpay/order, and the
+// frontend no longer marks payments as failed.
 import {
-    createPayment,
     createRazorpayOrder,
-    verifyRazorpayPayment,
-    paymentFailed
+    verifyRazorpayPayment
 } from "../../../services/paymentService";
 
 import {
@@ -1049,7 +1780,6 @@ const Payment = () => {
 
     const {
         order,
-        payment,
         paymentSummary
     } = location.state || {};
 
@@ -1348,8 +2078,6 @@ const Payment = () => {
     // =====================================================
     // CALCULATED GRAND TOTAL
     //
-    // THIS IS THE IMPORTANT VALUE
-    //
     // Taxable
     // + Shipping
     // + GST
@@ -1406,8 +2134,6 @@ const Payment = () => {
 
     // =====================================================
     // FINAL PAYABLE AMOUNT
-    //
-    // IMPORTANT:
     //
     // First use the exact checkout total.
     // If unavailable, calculate it.
@@ -1659,6 +2385,8 @@ const Payment = () => {
 
             // =================================================
             // FINAL AMOUNT
+            // (used for display and for the paise check below.
+            // It is NOT sent to the backend.)
             // =================================================
 
             const finalAmount =
@@ -1690,11 +2418,6 @@ const Payment = () => {
                     gstAmount
                 );
 
-
-            /*
-             * If checkout total exists and there is a small
-             * rounding difference, use checkout's exact total.
-             */
 
             if (
                 checkoutFinalTotal > 0 &&
@@ -1753,7 +2476,7 @@ const Payment = () => {
             );
 
             console.log(
-                "CREATING FINAL PAYMENT"
+                "STARTING PAYMENT"
             );
 
             console.log(
@@ -1802,64 +2525,16 @@ const Payment = () => {
 
 
             // =================================================
-            // CREATE DATABASE PAYMENT
-            // =================================================
-
-            const paymentResponse =
-                await createPayment({
-
-                    paymentFor:
-                        "ORDER",
-
-                    referenceId:
-                        order._id,
-
-                    amount:
-                        finalAmount,
-
-                    currency:
-                        "INR",
-
-                    paymentMethod:
-                        "UPI"
-
-                });
-
-
-            console.log(
-                "DATABASE PAYMENT RESPONSE:",
-                paymentResponse
-            );
-
-
-            if (
-                !paymentResponse?.success ||
-                !paymentResponse?.payment
-            ) {
-
-                throw new Error(
-                    paymentResponse?.message ||
-                    "Payment creation failed"
-                );
-
-            }
-
-
-            const createdPayment =
-                paymentResponse.payment;
-
-
-            // =================================================
             // CREATE RAZORPAY ORDER
             //
-            // IMPORTANT:
-            // finalAmount is explicitly sent.
+            // Only order._id is sent. The amount is read from
+            // the order in the database. The backend also
+            // creates the Payment document here.
             // =================================================
 
             const razorpayResponse =
                 await createRazorpayOrder(
-                    order._id,
-                    finalAmount
+                    order._id
                 );
 
 
@@ -1924,6 +2599,10 @@ const Payment = () => {
 
             // =================================================
             // HARD VALIDATION
+            //
+            // Checks that the total shown on this page equals
+            // the amount the backend took from the order in
+            // the database.
             // =================================================
 
             if (
@@ -1997,13 +2676,12 @@ const Payment = () => {
 
                             // =========================================
                             // VERIFY PAYMENT
+                            //
+                            // Only the 3 Razorpay values are sent.
                             // =========================================
 
                             const verifyResponse =
                                 await verifyRazorpayPayment({
-
-                                    paymentId:
-                                        createdPayment._id,
 
                                     razorpayOrderId:
                                         response.razorpay_order_id,
@@ -2036,8 +2714,7 @@ const Payment = () => {
 
 
                             const finalPayment =
-                                verifyResponse.payment ||
-                                createdPayment;
+                                verifyResponse.payment;
 
 
                             // =========================================
@@ -2072,6 +2749,41 @@ const Payment = () => {
                                 invoiceResponse.data;
 
 
+                            // =========================================
+                            // CHANGE: BUILD THE UPDATED ORDER
+                            //
+                            // The `order` from location.state is the
+                            // old copy from before payment (status
+                            // PENDING). Use the fresh order if the
+                            // verify API returns one, otherwise merge
+                            // the paid status into the old copy.
+                            // =========================================
+
+                            const verifiedOrder =
+                                verifyResponse.order ||
+                                verifyResponse.data?.order ||
+                                null;
+
+
+                            const updatedOrder =
+                                verifiedOrder
+                                    ? {
+                                        ...order,
+                                        ...verifiedOrder
+                                    }
+                                    : {
+                                        ...order,
+                                        orderStatus:
+                                            "CONFIRMED",
+                                        paymentStatus:
+                                            "PAID",
+                                        paidAmount:
+                                            finalAmount,
+                                        paymentId:
+                                            response.razorpay_payment_id
+                                    };
+
+
                             toast.success(
                                 "Payment successful and invoice generated!"
                             );
@@ -2086,7 +2798,9 @@ const Payment = () => {
                                 {
                                     state: {
 
-                                        order,
+                                        // CHANGE: was `order`
+                                        order:
+                                            updatedOrder,
 
                                         payment:
                                             finalPayment,
@@ -2263,64 +2977,17 @@ const Payment = () => {
 
             // =================================================
             // RAZORPAY
+            //
+            // No "payment.failed" handler: Razorpay lets the
+            // customer retry inside the same popup, so the
+            // payment stays PENDING until a real verify
+            // succeeds.
             // =================================================
 
             const razorpay =
                 new window.Razorpay(
                     options
                 );
-
-
-            // =================================================
-            // PAYMENT FAILED
-            // =================================================
-
-            razorpay.on(
-                "payment.failed",
-                async (
-                    response
-                ) => {
-
-                    console.error(
-                        "RAZORPAY PAYMENT FAILED:",
-                        response
-                    );
-
-
-                    try {
-
-                        if (
-                            createdPayment?._id
-                        ) {
-
-                            await paymentFailed(
-                                createdPayment._id,
-                                {
-                                    failureReason:
-                                        response?.error?.description ||
-                                        "Razorpay payment failed"
-                                }
-                            );
-
-                        }
-
-                    }
-                    catch (error) {
-
-                        console.error(
-                            "FAILED PAYMENT UPDATE ERROR:",
-                            error
-                        );
-
-                    }
-                    finally {
-
-                        setLoading(false);
-
-                    }
-
-                }
-            );
 
 
             // =================================================
@@ -2363,51 +3030,19 @@ const Payment = () => {
 
     // =====================================================
     // CANCEL PAYMENT
+    //
+    // No Payment document exists before Pay is clicked, so
+    // there is nothing to mark as failed. Cancel just goes
+    // back to the cart.
     // =====================================================
 
-    const cancelPayment = async () => {
+    const cancelPayment = () => {
 
         if (loading) {
             return;
         }
 
-
-        try {
-
-            setLoading(true);
-
-
-            if (payment?._id) {
-
-                await paymentFailed(
-                    payment._id,
-                    {
-                        failureReason:
-                            "Cancelled By User"
-                    }
-                );
-
-            }
-
-
-            navigate("/cart");
-
-        }
-        catch (error) {
-
-            console.error(
-                "CANCEL PAYMENT ERROR:",
-                error
-            );
-
-            navigate("/cart");
-
-        }
-        finally {
-
-            setLoading(false);
-
-        }
+        navigate("/cart");
 
     };
 
@@ -2760,4 +3395,3 @@ const Payment = () => {
 
 
 export default Payment;
-
