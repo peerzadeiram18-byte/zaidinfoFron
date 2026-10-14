@@ -1089,3 +1089,306 @@
         transition: none;
     }
 }
+
+
+/* ==========================================
+   PRODUCT LIST ACTION BUTTONS
+========================================== */
+
+.product-actions1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.edit-btn1,
+.delete-btn1 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.edit-btn1 {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.edit-btn1:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.delete-btn1 {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.delete-btn1:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.edit-btn1:disabled,
+.delete-btn1:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   EDIT MODAL
+========================================== */
+
+.product-edit-overlay1 {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.65);
+}
+
+.product-edit-modal1 {
+  width: 100%;
+  max-width: 850px;
+  max-height: 92dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.product-edit-header1 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.product-edit-header1 h2 {
+  margin: 0 0 5px;
+  color: #0f172a;
+  font-size: 22px;
+}
+
+.product-edit-header1 p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.product-edit-close1 {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: #f1f5f9;
+  cursor: pointer;
+}
+
+.product-edit-modal1 form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.product-edit-body1 {
+  padding: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.product-edit-body1 h3 {
+  margin: 22px 0 15px;
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.product-edit-grid1 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.product-edit-grid1 label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.product-edit-grid1 input,
+.product-edit-grid1 select,
+.product-edit-grid1 textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.product-edit-grid1 input:focus,
+.product-edit-grid1 select:focus,
+.product-edit-grid1 textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.product-edit-grid1 input:disabled {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.product-edit-wide1 {
+  grid-column: 1 / -1;
+}
+
+.product-edit-note1 {
+  margin-top: 15px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.product-edit-footer1 {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+.product-edit-cancel1,
+.product-edit-save1 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.product-edit-cancel1 {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+}
+
+.product-edit-save1 {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.product-edit-save1:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.product-edit-cancel1:disabled,
+.product-edit-save1:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   RESPONSIVE TABLE
+========================================== */
+
+.table-container1 {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 768px) {
+  .product-edit-modal1 {
+    max-height: 95dvh;
+  }
+
+  .product-edit-header1,
+  .product-edit-body1 {
+    padding: 16px;
+  }
+
+  .product-edit-footer1 {
+    padding: 14px 16px;
+  }
+
+  .product-edit-grid1 {
+    gap: 12px;
+  }
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+  .product-actions1 {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 110px;
+  }
+
+  .product-actions1 button {
+    width: 100%;
+  }
+
+  .product-edit-overlay1 {
+    padding: 8px;
+  }
+
+  .product-edit-modal1 {
+    max-height: 96dvh;
+    border-radius: 12px;
+  }
+
+  .product-edit-grid1 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .product-edit-header1 h2 {
+    font-size: 19px;
+  }
+
+  .product-edit-footer1 {
+    gap: 8px;
+  }
+
+  .product-edit-footer1 button {
+    flex: 1;
+    padding: 11px 10px;
+  }
+}

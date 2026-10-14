@@ -313,3 +313,185 @@ margin-top:4px;
 font-weight:bold;
 
 }
+
+
+/* ==========================================
+   INVENTORY ACTION BUTTONS
+   ADD STOCK | REMOVE STOCK | DELETE
+========================================== */
+
+.inventory-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================
+   DELETE BUTTON
+========================================== */
+
+.inventory-delete-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  padding: 9px 14px;
+  min-height: 36px;
+
+  background-color: #dc2626;
+  color: #ffffff;
+
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* HOVER */
+
+.inventory-delete-btn:hover:not(:disabled) {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+/* ACTIVE */
+
+.inventory-delete-btn:active:not(:disabled) {
+  background-color: #991b1b;
+}
+
+/* DISABLED / DELETING */
+
+.inventory-delete-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* KEYBOARD ACCESSIBILITY */
+
+.inventory-delete-btn:focus-visible {
+  outline: 3px solid rgba(220, 38, 38, 0.3);
+  outline-offset: 2px;
+}
+
+/* ==========================================
+   EXISTING ADD / REMOVE BUTTONS
+========================================== */
+
+.inventory-actions .add-btn,
+.inventory-actions .remove-btn {
+  min-height: 36px;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   TABLE RESPONSIVENESS
+========================================== */
+
+.inventory-table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inventory-table th,
+.inventory-table td {
+  vertical-align: middle;
+}
+
+/* ==========================================
+   TABLET - 768px
+========================================== */
+
+@media (max-width: 768px) {
+  .inventory-actions {
+    gap: 6px;
+  }
+
+  .inventory-delete-btn {
+    padding: 8px 11px;
+    font-size: 12px;
+    min-height: 34px;
+  }
+
+  .inventory-table-wrapper {
+    overflow-x: auto;
+  }
+}
+
+/* ==========================================
+   MOBILE - 600px
+========================================== */
+
+@media (max-width: 600px) {
+  .inventory-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 7px;
+    min-width: 125px;
+  }
+
+  .inventory-actions button {
+    width: 100%;
+    min-height: 36px;
+  }
+
+  .inventory-delete-btn {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .inventory-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* ==========================================
+   SMALL MOBILE - 375px
+========================================== */
+
+@media (max-width: 375px) {
+  .inventory-actions {
+    min-width: 110px;
+    gap: 6px;
+  }
+
+  .inventory-delete-btn {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+}
+
+/* ==========================================
+   REDUCED MOTION
+========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .inventory-delete-btn {
+    transition: none;
+  }
+}

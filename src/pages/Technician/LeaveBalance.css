@@ -1,0 +1,127 @@
+/* src/pages/Technician/LeaveBalance.css
+   Uses the tokens from TechnicianLeave.css when rendered inside
+   .leave-wrapper, with fallbacks so it also works standalone. */
+
+.lb-section {
+  margin-bottom: 1.5rem;
+}
+
+.lb-title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(0.95rem, 0.9rem + 0.3vw, 1.1rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--lv-text, #0f172a);
+  text-wrap: balance;
+}
+
+/* Fixed-width cards that wrap, so two cards don't stretch
+   across the whole page on wide screens. */
+.lb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 240px));
+  gap: 0.85rem;
+}
+
+.lb-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  padding: 1rem 1.15rem;
+  background: var(--lv-surface, #ffffff);
+  border: 1px solid var(--lv-border, #e2e8f0);
+  border-radius: var(--lv-radius, 12px);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+@media (hover: hover) {
+  .lb-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px -4px rgba(15, 23, 42, 0.1);
+  }
+}
+
+.lb-type {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--lv-muted, #64748b);
+}
+
+.lb-value {
+  font-size: clamp(1.35rem, 1.2rem + 0.6vw, 1.65rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--lv-text, #0f172a);
+  font-variant-numeric: tabular-nums;
+}
+
+.lb-value small {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--lv-muted, #64748b);
+}
+
+.lb-bar {
+  height: 6px;
+  margin: 0.45rem 0 0.25rem;
+  background: var(--lv-border-soft, #f1f5f9);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.lb-bar-fill {
+  height: 100%;
+  background: var(--lv-accent, #2563eb);
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+/* was #94a3b8, which fails WCAG AA contrast on white */
+.lb-used {
+  font-size: 0.78rem;
+  color: var(--lv-muted, #64748b);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Balance reached zero */
+.lb-card-exhausted {
+  border-color: #fecaca;
+}
+
+.lb-card-exhausted .lb-value {
+  color: var(--lv-danger, #dc2626);
+}
+
+.lb-card-exhausted .lb-bar-fill {
+  background: var(--lv-danger, #dc2626);
+}
+
+/* Narrow page: two cards per row */
+@container leave (max-width: 520px) {
+  .lb-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
+  }
+
+  .lb-card {
+    padding: 0.85rem 0.9rem;
+  }
+}
+
+/* Very narrow page: stack to one column */
+@container leave (max-width: 320px) {
+  .lb-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lb-card,
+  .lb-bar-fill {
+    transition-duration: 0.01ms;
+  }
+}

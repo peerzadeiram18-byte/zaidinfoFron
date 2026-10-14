@@ -216,9 +216,14 @@ export default function Header() {
           ""
       ).toUpperCase();
 
-      switch (role) {
+  switch (role) {
         case "ADMIN":
           return "/admin-dashboard";
+
+        case "HR":
+        case "HR_EXECUTIVE":
+        case "HR_MANAGER":
+          return "/hr-dashboard";
 
         case "INVENTORY":
         case "INVENTORY_MANAGER":

@@ -139,3 +139,19 @@ export const getStockHistory = async (productId) => {
 );
 
 };
+
+/* ==========================================
+   DELETE INVENTORY
+========================================== */
+
+export const deleteInventory = async (inventoryId) => {
+  if (!inventoryId) {
+    throw new Error("Inventory ID is required");
+  }
+
+  return await axios.delete(
+    `${API}/${encodeURIComponent(String(inventoryId))}`,
+    getConfig()
+  );
+};
+
