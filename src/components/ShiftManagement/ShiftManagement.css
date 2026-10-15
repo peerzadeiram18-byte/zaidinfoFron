@@ -1,225 +1,610 @@
+/* ==========================================================================
+   ShiftManagement.css
+   Mobile-first, token-based, responsive (phone → tablet → desktop).
+   Class names are unchanged, so no edits are needed in ShiftManagement.jsx.
+   ========================================================================== */
 
-/* Container & Theme */
-.shift-container {
-  max-width: 1100px;
-  margin: 30px auto;
-  padding: 0 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  background-color: #f4fdf8;
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* Color */
+  --sm-bg: #f4fdf8;
+  --sm-surface: #ffffff;
+  --sm-surface-alt: #f7fdfa;
+  --sm-surface-head: #e8f7ee;
+  --sm-border: #d8f3e5;
+  --sm-border-input: #b7e4c7;
+  --sm-border-row: #edf7f2;
+
+  --sm-text: #334e43;
+  --sm-text-strong: #1b4d3e;
+  --sm-text-label: #2e5d4b;
+  --sm-text-muted: #5c8d7b;
+  --sm-text-faint: #7fa998;
+
+  --sm-primary: #2e7d32;
+  --sm-primary-hover: #256528;
+  --sm-primary-disabled: #a3d9b1;
+  --sm-primary-ring: rgba(46, 125, 50, 0.22);
+
+  --sm-input-bg: #fbfdfc;
+
+  --sm-error-bg: #fde8e8;
+  --sm-error-text: #9b1c1c;
+  --sm-error-line: #f87171;
+
+  --sm-badge-active-bg: #d1e7dd;
+  --sm-badge-active-text: #0f5132;
+  --sm-badge-inactive-bg: #f8d7da;
+  --sm-badge-inactive-text: #842029;
+  --sm-neutral: #6b7f76; /* darker than before: passes WCAG AA on white */
+
+  /* Type: fluid scale (min, preferred, max) */
+  --sm-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --sm-font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas,
+    monospace;
+  --sm-text-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+  --sm-text-sm: clamp(0.8125rem, 0.79rem + 0.12vw, 0.875rem);
+  --sm-text-base: clamp(0.9375rem, 0.91rem + 0.15vw, 1rem);
+  --sm-text-lg: clamp(1.125rem, 1.04rem + 0.45vw, 1.375rem);
+
+  /* Space & shape */
+  --sm-gap: clamp(1rem, 0.8rem + 1vw, 1.75rem);
+  --sm-pad: clamp(1rem, 0.7rem + 1.5vw, 1.75rem);
+  --sm-radius-sm: 8px;
+  --sm-radius-md: 12px;
+  --sm-radius-pill: 999px;
+  --sm-shadow: 0 1px 2px rgba(27, 77, 62, 0.06),
+    0 6px 20px rgba(46, 125, 50, 0.08);
+
+  --sm-tap: 44px; /* minimum comfortable touch target */
+  --sm-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* Card */
+/* Dark mode follows the OS setting */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sm-bg: #0d1a15;
+    --sm-surface: #14241d;
+    --sm-surface-alt: #172a22;
+    --sm-surface-head: #1c3329;
+    --sm-border: #244436;
+    --sm-border-input: #2f5a47;
+    --sm-border-row: #1f372c;
+
+    --sm-text: #c5dbd0;
+    --sm-text-strong: #e6f4ec;
+    --sm-text-label: #b5d2c4;
+    --sm-text-muted: #86ab99;
+    --sm-text-faint: #6f9684;
+
+    --sm-primary: #4caf50;
+    --sm-primary-hover: #66bb6a;
+    --sm-primary-disabled: #2f5a47;
+    --sm-primary-ring: rgba(76, 175, 80, 0.3);
+    --sm-input-bg: #101e18;
+
+    --sm-error-bg: #3a1c1c;
+    --sm-error-text: #fca5a5;
+    --sm-error-line: #f87171;
+
+    --sm-badge-active-bg: #1d4a33;
+    --sm-badge-active-text: #a7e8c3;
+    --sm-badge-inactive-bg: #4a2327;
+    --sm-badge-inactive-text: #f5b5bb;
+    --sm-neutral: #8fa89c;
+
+    --sm-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Page + container
+   The background used to sit only on the container (a pale strip inside a
+   white page). Painting it on the body fixes that without touching the JSX.
+   -------------------------------------------------------------------------- */
+body:has(.shift-container) {
+  background-color: var(--sm-bg);
+}
+
+.shift-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: var(--sm-gap);
+  padding-inline: max(var(--sm-gap), env(safe-area-inset-left))
+    max(var(--sm-gap), env(safe-area-inset-right));
+  display: flex;
+  flex-direction: column;
+  gap: var(--sm-gap);
+  font-family: var(--sm-font);
+  font-size: var(--sm-text-base);
+  line-height: 1.5;
+  color: var(--sm-text);
+  background-color: var(--sm-bg);
+  -webkit-text-size-adjust: 100%;
+}
+
+.shift-container *,
+.shift-container *::before,
+.shift-container *::after {
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   3. Card + headings
+   -------------------------------------------------------------------------- */
 .shift-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 24px 28px;
-  box-shadow: 0 4px 16px rgba(46, 125, 50, 0.08);
-  border: 1px solid #d8f3e5;
+  min-width: 0; /* lets the table scroll instead of stretching the flex item */
+  background-color: var(--sm-surface);
+  border: 1px solid var(--sm-border);
+  border-radius: var(--sm-radius-md);
+  padding: var(--sm-pad);
+  box-shadow: var(--sm-shadow);
 }
 
 .shift-header {
-  margin-bottom: 20px;
-  border-bottom: 2px solid #e8f7ee;
-  padding-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--sm-border);
 }
 
 .shift-heading {
   margin: 0;
-  font-size: 20px;
+  font-size: var(--sm-text-lg);
   font-weight: 700;
-  color: #1b4d3e;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--sm-text-strong);
+  text-wrap: balance;
 }
 
 .shift-subheading {
-  font-size: 13px;
-  color: #5c8d7b;
+  font-size: var(--sm-text-sm);
+  color: var(--sm-text-muted);
 }
 
-/* Error Banner */
+/* --------------------------------------------------------------------------
+   4. Error banner
+   -------------------------------------------------------------------------- */
 .shift-error-msg {
-  background-color: #fde8e8;
-  color: #9b1c1c;
-  padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 14px;
-  margin-bottom: 16px;
-  border-left: 4px solid #f87171;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--sm-radius-sm);
+  border-left: 4px solid var(--sm-error-line);
+  background-color: var(--sm-error-bg);
+  color: var(--sm-error-text);
+  font-size: var(--sm-text-sm);
+  overflow-wrap: anywhere;
 }
 
-/* Form Layout */
+/* --------------------------------------------------------------------------
+   5. Form grid
+   Explicit column counts per breakpoint replace repeat(auto-fit, minmax(240px))
+   which, combined with `span 2`, forced horizontal overflow on narrow screens.
+   -------------------------------------------------------------------------- */
 .shift-form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 18px;
+  grid-template-columns: 1fr; /* phones */
+  gap: 1rem 1.125rem;
   align-items: end;
 }
 
 .shift-field-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-}
-
-.shift-field-group.span-two {
-  grid-column: span 2;
+  gap: 0.375rem;
+  min-width: 0;
 }
 
 .shift-label {
-  font-size: 13px;
+  font-size: var(--sm-text-sm);
   font-weight: 600;
-  color: #2e5d4b;
+  color: var(--sm-text-label);
 }
 
 .shift-input,
 .shift-select {
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #b7e4c7;
-  font-size: 14px;
-  outline: none;
-  background-color: #fbfdfc;
-  color: #1b4d3e;
-  transition: border-color 0.2s;
+  width: 100%;
+  min-height: var(--sm-tap);
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--sm-border-input);
+  border-radius: var(--sm-radius-sm);
+  background-color: var(--sm-input-bg);
+  color: var(--sm-text-strong);
+  font: inherit;
+  font-size: max(16px, var(--sm-text-base)); /* stops iOS zooming on focus */
+  line-height: 1.3;
+  transition: border-color 0.2s var(--sm-ease), box-shadow 0.2s var(--sm-ease);
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-.shift-input:focus,
-.shift-select:focus {
-  border-color: #2e7d32;
-  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+.shift-input::placeholder {
+  color: var(--sm-text-faint);
+}
+
+.shift-input:hover,
+.shift-select:hover {
+  border-color: var(--sm-primary);
+}
+
+/* Keep a visible focus indicator (the old CSS had outline: none) */
+.shift-input:focus-visible,
+.shift-select:focus-visible {
+  outline: none;
+  border-color: var(--sm-primary);
+  box-shadow: 0 0 0 3px var(--sm-primary-ring);
+}
+
+/* Custom chevron since native select appearance is reset */
+.shift-select {
+  padding-right: 2.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%235c8d7b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  cursor: pointer;
+}
+
+/* Make the time/number pickers behave on Safari */
+.shift-input[type="time"],
+.shift-input[type="number"] {
+  font-variant-numeric: tabular-nums;
 }
 
 .shift-checkbox-group {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding-bottom: 10px;
+  gap: 0.625rem;
+  min-height: var(--sm-tap);
 }
 
 .shift-checkbox {
-  width: 16px;
-  height: 16px;
-  accent-color: #2e7d32;
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--sm-primary);
   cursor: pointer;
+}
+
+.shift-checkbox:focus-visible {
+  outline: 3px solid var(--sm-primary-ring);
+  outline-offset: 2px;
 }
 
 .shift-checkbox-label {
-  font-size: 14px;
+  font-size: var(--sm-text-sm);
   font-weight: 600;
-  color: #2e5d4b;
+  color: var(--sm-text-label);
   cursor: pointer;
+  user-select: none;
 }
 
+/* Submit */
 .shift-submit-wrapper {
   grid-column: 1 / -1;
-  text-align: right;
+  display: flex;
+  justify-content: stretch; /* full-width button on phones */
 }
 
 .shift-submit-btn {
-  background-color: #2e7d32;
+  width: 100%;
+  min-height: var(--sm-tap);
+  padding: 0.6875rem 1.5rem;
+  border: 0;
+  border-radius: var(--sm-radius-sm);
+  background-color: var(--sm-primary);
   color: #ffffff;
-  border: none;
-  padding: 11px 24px;
-  border-radius: 6px;
-  font-size: 14px;
+  font: inherit;
+  font-size: var(--sm-text-base);
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(46, 125, 50, 0.2);
-  transition: background-color 0.2s;
+  box-shadow: 0 2px 6px var(--sm-primary-ring);
+  transition: background-color 0.2s var(--sm-ease),
+    transform 0.15s var(--sm-ease), box-shadow 0.2s var(--sm-ease);
+  -webkit-tap-highlight-color: transparent;
 }
 
 .shift-submit-btn:hover {
-  background-color: #256528;
+  background-color: var(--sm-primary-hover);
+}
+
+.shift-submit-btn:active {
+  transform: translateY(1px);
+}
+
+.shift-submit-btn:focus-visible {
+  outline: 3px solid var(--sm-primary-ring);
+  outline-offset: 2px;
 }
 
 .shift-submit-btn:disabled {
-  background-color: #a3d9b1;
+  background-color: var(--sm-primary-disabled);
+  box-shadow: none;
   cursor: not-allowed;
+  transform: none;
 }
 
-/* Table */
+/* --------------------------------------------------------------------------
+   6. Table (base = desktop styling; phones get a card layout in section 8)
+   -------------------------------------------------------------------------- */
 .shift-table-wrapper {
+  width: 100%;
   overflow-x: auto;
-  border-radius: 8px;
-  border: 1px solid #d8f3e5;
+  border: 1px solid var(--sm-border);
+  border-radius: var(--sm-radius-sm);
+  -webkit-overflow-scrolling: touch;
 }
 
 .shift-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 14px;
+  font-size: var(--sm-text-sm);
 }
 
 .shift-th {
-  background-color: #e8f7ee;
-  color: #1b4d3e;
+  padding: 0.75rem 1rem;
+  background-color: var(--sm-surface-head);
+  border-bottom: 1px solid var(--sm-border);
+  color: var(--sm-text-strong);
   font-weight: 700;
-  padding: 12px 16px;
-  border-bottom: 2px solid #d8f3e5;
+  white-space: nowrap;
 }
 
 .shift-tr-even {
-  background-color: #ffffff;
+  background-color: var(--sm-surface);
 }
 
 .shift-tr-odd {
-  background-color: #f7fdfa;
+  background-color: var(--sm-surface-alt);
+}
+
+.shift-table tbody tr {
+  transition: background-color 0.15s var(--sm-ease);
+}
+
+@media (hover: hover) {
+  .shift-table tbody tr:hover {
+    background-color: var(--sm-surface-head);
+  }
+}
+
+.shift-td,
+.shift-td-name,
+.shift-td-time {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--sm-border-row);
+  vertical-align: middle;
+}
+
+.shift-table tbody tr:last-child > td {
+  border-bottom: 0;
 }
 
 .shift-td {
-  padding: 12px 16px;
-  color: #334e43;
-  border-bottom: 1px solid #edf7f2;
+  color: var(--sm-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .shift-td-name {
-  padding: 12px 16px;
   font-weight: 600;
-  color: #1b4d3e;
-  border-bottom: 1px solid #edf7f2;
+  color: var(--sm-text-strong);
 }
 
 .shift-td-time {
-  padding: 12px 16px;
-  font-family: monospace;
-  color: #2e7d32;
+  font-family: var(--sm-font-mono);
   font-weight: 600;
-  border-bottom: 1px solid #edf7f2;
+  color: var(--sm-primary);
+  white-space: nowrap;
 }
 
 .shift-empty-cell {
-  padding: 20px;
+  padding: 2rem 1rem;
   text-align: center;
-  color: #7fa998;
+  color: var(--sm-text-faint);
 }
 
-/* Badges */
-.badge-active {
-  background-color: #d1e7dd;
-  color: #0f5132;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
+/* --------------------------------------------------------------------------
+   7. Badges
+   -------------------------------------------------------------------------- */
+.badge-active,
+.badge-inactive {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--sm-radius-pill);
+  font-size: var(--sm-text-xs);
   font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.badge-active {
+  background-color: var(--sm-badge-active-bg);
+  color: var(--sm-badge-active-text);
 }
 
 .badge-inactive {
-  background-color: #f8d7da;
-  color: #842029;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 700;
+  background-color: var(--sm-badge-inactive-bg);
+  color: var(--sm-badge-inactive-text);
 }
 
 .badge-success {
-  color: #2e7d32;
+  color: var(--sm-primary);
   font-weight: 600;
 }
 
 .badge-neutral {
-  color: #888888;
+  color: var(--sm-neutral);
+}
+
+/* --------------------------------------------------------------------------
+   8. Responsive breakpoints
+   -------------------------------------------------------------------------- */
+
+/* Tablet portrait and up: two-column form, inline submit button */
+@media (min-width: 640px) {
+  .shift-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shift-field-group.span-two {
+    grid-column: span 2;
+  }
+
+  .shift-submit-wrapper {
+    justify-content: flex-end;
+  }
+
+  .shift-submit-btn {
+    width: auto;
+    min-width: 11rem;
+  }
+}
+
+/* Desktop and up: three-column form */
+@media (min-width: 1024px) {
+  .shift-form-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Phones: turn each table row into a labelled card.
+   Labels come from CSS (nth-child) so the JSX does not need data-label attrs.
+   If you reorder the table columns, update the content strings below. */
+@media (max-width: 719px) {
+  .shift-table-wrapper {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .shift-table,
+  .shift-table tbody,
+  .shift-table tr {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Hide the header row visually but keep it for screen readers */
+  .shift-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .shift-table tbody {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr); /* stops rows growing wider than the card */
+    gap: 0.75rem;
+  }
+
+  .shift-table tbody tr {
+    padding: 0.25rem 1rem;
+    border: 1px solid var(--sm-border);
+    border-radius: var(--sm-radius-sm);
+  }
+
+  .shift-table tbody tr:hover {
+    background-color: inherit;
+  }
+
+  /* `.shift-table .x` (0,2,0) so these are not outranked by element rules */
+  .shift-table .shift-td,
+  .shift-table .shift-td-time {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.625rem 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  /* Shift name acts as the card title */
+  .shift-table .shift-td-name {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 0 0.625rem;
+    font-size: var(--sm-text-base);
+    border-bottom: 1px solid var(--sm-border-row);
+  }
+
+  .shift-td::before,
+  .shift-td-time::before {
+    flex: none;
+    font-family: var(--sm-font);
+    font-weight: 600;
+    text-align: left;
+    color: var(--sm-text-muted);
+  }
+
+  .shift-td-time::before { content: "Timings"; }
+  .shift-td:nth-child(3)::before { content: "Break"; }
+  .shift-td:nth-child(4)::before { content: "Late grace"; }
+  .shift-td:nth-child(5)::before { content: "Overtime"; }
+  .shift-td:nth-child(6)::before { content: "Status"; }
+
+  .shift-table tbody tr > td:last-child {
+    border-bottom: 0;
+  }
+
+  /* Empty-state row keeps a simple centred message */
+  .shift-table .shift-empty-cell {
+    display: block;
+    width: 100%;
+    padding: 1.5rem 1rem;
+    text-align: center;
+  }
+  .shift-table .shift-empty-cell::before {
+    content: none;
+  }
+}
+
+/* Large screens: a little more breathing room */
+@media (min-width: 1280px) {
+  .shift-container {
+    max-width: 1200px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. Accessibility preferences
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .shift-container *,
+  .shift-container *::before,
+  .shift-container *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .shift-submit-btn:active {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .shift-card,
+  .shift-input,
+  .shift-select,
+  .shift-submit-btn,
+  .badge-active,
+  .badge-inactive {
+    border: 1px solid CanvasText;
+  }
 }

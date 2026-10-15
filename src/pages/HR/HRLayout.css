@@ -1,500 +1,91 @@
+/* =====================================================
+   HR LAYOUT — responsive (desktop / tablet / mobile)
+   Desktop  (>= 1025px): fixed sidebar, content beside it
+   Tablet + Mobile (<= 1024px): off-canvas drawer + topbar
+===================================================== */
+
 :root {
-  --rep-bg-primary: #f8fafc;
-  --rep-sidebar-bg: #ffffff;
-  --rep-accent: #2563eb;
-  --rep-accent-hover: #1d4ed8;
-  --rep-accent-light: #eff6ff;
-  --rep-text-dark: #0f172a;
-  --rep-text-muted: #64748b;
-  --rep-border-color: #e2e8f0;
-  --rep-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --rep-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --hr-sidebar-w: 260px;
+  --hr-topbar-h: 60px;
+
+  --hr-bg: #f7f9fc;
+  --hr-surface: #ffffff;
+  --hr-border: #e8edf4;
+  --hr-border-soft: #eef1f5;
+
+  --hr-text: #26364d;
+  --hr-text-muted: #6a7b94;
+  --hr-text-faint: #687891;
+
+  --hr-hover: #f5f8fc;
+  --hr-active-bg: #edf3fa;
+  --hr-accent: #2563eb;
+
+  --hr-ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-.rep-layout-root {
-  display: flex;
-  min-height: 100vh;
-  background-color: var(--rep-bg-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: var(--rep-text-dark);
-}
-
-/* Mobile Topbar */
-.rep-mobile-topbar {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: #ffffff;
-  border-bottom: 1px solid var(--rep-border-color);
-  padding: 0 1.25rem;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 100;
-}
-
-.rep-brand-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 700;
-  font-size: 1rem;
-  color: var(--rep-accent);
-}
-
-.rep-menu-toggle-btn {
-  background: transparent;
-  border: none;
-  font-size: 1.25rem;
-  color: var(--rep-text-dark);
-  cursor: pointer;
-}
-
-/* Sidebar Structure */
-.rep-sidebar {
-  width: 270px;
-  min-width: 270px;
-  background: var(--rep-sidebar-bg);
-  border-right: 1px solid var(--rep-border-color);
-  display: flex;
-  flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  z-index: 90;
-  transition: transform 0.25s ease;
-}
-
-.rep-sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.5rem 1.25rem;
-  border-bottom: 1px solid var(--rep-border-color);
-}
-
-.rep-brand-avatar {
-  width: 38px;
-  height: 38px;
-  background: var(--rep-accent);
-  color: #ffffff;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-}
-
-.rep-brand-text h3 {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.rep-brand-text span {
-  font-size: 0.75rem;
-  color: var(--rep-text-muted);
-}
-
-/* Navigation List */
-.rep-nav-section {
-  flex: 1;
-  padding: 1.25rem 0.85rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  overflow-y: auto;
-}
-
-.rep-nav-heading {
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--rep-text-muted);
-  letter-spacing: 0.05em;
-  padding: 0.75rem 0.75rem 0.25rem;
-}
-
-.rep-nav-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.7rem 0.85rem;
-  border-radius: 6px;
-  color: var(--rep-text-muted);
-  text-decoration: none;
-  font-size: 0.88rem;
-  font-weight: 500;
-  transition: all 0.15s ease-in-out;
-}
-
-.rep-nav-item:hover {
-  background: #f1f5f9;
-  color: var(--rep-text-dark);
-}
-
-.rep-nav-item-active {
-  background: var(--rep-accent-light) !important;
-  color: var(--rep-accent) !important;
-  font-weight: 600;
-}
-
-.rep-nav-icon {
-  font-size: 1rem;
-}
-
-/* Sidebar Footer */
-.rep-sidebar-footer {
-  padding: 1rem 1.25rem;
-  border-top: 1px solid var(--rep-border-color);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #ffffff;
-}
-
-.rep-user-profile {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.rep-user-badge {
-  width: 34px;
-  height: 34px;
-  background: #e2e8f0;
-  color: #334155;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.85rem;
-}
-
-.rep-user-meta {
-  display: flex;
-  flex-direction: column;
-}
-
-.rep-user-meta strong {
-  font-size: 0.82rem;
-}
-
-.rep-user-meta small {
-  font-size: 0.72rem;
-  color: #16a34a;
-}
-
-.rep-logout-btn {
-  background: transparent;
-  border: none;
-  color: var(--rep-text-muted);
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 4px;
-  transition: background 0.15s ease;
-}
-
-.rep-logout-btn:hover {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-/* Main Wrapper (holds topbar + canvas) */
-.rep-main-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-x: hidden;
-}
-
-/* Main Outlet Area */
-.rep-main-canvas {
-  flex: 1;
-  padding: 2rem;
-  max-width: 1400px;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-/* ================================
-   HR TOPBAR
-================================ */
-
-.hr-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  padding: 0.85rem 2rem;
-  background: #ffffff;
-  border-bottom: 1px solid var(--rep-border-color);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.hr-topbar-icon-btn {
-  position: relative;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--rep-border-color);
-  background: #f8fafc;
-  color: var(--rep-text-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.hr-topbar-icon-btn:hover {
-  background: var(--rep-accent-light);
-  color: var(--rep-accent);
-  border-color: var(--rep-accent);
-}
-
-.hr-notif-wrapper {
-  position: relative;
-}
-
-.hr-notif-badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: #dc2626;
-  color: #fff;
-  font-size: 0.68rem;
-  font-weight: 700;
-  min-width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-}
-
-/* POPOVER */
-.hr-notif-popover {
-  position: absolute;
-  top: 52px;
-  right: 0;
-  width: 380px;
-  max-width: 90vw;
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-  border: 1px solid #eef1f4;
-  z-index: 200;
-  overflow: hidden;
-}
-
-.hr-notif-popover-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 1.1rem 1.25rem 0.75rem;
-}
-
-.hr-notif-popover-header h3 {
-  margin: 0;
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: #0f172a;
-}
-
-.hr-notif-popover-header p {
-  margin: 0.2rem 0 0;
-  font-size: 0.85rem;
-  color: #94a3b8;
-}
-
-.hr-notif-close-btn {
-  background: #f1f5f9;
-  border: none;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  color: #64748b;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hr-notif-mark-all {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: none;
-  border: none;
-  color: #16a34a;
-  font-weight: 600;
-  font-size: 0.85rem;
-  padding: 0.5rem 1.25rem 0.9rem;
-  cursor: pointer;
-  border-bottom: 1px solid #eef1f4;
-  width: 100%;
-  text-align: left;
-}
-
-.hr-notif-scroll {
-  max-height: 340px;
-  overflow-y: auto;
-}
-
-.hr-notif-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.9rem 1.25rem;
-  cursor: pointer;
-  border-bottom: 1px solid #f4f6f8;
-  transition: background 0.15s ease;
-  position: relative;
-}
-
-.hr-notif-row:hover {
-  background: #fafbfc;
-}
-
-.hr-notif-row.unread {
-  background: #f0fdf4;
-}
-
-.hr-notif-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #22c55e;
-  margin-top: 6px;
-  flex-shrink: 0;
-}
-
-.hr-notif-row:not(.unread) .hr-notif-dot {
-  background: #cbd5e1;
-}
-
-.hr-notif-row-content {
-  flex: 1;
-}
-
-.hr-notif-row-content strong {
-  display: block;
-  font-size: 0.9rem;
-  color: #0f172a;
-  margin-bottom: 0.2rem;
-}
-
-.hr-notif-row-content p {
-  margin: 0 0 0.3rem;
-  font-size: 0.82rem;
-  color: #475569;
-  line-height: 1.4;
-}
-
-.hr-notif-row-content small {
-  font-size: 0.72rem;
-  color: #94a3b8;
-}
-
-.hr-notif-delete-btn {
-  border: none;
-  background: transparent;
-  color: #ef4444;
-  cursor: pointer;
-  font-size: 0.85rem;
-  padding: 4px;
-  flex-shrink: 0;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-
-.hr-notif-row:hover .hr-notif-delete-btn {
-  opacity: 1;
-}
-
-.hr-notif-empty-state {
-  text-align: center;
-  padding: 2.5rem 1rem;
-  color: #94a3b8;
-}
-
-.hr-notif-empty-state svg {
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-}
-
-.hr-notif-view-all {
-  display: block;
-  width: 100%;
-  padding: 0.85rem;
-  background: #ffffff;
-  border: none;
-  border-top: 1px solid #eef1f4;
-  color: #16a34a;
-  font-weight: 700;
-  font-size: 0.88rem;
-  cursor: pointer;
-}
-
-.hr-notif-view-all:hover {
-  background: #f8fafc;
-}
-
-/* Responsive adjustments */
-@media (max-width: 992px) {
-  .rep-mobile-topbar {
-    display: flex;
-  }
-
-  .rep-sidebar {
-    position: fixed;
-    top: 60px;
-    bottom: 0;
-    height: calc(100vh - 60px);
-    transform: translateX(-100%);
-  }
-
-  .rep-sidebar-open {
-    transform: translateX(0);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  }
-
-  .rep-main-canvas {
-    padding: 5rem 1rem 1.5rem;
-  }
-
-  .hr-topbar {
-    padding: 0.75rem 1rem;
-  }
-
-  .hr-notif-popover {
-    width: 92vw;
-    right: -1rem;
-  }
-}
-
 /* =====================================================
-   HR LAYOUT
+   ROOT
+   (font is inherited from your global CSS so the sidebar
+   matches the rest of the app)
 ===================================================== */
 
 .hr-layout {
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   display: flex;
-  background: #f7f9fc;
+  background: var(--hr-bg);
+  color: var(--hr-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =====================================================
+   MOBILE / TABLET TOPBAR (hidden on desktop)
+===================================================== */
+
+.hr-topbar {
+  display: none;
+}
+
+.hr-menu-toggle {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--hr-border);
+  border-radius: 10px;
+  background: var(--hr-surface);
+  color: var(--hr-text);
+
+  font-size: 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--hr-ease), transform 0.12s var(--hr-ease);
+}
+
+.hr-menu-toggle:active {
+  transform: scale(0.95);
+}
+
+.hr-topbar-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: var(--hr-text-muted);
+}
+
+/* Overlay behind the drawer */
+.hr-overlay {
+  display: none;
 }
 
 /* =====================================================
@@ -502,33 +93,37 @@
 ===================================================== */
 
 .hr-sidebar {
-  width: 250px;
-  min-width: 250px;
+  width: var(--hr-sidebar-w);
+  min-width: var(--hr-sidebar-w);
   height: 100vh;
+  height: 100dvh;
+
   position: fixed;
-  left: 0;
-  top: 0;
+  inset: 0 auto 0 0;
   z-index: 1000;
 
   display: flex;
   flex-direction: column;
 
-  background: #ffffff;
-  border-right: 1px solid #e8edf4;
+  background: var(--hr-surface);
+  border-right: 1px solid var(--hr-border);
 
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #d5dce6 transparent;
 }
-
-/* =====================================================
-   SIDEBAR HEADER
-===================================================== */
 
 .hr-sidebar-header {
   height: 65px;
+  min-height: 65px;
+
   display: flex;
   align-items: center;
+  justify-content: space-between;
+
   padding: 0 18px;
-  border-bottom: 1px solid #eef1f5;
+  border-bottom: 1px solid var(--hr-border-soft);
 }
 
 .hr-brand {
@@ -539,43 +134,51 @@
   font-size: 18px;
   font-weight: 800;
   letter-spacing: 0.5px;
-
-  color: #667892;
+  color: var(--hr-text-muted);
 
   cursor: pointer;
 }
 
-/* =====================================================
-   MENU TITLE
-===================================================== */
+/* Close (X) button — only visible inside the drawer */
+.hr-sidebar-close {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
 
-.hr-menu-title {
-  padding: 18px 15px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--hr-text-muted);
 
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.7px;
-
-  color: #687891;
+  font-size: 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* =====================================================
    MENU
 ===================================================== */
 
+.hr-menu-title {
+  padding: 18px 16px 10px;
+
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  color: var(--hr-text-faint);
+}
+
 .hr-sidebar-menu {
   display: flex;
   flex-direction: column;
-
-  padding: 0 7px 20px;
+  padding: 0 10px 20px;
 }
 
-/* =====================================================
-   MENU ITEM
-===================================================== */
-
 .hr-menu-item {
-  min-height: 43px;
+  position: relative;
+  min-height: 44px;
 
   display: flex;
   align-items: center;
@@ -584,34 +187,34 @@
   margin: 2px 0;
   padding: 0 14px;
 
-  border-radius: 7px;
-
+  border-radius: 8px;
   text-decoration: none;
 
-  color: #6a7b94;
-
+  color: var(--hr-text-muted);
   font-size: 15px;
   font-weight: 500;
 
-  transition:
-    background 0.18s ease,
-    color 0.18s ease;
-}
-
-.hr-menu-item:hover {
-  background: #f5f8fc;
-  color: #26364d;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--hr-ease), color 0.18s var(--hr-ease);
 }
 
 .hr-menu-item.active {
-  background: #edf3fa;
-  color: #26364d;
+  background: var(--hr-active-bg);
+  color: var(--hr-text);
   font-weight: 600;
 }
 
-/* =====================================================
-   ICON
-===================================================== */
+/* Small accent bar on the active item */
+.hr-menu-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--hr-accent);
+}
 
 .hr-menu-icon {
   width: 18px;
@@ -626,59 +229,72 @@
 }
 
 .hr-menu-item.active .hr-menu-icon {
-  color: #1e2c41;
+  color: var(--hr-accent);
 }
-
-/* =====================================================
-   LABEL
-===================================================== */
 
 .hr-menu-label {
+  min-width: 0; /* required for ellipsis to work inside a flex row */
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* =====================================================
-   FOOTER
+   FOOTER / LOGOUT
 ===================================================== */
 
 .hr-sidebar-footer {
   margin-top: auto;
-
-  padding: 14px;
-
-  border-top: 1px solid #eef1f5;
+  padding: 14px 10px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--hr-border-soft);
 }
-
-/* =====================================================
-   LOGOUT
-===================================================== */
 
 .hr-logout-btn {
   width: 100%;
-  min-height: 42px;
+  min-height: 44px;
 
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 
-  padding: 0 12px;
+  padding: 0 14px;
 
   border: none;
-  border-radius: 7px;
-
+  border-radius: 8px;
   background: transparent;
+  color: var(--hr-text-muted);
 
-  color: #687b95;
-
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
+  font-family: inherit;
 
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--hr-ease), color 0.18s var(--hr-ease);
 }
 
-.hr-logout-btn:hover {
-  background: #f5f7fa;
-  color: #26364d;
+/* Hover effects only on devices that really hover (no sticky hover on touch) */
+@media (hover: hover) {
+  .hr-menu-toggle:hover,
+  .hr-sidebar-close:hover {
+    background: var(--hr-hover);
+    color: var(--hr-text);
+  }
+
+  .hr-menu-item:hover {
+    background: var(--hr-hover);
+    color: var(--hr-text);
+  }
+
+  .hr-menu-item.active:hover {
+    background: var(--hr-active-bg);
+  }
+
+  .hr-logout-btn:hover {
+    background: #fee2e2;
+    color: #dc2626;
+  }
 }
 
 /* =====================================================
@@ -686,58 +302,197 @@
 ===================================================== */
 
 .hr-main {
-  width: calc(100% - 250px);
+  flex: 1;
+  min-width: 0; /* lets the flex child shrink so forms/tables never widen the page */
   min-height: 100vh;
+  min-height: 100dvh;
 
-  margin-left: 250px;
-
-  background: #f7f9fc;
+  margin-left: var(--hr-sidebar-w);
+  background: var(--hr-bg);
 }
 
 .hr-main-content {
   width: 100%;
-  min-height: 100vh;
+  max-width: 1600px;
 
+  margin: 0 auto;
   padding: 28px;
-  box-sizing: border-box;
+}
+
+/* Anything rendered inside <Outlet /> must never exceed the content box */
+.hr-main-content > * {
+  max-width: 100%;
+}
+
+.hr-main-content img,
+.hr-main-content video {
+  max-width: 100%;
+  height: auto;
 }
 
 /* =====================================================
-   MOBILE
+   FOCUS (keyboard accessibility)
 ===================================================== */
 
-@media (max-width: 900px) {
-  .hr-sidebar {
-    width: 220px;
-    min-width: 220px;
+.hr-menu-item:focus-visible,
+.hr-logout-btn:focus-visible,
+.hr-brand:focus-visible,
+.hr-menu-toggle:focus-visible,
+.hr-sidebar-close:focus-visible {
+  outline: 2px solid var(--hr-accent);
+  outline-offset: 2px;
+}
+
+/* =====================================================
+   TABLET + MOBILE  (<= 1024px) — DRAWER MODE
+===================================================== */
+
+@media (max-width: 1024px) {
+  /* Topbar */
+  .hr-topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+
+    height: calc(var(--hr-topbar-h) + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 16px 0;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--hr-border);
   }
 
+  /* Drawer (closed) */
+  .hr-sidebar {
+    width: min(300px, 84vw);
+    min-width: 0;
+    padding-top: env(safe-area-inset-top, 0px); /* keep header clear of the notch */
+
+    transform: translateX(-100%);
+    visibility: hidden; /* removes hidden links from tab order / screen readers */
+    transition: transform 0.28s var(--hr-ease), visibility 0s linear 0.28s;
+  }
+
+  /* Drawer (open) */
+  .hr-sidebar.is-open {
+    transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.28s var(--hr-ease), visibility 0s;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+  }
+
+  .hr-sidebar-close {
+    display: inline-flex;
+  }
+
+  /* Dim overlay */
+  .hr-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 950;
+
+    background: rgba(15, 23, 42, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s var(--hr-ease);
+  }
+
+  .hr-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Content takes the full width, below the topbar */
   .hr-main {
-    width: calc(100% - 220px);
-    margin-left: 220px;
+    margin-left: 0;
+    width: 100%;
+    padding-top: calc(var(--hr-topbar-h) + env(safe-area-inset-top, 0px));
   }
 
   .hr-main-content {
-    padding: 20px;
+    padding: 22px;
+  }
+
+  /* Stop the page behind the drawer from scrolling */
+  html:has(body.hr-no-scroll),
+  body.hr-no-scroll {
+    overflow: hidden;
   }
 }
 
-@media (max-width: 700px) {
-  .hr-sidebar {
-    width: 210px;
-    min-width: 210px;
-  }
+/* =====================================================
+   TABLET (641px – 1024px)
+===================================================== */
 
-  .hr-main {
-    width: calc(100% - 210px);
-    margin-left: 210px;
+@media (min-width: 641px) and (max-width: 1024px) {
+  .hr-main-content {
+    padding: 26px 28px;
+  }
+}
+
+/* =====================================================
+   MOBILE (<= 640px)
+===================================================== */
+
+@media (max-width: 640px) {
+  .hr-topbar {
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .hr-main-content {
-    padding: 15px;
+    padding: 16px 14px 28px;
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
   }
 
-  .hr-menu-item {
-    font-size: 14px;
+  .hr-menu-item,
+  .hr-logout-btn {
+    min-height: 48px; /* comfortable touch target */
+  }
+}
+
+/* =====================================================
+   SMALL PHONES (<= 380px)
+===================================================== */
+
+@media (max-width: 380px) {
+  .hr-main-content {
+    padding: 14px 10px 24px;
+  }
+}
+
+/* =====================================================
+   LARGE SCREENS (>= 1600px)
+===================================================== */
+
+@media (min-width: 1600px) {
+  :root {
+    --hr-sidebar-w: 280px;
+  }
+
+  .hr-main-content {
+    padding: 36px 40px;
+  }
+}
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .hr-sidebar,
+  .hr-overlay,
+  .hr-menu-item,
+  .hr-logout-btn,
+  .hr-menu-toggle {
+    transition: none !important;
   }
 }

@@ -1,572 +1,296 @@
-/* =========================================================
-   Corporate page
-   Structure: tokens -> base -> container/section -> icons ->
-   buttons -> hero -> headings -> benefits -> steps -> CTA
-   ========================================================= */
+/* =====================================================
+   CORPORATE PROFILE — responsive (desktop / tablet / mobile)
+   Desktop  (>= 1025px): 3-column form
+   Tablet   (641px – 1024px): 2-column form
+   Mobile   (<= 640px): 1-column form, full-width button
+===================================================== */
 
-/* ===== Tokens (one place to change colour, spacing, motion) ===== */
-.corp-page {
-  --corp-accent: #10b981;
-  --corp-accent-strong: #059669;
-  --corp-accent-soft: #34d399;
-  --corp-ink: #020617;
-  --corp-text: #111827;
-  --corp-muted: #6b7280;
-  --corp-page-bg: #ffffff;
-  --corp-surface: #ffffff;
-  --corp-surface-alt: #f9fafb;
-  --corp-border: #e5e7eb;
+.profile-page {
+  --pf-accent: #16a34a;
+  --pf-accent-hover: #15803d;
+  --pf-ring: rgba(22, 163, 74, 0.18);
+  --pf-text: #111827;
+  --pf-text-muted: #6b7280;
+  --pf-label: #374151;
+  --pf-border: #d1d5db;
+  --pf-border-soft: #e5e7eb;
+  --pf-surface: #ffffff;
+  --pf-radius: 12px;
 
-  --corp-gutter: clamp(1rem, 4vw, 3rem);        /* fluid side padding */
-  --corp-section-y: clamp(3.5rem, 8vw, 6rem);   /* fluid vertical rhythm */
-  --corp-max: 1280px;                           /* content width cap */
-  --corp-ease: cubic-bezier(0.22, 1, 0.36, 1);
-
-  color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  .corp-page {
-    --corp-text: #ffffff;
-    --corp-muted: #94a3b8;
-    --corp-page-bg: #020617;
-    --corp-surface: #0f172a;
-    --corp-surface-alt: rgba(15, 23, 42, 0.4);
-    --corp-border: #1e293b;
-  }
-}
-
-/* ===== Base / layout ===== */
-.corp-page {
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  min-width: 0;
-  min-height: 100vh;               /* fallback */
-  min-height: 100dvh;              /* no jump when the mobile URL bar collapses */
-  background-color: var(--corp-page-bg);
-  color: var(--corp-text);
-  transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: clip;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 0 40px;
+  color: var(--pf-text);
+}
+
+.profile-page *,
+.profile-page *::before,
+.profile-page *::after {
   box-sizing: border-box;
 }
 
-/* Resets the global "main { margin-left: 240px; padding-left: 32px }" sidebar
-   offset. ".corp-page .corp-main" (0,2,0) beats a plain "main" rule (0,0,1).
-   If the global rule uses !important or a higher-specificity selector,
-   add !important to margin/padding below. */
-.corp-page .corp-main {
-  flex-grow: 1;
-  width: 100%;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  max-width: none;
-  float: none;
-  box-sizing: border-box;
-}
+/* =====================================================
+   TITLES
+===================================================== */
 
-/* ===== Container + section =====
-   Container owns the HORIZONTAL padding and max-width.
-   Section owns the VERTICAL padding only, so the two never
-   fight over the same property regardless of source order. */
-.corp-container {
-  width: 100%;
-  max-width: calc(var(--corp-max) + 2 * var(--corp-gutter));
-  margin-inline: auto;
-  padding-inline: max(
-    var(--corp-gutter),
-    env(safe-area-inset-left),
-    env(safe-area-inset-right)
-  );
-  box-sizing: border-box;
-}
-
-.corp-section {
-  padding-block: var(--corp-section-y);
-}
-
-/* ===== Icons ===== */
-.corp-icon-sm {
-  width: 1rem;
-  height: 1rem;
-  flex-shrink: 0;
-}
-
-.corp-icon-md {
-  width: 1.25rem;
-  height: 1.25rem;
-  flex-shrink: 0;
-}
-
-.corp-icon-accent {
-  color: var(--corp-accent);
-}
-
-/* ===== Buttons ===== */
-.corp-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  min-height: 44px;                /* comfortable touch target */
+.profile-title {
+  margin: 0 0 20px;
+  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.625rem);
   font-weight: 700;
-  font-size: 0.95rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  border: none;
-  cursor: pointer;
-  transition:
-    background-color 0.2s var(--corp-ease),
-    border-color 0.2s var(--corp-ease),
-    transform 0.2s var(--corp-ease),
-    box-shadow 0.2s var(--corp-ease);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
 }
 
-.corp-btn .corp-icon-sm {
-  transition: transform 0.2s var(--corp-ease);
-}
+.profile-section-title {
+  margin: 28px 0 16px;
+  padding-bottom: 10px;
 
-.corp-btn:hover .corp-icon-sm {
-  transform: translateX(3px);
-}
-
-.corp-btn:active {
-  transform: scale(0.97);
-}
-
-.corp-btn:focus-visible {
-  outline: 2px solid var(--corp-accent-soft);
-  outline-offset: 3px;
-}
-
-.corp-btn-primary {
-  background-color: var(--corp-accent);
-  color: var(--corp-ink);
-}
-
-.corp-btn-primary:hover {
-  background-color: var(--corp-accent-strong);
-  box-shadow: 0 8px 24px -8px rgba(16, 185, 129, 0.6);
-}
-
-.corp-btn-outline {
-  background-color: transparent;
-  color: #ffffff;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.corp-btn-outline:hover {
-  border-color: #ffffff;
-}
-
-/* ===== Hero (always dark) ===== */
-.corp-hero {
-  position: relative;
-  background-color: var(--corp-ink);
-  color: #ffffff;
-  overflow: hidden;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.corp-hero-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(60% 70% at 85% 45%, rgba(16, 185, 129, 0.14), transparent 70%),
-    linear-gradient(to bottom right, rgba(2, 44, 34, 0.4), #020617, #020617);
-  pointer-events: none;
-}
-
-/* Text column. On desktop the image panel is absolutely positioned on the
-   right half of the hero, so the text is simply capped to the left half. */
-.corp-hero-inner {
-  position: relative;
-  z-index: 1;                       /* text always above the image panel */
-  /* --corp-nav-offset: set on .corp-page to your navbar height if it
-     overlaps the page (e.g. .corp-page { --corp-nav-offset: 96px; }) */
-  padding-top: calc(clamp(1.5rem, 3vw, 2.25rem) + var(--corp-nav-offset, 0px));
-  padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
-}
-
-.corp-hero-content {
-  min-width: 0;
-  max-width: 36rem;
-}
-
-@media (min-width: 1024px) {
-  .corp-hero-content {
-    /* Never wider than 34rem, and never wider than the space left of the
-       panel (52vw) minus both gutters, so it can't slide under the image.
-       Uses the same viewport basis as the panel, and keeps the gutters. */
-    width: min(34rem, calc(52vw - 2 * var(--corp-gutter)));
-    max-width: none;
-  }
-}
-
-/* Image follows the text on small screens, so trim the gap below the copy */
-@media (max-width: 1023px) {
-  .corp-hero-inner {
-    padding-bottom: 1.5rem;
-  }
-}
-
-.corp-hero-eyebrow {
-  margin: 0 0 0.625rem;
-  color: var(--corp-accent-soft);
-  font-size: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.corp-hero-title {
-  margin: 0;                                       /* neutralise global h1 margin */
-  font-size: clamp(2rem, 1rem + 2.8vw, 3.25rem);      /* fluid, no breakpoints */
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-  max-width: 18ch;
-  text-wrap: balance;
-}
-
-.corp-hero-title-accent {
-  color: var(--corp-accent-soft);
-}
-
-.corp-hero-desc {
-  margin: 0.875rem 0 0;
-  color: #cbd5e1;
-  font-size: clamp(0.9375rem, 0.9rem + 0.3vw, 1.0625rem);
-  line-height: 1.6;
-  max-width: 36rem;
-  text-wrap: pretty;
-}
-
-.corp-hero-actions {
-  margin-top: 1.25rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-/* Buttons share a row when there is room, stack full-width on phones */
-.corp-hero-actions .corp-btn {
-  flex: 1 1 14rem;
-}
-
-@media (min-width: 640px) {
-  .corp-hero-actions .corp-btn {
-    flex: 0 0 auto;
-  }
-}
-
-.corp-trust-strip {
-  margin-top: 1.25rem;
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 2rem;
-  row-gap: 0.75rem;
-  font-size: 0.875rem;
-  color: #cbd5e1;
-}
-
-.corp-trust-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* ===== Hero image =====
-   The photo has a white studio backdrop, so instead of a floating rounded
-   card it is a full-bleed panel: it touches the hero's edges and has a
-   slanted cut, so it reads as part of the layout rather than a sticker. */
-.corp-hero-media {
-  position: relative;
-  z-index: 0;
-  margin: 0;
-  width: 100%;
-  aspect-ratio: 3 / 2;
-  overflow: hidden;
-  background-color: #ffffff;
-  /* Mobile: slanted top edge, image runs edge-to-edge below the text */
-  clip-path: polygon(0 7%, 100% 0, 100% 100%, 0 100%);
-}
-
-.corp-hero-img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 70% center;
-}
-
-/* Darkens the edge that touches the hero so the white eases in */
-.corp-hero-media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(2, 6, 23, 0.45), transparent 35%);
-  pointer-events: none;
-}
-
-/* Tablet: wider, shorter crop */
-@media (min-width: 640px) and (max-width: 1023px) {
-  .corp-hero-media {
-    aspect-ratio: 16 / 9;
-  }
-}
-
-/* Desktop: right-half panel, full hero height, slanted left edge */
-@media (min-width: 1024px) {
-  .corp-hero-media {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 48%;
-    aspect-ratio: auto;
-    clip-path: polygon(14% 0, 100% 0, 100% 100%, 0 100%);
-  }
-
-  .corp-hero-media::after {
-    background: linear-gradient(to right, rgba(2, 6, 23, 0.4), transparent 30%);
-  }
-}
-
-/* ===== Section headings ===== */
-.corp-section-heading-wrap {
-  margin-bottom: 2.5rem;
-}
-
-.corp-how-heading-wrap {
-  margin-bottom: 3.5rem;
-}
-
-.corp-section-heading {
-  margin: 0;
-  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
-  font-weight: 800;
-  color: var(--corp-text);
-  text-align: center;
-  text-wrap: balance;
-}
-
-/* ===== Benefits grid ===== */
-.corp-benefits-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.5rem;
-  width: 100%;
-}
-
-@media (min-width: 640px) {
-  .corp-benefits-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .corp-benefits-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-.corp-benefit-card {
-  border: 1px solid var(--corp-border);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  background-color: var(--corp-surface);
-  box-sizing: border-box;
-  transition:
-    transform 0.25s var(--corp-ease),
-    box-shadow 0.25s var(--corp-ease),
-    border-color 0.25s var(--corp-ease);
-}
-
-/* Hover lift only where a real pointer exists (no sticky hover on touch) */
-@media (hover: hover) {
-  .corp-benefit-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--corp-accent);
-    box-shadow: 0 12px 32px -12px rgba(16, 185, 129, 0.35);
-  }
-}
-
-.corp-benefit-icon-circle {
-  width: 3rem;
-  height: 3rem;
-  border-radius: 9999px;
-  border: 2px solid var(--corp-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.corp-benefit-title {
-  margin: 0 0 0.375rem;
-  font-weight: 700;
   font-size: 1rem;
-  color: var(--corp-text);
+  font-weight: 600;
+  color: var(--pf-label);
+
+  border-bottom: 1px solid var(--pf-border-soft);
 }
 
-.corp-benefit-desc {
-  margin: 0;
-  font-size: 0.9375rem;
-  color: var(--corp-muted);
-  line-height: 1.6;
+.profile-section-title:first-child {
+  margin-top: 0;
 }
 
-/* ===== How it works ===== */
-.corp-how-section {
-  background-color: var(--corp-surface-alt);
-  padding-block: var(--corp-section-y);
+/* =====================================================
+   ALERTS
+===================================================== */
+
+.profile-alert {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+
+  border-radius: 8px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+
+  overflow-wrap: anywhere;
+  animation: profile-fade-in 0.2s ease-out;
+}
+
+.profile-alert-error {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.profile-alert-success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+@keyframes profile-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =====================================================
+   FORM CARD
+===================================================== */
+
+.profile-form {
   width: 100%;
-  box-sizing: border-box;
+  padding: 28px;
+
+  background: var(--pf-surface);
+  border: 1px solid var(--pf-border-soft);
+  border-radius: var(--pf-radius);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04),
+    0 4px 12px rgba(16, 24, 40, 0.04);
 }
 
-.corp-steps-grid {
+/* =====================================================
+   GRID
+===================================================== */
+
+.profile-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 2rem;
-  position: relative;
-  width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* minmax(0,…) stops inputs forcing overflow */
+  gap: 18px 20px;
 }
 
-@media (min-width: 640px) {
-  .corp-steps-grid {
+.profile-form-row {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-form-row-full {
+  grid-column: 1 / -1;
+}
+
+.profile-form-row label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--pf-label);
+}
+
+/* =====================================================
+   INPUTS
+===================================================== */
+
+.profile-form-row input,
+.profile-form-row select {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+
+  padding: 9px 12px;
+
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--pf-text);
+
+  background: #fff;
+  border: 1px solid var(--pf-border);
+  border-radius: 8px;
+
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.profile-form-row select {
+  cursor: pointer;
+}
+
+.profile-form-row input::placeholder {
+  color: #9ca3af;
+}
+
+@media (hover: hover) {
+  .profile-form-row input:hover:not(:disabled),
+  .profile-form-row select:hover:not(:disabled) {
+    border-color: #9ca3af;
+  }
+}
+
+.profile-form-row input:focus,
+.profile-form-row select:focus {
+  outline: none;
+  border-color: var(--pf-accent);
+  box-shadow: 0 0 0 3px var(--pf-ring);
+}
+
+.profile-form-row input:disabled {
+  background: #f3f4f6;
+  color: var(--pf-text-muted);
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   SAVE BUTTON
+===================================================== */
+
+.profile-save-btn {
+  min-height: 44px;
+  margin-top: 28px;
+  padding: 10px 24px;
+
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+
+  background: var(--pf-accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+@media (hover: hover) {
+  .profile-save-btn:hover:not(:disabled) {
+    background: var(--pf-accent-hover);
+  }
+}
+
+.profile-save-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.profile-save-btn:focus-visible {
+  outline: 2px solid var(--pf-accent);
+  outline-offset: 2px;
+}
+
+.profile-save-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   TABLET (641px – 1024px) — 2 columns
+===================================================== */
+
+@media (max-width: 1024px) {
+  .profile-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1024px) {
-  .corp-steps-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+/* =====================================================
+   MOBILE (<= 640px) — 1 column
+===================================================== */
+
+@media (max-width: 640px) {
+  .profile-page {
+    padding: 8px 0 28px;
+  }
+
+  .profile-form {
+    padding: 18px 16px;
+    border-radius: 10px;
+  }
+
+  .profile-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .profile-section-title {
+    margin: 24px 0 14px;
+  }
+
+  /* 16px prevents iOS Safari from zooming into the field on focus */
+  .profile-form-row input,
+  .profile-form-row select {
+    min-height: 46px;
+    font-size: 1rem;
+  }
+
+  .profile-save-btn {
+    width: 100%;
+    min-height: 48px;
   }
 }
 
-.corp-step {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
 
-.corp-step-number {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 9999px;
-  background-color: var(--corp-accent);
-  color: var(--corp-ink);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 1.125rem;
-  margin-bottom: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.corp-step-icon {
-  margin-bottom: 0.5rem;
-}
-
-.corp-step-title {
-  margin: 0 0 0.375rem;
-  font-weight: 700;
-  font-size: 1rem;                 /* was 14px */
-  color: var(--corp-text);
-}
-
-.corp-step-desc {
-  margin: 0;
-  font-size: 0.875rem;             /* was 12px, too small on mobile */
-  color: var(--corp-muted);
-  line-height: 1.6;
-  max-width: 24ch;
-}
-
-/* ===== Final CTA card ===== */
-.corp-cta-card {
-  position: relative;
-  background-color: var(--corp-ink);
-  border-radius: 1.5rem;
-  border: 1px solid #1e293b;
-  padding: clamp(2rem, 5vw, 3.5rem);
-  overflow: hidden;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.corp-cta-card-bg {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom right,
-    rgba(2, 44, 34, 0.4),
-    #020617,
-    #020617
-  );
-  pointer-events: none;
-}
-
-.corp-cta-inner {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-/* 768px (not 640px): text + nowrap button needs the extra room on tablets */
-@media (min-width: 768px) {
-  .corp-cta-inner {
-    flex-direction: row;
-    align-items: center;
-  }
-}
-
-.corp-cta-title {
-  margin: 0 0 0.5rem;
-  color: #ffffff;
-  font-size: clamp(1.5rem, 1.2rem + 1vw, 1.875rem);
-  font-weight: 800;
-  text-wrap: balance;
-}
-
-.corp-cta-desc {
-  margin: 0;
-  color: #cbd5e1;
-  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
-  line-height: 1.6;
-  max-width: 28rem;
-}
-
-.corp-cta-btn {
-  padding: 0.875rem 1.75rem;
-  white-space: nowrap;
-  flex-shrink: 0;
-  width: 100%;                     /* full-width tap target on mobile */
-}
-
-@media (min-width: 768px) {
-  .corp-cta-btn {
-    width: auto;
-  }
-}
-
-/* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
-  .corp-page *,
-  .corp-page *::before,
-  .corp-page *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  .profile-alert {
+    animation: none;
+  }
+
+  .profile-form-row input,
+  .profile-form-row select,
+  .profile-save-btn {
+    transition: none;
   }
 }

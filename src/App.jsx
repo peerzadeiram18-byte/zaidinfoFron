@@ -4473,6 +4473,8 @@ import Wishlist from "./pages/Shop/Wishlist/Wishlist";
 import MyAddress from "./pages/Profile/MyAddress/MyAddress";
 import AddAddress from "./pages/Profile/AddAddress/AddAddress";
 
+import EditAddress from "./pages/Profile/EditAddress/EditAddress";
+import Password from "./pages/Admin/Customer/ChangePassword";   // add this line
 // ===============================
 // CUSTOMER ORDERS
 // ===============================
@@ -5105,6 +5107,12 @@ const hideGlobalHeader =
             <Route path="add-address" element={<AddAddress />} />
             <Route path="addresses" element={<MyAddress />} />
 
+
+                        {/* NEW — Customer pages inside the corporate dashboard (Wishlist, Cart, Change Password) */}
+            <Route path="wishlist" element={<Wishlist />} />
+            <Route path="cart" element={<Cart />} />
+            <Route path="change-password" element={<Password />} />
+
             {/* NEW — Request Quote page (business customer submits a quote request) */}
             <Route path="request-quote" element={<RequestQuote />} />
             <Route
@@ -5382,11 +5390,16 @@ const hideGlobalHeader =
           <Route path="/my-address" element={<MyAddress />} />
           <Route path="/add-address" element={<AddAddress />} />
 
+                   <Route path="/edit-address/:id" element={<EditAddress />} />   {/* add this line */}
+
           {/* =================================================
               CUSTOMER CHECKOUT
           ================================================= */}
 
           <Route path="/checkout" element={<Checkout />} />
+
+          <Route path="/checkout/:addressId" element={<Checkout />} />   {/* add this line */}
+
           <Route path="/select-address" element={<SelectAddress />} />
 
           {/* =================================================

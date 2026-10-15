@@ -1,0 +1,313 @@
+/* ==========================================================================
+   EditAddress.css
+   All selectors are namespaced with "edit-address" / "ea-" so they cannot
+   collide with AddAddress.css or MyAddress.css (plain CSS imports are global).
+   ========================================================================== */
+
+.edit-address-page {
+  /* Design tokens, scoped to this page */
+  --ea-ink: #1f2d25;
+  --ea-muted: #5f7367;
+  --ea-line: #d5e3da;
+  --ea-line-strong: #9dbaa9;
+  --ea-surface: #ffffff;
+  --ea-bg: #eef6f1;
+  --ea-brand: #2d6a4f;        /* white text on this passes WCAG AA (about 6.5:1) */
+  --ea-brand-hover: #1b4332;
+  --ea-focus: #52b788;
+  --ea-danger: #b42318;
+
+  min-height: 60vh;
+  min-height: 60dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+  padding: clamp(16px, 4vw, 40px) clamp(12px, 4vw, 24px) 48px;
+  background:
+    radial-gradient(circle at top left, #f6fcf8 0%, var(--ea-bg) 70%);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  color: var(--ea-ink);
+}
+
+.edit-address-page *,
+.edit-address-page *::before,
+.edit-address-page *::after {
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Card
+   -------------------------------------------------------------------------- */
+
+.edit-address-card {
+  width: 100%;
+  max-width: 640px;
+  padding: clamp(20px, 4vw, 32px);
+  background: var(--ea-surface);
+  border: 1px solid var(--ea-line);
+  border-radius: 20px;
+  box-shadow:
+    0 1px 2px rgba(31, 45, 37, 0.04),
+    0 16px 40px -16px rgba(31, 45, 37, 0.14);
+}
+
+.edit-address-head {
+  margin-bottom: 24px;
+}
+
+.edit-address-head h2 {
+  margin: 0 0 4px;
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--ea-ink);
+}
+
+.edit-address-head p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--ea-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Form grid
+   minmax(0, 1fr) lets columns shrink below their content width, which stops
+   long inputs from pushing the card wider than the screen.
+   -------------------------------------------------------------------------- */
+
+.edit-address-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 16px;
+}
+
+.ea-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ea-field--full {
+  grid-column: 1 / -1;
+}
+
+.ea-field label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ea-ink);
+}
+
+.ea-optional {
+  font-weight: 400;
+  color: var(--ea-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Controls
+   16px font size on inputs stops iOS Safari from zooming in on focus.
+   44px minimum height gives a comfortable touch target.
+   -------------------------------------------------------------------------- */
+
+.ea-field input,
+.ea-field select,
+.ea-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--ea-ink);
+  background-color: var(--ea-surface);
+  border: 1px solid var(--ea-line);
+  border-radius: 10px;
+  outline: 2px solid transparent; /* keeps a visible focus in forced-colors mode */
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.ea-field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.ea-field input::placeholder,
+.ea-field textarea::placeholder {
+  color: #7d9186;
+}
+
+@media (hover: hover) {
+  .ea-field input:hover,
+  .ea-field select:hover,
+  .ea-field textarea:hover {
+    border-color: var(--ea-line-strong);
+  }
+}
+
+.ea-field input:focus-visible,
+.ea-field select:focus-visible,
+.ea-field textarea:focus-visible {
+  border-color: var(--ea-brand);
+  box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.35);
+}
+
+/* Select with custom arrow */
+.ea-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 40px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232d6a4f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   Validation
+   -------------------------------------------------------------------------- */
+
+.ea-field [aria-invalid="true"] {
+  border-color: var(--ea-danger);
+}
+
+.ea-field [aria-invalid="true"]:focus-visible {
+  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.22);
+}
+
+.ea-error {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--ea-danger);
+}
+
+/* --------------------------------------------------------------------------
+   Actions
+   -------------------------------------------------------------------------- */
+
+.ea-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 6px;
+  padding-top: 20px;
+  border-top: 1px solid var(--ea-line);
+}
+
+.ea-btn {
+  min-height: 44px;
+  padding: 0 22px;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  outline: 2px solid transparent;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.ea-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.45);
+}
+
+.ea-btn--primary {
+  color: #ffffff;
+  background-color: var(--ea-brand);
+}
+
+.ea-btn--ghost {
+  color: var(--ea-ink);
+  background-color: transparent;
+  border-color: var(--ea-line);
+}
+
+@media (hover: hover) {
+  .ea-btn--primary:hover:not(:disabled) {
+    background-color: var(--ea-brand-hover);
+  }
+
+  .ea-btn--ghost:hover:not(:disabled) {
+    border-color: var(--ea-line-strong);
+    background-color: #f6fbf8;
+  }
+}
+
+.ea-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Loading state
+   -------------------------------------------------------------------------- */
+
+.ea-loading {
+  margin: 0;
+  padding: 48px 0;
+  text-align: center;
+  font-size: 0.9375rem;
+  color: var(--ea-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   Mobile  : up to 560px       -> one column, full-width stacked buttons
+   Tablet  : 561px to 1023px   -> two columns, card centered
+   Desktop : 1024px and up     -> more breathing room at the top
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  .edit-address-card {
+    border-radius: 16px;
+  }
+
+  .edit-address-form {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .ea-field--full {
+    grid-column: auto;
+  }
+
+  .ea-actions {
+    flex-direction: column-reverse; /* primary action sits on top, near the thumb */
+  }
+
+  .ea-btn {
+    width: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .edit-address-page {
+    padding-top: 56px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ea-field input,
+  .ea-field select,
+  .ea-field textarea,
+  .ea-btn {
+    transition: none;
+  }
+}

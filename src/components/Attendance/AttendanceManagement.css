@@ -1,262 +1,686 @@
+/* ==========================================================================
+   AttendanceManagement.css
+   Mobile-first and fully responsive (phone → tablet → desktop).
+   Class names are unchanged, so AdminAttendance.jsx needs no edits.
+   ========================================================================== */
 
-:root {
+/* --------------------------------------------------------------------------
+   1. Design tokens
+   Scoped to .attendance-container (not :root) so they can't leak into, or be
+   overwritten by, other pages' CSS.
+   -------------------------------------------------------------------------- */
+.attendance-container {
+  /* Color */
   --bg-main: #f4f9f5;
   --card-bg: #ffffff;
+  --card-alt: #f7fcf8;
   --primary-green: #2e7d32;
   --primary-green-hover: #1b5e20;
+  --accent-green: #3f9f45;
+  --accent-green-hover: #2e7d32;
   --light-green-bg: #e8f5e9;
-  --accent-green: #4caf50;
   --border-color: #c8e6c9;
+  --border-row: #eef7f0;
+  --input-bg: #fafdfa;
   --text-dark: #1e3a1e;
   --text-muted: #557255;
   --danger-red: #d32f2f;
   --danger-hover: #b71c1c;
-  --shadow: 0 4px 12px rgba(46, 125, 50, 0.08);
+  --focus-ring: rgba(76, 175, 80, 0.3);
+  --shadow: 0 1px 2px rgba(30, 58, 30, 0.06), 0 6px 18px rgba(46, 125, 50, 0.08);
+
+  /* Status colors (text on tint) */
+  --present-bg: #e8f5e9;  --present-fg: #1b5e20;
+  --absent-bg: #ffebee;   --absent-fg: #b71c1c;
+  --leave-bg: #fff3e0;    --leave-fg: #b45309;
+  --half-bg: #e1f5fe;     --half-fg: #01579b;
+  --late-bg: #e8eaed;     --late-fg: #353b41;
+
+  /* Type: fluid scale */
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --fs-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
+  --fs-sm: clamp(0.8125rem, 0.79rem + 0.12vw, 0.9rem);
+  --fs-base: clamp(0.9375rem, 0.91rem + 0.15vw, 1rem);
+  --fs-lg: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  --fs-xl: clamp(1.375rem, 1.15rem + 1.1vw, 1.875rem);
+  --fs-stat: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+
+  /* Space & shape */
+  --gap: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  --pad: clamp(1rem, 0.7rem + 1.5vw, 1.5rem);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --tap: 44px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .attendance-container {
+    --bg-main: #0d1a15;
+    --card-bg: #14241d;
+    --card-alt: #172a22;
+    --primary-green: #66bb6a;
+    --primary-green-hover: #81c784;
+    --accent-green: #43a047;
+    --accent-green-hover: #4caf50;
+    --light-green-bg: #1c3329;
+    --border-color: #244436;
+    --border-row: #1f372c;
+    --input-bg: #101e18;
+    --text-dark: #e3f1e8;
+    --text-muted: #8fb3a0;
+    --danger-red: #e55353;
+    --danger-hover: #f06a6a;
+    --focus-ring: rgba(102, 187, 106, 0.35);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.25);
+
+    --present-bg: #1d4a33;  --present-fg: #a7e8c3;
+    --absent-bg: #4a2327;   --absent-fg: #f5b5bb;
+    --leave-bg: #4a3417;    --leave-fg: #fcd29a;
+    --half-bg: #17384d;     --half-fg: #a5d8f5;
+    --late-bg: #2b3238;     --late-fg: #c9d1d8;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Page shell
+   -------------------------------------------------------------------------- */
+body:has(.attendance-container) {
+  background-color: #f4f9f5;
+}
+@media (prefers-color-scheme: dark) {
+  body:has(.attendance-container) {
+    background-color: #0d1a15;
+  }
 }
 
 .attendance-container {
-  padding: 30px;
-  background-color: var(--bg-main);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1400px;
   min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: var(--pad);
+  padding-inline: max(var(--pad), env(safe-area-inset-left))
+    max(var(--pad), env(safe-area-inset-right));
+  padding-bottom: max(var(--pad), env(safe-area-inset-bottom));
+  background-color: var(--bg-main);
   color: var(--text-dark);
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+.attendance-container *,
+.attendance-container *::before,
+.attendance-container *::after {
+  box-sizing: border-box;
 }
 
 .attendance-title {
+  margin: 0 0 var(--gap);
+  padding-bottom: 0.625rem;
+  border-bottom: 2px solid var(--border-color);
   color: var(--primary-green);
-  margin-bottom: 24px;
-  font-size: 26px;
+  font-size: var(--fs-xl);
   font-weight: 700;
-  border-bottom: 3px solid var(--border-color);
-  padding-bottom: 10px;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
+/* --------------------------------------------------------------------------
+   3. Form cards
+   The old `flex: 1; min-width: 320px` overflowed any screen narrower than
+   ~370px. Grid with minmax(0, 1fr) can never be wider than its container.
+   -------------------------------------------------------------------------- */
 .attendance-forms-wrapper {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+  margin-bottom: calc(var(--gap) * 1.25);
 }
 
 .attendance-card {
-  flex: 1;
-  min-width: 320px;
+  min-width: 0;
+  padding: var(--pad);
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.attendance-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(46, 125, 50, 0.12);
 }
 
 .attendance-card h3 {
-  margin-top: 0;
-  margin-bottom: 12px;
+  margin: 0 0 0.75rem;
   color: var(--primary-green);
-  font-size: 18px;
+  font-size: var(--fs-lg);
+  line-height: 1.3;
+  text-wrap: balance;
 }
 
-.attendance-card p {
+.attendance-card p,
+.card-subtitle {
+  margin: 0 0 1.125rem;
   color: var(--text-muted);
-  font-size: 13px;
-  margin-bottom: 18px;
+  font-size: var(--fs-sm);
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
 }
 
 .form-group label {
   display: block;
-  font-size: 14px;
-  font-weight: 600;
+  margin-bottom: 0.375rem;
   color: var(--text-dark);
-  margin-bottom: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
 }
 
 .form-control {
+  display: block;
   width: 100%;
-  padding: 10px 12px;
+  min-height: var(--tap);
+  padding: 0.625rem 0.75rem;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
-  font-size: 14px;
-  background-color: #fafdfa;
+  border-radius: var(--radius-sm);
+  background-color: var(--input-bg);
   color: var(--text-dark);
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease;
+  font: inherit;
+  font-size: max(16px, var(--fs-base)); /* prevents iOS zoom-on-focus */
+  line-height: 1.3;
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
 }
 
-.form-control:focus {
+.form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.form-control:hover {
   border-color: var(--accent-green);
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.15);
 }
 
-.btn-primary-green {
-  width: 100%;
-  padding: 11px;
-  background-color: var(--primary-green);
+.form-control:focus-visible {
+  outline: none;
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* Select styling: consistent chevron across browsers */
+select.form-control,
+.filter-item select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%23557255' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   4. Buttons
+   -------------------------------------------------------------------------- */
+.btn-primary-green,
+.btn-accent-green,
+.btn-danger {
+  min-height: var(--tap);
+  border: 0;
   color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
+  font: inherit;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s var(--ease), transform 0.15s var(--ease);
+  -webkit-tap-highlight-color: transparent;
 }
 
-.btn-primary-green:hover {
-  background-color: var(--primary-green-hover);
-}
-
+.btn-primary-green,
 .btn-accent-green {
   width: 100%;
-  padding: 11px;
-  background-color: var(--accent-green);
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  padding: 0.6875rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-base);
 }
 
-.btn-accent-green:hover {
-  background-color: var(--primary-green);
-}
+.btn-primary-green { background-color: #2e7d32; }
+.btn-primary-green:hover { background-color: #1b5e20; }
+
+.btn-accent-green { background-color: var(--accent-green); }
+.btn-accent-green:hover { background-color: var(--accent-green-hover); }
 
 .btn-danger {
-  padding: 6px 12px;
-  background-color: var(--danger-red);
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
+  padding: 0.5rem 0.875rem;
+  border-radius: 6px;
+  background-color: #c62828;
+  font-size: var(--fs-sm);
+}
+.btn-danger:hover { background-color: var(--danger-hover); }
+
+.btn-primary-green:active,
+.btn-accent-green:active,
+.btn-danger:active {
+  transform: translateY(1px);
+}
+
+.btn-primary-green:focus-visible,
+.btn-accent-green:focus-visible,
+.btn-danger:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   5. Filter bar
+   -------------------------------------------------------------------------- */
+.filter-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: var(--gap) 0;
+  padding: var(--pad);
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow);
+}
+
+.filter-title h4 {
+  margin: 0 0 0.25rem;
+  font-size: var(--fs-lg);
+  line-height: 1.3;
+}
+
+.filter-title span {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.filter-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.filter-item label {
+  color: var(--text-dark);
+  font-size: var(--fs-sm);
   font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
-.btn-danger:hover {
-  background-color: var(--danger-hover);
+.filter-item select {
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0.5rem 2.25rem 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background-color: var(--input-bg);
+  color: var(--text-dark);
+  font: inherit;
+  font-size: max(16px, var(--fs-base));
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
 }
 
+.filter-item select:hover { border-color: var(--accent-green); }
+.filter-item select:focus-visible {
+  outline: none;
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+/* --------------------------------------------------------------------------
+   6. KPI stat cards
+   -------------------------------------------------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: calc(var(--gap) * 1.25);
+}
+
+.stat-card {
+  min-width: 0;
+  padding: clamp(0.875rem, 0.6rem + 1vw, 1.25rem);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.stat-card h4 {
+  margin: 0 0 0.25rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.stat-card span {
+  display: block;
+  font-size: var(--fs-stat);
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-present { background: var(--present-bg); color: var(--present-fg); }
+.stat-absent  { background: var(--absent-bg);  color: var(--absent-fg); }
+.stat-leave   { background: var(--leave-bg);   color: var(--leave-fg); }
+.stat-halfday { background: var(--half-bg);    color: var(--half-fg); }
+
+/* --------------------------------------------------------------------------
+   7. Section headings
+   -------------------------------------------------------------------------- */
+.section-header {
+  margin-bottom: 0.75rem;
+}
+
+.records-title {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: var(--fs-lg);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+/* --------------------------------------------------------------------------
+   8. Tables (desktop/tablet base styling)
+   overflow was `hidden`, which silently clipped columns on tablets.
+   It now scrolls horizontally when the table is wider than its card.
+   -------------------------------------------------------------------------- */
 .table-wrapper {
+  width: 100%;
+  overflow-x: auto;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  overflow: hidden;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow);
+  -webkit-overflow-scrolling: touch;
 }
 
 .attendance-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  font-size: var(--fs-sm);
 }
 
 .attendance-table th {
+  padding: 0.875rem 1rem;
   background-color: var(--light-green-bg);
+  border-bottom: 1px solid var(--border-color);
   color: var(--primary-green);
-  padding: 14px 16px;
-  font-size: 14px;
+  font-size: var(--fs-sm);
   font-weight: 700;
-  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
 }
 
 .attendance-table td {
-  padding: 12px 16px;
-  font-size: 14px;
-  border-bottom: 1px solid #eef7f0;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-row);
   color: var(--text-dark);
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
 }
 
-.attendance-table tbody tr:hover {
-  background-color: #f7fcf8;
+@media (hover: hover) {
+  .attendance-table tbody tr:hover {
+    background-color: var(--card-alt);
+  }
 }
 
-.attendance-table tbody tr:last-child td {
-  border-bottom: none;
+.no-data {
+  padding: 1.5rem 1rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.attendance-table td.no-data {
+  padding: 1.75rem 1rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* Badges */
+.badge-mode,
+.badge-status {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .badge-mode {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
   background-color: var(--light-green-bg);
   color: var(--primary-green);
 }
 
-.no-data {
-  text-align: center;
+.status-present  { background: var(--present-bg); color: var(--present-fg); }
+.status-absent   { background: var(--absent-bg);  color: var(--absent-fg); }
+.status-leave    { background: var(--leave-bg);   color: var(--leave-fg); }
+.status-half_day { background: var(--half-bg);    color: var(--half-fg); }
+.status-late     { background: var(--late-bg);    color: var(--late-fg); }
+
+/* Colored numbers in the summary table */
+.text-success { color: var(--present-fg); font-weight: 600; }
+.text-danger  { color: var(--absent-fg);  font-weight: 600; }
+.text-warning { color: var(--leave-fg);   font-weight: 600; }
+
+.checkout-done {
   color: var(--text-muted);
-  padding: 20px;
-}
-
-/* Filter Card */
-.filter-card {
-  background: #ffffff;
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  margin: 1.5rem 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-}
-.filter-title h4 { margin: 0 0 4px 0; font-size: 1.1rem; }
-.filter-title span { font-size: 0.85rem; color: #666; }
-.filter-controls { display: flex; gap: 1rem; }
-.filter-item { display: flex; align-items: center; gap: 0.5rem; }
-.filter-item select {
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #fff;
-  font-size: 0.95rem;
-}
-
-/* Stats Cards */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-.stat-card {
-  padding: 1.2rem;
-  border-radius: 8px;
-  text-align: center;
-}
-.stat-card h4 { margin: 0 0 6px 0; font-size: 0.85rem; text-transform: uppercase; }
-.stat-card span { font-size: 1.8rem; font-weight: bold; }
-
-.stat-present { background: #e8f5e9; color: #2e7d32; }
-.stat-absent { background: #ffebee; color: #c62828; }
-.stat-leave { background: #fff3e0; color: #ef6c00; }
-.stat-halfday { background: #e1f5fe; color: #0277bd; }
-
-/* Status Highlights */
-.text-success { color: #2e7d32; font-weight: 600; }
-.text-danger { color: #c62828; font-weight: 600; }
-.text-warning { color: #ef6c00; font-weight: 600; }
-
-.badge-status {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.75rem;
   font-weight: 600;
+  white-space: nowrap;
 }
-.status-present { background: #d4edda; color: #155724; }
-.status-absent { background: #f8d7da; color: #721c24; }
-.status-leave { background: #fff3cd; color: #856404; }
-.status-late { background: #e2e3e5; color: #383d41; }
+
+/* --------------------------------------------------------------------------
+   9. Breakpoints
+   -------------------------------------------------------------------------- */
+
+/* Small tablets and up (≥ 720px): real tables, 2-up form cards */
+@media (min-width: 720px) {
+  .attendance-forms-wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filter-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .filter-controls {
+    grid-template-columns: repeat(2, minmax(9rem, 12rem));
+  }
+
+  .filter-item {
+    flex-direction: column;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .attendance-table tbody tr:last-child > td {
+    border-bottom: 0;
+  }
+}
+
+/* Phones (< 720px): each table row becomes a labelled card.
+   Labels come from CSS (nth-child), so the JSX needs no data-label attributes.
+   The two tables are told apart with :has(): the punch-log table has 9 columns,
+   the monthly summary has 8. If you add/reorder columns, update the labels. */
+@media (max-width: 719px) {
+  .table-wrapper {
+    overflow: visible;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .attendance-table,
+  .attendance-table tbody,
+  .attendance-table tr {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Hide the header row visually; screen readers still get the labels */
+  .attendance-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .attendance-table tbody {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr); /* rows can't outgrow the screen */
+    gap: 0.75rem;
+  }
+
+  .attendance-table tbody tr {
+    padding: 0.25rem 1rem;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+  }
+
+  /* Every cell: label on the left, value on the right.
+     All selectors here are `.attendance-table td…` (same specificity as the
+     base rules above) so source order decides, with no accidental overrides. */
+  .attendance-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.625rem 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .attendance-table td:last-child {
+    border-bottom: 0;
+  }
+
+  .attendance-table td::before {
+    flex: none;
+    max-width: 50%;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-align: left;
+  }
+
+  /* First cell (employee name) is the card title */
+  .attendance-table td:first-child {
+    justify-content: flex-start;
+    padding-top: 0.75rem;
+    font-size: var(--fs-base);
+    font-weight: 700;
+    text-align: left;
+  }
+  .attendance-table td:first-child::before {
+    content: none;
+  }
+
+  /* Labels: Monthly Summary table (8 columns) */
+  .attendance-table td:nth-child(2)::before { content: "Employee ID"; }
+  .attendance-table td:nth-child(3)::before { content: "Present days"; }
+  .attendance-table td:nth-child(4)::before { content: "Absent days"; }
+  .attendance-table td:nth-child(5)::before { content: "Leaves"; }
+  .attendance-table td:nth-child(6)::before { content: "Half days"; }
+  .attendance-table td:nth-child(7)::before { content: "Late entries"; }
+  .attendance-table td:nth-child(8)::before { content: "Total hours"; }
+
+  /* Labels: Daily Punch Logs table (9 columns); :has() makes these win */
+  .attendance-table:has(thead th:nth-child(9)) td:nth-child(3)::before { content: "Date"; }
+  .attendance-table:has(thead th:nth-child(9)) td:nth-child(4)::before { content: "Mode"; }
+  .attendance-table:has(thead th:nth-child(9)) td:nth-child(5)::before { content: "Status"; }
+  .attendance-table:has(thead th:nth-child(9)) td:nth-child(6)::before { content: "Check-in"; }
+  .attendance-table:has(thead th:nth-child(9)) td:nth-child(7)::before { content: "Check-out"; }
+  .attendance-table:has(thead th:nth-child(9)) td:nth-child(8)::before { content: "Working hours"; }
+  .attendance-table:has(thead th:nth-child(9)) td:nth-child(9)::before { content: "Action"; }
+
+  /* Empty-state row: plain centred message, no label. Kept last in this block. */
+  .attendance-table td.no-data {
+    display: block;
+    padding: 1.5rem 1rem;
+    font-size: var(--fs-sm);
+    font-weight: 400;
+    text-align: center;
+  }
+  .attendance-table tbody td.no-data::before {
+    content: none;
+  }
+
+  /* Loading / empty message shown outside a table */
+  p.no-data {
+    padding: 1.5rem 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+  }
+}
+
+/* Extra-small phones: stack the filters and the 4 KPIs stay 2×2 */
+@media (max-width: 380px) {
+  .filter-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Desktop and up (≥ 1024px): roomier cells */
+@media (min-width: 1024px) {
+  .attendance-table th,
+  .attendance-table td {
+    padding-inline: 1.25rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   10. Accessibility preferences
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .attendance-container *,
+  .attendance-container *::before,
+  .attendance-container *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  .btn-primary-green:active,
+  .btn-accent-green:active,
+  .btn-danger:active {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .attendance-card,
+  .filter-card,
+  .stat-card,
+  .form-control,
+  .filter-item select,
+  .badge-mode,
+  .badge-status,
+  .btn-primary-green,
+  .btn-accent-green,
+  .btn-danger {
+    border: 1px solid CanvasText;
+  }
+}
