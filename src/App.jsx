@@ -5363,6 +5363,11 @@ const hideGlobalHeader =
 
           <Route path="/products" element={<Products />} />
           <Route path="/shop" element={<Shop />} />
+                   {/*
+  The last part of the URL is now the product slug,
+  e.g. /shop/product/asus-expertbook-0808
+*/}
+          <Route path="/shop/product/:slug" element={<ProductDetails />} />
           <Route path="/shop/product/:id" element={<ProductDetails />} />
 
           {/* =================================================
