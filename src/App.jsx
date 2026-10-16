@@ -5368,7 +5368,7 @@ const hideGlobalHeader =
   e.g. /shop/product/asus-expertbook-0808
 */}
           <Route path="/shop/product/:slug" element={<ProductDetails />} />
-          <Route path="/shop/product/:id" element={<ProductDetails />} />
+          {/* <Route path="/shop/product/:id" element={<ProductDetails />} /> */}
 
           {/* =================================================
               EMPLOYEE LEAVE DETAILS
