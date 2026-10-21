@@ -1,7 +1,8 @@
+
 // import axios from "axios";
 
-// const API_URL =
-//   import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+// // API base URL sirf .env se aayega (VITE_API_URL)
+// const API_URL = import.meta.env.VITE_API_URL || "";
 
 // const getToken = () =>
 //   localStorage.getItem("token") ||
@@ -94,99 +95,132 @@
 // };
 
 
-
-
 import axios from "axios";
 
-// API base URL sirf .env se aayega (VITE_API_URL)
-const API_URL = import.meta.env.VITE_API_URL || "";
+// =====================================================
+// API BASE
+// =====================================================
 
-const getToken = () =>
-  localStorage.getItem("token") ||
-  localStorage.getItem("accessToken");
+const rawBase =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:5000";
 
-const getConfig = () => ({
-  headers: {
-    Authorization: `Bearer ${getToken()}`,
-  },
-});
+const normalizedBase = rawBase.replace(/\/+$/, "");
 
-// ============================================
+const API_BASE = normalizedBase.endsWith("/api")
+  ? normalizedBase
+  : `${normalizedBase}/api`;
+
+const PAYMENT_API = `${API_BASE}/payments`;
+
+// =====================================================
+// AUTH HEADERS
+// =====================================================
+
+const getAuthHeaders = () => {
+  const token =
+    localStorage.getItem("token") ||
+    localStorage.getItem("accessToken");
+
+  return {
+    Authorization: token
+      ? `Bearer ${token}`
+      : "",
+    "Content-Type": "application/json",
+  };
+};
+
+// =====================================================
+// RESPONSE HELPER
+// =====================================================
+
+const handleResponse = (response) => response.data;
+
+// =====================================================
 // GET ALL PAYMENTS
 // GET /api/payments
-// ============================================
+// =====================================================
 
 export const getAllPayments = async () => {
-  const response = await axios.get(
-    `${API_URL}/payments`,
-    getConfig()
-  );
+  const response = await axios.get(PAYMENT_API, {
+    headers: getAuthHeaders(),
+  });
 
-  return response.data;
+  return handleResponse(response);
 };
 
-// ============================================
-// GET PAYMENT BY ID
-// ============================================
-
-export const getPaymentById = async (id) => {
-  const response = await axios.get(
-    `${API_URL}/payments/${id}`,
-    getConfig()
-  );
-
-  return response.data;
-};
-
-// ============================================
-// MARK PAYMENT SUCCESS
+// =====================================================
+// MARK SUCCESS
 // PATCH /api/payments/:id/success
-// ============================================
+// =====================================================
 
 export const markPaymentSuccess = async (
-  id,
-  data = {}
+  paymentId,
+  payload
 ) => {
   const response = await axios.patch(
-    `${API_URL}/payments/${id}/success`,
-    data,
-    getConfig()
+    `${PAYMENT_API}/${paymentId}/success`,
+    payload,
+    {
+      headers: getAuthHeaders(),
+    }
   );
 
-  return response.data;
+  return handleResponse(response);
 };
 
-// ============================================
-// MARK PAYMENT FAILED
-// ============================================
+// =====================================================
+// MARK FAILED
+// PATCH /api/payments/:id/failed
+// =====================================================
 
 export const markPaymentFailed = async (
-  id,
-  data = {}
+  paymentId,
+  payload
 ) => {
   const response = await axios.patch(
-    `${API_URL}/payments/${id}/failed`,
-    data,
-    getConfig()
+    `${PAYMENT_API}/${paymentId}/failed`,
+    payload,
+    {
+      headers: getAuthHeaders(),
+    }
   );
 
-  return response.data;
+  return handleResponse(response);
 };
 
-// ============================================
+// =====================================================
 // REFUND PAYMENT
 // PATCH /api/payments/:id/refund
-// ============================================
+// =====================================================
 
 export const refundPayment = async (
-  id,
-  data
+  paymentId,
+  payload
 ) => {
   const response = await axios.patch(
-    `${API_URL}/payments/${id}/refund`,
-    data,
-    getConfig()
+    `${PAYMENT_API}/${paymentId}/refund`,
+    payload,
+    {
+      headers: getAuthHeaders(),
+    }
   );
 
-  return response.data;
+  return handleResponse(response);
+};
+
+// =====================================================
+// GET PAYMENT BY ID
+// =====================================================
+
+export const getPaymentById = async (paymentId) => {
+  const response = await axios.get(
+    `${PAYMENT_API}/${paymentId}`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+
+  return handleResponse(response);
 };
