@@ -1994,8 +1994,8 @@ const STAFF_DASHBOARDS = [
   { label: "Sales / Receptionist Dashboard", path: "/receptionist-dashboard" },
   { label: "HR Dashboard", path: "/hr-dashboard" },
   { label: "Technician Dashboard", path: "/technician-dashboard" },
-  { label: "Inventory Dashboard", path: "/inventory-dashboard" },
-  { label: "Accountant Dashboard", path: "/accountant-dashboard" },
+  // { label: "Inventory Dashboard", path: "/inventory-dashboard" },
+  // { label: "Accountant Dashboard", path: "/accountant-dashboard" },
   { label: "IT Support Dashboard", path: "/itsupport-dashboard" },
 ];
 

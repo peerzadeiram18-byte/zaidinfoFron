@@ -1,116 +1,47 @@
-/* ==========================================================================
-   AttendanceManagement.css
-   Mobile-first and fully responsive (phone → tablet → desktop).
-   Class names are unchanged, so AdminAttendance.jsx needs no edits.
-   ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. Design tokens
-   Scoped to .attendance-container (not :root) so they can't leak into, or be
-   overwritten by, other pages' CSS.
-   -------------------------------------------------------------------------- */
-.attendance-container {
-  /* Color */
-  --bg-main: #f4f9f5;
-  --card-bg: #ffffff;
-  --card-alt: #f7fcf8;
-  --primary-green: #2e7d32;
-  --primary-green-hover: #1b5e20;
-  --accent-green: #3f9f45;
-  --accent-green-hover: #2e7d32;
-  --light-green-bg: #e8f5e9;
-  --border-color: #c8e6c9;
-  --border-row: #eef7f0;
-  --input-bg: #fafdfa;
-  --text-dark: #1e3a1e;
-  --text-muted: #557255;
-  --danger-red: #d32f2f;
-  --danger-hover: #b71c1c;
-  --focus-ring: rgba(76, 175, 80, 0.3);
-  --shadow: 0 1px 2px rgba(30, 58, 30, 0.06), 0 6px 18px rgba(46, 125, 50, 0.08);
+/* =========================================================
+   HR ATTENDANCE MANAGEMENT
+   COMPLETE RESPONSIVE CSS
+   THEME: WHITE / LIGHT BLUE / SLATE GREY
+========================================================= */
 
-  /* Status colors (text on tint) */
-  --present-bg: #e8f5e9;  --present-fg: #1b5e20;
-  --absent-bg: #ffebee;   --absent-fg: #b71c1c;
-  --leave-bg: #fff3e0;    --leave-fg: #b45309;
-  --half-bg: #e1f5fe;     --half-fg: #01579b;
-  --late-bg: #e8eaed;     --late-fg: #353b41;
-
-  /* Type: fluid scale */
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --fs-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
-  --fs-sm: clamp(0.8125rem, 0.79rem + 0.12vw, 0.9rem);
-  --fs-base: clamp(0.9375rem, 0.91rem + 0.15vw, 1rem);
-  --fs-lg: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
-  --fs-xl: clamp(1.375rem, 1.15rem + 1.1vw, 1.875rem);
-  --fs-stat: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
-
-  /* Space & shape */
-  --gap: clamp(1rem, 0.8rem + 1vw, 1.5rem);
-  --pad: clamp(1rem, 0.7rem + 1.5vw, 1.5rem);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --tap: 44px;
-  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-@media (prefers-color-scheme: dark) {
-  .attendance-container {
-    --bg-main: #0d1a15;
-    --card-bg: #14241d;
-    --card-alt: #172a22;
-    --primary-green: #66bb6a;
-    --primary-green-hover: #81c784;
-    --accent-green: #43a047;
-    --accent-green-hover: #4caf50;
-    --light-green-bg: #1c3329;
-    --border-color: #244436;
-    --border-row: #1f372c;
-    --input-bg: #101e18;
-    --text-dark: #e3f1e8;
-    --text-muted: #8fb3a0;
-    --danger-red: #e55353;
-    --danger-hover: #f06a6a;
-    --focus-ring: rgba(102, 187, 106, 0.35);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.25);
-
-    --present-bg: #1d4a33;  --present-fg: #a7e8c3;
-    --absent-bg: #4a2327;   --absent-fg: #f5b5bb;
-    --leave-bg: #4a3417;    --leave-fg: #fcd29a;
-    --half-bg: #17384d;     --half-fg: #a5d8f5;
-    --late-bg: #2b3238;     --late-fg: #c9d1d8;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   2. Page shell
-   -------------------------------------------------------------------------- */
-body:has(.attendance-container) {
-  background-color: #f4f9f5;
-}
-@media (prefers-color-scheme: dark) {
-  body:has(.attendance-container) {
-    background-color: #0d1a15;
-  }
-}
+/* =========================
+   MAIN CONTAINER
+========================= */
 
 .attendance-container {
-  box-sizing: border-box;
+  --att-primary: #617da7;
+  --att-primary-dark: #4c688f;
+  --att-primary-light: #eaf1f9;
+
+  --att-bg: #f5f7fb;
+  --att-white: #ffffff;
+  --att-text: #293a52;
+  --att-muted: #7889a2;
+  --att-border: #e3eaf3;
+
+  --att-green: #16845a;
+  --att-green-bg: #e7f7ef;
+
+  --att-red: #c34e55;
+  --att-red-bg: #fff0f1;
+
+  --att-orange: #b97920;
+  --att-orange-bg: #fff4e5;
+
+  --att-purple: #7458b5;
+  --att-purple-bg: #f1ecfb;
+
   width: 100%;
-  max-width: 1400px;
-  min-height: 100vh;
-  min-height: 100dvh;
-  margin-inline: auto;
-  padding: var(--pad);
-  padding-inline: max(var(--pad), env(safe-area-inset-left))
-    max(var(--pad), env(safe-area-inset-right));
-  padding-bottom: max(var(--pad), env(safe-area-inset-bottom));
-  background-color: var(--bg-main);
-  color: var(--text-dark);
-  font-family: var(--font);
-  font-size: var(--fs-base);
-  line-height: 1.5;
-  -webkit-text-size-adjust: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  padding: 28px;
+  margin: 0;
+  background: var(--att-bg);
+  color: var(--att-text);
+  font-family: inherit;
+  box-sizing: border-box;
 }
 
 .attendance-container *,
@@ -119,568 +50,985 @@ body:has(.attendance-container) {
   box-sizing: border-box;
 }
 
-.attendance-title {
-  margin: 0 0 var(--gap);
-  padding-bottom: 0.625rem;
-  border-bottom: 2px solid var(--border-color);
-  color: var(--primary-green);
-  font-size: var(--fs-xl);
+/* =========================
+   PAGE TITLE
+========================= */
+
+.attendance-container .attendance-title {
+  margin: 0 0 26px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid var(--att-border);
+  color: var(--att-text);
+  font-size: 25px;
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
+  line-height: 1.4;
+  letter-spacing: -0.4px;
 }
 
-/* --------------------------------------------------------------------------
-   3. Form cards
-   The old `flex: 1; min-width: 320px` overflowed any screen narrower than
-   ~370px. Grid with minmax(0, 1fr) can never be wider than its container.
-   -------------------------------------------------------------------------- */
-.attendance-forms-wrapper {
+/* =========================
+   FORMS WRAPPER
+========================= */
+
+.attendance-container .attendance-forms-wrapper {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--gap);
-  margin-bottom: calc(var(--gap) * 1.25);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  width: 100%;
+  margin-bottom: 26px;
 }
 
-.attendance-card {
+/* =========================
+   ATTENDANCE CARDS
+========================= */
+
+.attendance-container .attendance-card {
+  width: 100%;
   min-width: 0;
-  padding: var(--pad);
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow);
+  padding: 25px;
+  background: var(--att-white);
+  border: 1px solid var(--att-border);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(35, 60, 95, 0.035);
 }
 
-.attendance-card h3 {
-  margin: 0 0 0.75rem;
-  color: var(--primary-green);
-  font-size: var(--fs-lg);
-  line-height: 1.3;
-  text-wrap: balance;
+.attendance-container .attendance-card h3 {
+  margin: 0 0 22px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--att-border);
+  color: var(--att-text);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
-.attendance-card p,
-.card-subtitle {
-  margin: 0 0 1.125rem;
-  color: var(--text-muted);
-  font-size: var(--fs-sm);
+.attendance-container .card-subtitle {
+  margin: -10px 0 22px;
+  color: var(--att-muted);
+  font-size: 12px;
+  line-height: 1.6;
 }
 
-.form-group {
-  margin-bottom: 1rem;
+/* =========================
+   FORM
+========================= */
+
+.attendance-container .attendance-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
 }
 
-.form-group label {
+.attendance-container .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.attendance-container .form-group label {
   display: block;
-  margin-bottom: 0.375rem;
-  color: var(--text-dark);
-  font-size: var(--fs-sm);
+  margin: 0;
+  color: #536781;
+  font-size: 12px;
   font-weight: 600;
+  line-height: 1.5;
 }
 
-.form-control {
+/* =========================
+   INPUTS / SELECTS
+========================= */
+
+.attendance-container .form-control,
+.attendance-container .form-group input,
+.attendance-container .form-group select {
   display: block;
   width: 100%;
-  min-height: var(--tap);
-  padding: 0.625rem 0.75rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  background-color: var(--input-bg);
-  color: var(--text-dark);
-  font: inherit;
-  font-size: max(16px, var(--fs-base)); /* prevents iOS zoom-on-focus */
-  line-height: 1.3;
-  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
-}
-
-.form-control::placeholder {
-  color: var(--text-muted);
-  opacity: 0.75;
-}
-
-.form-control:hover {
-  border-color: var(--accent-green);
-}
-
-.form-control:focus-visible {
+  min-width: 0;
+  height: 46px;
+  padding: 0 14px;
+  margin: 0;
+  border: 1px solid #dce5ef;
+  border-radius: 9px;
   outline: none;
-  border-color: var(--accent-green);
-  box-shadow: 0 0 0 3px var(--focus-ring);
+  background: #ffffff;
+  color: var(--att-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
 }
 
-/* Select styling: consistent chevron across browsers */
-select.form-control,
-.filter-item select {
-  appearance: none;
-  -webkit-appearance: none;
-  padding-right: 2.25rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%23557255' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.875rem center;
+.attendance-container .form-control::placeholder,
+.attendance-container .form-group input::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
+}
+
+.attendance-container .form-control:hover,
+.attendance-container .form-group input:hover,
+.attendance-container .form-group select:hover {
+  border-color: #bdcde0;
+}
+
+.attendance-container .form-control:focus,
+.attendance-container .form-group input:focus,
+.attendance-container .form-group select:focus {
+  border-color: var(--att-primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(97, 125, 167, 0.12);
+}
+
+.attendance-container select {
   cursor: pointer;
 }
 
-/* --------------------------------------------------------------------------
-   4. Buttons
-   -------------------------------------------------------------------------- */
-.btn-primary-green,
-.btn-accent-green,
-.btn-danger {
-  min-height: var(--tap);
-  border: 0;
-  color: #ffffff;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s var(--ease), transform 0.15s var(--ease);
-  -webkit-tap-highlight-color: transparent;
+.attendance-container input[type="date"] {
+  color-scheme: light;
 }
 
-.btn-primary-green,
-.btn-accent-green {
+/* =========================
+   BUTTONS
+========================= */
+
+.attendance-container .btn-primary-green,
+.attendance-container .btn-accent-green {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
-  padding: 0.6875rem 1rem;
-  border-radius: var(--radius-sm);
-  font-size: var(--fs-base);
+  min-height: 45px;
+  padding: 11px 18px;
+  margin-top: 4px;
+  border: 1px solid var(--att-primary);
+  border-radius: 9px;
+  background: var(--att-primary);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.btn-primary-green { background-color: #2e7d32; }
-.btn-primary-green:hover { background-color: #1b5e20; }
-
-.btn-accent-green { background-color: var(--accent-green); }
-.btn-accent-green:hover { background-color: var(--accent-green-hover); }
-
-.btn-danger {
-  padding: 0.5rem 0.875rem;
-  border-radius: 6px;
-  background-color: #c62828;
-  font-size: var(--fs-sm);
-}
-.btn-danger:hover { background-color: var(--danger-hover); }
-
-.btn-primary-green:active,
-.btn-accent-green:active,
-.btn-danger:active {
-  transform: translateY(1px);
+.attendance-container .btn-primary-green:hover,
+.attendance-container .btn-accent-green:hover {
+  background: var(--att-primary-dark);
+  border-color: var(--att-primary-dark);
+  box-shadow: 0 4px 12px rgba(97, 125, 167, 0.18);
 }
 
-.btn-primary-green:focus-visible,
-.btn-accent-green:focus-visible,
-.btn-danger:focus-visible {
-  outline: 3px solid var(--focus-ring);
+.attendance-container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   FILTER CARD
+========================= */
+
+.attendance-container .filter-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  padding: 22px 25px;
+  margin-bottom: 24px;
+  background: var(--att-white);
+  border: 1px solid var(--att-border);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(35, 60, 95, 0.025);
+}
+
+.attendance-container .filter-title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.attendance-container .filter-title h4 {
+  margin: 0;
+  color: var(--att-text);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.attendance-container .filter-title span {
+  color: var(--att-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.attendance-container .filter-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.attendance-container .filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 130px;
+}
+
+.attendance-container .filter-item label {
+  color: #60718b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.attendance-container .filter-item select {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #dce5ef;
+  border-radius: 8px;
+  outline: none;
+  background: #ffffff;
+  color: var(--att-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.attendance-container .filter-item select:focus {
+  border-color: var(--att-primary);
+  box-shadow: 0 0 0 3px rgba(97, 125, 167, 0.12);
+}
+
+/* =========================
+   KPI STATS GRID
+========================= */
+
+.attendance-container .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+.attendance-container .stat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 115px;
+  padding: 21px;
+  overflow: hidden;
+  background: var(--att-white);
+  border: 1px solid var(--att-border);
+  border-radius: 13px;
+  box-shadow: 0 3px 12px rgba(35, 60, 95, 0.025);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.attendance-container .stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 18px rgba(35, 60, 95, 0.07);
+}
+
+.attendance-container .stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--att-primary);
+}
+
+.attendance-container .stat-card h4 {
+  margin: 0;
+  color: var(--att-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.attendance-container .stat-card > span {
+  display: block;
+  color: var(--att-text);
+  font-size: 29px;
+  font-weight: 750;
+  line-height: 1.1;
+}
+
+/* PRESENT */
+
+.attendance-container .stat-present::before {
+  background: var(--att-green);
+}
+
+.attendance-container .stat-present > span {
+  color: var(--att-green);
+}
+
+/* ABSENT */
+
+.attendance-container .stat-absent::before {
+  background: var(--att-red);
+}
+
+.attendance-container .stat-absent > span {
+  color: var(--att-red);
+}
+
+/* LEAVE */
+
+.attendance-container .stat-leave::before {
+  background: var(--att-orange);
+}
+
+.attendance-container .stat-leave > span {
+  color: var(--att-orange);
+}
+
+/* HALF DAY */
+
+.attendance-container .stat-halfday::before {
+  background: var(--att-purple);
+}
+
+.attendance-container .stat-halfday > span {
+  color: var(--att-purple);
+}
+
+/* =========================
+   SECTION HEADERS
+========================= */
+
+.attendance-container .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  width: 100%;
+  padding: 20px 22px;
+  background: var(--att-white);
+  border: 1px solid var(--att-border);
+  border-bottom: none;
+  border-radius: 13px 13px 0 0;
+}
+
+.attendance-container .records-title {
+  margin: 0;
+  color: var(--att-text);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* =========================
+   TABLE WRAPPER
+========================= */
+
+.attendance-container .table-wrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--att-white);
+  border: 1px solid var(--att-border);
+  border-radius: 0 0 13px 13px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 14px rgba(35, 60, 95, 0.025);
+}
+
+/* =========================
+   ATTENDANCE TABLE
+========================= */
+
+.attendance-container .attendance-table {
+  width: 100%;
+  min-width: 1000px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background: #ffffff;
+  text-align: left;
+}
+
+.attendance-container .attendance-table thead {
+  background: #f6f9fd;
+}
+
+.attendance-container .attendance-table th {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--att-border);
+  color: #6e809a;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.35px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.attendance-container .attendance-table td {
+  padding: 16px 18px;
+  border-bottom: 1px solid #edf1f6;
+  color: #53657e;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.6;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.attendance-container .attendance-table td strong {
+  color: var(--att-text);
+  font-weight: 700;
+}
+
+.attendance-container .attendance-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.attendance-container .attendance-table tbody tr:hover {
+  background: #f9fbfe;
+}
+
+.attendance-container .attendance-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================
+   TABLE TEXT COLORS
+========================= */
+
+.attendance-container .text-success {
+  color: var(--att-green) !important;
+  font-weight: 700 !important;
+}
+
+.attendance-container .text-danger {
+  color: var(--att-red) !important;
+  font-weight: 700 !important;
+}
+
+.attendance-container .text-warning {
+  color: var(--att-orange) !important;
+  font-weight: 700 !important;
+}
+
+/* =========================
+   ATTENDANCE MODE BADGE
+========================= */
+
+.attendance-container .badge-mode {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 11px;
+  border-radius: 7px;
+  background: var(--att-primary-light);
+  color: var(--att-primary);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* =========================
+   ATTENDANCE STATUS BADGES
+========================= */
+
+.attendance-container .badge-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border-radius: 7px;
+  background: #edf1f6;
+  color: #687c96;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.attendance-container .status-present {
+  background: var(--att-green-bg);
+  color: var(--att-green);
+}
+
+.attendance-container .status-absent {
+  background: var(--att-red-bg);
+  color: var(--att-red);
+}
+
+.attendance-container .status-leave {
+  background: var(--att-orange-bg);
+  color: var(--att-orange);
+}
+
+.attendance-container .status-half_day {
+  background: var(--att-purple-bg);
+  color: var(--att-purple);
+}
+
+.attendance-container .status-late {
+  background: #fff1e4;
+  color: #bd7422;
+}
+
+/* =========================
+   CHECKOUT BUTTON
+========================= */
+
+.attendance-container .btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 8px 13px;
+  border: 1px solid #e7b8bb;
+  border-radius: 7px;
+  background: var(--att-red-bg);
+  color: var(--att-red);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.attendance-container .btn-danger:hover {
+  background: var(--att-red);
+  border-color: var(--att-red);
+  color: #ffffff;
+}
+
+/* =========================
+   CHECKOUT COMPLETED
+========================= */
+
+.attendance-container .checkout-done {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 7px;
+  background: var(--att-green-bg);
+  color: var(--att-green);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* =========================
+   NO DATA / LOADING
+========================= */
+
+.attendance-container .no-data {
+  padding: 32px 20px !important;
+  color: var(--att-muted) !important;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.attendance-container p.no-data {
+  margin: 0;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.attendance-container .table-wrapper::-webkit-scrollbar {
+  height: 7px;
+}
+
+.attendance-container .table-wrapper::-webkit-scrollbar-track {
+  background: #f2f5fa;
+  border-radius: 10px;
+}
+
+.attendance-container .table-wrapper::-webkit-scrollbar-thumb {
+  background: #bdcbe0;
+  border-radius: 10px;
+}
+
+.attendance-container .table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--att-primary);
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+.attendance-container button:focus-visible,
+.attendance-container select:focus-visible,
+.attendance-container input:focus-visible {
+  outline: 3px solid rgba(97, 125, 167, 0.24);
   outline-offset: 2px;
 }
 
-/* --------------------------------------------------------------------------
-   5. Filter bar
-   -------------------------------------------------------------------------- */
-.filter-card {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin: var(--gap) 0;
-  padding: var(--pad);
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow);
-}
+/* =========================================================
+   RESPONSIVE - LARGE LAPTOP
+========================================================= */
 
-.filter-title h4 {
-  margin: 0 0 0.25rem;
-  font-size: var(--fs-lg);
-  line-height: 1.3;
-}
+@media (max-width: 1280px) {
+  .attendance-container {
+    padding: 22px;
+  }
 
-.filter-title span {
-  color: var(--text-muted);
-  font-size: var(--fs-sm);
-}
+  .attendance-container .attendance-forms-wrapper {
+    gap: 18px;
+  }
 
-.filter-controls {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-}
+  .attendance-container .attendance-card {
+    padding: 21px;
+  }
 
-.filter-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  min-width: 0;
-}
+  .attendance-container .stats-grid {
+    gap: 14px;
+  }
 
-.filter-item label {
-  color: var(--text-dark);
-  font-size: var(--fs-sm);
-  font-weight: 600;
-}
-
-.filter-item select {
-  width: 100%;
-  min-height: var(--tap);
-  padding: 0.5rem 2.25rem 0.5rem 0.75rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  background-color: var(--input-bg);
-  color: var(--text-dark);
-  font: inherit;
-  font-size: max(16px, var(--fs-base));
-  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
-}
-
-.filter-item select:hover { border-color: var(--accent-green); }
-.filter-item select:focus-visible {
-  outline: none;
-  border-color: var(--accent-green);
-  box-shadow: 0 0 0 3px var(--focus-ring);
-}
-
-/* --------------------------------------------------------------------------
-   6. KPI stat cards
-   -------------------------------------------------------------------------- */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-bottom: calc(var(--gap) * 1.25);
-}
-
-.stat-card {
-  min-width: 0;
-  padding: clamp(0.875rem, 0.6rem + 1vw, 1.25rem);
-  border-radius: var(--radius-md);
-  text-align: center;
-}
-
-.stat-card h4 {
-  margin: 0 0 0.25rem;
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.stat-card span {
-  display: block;
-  font-size: var(--fs-stat);
-  font-weight: 700;
-  line-height: 1.1;
-  font-variant-numeric: tabular-nums;
-}
-
-.stat-present { background: var(--present-bg); color: var(--present-fg); }
-.stat-absent  { background: var(--absent-bg);  color: var(--absent-fg); }
-.stat-leave   { background: var(--leave-bg);   color: var(--leave-fg); }
-.stat-halfday { background: var(--half-bg);    color: var(--half-fg); }
-
-/* --------------------------------------------------------------------------
-   7. Section headings
-   -------------------------------------------------------------------------- */
-.section-header {
-  margin-bottom: 0.75rem;
-}
-
-.records-title {
-  margin: 0;
-  color: var(--text-dark);
-  font-size: var(--fs-lg);
-  line-height: 1.3;
-  text-wrap: balance;
-}
-
-/* --------------------------------------------------------------------------
-   8. Tables (desktop/tablet base styling)
-   overflow was `hidden`, which silently clipped columns on tablets.
-   It now scrolls horizontally when the table is wider than its card.
-   -------------------------------------------------------------------------- */
-.table-wrapper {
-  width: 100%;
-  overflow-x: auto;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow);
-  -webkit-overflow-scrolling: touch;
-}
-
-.attendance-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: var(--fs-sm);
-}
-
-.attendance-table th {
-  padding: 0.875rem 1rem;
-  background-color: var(--light-green-bg);
-  border-bottom: 1px solid var(--border-color);
-  color: var(--primary-green);
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.attendance-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--border-row);
-  color: var(--text-dark);
-  font-variant-numeric: tabular-nums;
-  vertical-align: middle;
-}
-
-@media (hover: hover) {
-  .attendance-table tbody tr:hover {
-    background-color: var(--card-alt);
+  .attendance-container .stat-card {
+    padding: 18px;
   }
 }
 
-.no-data {
-  padding: 1.5rem 1rem;
-  color: var(--text-muted);
-  text-align: center;
-}
+/* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
 
-.attendance-table td.no-data {
-  padding: 1.75rem 1rem;
-  text-align: center;
-  color: var(--text-muted);
-}
+@media (max-width: 1024px) {
+  .attendance-container {
+    padding: 20px;
+  }
 
-/* Badges */
-.badge-mode,
-.badge-status {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  line-height: 1.2;
-  white-space: nowrap;
-}
+  .attendance-container .attendance-forms-wrapper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+  }
 
-.badge-mode {
-  background-color: var(--light-green-bg);
-  color: var(--primary-green);
-}
+  .attendance-container .attendance-card {
+    padding: 18px;
+  }
 
-.status-present  { background: var(--present-bg); color: var(--present-fg); }
-.status-absent   { background: var(--absent-bg);  color: var(--absent-fg); }
-.status-leave    { background: var(--leave-bg);   color: var(--leave-fg); }
-.status-half_day { background: var(--half-bg);    color: var(--half-fg); }
-.status-late     { background: var(--late-bg);    color: var(--late-fg); }
+  .attendance-container .attendance-card h3 {
+    font-size: 15px;
+  }
 
-/* Colored numbers in the summary table */
-.text-success { color: var(--present-fg); font-weight: 600; }
-.text-danger  { color: var(--absent-fg);  font-weight: 600; }
-.text-warning { color: var(--leave-fg);   font-weight: 600; }
-
-.checkout-done {
-  color: var(--text-muted);
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-/* --------------------------------------------------------------------------
-   9. Breakpoints
-   -------------------------------------------------------------------------- */
-
-/* Small tablets and up (≥ 720px): real tables, 2-up form cards */
-@media (min-width: 720px) {
-  .attendance-forms-wrapper {
+  .attendance-container .stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .filter-card {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+  .attendance-container .filter-card {
+    align-items: flex-start;
   }
 
-  .filter-controls {
-    grid-template-columns: repeat(2, minmax(9rem, 12rem));
-  }
-
-  .filter-item {
-    flex-direction: column;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1rem;
-  }
-
-  .attendance-table tbody tr:last-child > td {
-    border-bottom: 0;
+  .attendance-container .stat-card {
+    min-height: 105px;
   }
 }
 
-/* Phones (< 720px): each table row becomes a labelled card.
-   Labels come from CSS (nth-child), so the JSX needs no data-label attributes.
-   The two tables are told apart with :has(): the punch-log table has 9 columns,
-   the monthly summary has 8. If you add/reorder columns, update the labels. */
-@media (max-width: 719px) {
-  .table-wrapper {
-    overflow: visible;
-    background: transparent;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
+/* =========================================================
+   RESPONSIVE - SMALL TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+  .attendance-container {
+    padding: 16px;
   }
 
-  .attendance-table,
-  .attendance-table tbody,
-  .attendance-table tr {
-    display: block;
+  .attendance-container .attendance-title {
+    font-size: 21px;
+    margin-bottom: 20px;
+  }
+
+  .attendance-container .attendance-forms-wrapper {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .attendance-container .attendance-card {
+    padding: 20px;
+  }
+
+  .attendance-container .filter-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+    padding: 20px;
+  }
+
+  .attendance-container .filter-controls {
     width: 100%;
+  }
+
+  .attendance-container .filter-item {
+    flex: 1;
     min-width: 0;
   }
 
-  /* Hide the header row visually; screen readers still get the labels */
-  .attendance-table thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  .attendance-container .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 
-  .attendance-table tbody {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr); /* rows can't outgrow the screen */
-    gap: 0.75rem;
+  .attendance-container .stat-card {
+    min-height: 100px;
+    padding: 16px;
   }
 
-  .attendance-table tbody tr {
-    padding: 0.25rem 1rem;
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow);
+  .attendance-container .stat-card > span {
+    font-size: 25px;
   }
 
-  /* Every cell: label on the left, value on the right.
-     All selectors here are `.attendance-table td…` (same specificity as the
-     base rules above) so source order decides, with no accidental overrides. */
-  .attendance-table td {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+  .attendance-container .section-header {
+    padding: 17px;
+  }
+
+  .attendance-container .records-title {
+    font-size: 14px;
+  }
+
+  .attendance-container .attendance-table th {
+    padding: 13px 15px;
+  }
+
+  .attendance-container .attendance-table td {
+    padding: 13px 15px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+@media (max-width: 576px) {
+  .attendance-container {
+    padding: 12px;
+  }
+
+  .attendance-container .attendance-title {
+    font-size: 19px;
+    line-height: 1.4;
+    margin-bottom: 18px;
+    padding-bottom: 13px;
+  }
+
+  .attendance-container .attendance-forms-wrapper {
+    gap: 13px;
+    margin-bottom: 18px;
+  }
+
+  .attendance-container .attendance-card {
+    padding: 16px 14px;
+    border-radius: 11px;
+  }
+
+  .attendance-container .attendance-card h3 {
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+
+  .attendance-container .attendance-card form {
+    gap: 15px;
+  }
+
+  .attendance-container .form-group {
+    gap: 7px;
+  }
+
+  .attendance-container .form-group label {
+    font-size: 11px;
+  }
+
+  .attendance-container .form-control,
+  .attendance-container .form-group input,
+  .attendance-container .form-group select {
+    height: 44px;
+    font-size: 13px;
+  }
+
+  .attendance-container .btn-primary-green,
+  .attendance-container .btn-accent-green {
+    min-height: 44px;
+    font-size: 12px;
+  }
+
+  .attendance-container .filter-card {
+    padding: 16px 14px;
+    gap: 16px;
+    margin-bottom: 18px;
+    border-radius: 11px;
+  }
+
+  .attendance-container .filter-title h4 {
+    font-size: 14px;
+  }
+
+  .attendance-container .filter-title span {
+    font-size: 11px;
+  }
+
+  .attendance-container .filter-controls {
+    gap: 10px;
+  }
+
+  .attendance-container .filter-item label {
+    font-size: 10px;
+  }
+
+  .attendance-container .filter-item select {
+    height: 41px;
+    font-size: 12px;
+  }
+
+  .attendance-container .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .attendance-container .stat-card {
+    min-height: 95px;
+    padding: 13px 12px;
+    gap: 10px;
+    border-radius: 10px;
+  }
+
+  .attendance-container .stat-card h4 {
+    font-size: 11px;
+  }
+
+  .attendance-container .stat-card > span {
+    font-size: 23px;
+  }
+
+  .attendance-container .section-header {
+    padding: 14px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .attendance-container .records-title {
+    font-size: 13px;
+  }
+
+  .attendance-container .table-wrapper {
+    margin-bottom: 20px;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .attendance-container .attendance-table {
+    min-width: 900px;
+  }
+
+  .attendance-container .attendance-table th {
+    font-size: 10px;
+    padding: 12px;
+  }
+
+  .attendance-container .attendance-table td {
+    font-size: 11px;
+    padding: 12px;
+  }
+
+  .attendance-container .badge-status,
+  .attendance-container .badge-mode {
+    font-size: 9px;
+    padding: 5px 8px;
+  }
+
+  .attendance-container .btn-danger {
+    min-height: 32px;
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+
+  .attendance-container .no-data {
+    padding: 25px 14px !important;
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE - VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+  .attendance-container {
+    padding: 8px;
+  }
+
+  .attendance-container .attendance-title {
+    font-size: 17px;
+  }
+
+  .attendance-container .attendance-card {
+    padding: 13px 11px;
+  }
+
+  .attendance-container .filter-card {
+    padding: 13px 11px;
+  }
+
+  .attendance-container .stats-grid {
+    gap: 8px;
+  }
+
+  .attendance-container .stat-card {
+    padding: 11px 9px;
+    min-height: 90px;
+  }
+
+  .attendance-container .stat-card h4 {
+    font-size: 10px;
+  }
+
+  .attendance-container .stat-card > span {
+    font-size: 21px;
+  }
+
+  .attendance-container .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .attendance-container .filter-item {
     width: 100%;
-    padding: 0.625rem 0;
-    text-align: right;
-    overflow-wrap: anywhere;
   }
 
-  .attendance-table td:last-child {
-    border-bottom: 0;
-  }
-
-  .attendance-table td::before {
-    flex: none;
-    max-width: 50%;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-align: left;
-  }
-
-  /* First cell (employee name) is the card title */
-  .attendance-table td:first-child {
-    justify-content: flex-start;
-    padding-top: 0.75rem;
-    font-size: var(--fs-base);
-    font-weight: 700;
-    text-align: left;
-  }
-  .attendance-table td:first-child::before {
-    content: none;
-  }
-
-  /* Labels: Monthly Summary table (8 columns) */
-  .attendance-table td:nth-child(2)::before { content: "Employee ID"; }
-  .attendance-table td:nth-child(3)::before { content: "Present days"; }
-  .attendance-table td:nth-child(4)::before { content: "Absent days"; }
-  .attendance-table td:nth-child(5)::before { content: "Leaves"; }
-  .attendance-table td:nth-child(6)::before { content: "Half days"; }
-  .attendance-table td:nth-child(7)::before { content: "Late entries"; }
-  .attendance-table td:nth-child(8)::before { content: "Total hours"; }
-
-  /* Labels: Daily Punch Logs table (9 columns); :has() makes these win */
-  .attendance-table:has(thead th:nth-child(9)) td:nth-child(3)::before { content: "Date"; }
-  .attendance-table:has(thead th:nth-child(9)) td:nth-child(4)::before { content: "Mode"; }
-  .attendance-table:has(thead th:nth-child(9)) td:nth-child(5)::before { content: "Status"; }
-  .attendance-table:has(thead th:nth-child(9)) td:nth-child(6)::before { content: "Check-in"; }
-  .attendance-table:has(thead th:nth-child(9)) td:nth-child(7)::before { content: "Check-out"; }
-  .attendance-table:has(thead th:nth-child(9)) td:nth-child(8)::before { content: "Working hours"; }
-  .attendance-table:has(thead th:nth-child(9)) td:nth-child(9)::before { content: "Action"; }
-
-  /* Empty-state row: plain centred message, no label. Kept last in this block. */
-  .attendance-table td.no-data {
-    display: block;
-    padding: 1.5rem 1rem;
-    font-size: var(--fs-sm);
-    font-weight: 400;
-    text-align: center;
-  }
-  .attendance-table tbody td.no-data::before {
-    content: none;
-  }
-
-  /* Loading / empty message shown outside a table */
-  p.no-data {
-    padding: 1.5rem 1rem;
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
+  .attendance-container .section-header {
+    padding: 12px;
   }
 }
 
-/* Extra-small phones: stack the filters and the 4 KPIs stay 2×2 */
-@media (max-width: 380px) {
-  .filter-controls {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
 
-/* Desktop and up (≥ 1024px): roomier cells */
-@media (min-width: 1024px) {
-  .attendance-table th,
-  .attendance-table td {
-    padding-inline: 1.25rem;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   10. Accessibility preferences
-   -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .attendance-container *,
   .attendance-container *::before,
   .attendance-container *::after {
-    transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
-  }
-  .btn-primary-green:active,
-  .btn-accent-green:active,
-  .btn-danger:active {
-    transform: none;
-  }
-}
-
-@media (forced-colors: active) {
-  .attendance-card,
-  .filter-card,
-  .stat-card,
-  .form-control,
-  .filter-item select,
-  .badge-mode,
-  .badge-status,
-  .btn-primary-green,
-  .btn-accent-green,
-  .btn-danger {
-    border: 1px solid CanvasText;
+    transition-duration: 0.01ms !important;
   }
 }

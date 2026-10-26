@@ -696,11 +696,11 @@ const NAV_SECTIONS = [
   {
     title: "STAFF & LEAVES",
     links: [
-      {
-        name: "Receptionist Staff",
-        icon: FaTools,
-        path: `${BASE}/staff-list`,
-      },
+      // {
+      //   name: "Receptionist Staff",
+      //   icon: FaTools,
+      //   path: `${BASE}/staff-list`,
+      // },
       {
         name: "Apply Leave",
         icon: FaCalendarPlus,

@@ -1,610 +1,1138 @@
-/* ==========================================================================
-   ShiftManagement.css
-   Mobile-first, token-based, responsive (phone → tablet → desktop).
-   Class names are unchanged, so no edits are needed in ShiftManagement.jsx.
-   ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. Design tokens
-   -------------------------------------------------------------------------- */
-:root {
-  /* Color */
-  --sm-bg: #f4fdf8;
-  --sm-surface: #ffffff;
-  --sm-surface-alt: #f7fdfa;
-  --sm-surface-head: #e8f7ee;
-  --sm-border: #d8f3e5;
-  --sm-border-input: #b7e4c7;
-  --sm-border-row: #edf7f2;
+/* ============================================
+   HR SHIFT MANAGEMENT
+   UNIQUE CLASS PREFIX: hrsm-
+============================================ */
 
-  --sm-text: #334e43;
-  --sm-text-strong: #1b4d3e;
-  --sm-text-label: #2e5d4b;
-  --sm-text-muted: #5c8d7b;
-  --sm-text-faint: #7fa998;
+.hrsm-page {
+  --hrsm-primary: #607da9;
+  --hrsm-primary-dark: #48668f;
+  --hrsm-primary-light: #eaf1f9;
 
-  --sm-primary: #2e7d32;
-  --sm-primary-hover: #256528;
-  --sm-primary-disabled: #a3d9b1;
-  --sm-primary-ring: rgba(46, 125, 50, 0.22);
+  --hrsm-bg: #f5f7fb;
+  --hrsm-white: #ffffff;
 
-  --sm-input-bg: #fbfdfc;
+  --hrsm-text: #27384f;
+  --hrsm-muted: #7789a3;
+  --hrsm-border: #e5ebf3;
 
-  --sm-error-bg: #fde8e8;
-  --sm-error-text: #9b1c1c;
-  --sm-error-line: #f87171;
+  --hrsm-green: #16865a;
+  --hrsm-green-bg: #e8f7ef;
 
-  --sm-badge-active-bg: #d1e7dd;
-  --sm-badge-active-text: #0f5132;
-  --sm-badge-inactive-bg: #f8d7da;
-  --sm-badge-inactive-text: #842029;
-  --sm-neutral: #6b7f76; /* darker than before: passes WCAG AA on white */
+  --hrsm-orange: #b87719;
+  --hrsm-orange-bg: #fff4e3;
 
-  /* Type: fluid scale (min, preferred, max) */
-  --sm-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
-  --sm-font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas,
-    monospace;
-  --sm-text-xs: clamp(0.75rem, 0.73rem + 0.1vw, 0.8125rem);
-  --sm-text-sm: clamp(0.8125rem, 0.79rem + 0.12vw, 0.875rem);
-  --sm-text-base: clamp(0.9375rem, 0.91rem + 0.15vw, 1rem);
-  --sm-text-lg: clamp(1.125rem, 1.04rem + 0.45vw, 1.375rem);
+  --hrsm-purple: #755bc2;
+  --hrsm-purple-bg: #f0ebfc;
 
-  /* Space & shape */
-  --sm-gap: clamp(1rem, 0.8rem + 1vw, 1.75rem);
-  --sm-pad: clamp(1rem, 0.7rem + 1.5vw, 1.75rem);
-  --sm-radius-sm: 8px;
-  --sm-radius-md: 12px;
-  --sm-radius-pill: 999px;
-  --sm-shadow: 0 1px 2px rgba(27, 77, 62, 0.06),
-    0 6px 20px rgba(46, 125, 50, 0.08);
-
-  --sm-tap: 44px; /* minimum comfortable touch target */
-  --sm-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-/* Dark mode follows the OS setting */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --sm-bg: #0d1a15;
-    --sm-surface: #14241d;
-    --sm-surface-alt: #172a22;
-    --sm-surface-head: #1c3329;
-    --sm-border: #244436;
-    --sm-border-input: #2f5a47;
-    --sm-border-row: #1f372c;
-
-    --sm-text: #c5dbd0;
-    --sm-text-strong: #e6f4ec;
-    --sm-text-label: #b5d2c4;
-    --sm-text-muted: #86ab99;
-    --sm-text-faint: #6f9684;
-
-    --sm-primary: #4caf50;
-    --sm-primary-hover: #66bb6a;
-    --sm-primary-disabled: #2f5a47;
-    --sm-primary-ring: rgba(76, 175, 80, 0.3);
-    --sm-input-bg: #101e18;
-
-    --sm-error-bg: #3a1c1c;
-    --sm-error-text: #fca5a5;
-    --sm-error-line: #f87171;
-
-    --sm-badge-active-bg: #1d4a33;
-    --sm-badge-active-text: #a7e8c3;
-    --sm-badge-inactive-bg: #4a2327;
-    --sm-badge-inactive-text: #f5b5bb;
-    --sm-neutral: #8fa89c;
-
-    --sm-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.25);
-  }
-}
-
-/* --------------------------------------------------------------------------
-   2. Page + container
-   The background used to sit only on the container (a pale strip inside a
-   white page). Painting it on the body fixes that without touching the JSX.
-   -------------------------------------------------------------------------- */
-body:has(.shift-container) {
-  background-color: var(--sm-bg);
-}
-
-.shift-container {
-  box-sizing: border-box;
   width: 100%;
-  max-width: 1100px;
-  margin-inline: auto;
-  padding: var(--sm-gap);
-  padding-inline: max(var(--sm-gap), env(safe-area-inset-left))
-    max(var(--sm-gap), env(safe-area-inset-right));
-  display: flex;
-  flex-direction: column;
-  gap: var(--sm-gap);
-  font-family: var(--sm-font);
-  font-size: var(--sm-text-base);
-  line-height: 1.5;
-  color: var(--sm-text);
-  background-color: var(--sm-bg);
-  -webkit-text-size-adjust: 100%;
-}
-
-.shift-container *,
-.shift-container *::before,
-.shift-container *::after {
+  min-width: 0;
+  min-height: 100%;
+  padding: 28px;
+  background: var(--hrsm-bg);
+  color: var(--hrsm-text);
+  font-family: inherit;
   box-sizing: border-box;
 }
 
-/* --------------------------------------------------------------------------
-   3. Card + headings
-   -------------------------------------------------------------------------- */
-.shift-card {
-  min-width: 0; /* lets the table scroll instead of stretching the flex item */
-  background-color: var(--sm-surface);
-  border: 1px solid var(--sm-border);
-  border-radius: var(--sm-radius-md);
-  padding: var(--sm-pad);
-  box-shadow: var(--sm-shadow);
+.hrsm-page *,
+.hrsm-page *::before,
+.hrsm-page *::after {
+  box-sizing: border-box;
 }
 
-.shift-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 0.75rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--sm-border);
-}
-
-.shift-heading {
-  margin: 0;
-  font-size: var(--sm-text-lg);
-  font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: var(--sm-text-strong);
-  text-wrap: balance;
-}
-
-.shift-subheading {
-  font-size: var(--sm-text-sm);
-  color: var(--sm-text-muted);
-}
-
-/* --------------------------------------------------------------------------
-   4. Error banner
-   -------------------------------------------------------------------------- */
-.shift-error-msg {
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
-  border-radius: var(--sm-radius-sm);
-  border-left: 4px solid var(--sm-error-line);
-  background-color: var(--sm-error-bg);
-  color: var(--sm-error-text);
-  font-size: var(--sm-text-sm);
-  overflow-wrap: anywhere;
-}
-
-/* --------------------------------------------------------------------------
-   5. Form grid
-   Explicit column counts per breakpoint replace repeat(auto-fit, minmax(240px))
-   which, combined with `span 2`, forced horizontal overflow on narrow screens.
-   -------------------------------------------------------------------------- */
-.shift-form-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* phones */
-  gap: 1rem 1.125rem;
-  align-items: end;
-}
-
-.shift-field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
+.hrsm-container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
   min-width: 0;
 }
 
-.shift-label {
-  font-size: var(--sm-text-sm);
-  font-weight: 600;
-  color: var(--sm-text-label);
+/* ============================================
+   PAGE HEADER
+============================================ */
+
+.hrsm-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 26px;
 }
 
-.shift-input,
-.shift-select {
-  width: 100%;
-  min-height: var(--sm-tap);
-  padding: 0.625rem 0.75rem;
-  border: 1px solid var(--sm-border-input);
-  border-radius: var(--sm-radius-sm);
-  background-color: var(--sm-input-bg);
-  color: var(--sm-text-strong);
-  font: inherit;
-  font-size: max(16px, var(--sm-text-base)); /* stops iOS zooming on focus */
-  line-height: 1.3;
-  transition: border-color 0.2s var(--sm-ease), box-shadow 0.2s var(--sm-ease);
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.shift-input::placeholder {
-  color: var(--sm-text-faint);
-}
-
-.shift-input:hover,
-.shift-select:hover {
-  border-color: var(--sm-primary);
-}
-
-/* Keep a visible focus indicator (the old CSS had outline: none) */
-.shift-input:focus-visible,
-.shift-select:focus-visible {
-  outline: none;
-  border-color: var(--sm-primary);
-  box-shadow: 0 0 0 3px var(--sm-primary-ring);
-}
-
-/* Custom chevron since native select appearance is reset */
-.shift-select {
-  padding-right: 2.25rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%235c8d7b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.875rem center;
-  cursor: pointer;
-}
-
-/* Make the time/number pickers behave on Safari */
-.shift-input[type="time"],
-.shift-input[type="number"] {
-  font-variant-numeric: tabular-nums;
-}
-
-.shift-checkbox-group {
+.hrsm-page-heading {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  min-height: var(--sm-tap);
+  gap: 15px;
+  min-width: 0;
 }
 
-.shift-checkbox {
-  flex: none;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin: 0;
-  accent-color: var(--sm-primary);
-  cursor: pointer;
-}
-
-.shift-checkbox:focus-visible {
-  outline: 3px solid var(--sm-primary-ring);
-  outline-offset: 2px;
-}
-
-.shift-checkbox-label {
-  font-size: var(--sm-text-sm);
-  font-weight: 600;
-  color: var(--sm-text-label);
-  cursor: pointer;
-  user-select: none;
-}
-
-/* Submit */
-.shift-submit-wrapper {
-  grid-column: 1 / -1;
+.hrsm-page-icon {
+  width: 54px;
+  height: 54px;
+  min-width: 54px;
   display: flex;
-  justify-content: stretch; /* full-width button on phones */
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: var(--hrsm-primary-light);
+  color: var(--hrsm-primary);
+  font-size: 25px;
 }
 
-.shift-submit-btn {
+.hrsm-page-heading-text {
+  min-width: 0;
+}
+
+.hrsm-page-heading-text h1 {
+  margin: 0 0 6px;
+  font-size: 25px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--hrsm-text);
+}
+
+.hrsm-page-heading-text p {
+  margin: 0;
+  color: var(--hrsm-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.hrsm-refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 10px 18px;
+  border: 1px solid var(--hrsm-border);
+  border-radius: 10px;
+  background: var(--hrsm-white);
+  color: var(--hrsm-primary);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.hrsm-refresh-btn:hover:not(:disabled) {
+  background: var(--hrsm-primary-light);
+  border-color: #cbd9ea;
+}
+
+.hrsm-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   SUMMARY CARDS
+============================================ */
+
+.hrsm-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.hrsm-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+  min-height: 105px;
+  padding: 20px;
+  background: var(--hrsm-white);
+  border: 1px solid var(--hrsm-border);
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(35, 60, 95, 0.025);
+}
+
+.hrsm-stat-icon {
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  font-size: 22px;
+}
+
+.hrsm-stat-blue {
+  color: var(--hrsm-primary);
+  background: var(--hrsm-primary-light);
+}
+
+.hrsm-stat-green {
+  color: var(--hrsm-green);
+  background: var(--hrsm-green-bg);
+}
+
+.hrsm-stat-orange {
+  color: var(--hrsm-orange);
+  background: var(--hrsm-orange-bg);
+}
+
+.hrsm-stat-purple {
+  color: var(--hrsm-purple);
+  background: var(--hrsm-purple-bg);
+}
+
+.hrsm-stat-info {
+  min-width: 0;
+}
+
+.hrsm-stat-info span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--hrsm-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.hrsm-stat-info h3 {
+  margin: 0;
+  color: var(--hrsm-text);
+  font-size: 25px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* ============================================
+   MAIN CARDS
+============================================ */
+
+.hrsm-card {
   width: 100%;
-  min-height: var(--sm-tap);
-  padding: 0.6875rem 1.5rem;
-  border: 0;
-  border-radius: var(--sm-radius-sm);
-  background-color: var(--sm-primary);
-  color: #ffffff;
-  font: inherit;
-  font-size: var(--sm-text-base);
+  min-width: 0;
+  margin-bottom: 26px;
+  background: var(--hrsm-white);
+  border: 1px solid var(--hrsm-border);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(35, 60, 95, 0.025);
+}
+
+.hrsm-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 23px 26px;
+  border-bottom: 1px solid var(--hrsm-border);
+}
+
+.hrsm-card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.hrsm-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  background: var(--hrsm-primary-light);
+  color: var(--hrsm-primary);
+  border-radius: 11px;
+  font-size: 19px;
+}
+
+.hrsm-card-title-group h2 {
+  margin: 0 0 5px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--hrsm-text);
+}
+
+.hrsm-card-title-group p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--hrsm-muted);
+}
+
+.hrsm-header-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  background: var(--hrsm-primary-light);
+  color: var(--hrsm-primary);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hrsm-card-body {
+  padding: 28px 26px;
+}
+
+/* ============================================
+   FORM
+============================================ */
+
+.hrsm-form {
+  width: 100%;
+}
+
+.hrsm-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px 20px;
+}
+
+.hrsm-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+.hrsm-field-full {
+  grid-column: 1 / -1;
+}
+
+.hrsm-field label {
+  color: #52647e;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.hrsm-required {
+  margin-left: 3px;
+  color: #e25c5c;
+}
+
+.hrsm-input-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.hrsm-input-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #91a1b7;
+  pointer-events: none;
+}
+
+.hrsm-input,
+.hrsm-select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid #dce5ef;
+  border-radius: 9px;
+  outline: none;
+  background: #ffffff;
+  color: var(--hrsm-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hrsm-input-with-icon {
+  padding-left: 41px;
+}
+
+.hrsm-input::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
+}
+
+.hrsm-input:hover,
+.hrsm-select:hover {
+  border-color: #bccce0;
+}
+
+.hrsm-input:focus,
+.hrsm-select:focus {
+  border-color: var(--hrsm-primary);
+  box-shadow: 0 0 0 3px rgba(96, 125, 169, 0.11);
+}
+
+.hrsm-select {
+  cursor: pointer;
+  padding-right: 30px;
+}
+
+.hrsm-input[type="time"] {
+  color-scheme: light;
+}
+
+.hrsm-input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.65;
+}
+
+/* ============================================
+   OVERTIME OPTION
+============================================ */
+
+.hrsm-options-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px;
+  margin-top: 25px;
+  background: #f8fafd;
+  border: 1px solid var(--hrsm-border);
+  border-radius: 11px;
+}
+
+.hrsm-option-info {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+}
+
+.hrsm-option-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 41px;
+  height: 41px;
+  min-width: 41px;
+  border-radius: 10px;
+  background: var(--hrsm-primary-light);
+  color: var(--hrsm-primary);
+  font-size: 18px;
+}
+
+.hrsm-option-info h4 {
+  margin: 0 0 5px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--hrsm-text);
+}
+
+.hrsm-option-info p {
+  margin: 0;
+  color: var(--hrsm-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ============================================
+   CUSTOM TOGGLE SWITCH
+============================================ */
+
+.hrsm-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 25px;
+  min-width: 46px;
+  cursor: pointer;
+}
+
+.hrsm-switch input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.hrsm-switch-slider {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  background: #cbd5e1;
+  transition: background 0.2s ease;
+  pointer-events: none;
+}
+
+.hrsm-switch-slider::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease;
+}
+
+.hrsm-switch input:checked + .hrsm-switch-slider {
+  background: var(--hrsm-primary);
+}
+
+.hrsm-switch input:checked + .hrsm-switch-slider::before {
+  transform: translateX(21px);
+}
+
+.hrsm-switch input:focus-visible + .hrsm-switch-slider {
+  outline: 3px solid rgba(96, 125, 169, 0.3);
+  outline-offset: 3px;
+}
+
+/* ============================================
+   FORM ACTION BUTTONS
+============================================ */
+
+.hrsm-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 22px;
+  border-top: 1px solid var(--hrsm-border);
+}
+
+.hrsm-reset-btn,
+.hrsm-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 11px 22px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 6px var(--sm-primary-ring);
-  transition: background-color 0.2s var(--sm-ease),
-    transform 0.15s var(--sm-ease), box-shadow 0.2s var(--sm-ease);
-  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
 }
 
-.shift-submit-btn:hover {
-  background-color: var(--sm-primary-hover);
+.hrsm-reset-btn {
+  background: #ffffff;
+  border: 1px solid var(--hrsm-border);
+  color: #71839b;
 }
 
-.shift-submit-btn:active {
-  transform: translateY(1px);
+.hrsm-reset-btn:hover:not(:disabled) {
+  background: #f4f7fb;
 }
 
-.shift-submit-btn:focus-visible {
-  outline: 3px solid var(--sm-primary-ring);
-  outline-offset: 2px;
+.hrsm-submit-btn {
+  background: var(--hrsm-primary);
+  color: #ffffff;
+  border: 1px solid var(--hrsm-primary);
+  box-shadow: 0 3px 9px rgba(96, 125, 169, 0.14);
 }
 
-.shift-submit-btn:disabled {
-  background-color: var(--sm-primary-disabled);
-  box-shadow: none;
+.hrsm-submit-btn:hover:not(:disabled) {
+  background: var(--hrsm-primary-dark);
+  border-color: var(--hrsm-primary-dark);
+}
+
+.hrsm-submit-btn:disabled,
+.hrsm-reset-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
-  transform: none;
 }
 
-/* --------------------------------------------------------------------------
-   6. Table (base = desktop styling; phones get a card layout in section 8)
-   -------------------------------------------------------------------------- */
-.shift-table-wrapper {
+/* ============================================
+   ALERT MESSAGES
+============================================ */
+
+.hrsm-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.hrsm-alert svg {
+  flex-shrink: 0;
+  font-size: 17px;
+}
+
+.hrsm-alert-error {
+  background: #fff1f1;
+  color: #b94040;
+  border-color: #f5d6d6;
+}
+
+.hrsm-alert-success {
+  background: #eaf8f0;
+  color: #18804e;
+  border-color: #cdebd9;
+}
+
+/* ============================================
+   SHIFT LIST TABLE
+============================================ */
+
+.hrsm-list-card {
+  margin-bottom: 0;
+}
+
+.hrsm-count-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 13px;
+  background: var(--hrsm-primary-light);
+  color: var(--hrsm-primary);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.hrsm-table-wrapper {
   width: 100%;
+  max-width: 100%;
   overflow-x: auto;
-  border: 1px solid var(--sm-border);
-  border-radius: var(--sm-radius-sm);
   -webkit-overflow-scrolling: touch;
 }
 
-.shift-table {
+.hrsm-table {
   width: 100%;
+  min-width: 800px;
   border-collapse: collapse;
+  border-spacing: 0;
   text-align: left;
-  font-size: var(--sm-text-sm);
 }
 
-.shift-th {
-  padding: 0.75rem 1rem;
-  background-color: var(--sm-surface-head);
-  border-bottom: 1px solid var(--sm-border);
-  color: var(--sm-text-strong);
+.hrsm-table thead {
+  background: #f7f9fc;
+}
+
+.hrsm-table th {
+  padding: 16px 20px;
+  color: #6f819a;
+  font-size: 11px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.45px;
   white-space: nowrap;
+  border-bottom: 1px solid var(--hrsm-border);
 }
 
-.shift-tr-even {
-  background-color: var(--sm-surface);
-}
-
-.shift-tr-odd {
-  background-color: var(--sm-surface-alt);
-}
-
-.shift-table tbody tr {
-  transition: background-color 0.15s var(--sm-ease);
-}
-
-@media (hover: hover) {
-  .shift-table tbody tr:hover {
-    background-color: var(--sm-surface-head);
-  }
-}
-
-.shift-td,
-.shift-td-name,
-.shift-td-time {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--sm-border-row);
+.hrsm-table td {
+  padding: 17px 20px;
+  font-size: 12px;
+  color: var(--hrsm-text);
+  border-bottom: 1px solid #edf1f6;
   vertical-align: middle;
 }
 
-.shift-table tbody tr:last-child > td {
-  border-bottom: 0;
+.hrsm-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.shift-td {
-  color: var(--sm-text);
-  font-variant-numeric: tabular-nums;
+.hrsm-table-row {
+  transition: background 0.2s ease;
 }
 
-.shift-td-name {
-  font-weight: 600;
-  color: var(--sm-text-strong);
+.hrsm-table-row:hover {
+  background: #f9fbfe;
 }
 
-.shift-td-time {
-  font-family: var(--sm-font-mono);
-  font-weight: 600;
-  color: var(--sm-primary);
-  white-space: nowrap;
+/* SHIFT NAME CELL */
+
+.hrsm-shift-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
 }
 
-.shift-empty-cell {
-  padding: 2rem 1rem;
-  text-align: center;
-  color: var(--sm-text-faint);
+.hrsm-shift-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 10px;
+  background: var(--hrsm-primary-light);
+  color: var(--hrsm-primary);
+  font-size: 16px;
 }
 
-/* --------------------------------------------------------------------------
-   7. Badges
-   -------------------------------------------------------------------------- */
-.badge-active,
-.badge-inactive {
-  display: inline-block;
-  padding: 0.25rem 0.625rem;
-  border-radius: var(--sm-radius-pill);
-  font-size: var(--sm-text-xs);
+.hrsm-shift-name-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.hrsm-shift-name-info strong {
+  font-size: 12px;
   font-weight: 700;
-  line-height: 1.2;
+  color: #34445d;
+}
+
+.hrsm-shift-name-info small {
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--hrsm-muted);
+  font-size: 11px;
 }
 
-.badge-active {
-  background-color: var(--sm-badge-active-bg);
-  color: var(--sm-badge-active-text);
-}
-
-.badge-inactive {
-  background-color: var(--sm-badge-inactive-bg);
-  color: var(--sm-badge-inactive-text);
-}
-
-.badge-success {
-  color: var(--sm-primary);
+.hrsm-time-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #526987;
+  white-space: nowrap;
+  font-size: 12px;
   font-weight: 600;
 }
 
-.badge-neutral {
-  color: var(--sm-neutral);
+.hrsm-time-cell svg {
+  color: var(--hrsm-primary);
+  font-size: 14px;
 }
 
-/* --------------------------------------------------------------------------
-   8. Responsive breakpoints
-   -------------------------------------------------------------------------- */
+.hrsm-table-value {
+  color: #60718a;
+  font-size: 12px;
+}
 
-/* Tablet portrait and up: two-column form, inline submit button */
-@media (min-width: 640px) {
-  .shift-form-grid {
+/* ============================================
+   STATUS BADGES
+============================================ */
+
+.hrsm-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.hrsm-badge-yes,
+.hrsm-badge-active {
+  color: var(--hrsm-green);
+  background: var(--hrsm-green-bg);
+}
+
+.hrsm-badge-no {
+  color: #75859a;
+  background: #edf1f6;
+}
+
+.hrsm-badge-inactive {
+  color: var(--hrsm-orange);
+  background: var(--hrsm-orange-bg);
+}
+
+.hrsm-status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ============================================
+   TABLE FOOTER
+============================================ */
+
+.hrsm-table-footer {
+  padding: 16px 22px;
+  border-top: 1px solid var(--hrsm-border);
+  color: var(--hrsm-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ============================================
+   EMPTY / LOADING STATE
+============================================ */
+
+.hrsm-empty-cell {
+  padding: 0 !important;
+}
+
+.hrsm-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 190px;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.hrsm-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 14px;
+  background: var(--hrsm-primary-light);
+  color: var(--hrsm-primary);
+  border-radius: 15px;
+  font-size: 25px;
+}
+
+.hrsm-empty-state h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  color: var(--hrsm-text);
+}
+
+.hrsm-empty-state p {
+  margin: 0;
+  color: var(--hrsm-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.hrsm-list-alert {
+  margin: 18px 22px;
+}
+
+.hrsm-retry-btn {
+  margin-left: auto;
+  padding: 6px 11px;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ============================================
+   SPINNER
+============================================ */
+
+.hrsm-spin {
+  animation: hrsm-rotate 0.9s linear infinite;
+}
+
+@keyframes hrsm-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   TABLET / SMALL DESKTOP
+============================================ */
+
+@media (max-width: 1200px) {
+  .hrsm-page {
+    padding: 22px;
+  }
+
+  .hrsm-stats-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .shift-field-group.span-two {
-    grid-column: span 2;
-  }
-
-  .shift-submit-wrapper {
-    justify-content: flex-end;
-  }
-
-  .shift-submit-btn {
-    width: auto;
-    min-width: 11rem;
+  .hrsm-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Desktop and up: three-column form */
-@media (min-width: 1024px) {
-  .shift-form-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+/* ============================================
+   TABLET
+============================================ */
+
+@media (max-width: 768px) {
+  .hrsm-page {
+    padding: 16px;
+  }
+
+  .hrsm-page-header {
+    align-items: flex-start;
+  }
+
+  .hrsm-page-heading-text h1 {
+    font-size: 21px;
+  }
+
+  .hrsm-page-icon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    font-size: 21px;
+  }
+
+  .hrsm-stats-grid {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .hrsm-stat-card {
+    min-height: 90px;
+    padding: 15px;
+    gap: 11px;
+  }
+
+  .hrsm-stat-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    font-size: 19px;
+  }
+
+  .hrsm-stat-info h3 {
+    font-size: 22px;
+  }
+
+  .hrsm-card {
+    margin-bottom: 20px;
+  }
+
+  .hrsm-card-header {
+    padding: 18px;
+  }
+
+  .hrsm-card-body {
+    padding: 20px 18px;
+  }
+
+  .hrsm-form-grid {
+    gap: 18px 14px;
+  }
+
+  .hrsm-header-tag {
+    display: none;
   }
 }
 
-/* Phones: turn each table row into a labelled card.
-   Labels come from CSS (nth-child) so the JSX does not need data-label attrs.
-   If you reorder the table columns, update the content strings below. */
-@media (max-width: 719px) {
-  .shift-table-wrapper {
-    overflow: visible;
-    border: 0;
-    border-radius: 0;
+/* ============================================
+   MOBILE
+============================================ */
+
+@media (max-width: 576px) {
+  .hrsm-page {
+    padding: 12px;
   }
 
-  .shift-table,
-  .shift-table tbody,
-  .shift-table tr {
-    display: block;
+  .hrsm-page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    margin-bottom: 18px;
+  }
+
+  .hrsm-page-heading {
+    gap: 11px;
+  }
+
+  .hrsm-page-heading-text h1 {
+    font-size: 19px;
+  }
+
+  .hrsm-page-heading-text p {
+    font-size: 11px;
+  }
+
+  .hrsm-refresh-btn {
+    align-self: flex-start;
+    min-height: 38px;
+    padding: 8px 13px;
+    font-size: 12px;
+  }
+
+  .hrsm-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .hrsm-stat-card {
+    min-height: 100px;
+    padding: 13px 10px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .hrsm-stat-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 17px;
+    border-radius: 9px;
+  }
+
+  .hrsm-stat-info span {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .hrsm-stat-info h3 {
+    font-size: 21px;
+  }
+
+  .hrsm-card {
+    border-radius: 11px;
+  }
+
+  .hrsm-card-header {
+    padding: 16px 14px;
+    gap: 10px;
+  }
+
+  .hrsm-card-title-group {
+    gap: 10px;
+  }
+
+  .hrsm-section-icon {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 16px;
+  }
+
+  .hrsm-card-title-group h2 {
+    font-size: 15px;
+  }
+
+  .hrsm-card-title-group p {
+    font-size: 11px;
+  }
+
+  .hrsm-card-body {
+    padding: 17px 14px;
+  }
+
+  .hrsm-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 17px;
+  }
+
+  .hrsm-field-full {
+    grid-column: auto;
+  }
+
+  .hrsm-input,
+  .hrsm-select {
+    height: 44px;
+    font-size: 13px;
+  }
+
+  .hrsm-options-section {
+    padding: 13px;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .hrsm-option-icon {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    font-size: 16px;
+  }
+
+  .hrsm-option-info {
+    gap: 9px;
+  }
+
+  .hrsm-option-info h4 {
+    font-size: 12px;
+  }
+
+  .hrsm-option-info p {
+    font-size: 10px;
+  }
+
+  .hrsm-form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .hrsm-reset-btn,
+  .hrsm-submit-btn {
     width: 100%;
-    min-width: 0;
+    min-height: 43px;
   }
 
-  /* Hide the header row visually but keep it for screen readers */
-  .shift-table thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  .hrsm-count-label {
+    font-size: 10px;
+    padding: 6px 8px;
   }
 
-  .shift-table tbody {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr); /* stops rows growing wider than the card */
-    gap: 0.75rem;
-  }
-
-  .shift-table tbody tr {
-    padding: 0.25rem 1rem;
-    border: 1px solid var(--sm-border);
-    border-radius: var(--sm-radius-sm);
-  }
-
-  .shift-table tbody tr:hover {
-    background-color: inherit;
-  }
-
-  /* `.shift-table .x` (0,2,0) so these are not outranked by element rules */
-  .shift-table .shift-td,
-  .shift-table .shift-td-time {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    width: 100%;
-    padding: 0.625rem 0;
-    text-align: right;
-    overflow-wrap: anywhere;
-  }
-
-  /* Shift name acts as the card title */
-  .shift-table .shift-td-name {
-    display: block;
-    width: 100%;
-    padding: 0.75rem 0 0.625rem;
-    font-size: var(--sm-text-base);
-    border-bottom: 1px solid var(--sm-border-row);
-  }
-
-  .shift-td::before,
-  .shift-td-time::before {
-    flex: none;
-    font-family: var(--sm-font);
-    font-weight: 600;
-    text-align: left;
-    color: var(--sm-text-muted);
-  }
-
-  .shift-td-time::before { content: "Timings"; }
-  .shift-td:nth-child(3)::before { content: "Break"; }
-  .shift-td:nth-child(4)::before { content: "Late grace"; }
-  .shift-td:nth-child(5)::before { content: "Overtime"; }
-  .shift-td:nth-child(6)::before { content: "Status"; }
-
-  .shift-table tbody tr > td:last-child {
-    border-bottom: 0;
-  }
-
-  /* Empty-state row keeps a simple centred message */
-  .shift-table .shift-empty-cell {
-    display: block;
-    width: 100%;
-    padding: 1.5rem 1rem;
-    text-align: center;
-  }
-  .shift-table .shift-empty-cell::before {
-    content: none;
+  .hrsm-table-footer {
+    padding: 13px 15px;
   }
 }
 
-/* Large screens: a little more breathing room */
-@media (min-width: 1280px) {
-  .shift-container {
-    max-width: 1200px;
+/* ============================================
+   VERY SMALL DEVICES
+============================================ */
+
+@media (max-width: 360px) {
+  .hrsm-page {
+    padding: 8px;
+  }
+
+  .hrsm-stat-card {
+    padding: 10px 8px;
+  }
+
+  .hrsm-card-header {
+    padding: 13px 10px;
+  }
+
+  .hrsm-card-body {
+    padding: 14px 10px;
+  }
+
+  .hrsm-page-heading-text h1 {
+    font-size: 17px;
+  }
+
+  .hrsm-count-label {
+    padding: 5px 7px;
   }
 }
 
-/* --------------------------------------------------------------------------
-   9. Accessibility preferences
-   -------------------------------------------------------------------------- */
+/* ============================================
+   ACCESSIBILITY
+============================================ */
+
 @media (prefers-reduced-motion: reduce) {
-  .shift-container *,
-  .shift-container *::before,
-  .shift-container *::after {
+  .hrsm-page *,
+  .hrsm-page *::before,
+  .hrsm-page *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
-  }
-
-  .shift-submit-btn:active {
-    transform: none;
-  }
-}
-
-@media (forced-colors: active) {
-  .shift-card,
-  .shift-input,
-  .shift-select,
-  .shift-submit-btn,
-  .badge-active,
-  .badge-inactive {
-    border: 1px solid CanvasText;
   }
 }
