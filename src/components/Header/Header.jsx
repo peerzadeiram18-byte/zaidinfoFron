@@ -190,64 +190,111 @@ export default function Header() {
   // ROLE BASED DASHBOARD LOGIC
   // ---------------------------------------------------------------------------
 
-  const getDashboardPath = () => {
-    try {
-      const userData = localStorage.getItem("user");
+ 
+const getDashboardPath = () => {
+  try {
+    const userData = localStorage.getItem("user");
 
-      if (!userData) {
-        return "/customer-dashboard";
-      }
-
-      const user = JSON.parse(userData);
-
-      // Business customers go to the corporate dashboard,
-      // NOT the normal customer-dashboard.
-      if (
-        String(user?.role).toUpperCase() === "CUSTOMER" &&
-        String(user?.customerType).toUpperCase() === "BUSINESS"
-      ) {
-        return "/corporate-dashboard";
-      }
-
-      const role = String(
-        user?.role ||
-          user?.userRole ||
-          user?.type ||
-          ""
-      ).toUpperCase();
-
-  switch (role) {
-        case "ADMIN":
-          return "/admin-dashboard";
-
-        case "HR":
-        case "HR_EXECUTIVE":
-        case "HR_MANAGER":
-          return "/hr-dashboard";
-
-        case "INVENTORY":
-        case "INVENTORY_MANAGER":
-          return "/inventory-dashboard";
-
-        case "RECEPTIONIST":
-          return "/receptionist-dashboard";
-
-        case "TECHNICIAN":
-          return "/technician-dashboard";
-
-        case "ACCOUNTANT":
-          return "/accountant-dashboard";
-
-        case "CUSTOMER":
-        default:
-          return "/customer-dashboard";
-      }
-    } catch (error) {
-      console.error("DASHBOARD ROLE ERROR:", error);
-
-      return "/customer-dashboard";
+    if (!userData) {
+      console.warn("User data not found");
+      return "/login";
     }
-  };
+
+    const parsedUser = JSON.parse(userData);
+
+    // Supports different login response structures
+    const user =
+      parsedUser?.user ||
+      parsedUser?.data?.user ||
+      parsedUser?.data ||
+      parsedUser;
+
+    const role = String(
+      user?.role ||
+      user?.userRole ||
+      user?.type ||
+      parsedUser?.role ||
+      ""
+    )
+      .trim()
+      .toUpperCase()
+      .replace(/[\s-]+/g, "_");
+
+    const customerType = String(
+      user?.customerType ||
+      parsedUser?.customerType ||
+      ""
+    )
+      .trim()
+      .toUpperCase();
+
+    console.log("LOGGED IN USER:", user);
+    console.log("CURRENT USER ROLE:", role);
+
+    // Corporate / Business Customer
+    if (
+      role === "CUSTOMER" &&
+      customerType === "BUSINESS"
+    ) {
+      return "/corporate-dashboard";
+    }
+
+    switch (role) {
+      case "SUPER_ADMIN":
+        return "/admin-dashboard";
+
+      case "ADMIN":
+        return "/admin-dashboard";
+
+      case "HR":
+      case "HR_EXECUTIVE":
+      case "HR_MANAGER":
+        return "/hr-dashboard";
+
+      // case "INVENTORY":
+      // case "INVENTORY_MANAGER":
+      //   return "/inventory-dashboard";
+
+      case "RECEPTIONIST":
+        return "/receptionist-dashboard";
+
+      case "TECHNICIAN":
+        return "/technician-dashboard";
+
+      // case "ACCOUNTANT":
+      //   return "/accountant-dashboard";
+
+      case "SALES":
+      case "SALES_EXECUTIVE":
+        return "/receptionist-dashboard";
+
+      // IT SUPPORT - FIXED
+      case "IT_SUPPORT":
+      case "ITSUPPORT":
+      case "IT_SUPPORT_EXECUTIVE":
+        return "/itsupport-dashboard";
+
+      case "CUSTOMER":
+        return "/customer-dashboard";
+
+      default:
+        console.warn(
+          "Unknown user role:",
+          role
+        );
+
+        return "/login";
+    }
+  } catch (error) {
+    console.error(
+      "DASHBOARD ROLE ERROR:",
+      error
+    );
+
+    return "/login";
+  }
+};
+
 
   // ---------------------------------------------------------------------------
   // ROLE CHECK:
