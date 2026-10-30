@@ -495,3 +495,80 @@ font-weight:bold;
     transition: none;
   }
 }
+
+
+/* =====================================================
+   INVENTORY TYPE TABS
+===================================================== */
+
+.inventory-stock-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.inventory-stock-tabs button {
+  padding: 11px 18px;
+  border: 1px solid #dce3ee;
+  background: #fff;
+  color: #334155;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.inventory-stock-tabs button:hover {
+  background: #f1f5f9;
+}
+
+.inventory-stock-tabs button.active {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+
+.inventory-stock-tabs .inventory-refresh-btn {
+  margin-left: auto;
+  background: #f8fafc;
+}
+
+.inventory-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.inventory-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inventory-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .inventory-stock-tabs {
+    gap: 8px;
+  }
+
+  .inventory-stock-tabs button {
+    flex: 1 1 auto;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .inventory-stock-tabs .inventory-refresh-btn {
+    margin-left: 0;
+  }
+
+  .inventory-table {
+    min-width: 1100px;
+  }
+}

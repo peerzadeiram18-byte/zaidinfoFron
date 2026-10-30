@@ -1,12 +1,11 @@
-
 // import { useState } from "react";
 // import "./ChangePassword.css";
 
+// // API base URL sirf .env se aayega (VITE_API_URL)
+// const API = import.meta.env.VITE_API_URL;
 
 // const ChangePassword = () => {
 //   const token = localStorage.getItem("token");
-
-  
 
 //   const [password, setPassword] = useState({
 //     currentPassword: "",
@@ -69,7 +68,7 @@
 
 //     setLoading(true);
 
-//     fetch("http://localhost:5000/api/users/change-password", {
+//     fetch(`${API}/users/change-password`, {
 //       method: "PUT",
 //       headers: {
 //         authorization: `Bearer ${token}`,
@@ -126,9 +125,7 @@
 
 //         <form onSubmit={submitHandler} className="change-password-form">
 //           <div className="password-field">
-//             <label htmlFor="currentPassword">
-//               Current Password
-//             </label>
+//             <label htmlFor="currentPassword">Current Password</label>
 
 //             <input
 //               id="currentPassword"
@@ -143,9 +140,7 @@
 //           </div>
 
 //           <div className="password-field">
-//             <label htmlFor="newPassword">
-//               New Password
-//             </label>
+//             <label htmlFor="newPassword">New Password</label>
 
 //             <input
 //               id="newPassword"
@@ -160,9 +155,7 @@
 //           </div>
 
 //           <div className="password-field">
-//             <label htmlFor="confirmedNewPassword">
-//               Confirm New Password
-//             </label>
+//             <label htmlFor="confirmedNewPassword">Confirm New Password</label>
 
 //             <input
 //               id="confirmedNewPassword"
@@ -311,7 +304,7 @@ const ChangePassword = () => {
   return (
     <div className="change-password-container">
       {success && (
-        <div className="password-toast success-toast">
+        <div className="password-toast success-toast" role="status">
           <span className="toast-icon">✓</span>
           <span>{success}</span>
         </div>
@@ -319,7 +312,10 @@ const ChangePassword = () => {
 
       <div className="change-password-card">
         <div className="change-password-header">
-          <h2>Change Password</h2>
+          {/* markup-only change: <span> gives the green accent word */}
+          <h2>
+            Change <span>Password</span>
+          </h2>
           <p>Update your password to keep your account secure.</p>
         </div>
 
@@ -370,7 +366,7 @@ const ChangePassword = () => {
           </div>
 
           {error && (
-            <div className="password-error">
+            <div className="password-error" role="alert">
               <span>⚠</span>
               <span>{error}</span>
             </div>

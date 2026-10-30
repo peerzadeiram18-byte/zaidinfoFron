@@ -1,41 +1,41 @@
 
 /* =========================================================
-   RECEPTIONIST LAYOUT - COMPLETE RESPONSIVE CSS
+   RECEPTIONIST LAYOUT
    Desktop | Laptop | Tablet | Mobile
-========================================================= */
-
-/* =========================================================
-   1. ROOT VARIABLES
+   Design: Navy sidebar, green accents, white topbar
 ========================================================= */
 
 :root {
-  --rep-bg-primary: #f8fafc;
-  --rep-sidebar-bg: #ffffff;
+  --rep-sidebar-width: 272px;
+  --rep-topbar-height: 80px;
+  --rep-mobile-topbar-height: 62px;
 
-  --rep-accent: #2563eb;
-  --rep-accent-hover: #1d4ed8;
-  --rep-accent-light: #eff6ff;
+  --rep-navy: #071c2b;
+  --rep-navy-light: #0c293a;
+  --rep-navy-hover: #143b4b;
 
-  --rep-text-dark: #0f172a;
-  --rep-text-muted: #64748b;
+  --rep-green: #079b76;
+  --rep-green-dark: #087f63;
+  --rep-green-light: #e1f7ef;
+  --rep-green-hover: #087f63;
 
-  --rep-border-color: #e2e8f0;
+  --rep-bg-primary: #f3f7fb;
+  --rep-white: #ffffff;
 
-  --rep-shadow-sm:
-    0 1px 3px rgba(0, 0, 0, 0.05);
+  --rep-text-dark: #13283a;
+  --rep-text-muted: #718096;
+  --rep-text-light: #dce7ef;
 
-  --rep-shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.07),
-    0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --rep-border-color: #e5ebf1;
 
-  --rep-sidebar-width: 270px;
-  --rep-mobile-topbar-height: 60px;
+  --rep-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+  --rep-shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
 
   --rep-transition: 0.25s ease;
 }
 
 /* =========================================================
-   2. BOX SIZING
+   1. RESET / ROOT
 ========================================================= */
 
 .rep-layout-root,
@@ -45,73 +45,78 @@
   box-sizing: border-box;
 }
 
-/* =========================================================
-   3. ROOT LAYOUT
-========================================================= */
-
 .rep-layout-root {
-  --rep-current-sidebar-width: var(--rep-sidebar-width);
-
   position: relative;
-
-  display: block;
+  isolation: isolate;
 
   width: 100%;
   min-width: 0;
-
-  min-height: 100vh;
-  min-height: 100dvh;
-
   height: 100vh;
   height: 100dvh;
 
-  background: var(--rep-bg-primary);
+  overflow: hidden;
 
+  background: var(--rep-bg-primary);
   color: var(--rep-text-dark);
 
   font-family:
+    "Poppins",
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
     sans-serif;
 
-  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.rep-layout-root button,
+.rep-layout-root input {
+  font: inherit;
+}
+
+.rep-layout-root button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rep-layout-root a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* =========================================================
-   4. SIDEBAR BASE
+   2. SIDEBAR
 ========================================================= */
 
 .rep-sidebar {
   position: fixed;
+  z-index: 1100;
 
   top: 0;
-  left: 0;
   bottom: 0;
-
-  width: var(--rep-current-sidebar-width);
-  min-width: var(--rep-current-sidebar-width);
-
-  height: 100vh;
-  height: 100dvh;
+  left: 0;
 
   display: flex;
   flex-direction: column;
 
-  background: var(--rep-sidebar-bg);
-
-  border-right:
-    1px solid var(--rep-border-color);
-
-  box-shadow:
-    1px 0 5px rgba(0, 0, 0, 0.04);
-
-  z-index: 1100;
+  width: var(--rep-sidebar-width);
+  height: 100vh;
+  height: 100dvh;
 
   overflow: hidden;
+
+  background:
+    radial-gradient(
+      ellipse at 10% 100%,
+      rgba(5, 155, 118, 0.13),
+      transparent 42%
+    ),
+    linear-gradient(
+      180deg,
+      var(--rep-navy-light) 0%,
+      var(--rep-navy) 100%
+    );
+
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
 
   transform: translateX(0);
 
@@ -122,9 +127,23 @@
   will-change: transform;
 }
 
-/* =========================================================
-   5. SIDEBAR OPEN / CLOSED
-========================================================= */
+.rep-sidebar::after {
+  content: "";
+  position: absolute;
+
+  right: -45px;
+  bottom: 75px;
+
+  width: 230px;
+  height: 170px;
+
+  pointer-events: none;
+
+  border: 1px solid rgba(12, 185, 141, 0.1);
+  border-radius: 50%;
+
+  transform: rotate(-22deg);
+}
 
 .rep-sidebar.rep-sidebar-open {
   transform: translateX(0);
@@ -134,128 +153,132 @@
 .rep-sidebar.rep-sidebar-collapsed {
   transform: translateX(-100%);
   visibility: hidden;
-
-  transition:
-    transform var(--rep-transition),
-    visibility 0s 0.25s;
+  pointer-events: none;
 }
 
 /* =========================================================
-   6. SIDEBAR BRAND
+   3. SIDEBAR BRAND
 ========================================================= */
 
 .rep-sidebar-brand {
+  position: relative;
+  z-index: 1;
+
   flex: 0 0 auto;
 
   display: flex;
   align-items: center;
-
   gap: 12px;
 
   width: 100%;
-  min-height: 82px;
+  min-height: 92px;
 
-  padding: 18px 20px;
+  padding: 18px 22px;
 
-  background: #ffffff;
+  text-align: left;
 
-  border-bottom:
-    1px solid var(--rep-border-color);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+  cursor: pointer;
 }
 
 .rep-brand-avatar {
-  flex: 0 0 44px;
-
-  width: 44px;
-  height: 44px;
+  flex: 0 0 43px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: var(--rep-accent);
+  width: 43px;
+  height: 43px;
 
-  color: #ffffff;
+  border: 1px solid rgba(23, 204, 151, 0.32);
+  border-radius: 12px;
 
-  border-radius: 10px;
+  background: rgba(5, 155, 118, 0.16);
+  color: #36d5a5;
 
   font-size: 20px;
 }
 
 .rep-brand-text {
+  display: flex;
+  flex-direction: column;
+
   min-width: 0;
-  flex: 1;
+  gap: 5px;
 }
 
-.rep-brand-text h3 {
-  margin: 0;
+.rep-brand-text > strong {
+  color: #f7fafc;
 
-  font-size: 15px;
-  font-weight: 700;
-
-  letter-spacing: -0.01em;
-
-  color: #172b4d;
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+  line-height: 1.3;
 
   white-space: nowrap;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.rep-brand-text span {
-  display: inline-block;
+.rep-brand-text > strong > span {
+  color: #20c997;
+}
 
-  margin-top: 5px;
-
-  padding: 3px 6px;
-
-  background: #eaf2ff;
-
-  color: #6781a4;
-
-  border-radius: 4px;
+.rep-brand-text > small {
+  color: #a9bac7;
 
   font-size: 11px;
-
-  white-space: nowrap;
+  font-weight: 400;
+  letter-spacing: 0.15px;
 }
 
 /* =========================================================
-   7. NAVIGATION CONTAINER
+   4. WORKSPACE CAPTION
+========================================================= */
 
-   ONLY THIS AREA SCROLLS
+.rep-nav-caption {
+  flex: 0 0 auto;
+
+  padding: 20px 22px 8px;
+
+  color: #7f9aa9;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+/* =========================================================
+   5. NAVIGATION SCROLL CONTAINER
 ========================================================= */
 
 .rep-nav-section {
-  flex: 1 1 auto;
+  position: relative;
+  z-index: 1;
 
+  flex: 1 1 auto;
   min-height: 0;
 
   display: flex;
   flex-direction: column;
+  gap: 5px;
 
-  gap: 3px;
+  padding: 5px 13px 18px;
 
-  padding: 14px 10px 20px;
-
-  overflow-y: auto;
   overflow-x: hidden;
+  overflow-y: auto;
 
   overscroll-behavior: contain;
-
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-color: #315164 transparent;
 
   -webkit-overflow-scrolling: touch;
 }
 
-/* =========================================================
-   8. NAVIGATION SCROLLBAR
-========================================================= */
-
 .rep-nav-section::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .rep-nav-section::-webkit-scrollbar-track {
@@ -263,268 +286,375 @@
 }
 
 .rep-nav-section::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #315164;
   border-radius: 10px;
 }
 
-.rep-nav-section::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
 /* =========================================================
-   9. SECTION HEADINGS
+   6. NAVIGATION GROUPS
 ========================================================= */
 
+.rep-nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
 .rep-nav-heading {
+  display: block;
   flex: 0 0 auto;
 
-  display: block;
+  margin: 15px 0 5px;
+  padding: 0 12px;
 
-  margin: 10px 0 4px;
+  color: #7895a5;
 
-  padding: 9px 12px 5px;
-
-  color: #718096;
-
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-
-  letter-spacing: 0.5px;
-
-  line-height: 1.3;
+  letter-spacing: 1px;
+  line-height: 1.5;
 
   text-transform: uppercase;
 }
 
 /* =========================================================
-   10. NAVIGATION ITEMS
+   7. NAVIGATION LINKS
 ========================================================= */
 
 .rep-nav-item {
-  flex: 0 0 auto;
+  position: relative;
 
   display: flex;
   align-items: center;
-
   gap: 12px;
 
   width: 100%;
+  min-width: 0;
   min-height: 43px;
 
   padding: 10px 12px;
 
-  border-radius: 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
 
   background: transparent;
-
-  color: #60748f;
+  color: #d4e0e9;
 
   text-decoration: none;
 
-  font-size: 13.5px;
-  font-weight: 500;
-
-  line-height: 1.35;
-
-  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 450;
+  line-height: 1.45;
 
   transition:
-    background 0.2s ease,
-    color 0.2s ease;
+    background var(--rep-transition),
+    color var(--rep-transition),
+    border-color var(--rep-transition);
 }
 
 .rep-nav-item:hover {
-  background: #f2f6fd;
-
-  color: var(--rep-accent);
-
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
   text-decoration: none;
 }
 
 .rep-nav-item:focus-visible {
-  outline: 2px solid var(--rep-accent);
-  outline-offset: -2px;
+  outline: 2px solid #2ed6a7;
+  outline-offset: 2px;
 }
 
-/* =========================================================
-   11. ACTIVE NAVIGATION
-========================================================= */
+/* Active link */
 
 .rep-nav-item.rep-nav-item-active {
-  background: var(--rep-accent-light);
+  background: linear-gradient(
+    100deg,
+    #0a9d78 0%,
+    #087d67 100%
+  );
 
-  color: var(--rep-accent);
+  border-color: rgba(65, 230, 182, 0.16);
+
+  color: #ffffff;
 
   font-weight: 600;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .rep-nav-item.rep-nav-item-active:hover {
-  background: #dbeafe;
-
-  color: var(--rep-accent-hover);
+  background: linear-gradient(
+    100deg,
+    #0bac84 0%,
+    #098b70 100%
+  );
 }
 
-/* =========================================================
-   12. NAVIGATION ICON
-========================================================= */
+/* Icons */
 
 .rep-nav-icon {
   flex: 0 0 18px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   width: 18px;
   min-width: 18px;
 
   font-size: 15px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
-/* =========================================================
-   13. NAVIGATION TEXT
-========================================================= */
+.rep-nav-item-active .rep-nav-icon {
+  color: #ffffff;
+}
 
-.rep-nav-item span {
-  flex: 1;
+/* Link labels */
 
+.rep-nav-label {
+  flex: 1 1 auto;
   min-width: 0;
 
   overflow: hidden;
-
   text-overflow: ellipsis;
-
   white-space: nowrap;
 }
 
 /* =========================================================
-   14. FIXED SIDEBAR FOOTER
-
-   FOOTER NEVER SCROLLS WITH NAV
+   8. SIDEBAR FOOTER
 ========================================================= */
 
 .rep-sidebar-footer {
+  position: relative;
+  z-index: 2;
+
   flex: 0 0 auto;
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
-
   gap: 10px;
 
+  min-height: 77px;
   width: 100%;
-  min-height: 69px;
 
-  padding: 11px 14px;
+  padding: 13px 17px;
 
-  background: #ffffff;
-
-  border-top:
-    1px solid var(--rep-border-color);
-
-  z-index: 5;
+  background: rgba(3, 17, 28, 0.42);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* =========================================================
-   15. USER PROFILE
-========================================================= */
-
 .rep-user-profile {
-  flex: 1;
-
-  min-width: 0;
+  flex: 1 1 auto;
 
   display: flex;
   align-items: center;
-
   gap: 10px;
+
+  min-width: 0;
 }
 
 .rep-user-badge {
-  flex: 0 0 36px;
-
-  width: 36px;
-  height: 36px;
+  flex: 0 0 38px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: #edf2f7;
+  width: 38px;
+  height: 38px;
 
-  color: #52657d;
-
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
+
+  background: #174c4c;
+  color: #d9fff1;
 
   font-size: 14px;
   font-weight: 700;
 }
 
 .rep-user-meta {
-  flex: 1;
-
-  min-width: 0;
-
   display: flex;
   flex-direction: column;
+  gap: 5px;
+
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .rep-user-meta strong {
-  display: block;
-
-  font-size: 13px;
-  font-weight: 600;
-
-  color: #1e293b;
-
-  line-height: 1.3;
-
-  white-space: nowrap;
-
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #f4f8fb;
+
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .rep-user-meta small {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 
-  margin-top: 3px;
+  color: #9eb3c1;
 
-  font-size: 11px;
-
-  color: #16a34a;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 10px;
 }
 
-/* =========================================================
-   16. LOGOUT BUTTON
-========================================================= */
+.rep-online-dot {
+  display: inline-block;
+  flex: 0 0 6px;
+
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+  background: #23d49c;
+  box-shadow: 0 0 0 3px rgba(35, 212, 156, 0.1);
+}
 
 .rep-logout-btn {
-  flex: 0 0 36px;
-
-  width: 36px;
-  height: 36px;
+  flex: 0 0 37px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  width: 37px;
+  height: 37px;
+
   padding: 0;
 
-  border: none;
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  background: transparent;
+  color: #c4d2dc;
+
+  font-size: 16px;
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.rep-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.14);
+  color: #ff9292;
+}
+
+.rep-logout-btn:focus-visible {
+  outline: 2px solid #2ed6a7;
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   9. MAIN SHELL
+========================================================= */
+
+.rep-main-shell {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  width: calc(100% - var(--rep-sidebar-width));
+  height: 100vh;
+  height: 100dvh;
+
+  min-width: 0;
+  min-height: 0;
+
+  margin-left: var(--rep-sidebar-width);
+
+  overflow: hidden;
+
+  background: var(--rep-bg-primary);
+
+  transition:
+    margin-left var(--rep-transition),
+    width var(--rep-transition);
+}
+
+/* Sidebar closed: expand the main shell */
+
+.rep-layout-sidebar-closed .rep-main-shell {
+  width: 100%;
+  margin-left: 0;
+}
+
+/* =========================================================
+   10. DESKTOP TOPBAR
+========================================================= */
+
+.rep-desktop-topbar {
+  position: relative;
+  z-index: 10;
+
+  flex: 0 0 var(--rep-topbar-height);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  width: 100%;
+  height: var(--rep-topbar-height);
+  min-width: 0;
+
+  padding: 0 28px;
+
+  background: rgba(255, 255, 255, 0.97);
+  border-bottom: 1px solid var(--rep-border-color);
+
+  box-shadow: var(--rep-shadow-sm);
+}
+
+.rep-topbar-left,
+.rep-topbar-right {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.rep-topbar-left {
+  flex: 1 1 auto;
+  gap: 22px;
+}
+
+.rep-topbar-right {
+  flex: 0 0 auto;
+  gap: 21px;
+}
+
+/* =========================================================
+   11. DESKTOP MENU BUTTON
+========================================================= */
+
+.rep-topbar-menu-btn {
+  flex: 0 0 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 38px;
+
+  padding: 0;
+
+  border: 0;
   border-radius: 8px;
 
   background: transparent;
+  color: #193447;
 
-  color: #64748b;
-
-  font-size: 16px;
-
+  font-size: 20px;
   cursor: pointer;
 
   transition:
@@ -532,73 +662,278 @@
     color 0.2s ease;
 }
 
-.rep-logout-btn:hover {
-  background: #fee2e2;
-
-  color: #dc2626;
-}
-
-.rep-logout-btn:focus-visible {
-  outline: 2px solid var(--rep-accent);
-  outline-offset: 2px;
+.rep-topbar-menu-btn:hover {
+  background: #edf8f4;
+  color: var(--rep-green-dark);
 }
 
 /* =========================================================
-   17. MAIN CONTENT
+   12. SEARCH BOX
+========================================================= */
 
-   SIDEBAR OPEN = CONTENT SHIFTED
-   SIDEBAR CLOSED = FULL WIDTH
+.rep-search-box {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  width: min(100%, 450px);
+  min-width: 0;
+  height: 42px;
+
+  padding: 0 15px;
+
+  border: 1px solid #e1e8ef;
+  border-radius: 24px;
+
+  background: #f6f8fb;
+  color: #75879a;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.rep-search-box:focus-within {
+  background: #ffffff;
+  border-color: #7ccdb6;
+  box-shadow: 0 0 0 3px rgba(8, 155, 118, 0.08);
+}
+
+.rep-search-box > svg {
+  flex: 0 0 auto;
+  font-size: 15px;
+}
+
+.rep-search-box input {
+  flex: 1 1 auto;
+
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+
+  padding: 0;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+  color: var(--rep-text-dark);
+
+  font-size: 12px;
+}
+
+.rep-search-box input::placeholder {
+  color: #8493a3;
+  opacity: 1;
+}
+
+.rep-search-box input:focus {
+  outline: none;
+}
+
+.rep-search-box input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.rep-search-clear {
+  flex: 0 0 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #64748b;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   13. NOTIFICATION BUTTON
+========================================================= */
+
+.rep-notification-btn {
+  position: relative;
+
+  flex: 0 0 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 40px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+  color: #183448;
+
+  font-size: 19px;
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.rep-notification-btn:hover {
+  color: var(--rep-green-dark);
+  background: #f0faf6;
+}
+
+.rep-notification-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+
+  width: 8px;
+  height: 8px;
+
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+
+  background: #ef4444;
+}
+
+.rep-topbar-divider {
+  width: 1px;
+  height: 34px;
+  background: #e8edf2;
+}
+
+/* =========================================================
+   14. TOPBAR PROFILE
+========================================================= */
+
+.rep-topbar-profile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-width: 0;
+  max-width: 260px;
+
+  padding: 5px 0 5px 2px;
+
+  border: 0;
+  background: transparent;
+
+  text-align: left;
+  cursor: pointer;
+}
+
+.rep-topbar-avatar {
+  flex: 0 0 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  border: 2px solid #e4f5ee;
+  border-radius: 50%;
+
+  background: #d7f4e7;
+  color: #087f63;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.rep-topbar-user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 0;
+}
+
+.rep-topbar-user-info strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #172b3b;
+
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.rep-topbar-user-info small {
+  color: #7b8b9a;
+
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.rep-profile-chevron {
+  flex: 0 0 auto;
+
+  margin-left: 3px;
+
+  color: #647b8a;
+  font-size: 11px;
+}
+
+/* =========================================================
+   15. MAIN PAGE CONTENT
 ========================================================= */
 
 .rep-main-canvas {
-  position: relative;
+  flex: 1 1 auto;
 
   display: block;
 
-  width: calc(
-    100% - var(--rep-current-sidebar-width)
-  );
-
+  width: 100%;
   min-width: 0;
-
-  height: 100vh;
-  height: 100dvh;
-
   min-height: 0;
 
-  margin-left: var(--rep-current-sidebar-width);
-
-  padding: 2rem;
-
-  background: var(--rep-bg-primary);
+  padding: 24px;
 
   overflow-x: hidden;
   overflow-y: auto;
 
+  background:
+    linear-gradient(
+      180deg,
+      #f5f8fc 0%,
+      #f1f6fa 100%
+    );
+
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+
   -webkit-overflow-scrolling: touch;
-
-  transition:
-    margin-left var(--rep-transition),
-    width var(--rep-transition);
 }
 
-/* =========================================================
-   18. MAIN WHEN SIDEBAR COLLAPSED
-========================================================= */
-
-.rep-layout-root:has(
-  .rep-sidebar-collapsed
-) .rep-main-canvas {
-  margin-left: 0;
-
-  width: 100%;
+.rep-main-canvas::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* =========================================================
-   19. MAIN CHILDREN
+.rep-main-canvas::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-   PREVENT HORIZONTAL OVERFLOW
-========================================================= */
+.rep-main-canvas::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
 
 .rep-main-canvas > * {
   max-width: 100%;
@@ -606,564 +941,536 @@
 }
 
 /* =========================================================
-   20. MOBILE TOPBAR
-
-   HIDDEN ON DESKTOP
+   16. MOBILE ELEMENTS: HIDDEN ON DESKTOP
 ========================================================= */
 
-.rep-mobile-topbar {
+.rep-mobile-topbar,
+.rep-mobile-search-wrap {
   display: none;
-
-  position: fixed;
-
-  top: 0;
-  left: 0;
-  right: 0;
-
-  height: var(--rep-mobile-topbar-height);
-
-  padding: 0 16px;
-
-  align-items: center;
-  justify-content: space-between;
-
-  background: #ffffff;
-
-  border-bottom:
-    1px solid var(--rep-border-color);
-
-  box-shadow: var(--rep-shadow-sm);
-
-  z-index: 1200;
 }
-
-/* =========================================================
-   21. MOBILE BRAND
-========================================================= */
-
-.rep-brand-badge {
-  display: flex;
-  align-items: center;
-
-  gap: 8px;
-
-  min-width: 0;
-
-  color: var(--rep-accent);
-
-  font-size: 15px;
-  font-weight: 700;
-
-  white-space: nowrap;
-}
-
-.rep-brand-icon {
-  flex-shrink: 0;
-
-  font-size: 18px;
-}
-
-/* =========================================================
-   22. MOBILE MENU TOGGLE
-========================================================= */
 
 .rep-menu-toggle-btn {
-  flex: 0 0 42px;
-
-  width: 42px;
-  height: 42px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
+  flex: 0 0 40px;
+
+  width: 40px;
+  height: 40px;
+
   padding: 0;
 
-  background: #eff4ff;
+  border: 1px solid #e1eee9;
+  border-radius: 10px;
 
-  border: none;
-  border-radius: 8px;
+  background: #f0faf6;
+  color: var(--rep-green-dark);
 
-  color: var(--rep-accent);
-
-  font-size: 19px;
-
+  font-size: 18px;
   cursor: pointer;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
 }
-
-.rep-menu-toggle-btn:hover {
-  background: #dbeafe;
-
-  color: var(--rep-accent-hover);
-}
-
-.rep-menu-toggle-btn:focus-visible {
-  outline: 2px solid var(--rep-accent);
-  outline-offset: 2px;
-}
-
-/* =========================================================
-   23. MOBILE OVERLAY
-
-   HIDDEN ON DESKTOP
-========================================================= */
 
 .rep-sidebar-overlay {
   display: none;
-
-  position: fixed;
-
-  inset: 0;
-
-  background: rgba(15, 23, 42, 0.38);
-
-  z-index: 1050;
 }
 
 /* =========================================================
-   24. DESKTOP SIDEBAR TOGGLE
-
-   WORKS WHEN BUTTON IS ADDED IN JSX
+   17. LAPTOP
+   993px - 1200px
 ========================================================= */
 
-.rep-desktop-toggle {
-  display: none;
+@media (min-width: 993px) and (max-width: 1200px) {
+  :root {
+    --rep-sidebar-width: 250px;
+    --rep-topbar-height: 74px;
+  }
+
+  .rep-sidebar-brand {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .rep-nav-section {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .rep-nav-item {
+    gap: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 12px;
+  }
+
+  .rep-desktop-topbar {
+    gap: 14px;
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .rep-topbar-left {
+    gap: 14px;
+  }
+
+  .rep-topbar-right {
+    gap: 13px;
+  }
+
+  .rep-main-canvas {
+    padding: 20px;
+  }
 }
 
-@media (min-width: 993px) {
-  .rep-desktop-toggle {
+/* =========================================================
+   18. TABLET / MOBILE DRAWER
+   992px AND BELOW
+========================================================= */
+
+@media (max-width: 992px) {
+  :root {
+    --rep-sidebar-width: 0px;
+  }
+
+  .rep-layout-root {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  /* Fixed mobile header */
+
+  .rep-mobile-topbar {
     position: fixed;
+    z-index: 1200;
 
-    top: 22px;
+    top: 0;
+    right: 0;
+    left: 0;
 
-    left: calc(
-      var(--rep-current-sidebar-width) - 18px
-    );
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
 
-    width: 36px;
-    height: 36px;
+    width: 100%;
+    height: var(--rep-mobile-topbar-height);
+
+    padding: 0 18px;
+
+    background: #ffffff;
+    border-bottom: 1px solid var(--rep-border-color);
+
+    box-shadow: var(--rep-shadow-sm);
+  }
+
+  .rep-mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    min-width: 0;
+
+    padding: 0;
+
+    border: 0;
+    background: transparent;
+
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .rep-brand-mark {
+    flex: 0 0 37px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    padding: 0;
+    width: 37px;
+    height: 37px;
 
-    background: #ffffff;
+    border-radius: 10px;
 
-    color: var(--rep-accent);
+    background: #e4f8ef;
+    color: var(--rep-green-dark);
 
-    border: 1px solid var(--rep-border-color);
-    border-radius: 9px;
-
-    box-shadow: var(--rep-shadow-md);
-
-    font-size: 15px;
-
-    cursor: pointer;
-
-    z-index: 1201;
-
-    transition:
-      left var(--rep-transition),
-      background 0.2s ease;
+    font-size: 18px;
   }
 
-  .rep-desktop-toggle:hover {
-    background: var(--rep-accent-light);
-  }
-
-  .rep-desktop-toggle.rep-toggle-closed {
-    left: 16px;
-  }
-
-  .rep-desktop-toggle.rep-toggle-open {
-    left: calc(
-      var(--rep-current-sidebar-width) - 18px
-    );
-  }
-}
-
-/* =========================================================
-   25. MEDIUM DESKTOP / LAPTOP
-
-   993px TO 1100px
-========================================================= */
-
-@media (min-width: 993px) and (max-width: 1100px) {
-  .rep-layout-root {
-    --rep-current-sidebar-width: 255px;
-  }
-
-  .rep-main-canvas {
-    padding: 1.5rem;
-  }
-
-  .rep-sidebar-brand {
-    padding: 16px;
-  }
-
-  .rep-nav-item {
-    font-size: 13px;
-
-    gap: 10px;
-  }
-}
-
-/* =========================================================
-   26. TABLET / MOBILE DRAWER
-
-   992px AND BELOW
-========================================================= */
-
-@media (max-width: 992px) {
-  .rep-layout-root {
-    --rep-current-sidebar-width: 0px;
-
-    display: block;
-
-    width: 100%;
-
-    height: 100vh;
-    height: 100dvh;
-
-    overflow: hidden;
-  }
-
-  /* MOBILE TOPBAR */
-
-  .rep-mobile-topbar {
+  .rep-mobile-brand-text {
     display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    min-width: 0;
   }
 
-  /* SIDEBAR DRAWER */
+  .rep-mobile-brand-text strong {
+    color: var(--rep-text-dark);
+
+    font-size: 13px;
+    font-weight: 750;
+    letter-spacing: -0.2px;
+
+    white-space: nowrap;
+  }
+
+  .rep-mobile-brand-text small {
+    color: var(--rep-text-muted);
+    font-size: 10px;
+  }
+
+  .rep-menu-toggle-btn {
+    flex-shrink: 0;
+  }
+
+  /* Sidebar drawer */
 
   .rep-sidebar {
+    z-index: 1100;
+
     top: var(--rep-mobile-topbar-height);
-
-    left: 0;
     bottom: 0;
+    left: 0;
 
-    width: min(300px, 85vw);
-    min-width: min(300px, 85vw);
-
+    width: min(300px, 86vw);
     height: calc(
       100vh - var(--rep-mobile-topbar-height)
     );
-
     height: calc(
       100dvh - var(--rep-mobile-topbar-height)
     );
 
-    z-index: 1100;
-
     transform: translateX(-105%);
+    visibility: hidden;
 
     box-shadow: none;
-  }
 
-  /* DRAWER OPEN */
+    transition:
+      transform var(--rep-transition),
+      visibility 0s linear 0.25s,
+      box-shadow var(--rep-transition);
+  }
 
   .rep-sidebar.rep-sidebar-open {
     transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
 
-    box-shadow:
-      4px 0 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.17);
+
+    transition:
+      transform var(--rep-transition),
+      visibility 0s,
+      box-shadow var(--rep-transition);
   }
-
-  /* DRAWER CLOSED */
 
   .rep-sidebar.rep-sidebar-collapsed {
     transform: translateX(-105%);
+    visibility: hidden;
+    pointer-events: none;
   }
 
-  /* OVERLAY */
+  /* Drawer overlay */
 
   .rep-sidebar-overlay {
-    display: block;
+    position: fixed;
+    z-index: 1050;
 
     top: var(--rep-mobile-topbar-height);
+    right: 0;
+    bottom: 0;
+    left: 0;
 
-    z-index: 1050;
+    display: block;
+
+    width: 100%;
+    height: calc(
+      100vh - var(--rep-mobile-topbar-height)
+    );
+    height: calc(
+      100dvh - var(--rep-mobile-topbar-height)
+    );
+
+    padding: 0;
+
+    border: 0;
+    border-radius: 0;
+
+    background: rgba(5, 21, 33, 0.48);
+
+    cursor: pointer;
+
+    animation: rep-overlay-in 0.2s ease;
   }
 
-  /* MAIN CONTENT */
+  @keyframes rep-overlay-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
-  .rep-main-canvas,
-  .rep-layout-root:has(
-    .rep-sidebar-collapsed
-  ) .rep-main-canvas {
+  /* Hide desktop header */
+
+  .rep-desktop-topbar {
+    display: none;
+  }
+
+  /* Main area */
+
+  .rep-main-shell,
+  .rep-layout-sidebar-closed .rep-main-shell {
     width: 100%;
-
     height: 100vh;
     height: 100dvh;
 
-    min-height: 0;
-
     margin-left: 0;
 
-    padding:
-      calc(var(--rep-mobile-topbar-height) + 20px)
-      20px
-      24px;
+    padding-top: var(--rep-mobile-topbar-height);
+  }
+
+  /* Mobile search */
+
+  .rep-mobile-search-wrap {
+    display: block;
+    flex: 0 0 auto;
+
+    width: 100%;
+
+    padding: 14px 20px 0;
+
+    background: var(--rep-bg-primary);
+  }
+
+  .rep-mobile-search {
+    width: 100%;
+    max-width: none;
+    height: 42px;
+  }
+
+  /* Main content */
+
+  .rep-main-canvas {
+    flex: 1 1 auto;
+    min-height: 0;
+
+    padding: 18px 20px 24px;
 
     overflow-x: hidden;
     overflow-y: auto;
   }
 
-  /* BRAND */
-
   .rep-sidebar-brand {
-    min-height: 74px;
-
-    padding: 14px 16px;
+    min-height: 83px;
   }
-
-  /* NAVIGATION */
 
   .rep-nav-section {
-    padding: 12px 10px 18px;
-  }
-
-  .rep-nav-item {
-    min-height: 44px;
-
-    font-size: 13px;
-  }
-
-  /* FOOTER */
-
-  .rep-sidebar-footer {
-    min-height: 68px;
-  }
-
-  /* DESKTOP TOGGLE HIDDEN */
-
-  .rep-desktop-toggle {
-    display: none;
+    padding-right: 12px;
+    padding-left: 12px;
   }
 }
 
 /* =========================================================
-   27. SMALL TABLETS
-
-   601px TO 768px
+   19. SMALL TABLETS
+   601px - 768px
 ========================================================= */
 
 @media (min-width: 601px) and (max-width: 768px) {
   .rep-main-canvas {
-    padding:
-      calc(var(--rep-mobile-topbar-height) + 18px)
-      18px
-      22px;
+    padding: 16px 18px 22px;
   }
 
-  .rep-sidebar {
-    width: 285px;
-    min-width: 285px;
+  .rep-mobile-search-wrap {
+    padding-right: 18px;
+    padding-left: 18px;
   }
 }
 
 /* =========================================================
-   28. MOBILE DEVICES
-
+   20. MOBILE
    600px AND BELOW
 ========================================================= */
 
 @media (max-width: 600px) {
+  :root {
+    --rep-mobile-topbar-height: 60px;
+  }
+
   .rep-mobile-topbar {
     padding: 0 12px;
   }
 
-  .rep-brand-badge {
-    font-size: 13px;
-
-    gap: 7px;
+  .rep-brand-mark {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
   }
 
-  .rep-brand-icon {
-    font-size: 17px;
+  .rep-mobile-brand {
+    gap: 8px;
+  }
+
+  .rep-mobile-brand-text strong {
+    font-size: 12px;
   }
 
   .rep-menu-toggle-btn {
-    flex-basis: 40px;
-
-    width: 40px;
-    height: 40px;
-
-    font-size: 18px;
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
   }
 
   .rep-sidebar {
-    width: 88vw;
-    min-width: 88vw;
-
-    max-width: 320px;
-  }
-
-  .rep-main-canvas,
-  .rep-layout-root:has(
-    .rep-sidebar-collapsed
-  ) .rep-main-canvas {
-    padding:
-      calc(var(--rep-mobile-topbar-height) + 14px)
-      12px
-      18px;
+    width: min(310px, 88vw);
   }
 
   .rep-sidebar-brand {
-    min-height: 72px;
-
-    padding: 12px 14px;
+    min-height: 78px;
+    padding: 14px 17px;
   }
 
   .rep-brand-avatar {
-    flex-basis: 40px;
-
-    width: 40px;
-    height: 40px;
-
+    flex-basis: 39px;
+    width: 39px;
+    height: 39px;
     font-size: 18px;
   }
 
-  .rep-brand-text h3 {
-    font-size: 14px;
+  .rep-brand-text > strong {
+    font-size: 15px;
   }
 
-  .rep-brand-text span {
-    font-size: 10px;
+  .rep-nav-caption {
+    padding: 16px 19px 7px;
   }
 
   .rep-nav-section {
-    padding: 10px 8px 16px;
+    padding: 5px 10px 14px;
   }
 
   .rep-nav-heading {
-    padding: 9px 10px 4px;
-
-    font-size: 10px;
+    margin-top: 13px;
+    font-size: 9px;
   }
 
   .rep-nav-item {
-    min-height: 44px;
-
-    padding: 10px;
-
-    gap: 10px;
-
-    font-size: 13px;
+    min-height: 43px;
+    gap: 11px;
+    padding: 10px 11px;
+    font-size: 12px;
   }
 
   .rep-sidebar-footer {
-    min-height: 66px;
+    min-height: 70px;
+    padding: 10px 12px;
+  }
 
-    padding: 10px;
+  .rep-mobile-search-wrap {
+    padding: 12px 12px 0;
+  }
+
+  .rep-mobile-search {
+    height: 40px;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .rep-search-box input {
+    font-size: 12px;
+  }
+
+  .rep-main-canvas {
+    padding: 14px 12px 20px;
   }
 }
 
 /* =========================================================
-   29. VERY SMALL MOBILE
-
+   21. VERY SMALL MOBILE
    380px AND BELOW
 ========================================================= */
 
 @media (max-width: 380px) {
+  .rep-mobile-brand-text strong {
+    font-size: 11px;
+  }
+
+  .rep-mobile-topbar {
+    gap: 7px;
+    padding: 0 10px;
+  }
+
+  .rep-main-canvas {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .rep-mobile-search-wrap {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
   .rep-sidebar {
-    width: 92vw;
-    min-width: 92vw;
-
-    max-width: 320px;
-  }
-
-  .rep-brand-badge {
-    font-size: 12px;
-  }
-
-  .rep-brand-text h3 {
-    font-size: 13px;
-  }
-
-  .rep-brand-text span {
-    font-size: 10px;
+    width: 90vw;
   }
 
   .rep-user-meta strong {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .rep-user-meta small {
-    font-size: 10px;
-  }
-
-  .rep-main-canvas,
-  .rep-layout-root:has(
-    .rep-sidebar-collapsed
-  ) .rep-main-canvas {
-    padding:
-      calc(var(--rep-mobile-topbar-height) + 12px)
-      10px
-      16px;
+    font-size: 9px;
   }
 }
 
 /* =========================================================
-   30. LANDSCAPE MOBILE / SHORT HEIGHT
+   22. SHORT LANDSCAPE SCREENS
 ========================================================= */
 
-@media (max-height: 600px) and (max-width: 992px) {
+@media (max-height: 600px) {
   .rep-sidebar-brand {
-    min-height: 60px;
-
-    padding: 8px 12px;
+    min-height: 68px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 
-  .rep-brand-avatar {
-    width: 34px;
-    height: 34px;
-
-    flex-basis: 34px;
-
-    font-size: 16px;
-  }
-
-  .rep-nav-section {
-    padding-top: 6px;
-    padding-bottom: 6px;
+  .rep-nav-caption {
+    padding-top: 10px;
   }
 
   .rep-nav-heading {
-    margin-top: 5px;
-
-    padding-top: 5px;
+    margin-top: 9px;
   }
 
   .rep-nav-item {
-    min-height: 38px;
-
-    padding: 7px 10px;
+    min-height: 37px;
+    padding-top: 7px;
+    padding-bottom: 7px;
   }
 
   .rep-sidebar-footer {
-    min-height: 56px;
-
-    padding: 7px 10px;
+    min-height: 60px;
+    padding-top: 8px;
+    padding-bottom: 8px;
   }
 }
 
 /* =========================================================
-   31. ACCESSIBILITY
+   23. ACCESSIBILITY
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .rep-sidebar,
-  .rep-main-canvas,
-  .rep-desktop-toggle,
-  .rep-nav-item,
-  .rep-menu-toggle-btn {
-    transition: none !important;
+  .rep-layout-root *,
+  .rep-layout-root *::before,
+  .rep-layout-root *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

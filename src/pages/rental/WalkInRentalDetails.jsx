@@ -1,1583 +1,3 @@
-// // import React, { useCallback, useEffect, useMemo, useState } from "react";
-// // import { useNavigate, useParams } from "react-router-dom";
-// // import {
-// //   ArrowLeft,
-// //   CalendarDays,
-// //   CheckCircle2,
-// //   Clock3,
-// //   FileText,
-// //   Loader2,
-// //   Package,
-// //   Phone,
-// //   Mail,
-// //   MapPin,
-// //   User,
-// //   Building2,
-// //   IndianRupee,
-// //   RefreshCw,
-// //   ShieldCheck,
-// //   AlertCircle,
-// // } from "lucide-react";
-
-// // import {
-// //   getRentalById,
-// //   markDepositReceived,
-// //   allocateRental,
-// //   markRentalReturned,
-// // } from "../../services/rentalApi";
-
-// // import "./WalkInRentalDetails.css";
-
-
-// // // ============================================================
-// // // HELPERS
-// // // ============================================================
-
-// // const getId = (value) => {
-// //   if (!value) return "";
-
-// //   if (typeof value === "string") return value;
-
-// //   return (
-// //     value?._id ||
-// //     value?.id ||
-// //     value?.$oid ||
-// //     ""
-// //   );
-// // };
-
-// // const getName = (value) => {
-// //   if (!value) return "";
-
-// //   if (typeof value === "string") return value;
-
-// //   return (
-// //     value?.name ||
-// //     value?.title ||
-// //     value?.productName ||
-// //     value?.label ||
-// //     ""
-// //   );
-// // };
-
-// // const getNumber = (...values) => {
-// //   for (const value of values) {
-// //     if (
-// //       value !== undefined &&
-// //       value !== null &&
-// //       value !== "" &&
-// //       !Number.isNaN(Number(value))
-// //     ) {
-// //       return Number(value);
-// //     }
-// //   }
-
-// //   return 0;
-// // };
-
-// // const formatMoney = (value) => {
-// //   const number = Number(value || 0);
-
-// //   return `₹${number.toLocaleString("en-IN")}`;
-// // };
-
-// // const formatDate = (value) => {
-// //   if (!value) return "—";
-
-// //   const date = new Date(value);
-
-// //   if (Number.isNaN(date.getTime())) {
-// //     return "—";
-// //   }
-
-// //   return date.toLocaleDateString("en-IN", {
-// //     day: "2-digit",
-// //     month: "short",
-// //     year: "numeric",
-// //   });
-// // };
-
-// // const formatDateTime = (value) => {
-// //   if (!value) return "—";
-
-// //   const date = new Date(value);
-
-// //   if (Number.isNaN(date.getTime())) {
-// //     return "—";
-// //   }
-
-// //   return date.toLocaleString("en-IN", {
-// //     day: "2-digit",
-// //     month: "short",
-// //     year: "numeric",
-// //     hour: "2-digit",
-// //     minute: "2-digit",
-// //   });
-// // };
-
-// // const getStatusClass = (status) => {
-// //   const value = String(status || "").toUpperCase();
-
-// //   if (
-// //     value === "ACTIVE" ||
-// //     value === "ALLOCATED" ||
-// //     value === "APPROVED" ||
-// //     value === "COMPLETED"
-// //   ) {
-// //     return "success";
-// //   }
-
-// //   if (
-// //     value === "PENDING" ||
-// //     value === "REQUESTED"
-// //   ) {
-// //     return "warning";
-// //   }
-
-// //   if (
-// //     value === "REJECTED" ||
-// //     value === "CANCELLED"
-// //   ) {
-// //     return "danger";
-// //   }
-
-// //   if (
-// //     value === "RETURNED" ||
-// //     value === "CLOSED"
-// //   ) {
-// //     return "info";
-// //   }
-
-// //   return "neutral";
-// // };
-
-// // const extractRental = (response) => {
-// //   if (!response) return null;
-
-// //   // axios response
-// //   const data = response?.data;
-
-// //   if (data?.rental) {
-// //     return data.rental;
-// //   }
-
-// //   if (data?.data?.rental) {
-// //     return data.data.rental;
-// //   }
-
-// //   if (data?.data) {
-// //     return data.data;
-// //   }
-
-// //   if (response?.rental) {
-// //     return response.rental;
-// //   }
-
-// //   return data || response;
-// // };
-
-
-// // // ============================================================
-// // // COMPONENT
-// // // ============================================================
-
-// // function WalkInRentalDetails() {
-// //   const navigate = useNavigate();
-// //   const { rentalId } = useParams();
-
-// //   const [rental, setRental] = useState(null);
-
-// //   const [loading, setLoading] = useState(true);
-// //   const [actionLoading, setActionLoading] = useState(false);
-
-// //   const [error, setError] = useState("");
-// //   const [actionError, setActionError] = useState("");
-// //   const [actionSuccess, setActionSuccess] = useState("");
-
-// //   // ==========================================================
-// //   // LOAD RENTAL
-// //   // ==========================================================
-
-// //   const loadRental = useCallback(async () => {
-// //     if (!rentalId) {
-// //       setError("Rental ID is missing.");
-// //       setLoading(false);
-// //       return;
-// //     }
-
-// //     try {
-// //       setLoading(true);
-// //       setError("");
-
-// //       console.log(
-// //         "========== WALK-IN RENTAL DETAILS =========="
-// //       );
-
-// //       console.log("Rental ID:", rentalId);
-
-// //       const response = await getRentalById(rentalId);
-
-// //       console.log("Rental Details Response:", response);
-
-// //       const rentalData = extractRental(response);
-
-// //       console.log("Normalized Rental:", rentalData);
-
-// //       if (!rentalData) {
-// //         throw new Error("Rental details not found.");
-// //       }
-
-// //       setRental(rentalData);
-// //     } catch (err) {
-// //       console.error(
-// //         "GET WALK-IN RENTAL DETAILS ERROR:",
-// //         err
-// //       );
-
-// //       setError(
-// //         err?.message ||
-// //           err?.response?.data?.message ||
-// //           "Failed to load rental details."
-// //       );
-// //     } finally {
-// //       setLoading(false);
-// //     }
-// //   }, [rentalId]);
-
-// //   useEffect(() => {
-// //     loadRental();
-// //   }, [loadRental]);
-
-// //   // ==========================================================
-// //   // NORMALIZED DATA
-// //   // ==========================================================
-
-// //   const details = useMemo(() => {
-// //     if (!rental) return null;
-
-// //     const individual =
-// //       rental?.individualDetails || {};
-
-// //     const company =
-// //       rental?.companyDetails || {};
-
-// //     const customerType =
-// //       String(
-// //         rental?.customerType || "INDIVIDUAL"
-// //       ).toUpperCase();
-
-// //     const customer =
-// //       customerType === "COMPANY"
-// //         ? {
-// //             name:
-// //               company?.companyName ||
-// //               company?.contactPerson ||
-// //               "Company Customer",
-
-// //             contactPerson:
-// //               company?.contactPerson || "",
-
-// //             phone:
-// //               company?.phone ||
-// //               "",
-
-// //             email:
-// //               company?.email ||
-// //               "",
-
-// //             address:
-// //               company?.officeAddress ||
-// //               "",
-
-// //             gstNumber:
-// //               company?.gstNumber ||
-// //               "",
-// //           }
-// //         : {
-// //             name:
-// //               individual?.fullName ||
-// //               rental?.customer?.name ||
-// //               rental?.customerId?.name ||
-// //               "Individual Customer",
-
-// //             contactPerson: "",
-
-// //             phone:
-// //               individual?.phone ||
-// //               rental?.customer?.phone ||
-// //               "",
-
-// //             email:
-// //               individual?.email ||
-// //               rental?.customer?.email ||
-// //               "",
-
-// //             address:
-// //               individual?.address ||
-// //               "",
-
-// //             gstNumber: "",
-// //           };
-
-// //     const product =
-// //       rental?.productId || {};
-
-// //     const rentalProduct =
-// //       rental?.rentalProductId || {};
-
-// //     const monthlyRent = getNumber(
-// //       rental?.monthlyRent,
-// //       rental?.pricing?.monthlyRent,
-// //       rentalProduct?.monthlyRent,
-// //       rentalProduct?.pricing?.monthlyRent
-// //     );
-
-// //     const securityDeposit = getNumber(
-// //       rental?.securityDeposit,
-// //       rental?.pricing?.securityDeposit,
-// //       rentalProduct?.securityDeposit,
-// //       rentalProduct?.pricing?.securityDeposit
-// //     );
-
-// //     const gstPercentage = getNumber(
-// //       rental?.gstPercentage,
-// //       rental?.pricing?.gstPercentage,
-// //       rentalProduct?.gstPercentage,
-// //       rentalProduct?.pricing?.gstPercentage
-// //     );
-
-// //     const rentalMonths = getNumber(
-// //       rental?.rentalMonths,
-// //       rental?.durationMonths,
-// //       rental?.months,
-// //       1
-// //     );
-
-// //     const rentSubtotal =
-// //       monthlyRent * rentalMonths;
-
-// //     const gstAmount =
-// //       rentSubtotal * (gstPercentage / 100);
-
-// //     const totalRent =
-// //       rentSubtotal + gstAmount;
-
-// //     const image =
-// //       product?.primaryImage ||
-// //       product?.image ||
-// //       product?.thumbnail ||
-// //       product?.images?.[0] ||
-// //       rentalProduct?.image ||
-// //       rentalProduct?.images?.[0] ||
-// //       "";
-
-// //     return {
-// //       customerType,
-// //       customer,
-
-// //       product,
-// //       rentalProduct,
-
-// //       productName:
-// //         getName(product) ||
-// //         getName(rentalProduct) ||
-// //         "Rental Product",
-
-// //       productBrand:
-// //         product?.brand?.name ||
-// //         product?.brand ||
-// //         "",
-
-// //       productModel:
-// //         product?.model ||
-// //         product?.modelNumber ||
-// //         "",
-
-// //       image,
-
-// //       monthlyRent,
-// //       securityDeposit,
-// //       gstPercentage,
-// //       gstAmount,
-
-// //       rentalMonths,
-
-// //       rentSubtotal,
-// //       totalRent,
-
-// //       startDate:
-// //         rental?.startDate,
-
-// //       expectedEndDate:
-// //         rental?.expectedEndDate,
-
-// //       nextPaymentDate:
-// //         rental?.nextPaymentDate,
-
-// //       lastPaymentDate:
-// //         rental?.lastPaymentDate,
-
-// //       status:
-// //         rental?.status || "—",
-
-// //       rentalSource:
-// //         rental?.rentalSource || "WALK_IN",
-
-// //       depositReceived:
-// //         Boolean(
-// //           rental?.depositReceived ||
-// //           rental?.isDepositReceived
-// //         ),
-
-// //       allocatedAt:
-// //         rental?.allocatedAt,
-
-// //       returnedAt:
-// //         rental?.returnedAt,
-
-// //       notes:
-// //         rental?.notes ||
-// //         rental?.handoverDescription ||
-// //         rental?.handoverNotes ||
-// //         "",
-
-// //       createdAt:
-// //         rental?.createdAt,
-
-// //       updatedAt:
-// //         rental?.updatedAt,
-// //     };
-// //   }, [rental]);
-
-// //   // ==========================================================
-// //   // ACTION HANDLER
-// //   // ==========================================================
-
-// //   const runAction = async (action, successMessage) => {
-// //     if (!rentalId) return;
-
-// //     try {
-// //       setActionLoading(true);
-// //       setActionError("");
-// //       setActionSuccess("");
-
-// //       console.log(
-// //         "Rental Action:",
-// //         action,
-// //         rentalId
-// //       );
-
-// //       let response;
-
-// //       if (action === "deposit") {
-// //         response =
-// //           await markDepositReceived(rentalId);
-// //       }
-
-// //       if (action === "allocate") {
-// //         response =
-// //           await allocateRental(rentalId);
-// //       }
-
-// //       if (action === "return") {
-// //         response =
-// //           await markRentalReturned(rentalId);
-// //       }
-
-// //       console.log(
-// //         "Rental Action Response:",
-// //         response
-// //       );
-
-// //       setActionSuccess(
-// //         successMessage ||
-// //           "Rental updated successfully."
-// //       );
-
-// //       await loadRental();
-// //     } catch (err) {
-// //       console.error(
-// //         "RENTAL ACTION ERROR:",
-// //         err
-// //       );
-
-// //       setActionError(
-// //         err?.response?.data?.message ||
-// //           err?.message ||
-// //           "Unable to update rental."
-// //       );
-// //     } finally {
-// //       setActionLoading(false);
-// //     }
-// //   };
-
-// //   // ==========================================================
-// //   // BUTTON ACTIONS
-// //   // ==========================================================
-
-// //   const handleDeposit = () => {
-// //     if (
-// //       !window.confirm(
-// //         "Mark security deposit as received?"
-// //       )
-// //     ) {
-// //       return;
-// //     }
-
-// //     runAction(
-// //       "deposit",
-// //       "Security deposit marked as received."
-// //     );
-// //   };
-
-// //   const handleAllocate = () => {
-// //     if (
-// //       !window.confirm(
-// //         "Allocate this rental?"
-// //       )
-// //     ) {
-// //       return;
-// //     }
-
-// //     runAction(
-// //       "allocate",
-// //       "Rental allocated successfully."
-// //     );
-// //   };
-
-// //   const handleReturn = () => {
-// //     if (
-// //       !window.confirm(
-// //         "Mark this rental as returned?"
-// //       )
-// //     ) {
-// //       return;
-// //     }
-
-// //     runAction(
-// //       "return",
-// //       "Rental marked as returned."
-// //     );
-// //   };
-
-// //   // ==========================================================
-// //   // LOADING
-// //   // ==========================================================
-
-// //   if (loading) {
-// //     return (
-// //       <div className="wir-details-page">
-// //         <div className="wir-details-loading">
-// //           <Loader2
-// //             size={40}
-// //             className="wir-spin"
-// //           />
-
-// //           <h3>
-// //             Loading rental details...
-// //           </h3>
-
-// //           <p>
-// //             Please wait while we fetch the
-// //             rental information.
-// //           </p>
-// //         </div>
-// //       </div>
-// //     );
-// //   }
-
-// //   // ==========================================================
-// //   // ERROR
-// //   // ==========================================================
-
-// //   if (error || !rental || !details) {
-// //     return (
-// //       <div className="wir-details-page">
-// //         <div className="wir-details-error">
-// //           <div className="wir-error-icon">
-// //             <AlertCircle size={34} />
-// //           </div>
-
-// //           <h2>
-// //             Unable to load rental
-// //           </h2>
-
-// //           <p>
-// //             {error ||
-// //               "Rental details were not found."}
-// //           </p>
-
-// //           <div className="wir-error-actions">
-// //             <button
-// //               className="wir-btn wir-btn-secondary"
-// //               onClick={() => navigate(-1)}
-// //             >
-// //               <ArrowLeft size={18} />
-// //               Back
-// //             </button>
-
-// //             <button
-// //               className="wir-btn wir-btn-primary"
-// //               onClick={loadRental}
-// //             >
-// //               <RefreshCw size={18} />
-// //               Retry
-// //             </button>
-// //           </div>
-// //         </div>
-// //       </div>
-// //     );
-// //   }
-
-// //   // ==========================================================
-// //   // RENDER
-// //   // ==========================================================
-
-// //   return (
-// //     <div className="wir-details-page">
-
-// //       {/* ======================================================
-// //           HEADER
-// //       ====================================================== */}
-
-// //       <div className="wir-details-header">
-
-// //         <div className="wir-header-left">
-
-// //           <button
-// //             className="wir-back-btn"
-// //             onClick={() => navigate(-1)}
-// //             title="Go Back"
-// //           >
-// //             <ArrowLeft size={20} />
-// //           </button>
-
-// //           <div>
-// //             <div className="wir-breadcrumb">
-// //               Receptionist
-// //               <span>/</span>
-// //               Rental
-// //               <span>/</span>
-// //               Rental Details
-// //             </div>
-
-// //             <h1>
-// //               Walk-In Rental Details
-// //             </h1>
-
-// //             <p>
-// //               Rental ID:{" "}
-// //               <strong>
-// //                 {getId(rental)}
-// //               </strong>
-// //             </p>
-// //           </div>
-
-// //         </div>
-
-// //         <div className="wir-header-actions">
-
-// //           <button
-// //             className="wir-btn wir-btn-secondary"
-// //             onClick={loadRental}
-// //             disabled={actionLoading}
-// //           >
-// //             <RefreshCw size={17} />
-// //             Refresh
-// //           </button>
-
-// //           <button
-// //             className="wir-btn wir-btn-secondary"
-// //             onClick={() =>
-// //               navigate(
-// //                 "/receptionist/rental/walkin-orders"
-// //               )
-// //             }
-// //           >
-// //             <FileText size={17} />
-// //             All Rentals
-// //           </button>
-
-// //         </div>
-// //       </div>
-
-
-// //       {/* ======================================================
-// //           ALERTS
-// //       ====================================================== */}
-
-// //       {actionSuccess && (
-// //         <div className="wir-alert wir-alert-success">
-// //           <CheckCircle2 size={20} />
-// //           <span>{actionSuccess}</span>
-// //         </div>
-// //       )}
-
-// //       {actionError && (
-// //         <div className="wir-alert wir-alert-danger">
-// //           <AlertCircle size={20} />
-// //           <span>{actionError}</span>
-// //         </div>
-// //       )}
-
-
-// //       {/* ======================================================
-// //           STATUS BAR
-// //       ====================================================== */}
-
-// //       <div className="wir-status-card">
-
-// //         <div className="wir-status-main">
-
-// //           <div className="wir-status-icon">
-// //             <Package size={24} />
-// //           </div>
-
-// //           <div>
-// //             <span className="wir-label">
-// //               Rental Status
-// //             </span>
-
-// //             <div className="wir-status-row">
-
-// //               <span
-// //                 className={`wir-status-badge ${getStatusClass(
-// //                   details.status
-// //                 )}`}
-// //               >
-// //                 {String(
-// //                   details.status || "UNKNOWN"
-// //                 ).replaceAll("_", " ")}
-// //               </span>
-
-// //               <span className="wir-source-badge">
-// //                 WALK-IN
-// //               </span>
-
-// //             </div>
-// //           </div>
-
-// //         </div>
-
-// //         <div className="wir-status-meta">
-
-// //           <div>
-// //             <span className="wir-label">
-// //               Created
-// //             </span>
-
-// //             <strong>
-// //               {formatDateTime(
-// //                 details.createdAt
-// //               )}
-// //             </strong>
-// //           </div>
-
-// //           <div>
-// //             <span className="wir-label">
-// //               Rental Period
-// //             </span>
-
-// //             <strong>
-// //               {details.rentalMonths} month
-// //               {details.rentalMonths !== 1
-// //                 ? "s"
-// //                 : ""}
-// //             </strong>
-// //           </div>
-
-// //           <div>
-// //             <span className="wir-label">
-// //               Security Deposit
-// //             </span>
-
-// //             <strong>
-// //               {details.depositReceived
-// //                 ? "Received"
-// //                 : "Pending"}
-// //             </strong>
-// //           </div>
-
-// //         </div>
-
-// //       </div>
-
-
-// //       {/* ======================================================
-// //           ACTION BUTTONS
-// //       ====================================================== */}
-
-// //       <div className="wir-action-card">
-
-// //         <div>
-// //           <h3>
-// //             Rental Actions
-// //           </h3>
-
-// //           <p>
-// //             Manage deposit, allocation and
-// //             return status from here.
-// //           </p>
-// //         </div>
-
-// //         <div className="wir-action-buttons">
-
-// //           {/* {!details.depositReceived && (
-// //             // <button
-// //             //   className="wir-btn wir-btn-warning"
-// //             //   onClick={handleDeposit}
-// //             //   disabled={actionLoading}
-// //             // >
-// //             //   {actionLoading ? (
-// //             //     <Loader2
-// //             //       size={17}
-// //             //       className="wir-spin"
-// //             //     />
-// //             //   ) : (
-// //             //     <ShieldCheck size={17} />
-// //             //   )}
-
-// //             //   Mark Deposit Received
-// //             // </button>
-// //           )} */}
-
-// //           {!details.allocatedAt &&
-// //             String(details.status).toUpperCase() !==
-// //               "RETURNED" && (
-// //               <button
-// //                 className="wir-btn wir-btn-primary"
-// //                 onClick={handleAllocate}
-// //                 disabled={actionLoading}
-// //               >
-// //                 {actionLoading ? (
-// //                   <Loader2
-// //                     size={17}
-// //                     className="wir-spin"
-// //                   />
-// //                 ) : (
-// //                   <CheckCircle2 size={17} />
-// //                 )}
-
-// //                 Allocate Rental
-// //               </button>
-// //             )}
-
-// //           {String(details.status).toUpperCase() ===
-// //             "ACTIVE" && (
-// //             <button
-// //               className="wir-btn wir-btn-danger"
-// //               onClick={handleReturn}
-// //               disabled={actionLoading}
-// //             >
-// //               {actionLoading ? (
-// //                 <Loader2
-// //                   size={17}
-// //                   className="wir-spin"
-// //                 />
-// //               ) : (
-// //                 <RefreshCw size={17} />
-// //               )}
-
-// //               Mark Returned
-// //             </button>
-// //           )}
-
-// //         </div>
-
-// //       </div>
-
-
-// //       {/* ======================================================
-// //           MAIN GRID
-// //       ====================================================== */}
-
-// //       <div className="wir-details-grid">
-
-// //         {/* ====================================================
-// //             CUSTOMER
-// //         ==================================================== */}
-
-// //         <section className="wir-card">
-
-// //           <div className="wir-card-header">
-
-// //             <div className="wir-card-title-icon">
-// //               {details.customerType ===
-// //               "COMPANY" ? (
-// //                 <Building2 size={20} />
-// //               ) : (
-// //                 <User size={20} />
-// //               )}
-// //             </div>
-
-// //             <div>
-// //               <h2>
-// //                 Customer Information
-// //               </h2>
-
-// //               <p>
-// //                 {details.customerType ===
-// //                 "COMPANY"
-// //                   ? "Company customer"
-// //                   : "Individual customer"}
-// //               </p>
-// //             </div>
-
-// //           </div>
-
-// //           <div className="wir-info-list">
-
-// //             <div className="wir-info-item">
-
-// //               <span className="wir-info-icon">
-// //                 {details.customerType ===
-// //                 "COMPANY" ? (
-// //                   <Building2 size={18} />
-// //                 ) : (
-// //                   <User size={18} />
-// //                 )}
-// //               </span>
-
-// //               <div>
-// //                 <span>
-// //                   {details.customerType ===
-// //                   "COMPANY"
-// //                     ? "Company Name"
-// //                     : "Full Name"}
-// //                 </span>
-
-// //                 <strong>
-// //                   {details.customer.name ||
-// //                     "—"}
-// //                 </strong>
-// //               </div>
-
-// //             </div>
-
-
-// //             {details.customer.contactPerson && (
-// //               <div className="wir-info-item">
-
-// //                 <span className="wir-info-icon">
-// //                   <User size={18} />
-// //                 </span>
-
-// //                 <div>
-// //                   <span>
-// //                     Contact Person
-// //                   </span>
-
-// //                   <strong>
-// //                     {
-// //                       details.customer
-// //                         .contactPerson
-// //                     }
-// //                   </strong>
-// //                 </div>
-
-// //               </div>
-// //             )}
-
-
-// //             <div className="wir-info-item">
-
-// //               <span className="wir-info-icon">
-// //                 <Phone size={18} />
-// //               </span>
-
-// //               <div>
-// //                 <span>
-// //                   Phone
-// //                 </span>
-
-// //                 <strong>
-// //                   {details.customer.phone ||
-// //                     "—"}
-// //                 </strong>
-// //               </div>
-
-// //             </div>
-
-
-// //             <div className="wir-info-item">
-
-// //               <span className="wir-info-icon">
-// //                 <Mail size={18} />
-// //               </span>
-
-// //               <div>
-// //                 <span>
-// //                   Email
-// //                 </span>
-
-// //                 <strong>
-// //                   {details.customer.email ||
-// //                     "—"}
-// //                 </strong>
-// //               </div>
-
-// //             </div>
-
-
-// //             <div className="wir-info-item">
-
-// //               <span className="wir-info-icon">
-// //                 <MapPin size={18} />
-// //               </span>
-
-// //               <div>
-// //                 <span>
-// //                   Address
-// //                 </span>
-
-// //                 <strong>
-// //                   {details.customer.address ||
-// //                     "—"}
-// //                 </strong>
-// //               </div>
-
-// //             </div>
-
-
-// //             {details.customer.gstNumber && (
-// //               <div className="wir-info-item">
-
-// //                 <span className="wir-info-icon">
-// //                   <FileText size={18} />
-// //                 </span>
-
-// //                 <div>
-// //                   <span>
-// //                     GST Number
-// //                   </span>
-
-// //                   <strong>
-// //                     {
-// //                       details.customer
-// //                         .gstNumber
-// //                     }
-// //                   </strong>
-// //                 </div>
-
-// //               </div>
-// //             )}
-
-// //           </div>
-
-// //         </section>
-
-
-// //         {/* ====================================================
-// //             PRODUCT
-// //         ==================================================== */}
-
-// //         <section className="wir-card">
-
-// //           <div className="wir-card-header">
-
-// //             <div className="wir-card-title-icon">
-// //               <Package size={20} />
-// //             </div>
-
-// //             <div>
-// //               <h2>
-// //                 Product Information
-// //               </h2>
-
-// //               <p>
-// //                 Rented product details
-// //               </p>
-// //             </div>
-
-// //           </div>
-
-// //           <div className="wir-product">
-
-// //             {details.image ? (
-// //               <img
-// //                 src={details.image}
-// //                 alt={details.productName}
-// //                 className="wir-product-image"
-// //                 onError={(event) => {
-// //                   event.currentTarget.style.display =
-// //                     "none";
-// //                 }}
-// //               />
-// //             ) : (
-// //               <div className="wir-product-placeholder">
-// //                 <Package size={38} />
-// //               </div>
-// //             )}
-
-// //             <div className="wir-product-info">
-
-// //               <h3>
-// //                 {details.productName}
-// //               </h3>
-
-// //               {details.productBrand && (
-// //                 <p>
-// //                   Brand:{" "}
-// //                   <strong>
-// //                     {details.productBrand}
-// //                   </strong>
-// //                 </p>
-// //               )}
-
-// //               {details.productModel && (
-// //                 <p>
-// //                   Model:{" "}
-// //                   <strong>
-// //                     {details.productModel}
-// //                   </strong>
-// //                 </p>
-// //               )}
-
-// //               {getId(details.rentalProduct) && (
-// //                 <p className="wir-small-id">
-// //                   Rental Product ID:{" "}
-// //                   {getId(
-// //                     details.rentalProduct
-// //                   )}
-// //                 </p>
-// //               )}
-
-// //               {getId(details.product) && (
-// //                 <p className="wir-small-id">
-// //                   Product ID:{" "}
-// //                   {getId(details.product)}
-// //                 </p>
-// //               )}
-
-// //             </div>
-
-// //           </div>
-
-// //         </section>
-
-
-// //         {/* ====================================================
-// //             RENTAL PERIOD
-// //         ==================================================== */}
-
-// //         <section className="wir-card">
-
-// //           <div className="wir-card-header">
-
-// //             <div className="wir-card-title-icon">
-// //               <CalendarDays size={20} />
-// //             </div>
-
-// //             <div>
-// //               <h2>
-// //                 Rental Period
-// //               </h2>
-
-// //               <p>
-// //                 Start and expected return
-// //               </p>
-// //             </div>
-
-// //           </div>
-
-// //           <div className="wir-date-grid">
-
-// //             <div className="wir-date-box">
-
-// //               <span>
-// //                 <CalendarDays size={17} />
-// //                 Start Date
-// //               </span>
-
-// //               <strong>
-// //                 {formatDate(
-// //                   details.startDate
-// //                 )}
-// //               </strong>
-
-// //             </div>
-
-
-// //             <div className="wir-date-box">
-
-// //               <span>
-// //                 <Clock3 size={17} />
-// //                 Expected End Date
-// //               </span>
-
-// //               <strong>
-// //                 {formatDate(
-// //                   details.expectedEndDate
-// //                 )}
-// //               </strong>
-
-// //             </div>
-
-
-// //             <div className="wir-date-box">
-
-// //               <span>
-// //                 <IndianRupee size={17} />
-// //                 Next Payment
-// //               </span>
-
-// //               <strong>
-// //                 {formatDate(
-// //                   details.nextPaymentDate
-// //                 )}
-// //               </strong>
-
-// //             </div>
-
-
-// //             <div className="wir-date-box">
-
-// //               <span>
-// //                 <RefreshCw size={17} />
-// //                 Returned At
-// //               </span>
-
-// //               <strong>
-// //                 {formatDateTime(
-// //                   details.returnedAt
-// //                 )}
-// //               </strong>
-
-// //             </div>
-
-// //           </div>
-
-// //         </section>
-
-
-// //         {/* ====================================================
-// //             PRICING
-// //         ==================================================== */}
-
-// //         <section className="wir-card">
-
-// //           <div className="wir-card-header">
-
-// //             <div className="wir-card-title-icon">
-// //               <IndianRupee size={20} />
-// //             </div>
-
-// //             <div>
-// //               <h2>
-// //                 Rental Pricing
-// //               </h2>
-
-// //               <p>
-// //                 Complete rental calculation
-// //               </p>
-// //             </div>
-
-// //           </div>
-
-// //           <div className="wir-pricing">
-
-// //             <div className="wir-price-row">
-
-// //               <span>
-// //                 Monthly Rent
-// //               </span>
-
-// //               <strong>
-// //                 {formatMoney(
-// //                   details.monthlyRent
-// //                 )}
-// //               </strong>
-
-// //             </div>
-
-
-// //             <div className="wir-price-row">
-
-// //               <span>
-// //                 Rental Duration
-// //               </span>
-
-// //               <strong>
-// //                 {details.rentalMonths} month
-// //                 {details.rentalMonths !== 1
-// //                   ? "s"
-// //                   : ""}
-// //               </strong>
-
-// //             </div>
-
-
-// //             <div className="wir-price-row">
-
-// //               <span>
-// //                 Rent Subtotal
-// //               </span>
-
-// //               <strong>
-// //                 {formatMoney(
-// //                   details.rentSubtotal
-// //                 )}
-// //               </strong>
-
-// //             </div>
-
-
-// //             <div className="wir-price-row">
-
-// //               <span>
-// //                 GST ({details.gstPercentage}%)
-// //               </span>
-
-// //               <strong>
-// //                 {formatMoney(
-// //                   details.gstAmount
-// //                 )}
-// //               </strong>
-
-// //             </div>
-
-
-// //             <div className="wir-price-row">
-
-// //               <span>
-// //                 Security Deposit
-// //               </span>
-
-// //               <strong>
-// //                 {formatMoney(
-// //                   details.securityDeposit
-// //                 )}
-// //               </strong>
-
-// //             </div>
-
-
-// //             <div className="wir-price-total">
-
-// //               <span>
-// //                 Total Rental Amount
-// //               </span>
-
-// //               <strong>
-// //                 {formatMoney(
-// //                   details.totalRent
-// //                 )}
-// //               </strong>
-
-// //             </div>
-
-// //           </div>
-
-// //         </section>
-
-// //       </div>
-
-
-// //       {/* ======================================================
-// //           NOTES
-// //       ====================================================== */}
-
-// //       {details.notes && (
-// //         <section className="wir-card wir-notes-card">
-
-// //           <div className="wir-card-header">
-
-// //             <div className="wir-card-title-icon">
-// //               <FileText size={20} />
-// //             </div>
-
-// //             <div>
-// //               <h2>
-// //                 Handover / Rental Notes
-// //               </h2>
-
-// //               <p>
-// //                 Notes saved during rental creation
-// //               </p>
-// //             </div>
-
-// //           </div>
-
-// //           <div className="wir-notes">
-// //             {details.notes}
-// //           </div>
-
-// //         </section>
-// //       )}
-
-
-// //       {/* ======================================================
-// //           TIMELINE
-// //       ====================================================== */}
-
-// //       <section className="wir-card">
-
-// //         <div className="wir-card-header">
-
-// //           <div className="wir-card-title-icon">
-// //             <Clock3 size={20} />
-// //           </div>
-
-// //           <div>
-// //             <h2>
-// //               Rental Timeline
-// //             </h2>
-
-// //             <p>
-// //               Important rental events
-// //             </p>
-// //           </div>
-
-// //         </div>
-
-// //         <div className="wir-timeline">
-
-// //           <div className="wir-timeline-item completed">
-
-// //             <div className="wir-timeline-dot">
-// //               <CheckCircle2 size={16} />
-// //             </div>
-
-// //             <div>
-// //               <strong>
-// //                 Rental Created
-// //               </strong>
-
-// //               <span>
-// //                 {formatDateTime(
-// //                   details.createdAt
-// //                 )}
-// //               </span>
-// //             </div>
-
-// //           </div>
-
-
-// //           <div
-// //             className={`wir-timeline-item ${
-// //               details.depositReceived
-// //                 ? "completed"
-// //                 : ""
-// //             }`}
-// //           >
-
-// //             <div className="wir-timeline-dot">
-// //               <ShieldCheck size={16} />
-// //             </div>
-
-// //             <div>
-// //               <strong>
-// //                 Security Deposit
-// //               </strong>
-
-// //               <span>
-// //                 {details.depositReceived
-// //                   ? "Deposit received"
-// //                   : "Deposit pending"}
-// //               </span>
-// //             </div>
-
-// //           </div>
-
-
-// //           <div
-// //             className={`wir-timeline-item ${
-// //               details.allocatedAt
-// //                 ? "completed"
-// //                 : ""
-// //             }`}
-// //           >
-
-// //             <div className="wir-timeline-dot">
-// //               <Package size={16} />
-// //             </div>
-
-// //             <div>
-// //               <strong>
-// //                 Rental Allocated
-// //               </strong>
-
-// //               <span>
-// //                 {details.allocatedAt
-// //                   ? formatDateTime(
-// //                       details.allocatedAt
-// //                     )
-// //                   : "Not allocated yet"}
-// //               </span>
-// //             </div>
-
-// //           </div>
-
-
-// //           <div
-// //             className={`wir-timeline-item ${
-// //               details.returnedAt
-// //                 ? "completed"
-// //                 : ""
-// //             }`}
-// //           >
-
-// //             <div className="wir-timeline-dot">
-// //               <RefreshCw size={16} />
-// //             </div>
-
-// //             <div>
-// //               <strong>
-// //                 Rental Returned
-// //               </strong>
-
-// //               <span>
-// //                 {details.returnedAt
-// //                   ? formatDateTime(
-// //                       details.returnedAt
-// //                     )
-// //                   : "Not returned yet"}
-// //               </span>
-// //             </div>
-
-// //           </div>
-
-// //         </div>
-
-// //       </section>
-
-
-// //       {/* ======================================================
-// //           FOOTER ACTIONS
-// //       ====================================================== */}
-
-// //       <div className="wir-footer-actions">
-
-// //         <button
-// //           className="wir-btn wir-btn-secondary"
-// //           onClick={() => navigate(-1)}
-// //         >
-// //           <ArrowLeft size={18} />
-// //           Back to Rentals
-// //         </button>
-
-// //         <button
-// //           className="wir-btn wir-btn-primary"
-// //           onClick={() =>
-// //             navigate(
-// //               "/receptionist/rental/walkin"
-// //             )
-// //           }
-// //         >
-// //           <Package size={18} />
-// //           Create New Walk-In Rental
-// //         </button>
-
-// //       </div>
-
-// //     </div>
-// //   );
-// // }
-
-// // export default WalkInRentalDetails;
-
-
-
 // import React, {
 //   useCallback,
 //   useEffect,
@@ -1674,7 +94,10 @@
 // const formatMoney = (value) => {
 //   const number = Number(value || 0);
 
-//   return `₹${number.toLocaleString("en-IN")}`;
+//   return `₹${number.toLocaleString("en-IN", {
+//     minimumFractionDigits: 0,
+//     maximumFractionDigits: 2,
+//   })}`;
 // };
 
 // const formatDate = (value) => {
@@ -1725,7 +148,8 @@
 
 //   if (
 //     value === "PENDING" ||
-//     value === "REQUESTED"
+//     value === "REQUESTED" ||
+//     value === "DEPOSIT_PENDING"
 //   ) {
 //     return "warning";
 //   }
@@ -1779,33 +203,90 @@
 // // EXTRACT DOCUMENTS
 // // ============================================================
 
+// // const extractDocuments = (response) => {
+// //   if (!response) {
+// //     return [];
+// //   }
+
+// //   const data = response?.data;
+
+// //   if (Array.isArray(data)) {
+// //     return data;
+// //   }
+
+// //   if (Array.isArray(data?.documents)) {
+// //     return data.documents;
+// //   }
+
+// //   if (Array.isArray(data?.data)) {
+// //     return data.data;
+// //   }
+
+// //   if (Array.isArray(data?.data?.documents)) {
+// //     return data.data.documents;
+// //   }
+
+// //   if (Array.isArray(response?.documents)) {
+// //     return response.documents;
+// //   }
+
+// //   return [];
+// // };
+
+
 // const extractDocuments = (response) => {
-//   if (!response) {
-//     return [];
-//   }
+//   if (!response) return [];
 
-//   // Axios response:
-//   // response.data
-//   const data = response?.data;
+//   // Axios response ya direct API response
+//   let current = response?.data ?? response;
 
-//   if (Array.isArray(data)) {
-//     return data;
-//   }
+//   // Nested API response support
+//   for (let i = 0; i < 6 && current; i++) {
+//     if (Array.isArray(current)) {
+//       return current;
+//     }
 
-//   if (Array.isArray(data?.documents)) {
-//     return data.documents;
-//   }
+//     if (typeof current !== "object") {
+//       return [];
+//     }
 
-//   if (Array.isArray(data?.data)) {
-//     return data.data;
-//   }
+//     // Different backend field names
+//     const keys = [
+//       "documents",
+//       "customerDocuments",
+//       "uploadedDocuments",
+//       "rentalDocuments",
+//       "files",
+//       "results",
+//     ];
 
-//   if (Array.isArray(data?.data?.documents)) {
-//     return data.data.documents;
-//   }
+//     for (const key of keys) {
+//       if (Array.isArray(current[key])) {
+//         return current[key];
+//       }
+//     }
 
-//   if (Array.isArray(response?.documents)) {
-//     return response.documents;
+//     if (current.document) {
+//       current = current.document;
+//       continue;
+//     }
+
+//     if (current.data !== undefined) {
+//       current = current.data;
+//       continue;
+//     }
+
+//     if (current.result !== undefined) {
+//       current = current.result;
+//       continue;
+//     }
+
+//     if (current.rental) {
+//       current = current.rental;
+//       continue;
+//     }
+
+//     break;
 //   }
 
 //   return [];
@@ -1823,7 +304,7 @@
 // };
 
 // // ============================================================
-// // NORMALIZE IMAGE / FILE URL
+// // NORMALIZE FILE URL
 // // ============================================================
 
 // const normalizeFileUrl = (file) => {
@@ -2019,10 +500,9 @@
 //   const source =
 //     fileName || fileUrl || "";
 
-//   const cleanSource =
-//     String(source)
-//       .split("?")[0]
-//       .split("#")[0];
+//   const cleanSource = String(source)
+//     .split("?")[0]
+//     .split("#")[0];
 
 //   const parts =
 //     cleanSource.split(".");
@@ -2110,7 +590,6 @@
 
 // function WalkInRentalDetails() {
 //   const navigate = useNavigate();
-
 //   const { rentalId } = useParams();
 
 //   // ==========================================================
@@ -2215,8 +694,8 @@
 //       );
 
 //       setError(
-//         err?.message ||
-//           err?.response?.data?.message ||
+//         err?.response?.data?.message ||
+//           err?.message ||
 //           "Failed to load rental details."
 //       );
 //     } finally {
@@ -2228,68 +707,159 @@
 //   // LOAD CUSTOMER DOCUMENTS
 //   // ==========================================================
 
-//   const loadDocuments = useCallback(
-//     async () => {
-//       if (!rentalId) {
-//         setDocuments([]);
-//         return;
-//       }
+//   // const loadDocuments = useCallback(
+//   //   async () => {
+//   //     if (!rentalId) {
+//   //       setDocuments([]);
+//   //       return;
+//   //     }
 
-//       try {
-//         setDocumentsLoading(true);
-//         setDocumentsError("");
+//   //     try {
+//   //       setDocumentsLoading(true);
+//   //       setDocumentsError("");
 
-//         console.log(
-//           "========== RENTAL DOCUMENTS =========="
-//         );
+//   //       console.log(
+//   //         "========== RENTAL DOCUMENTS =========="
+//   //       );
 
-//         console.log(
-//           "Loading documents for rental:",
-//           rentalId
-//         );
+//   //       console.log(
+//   //         "Loading documents for rental:",
+//   //         rentalId
+//   //       );
 
-//         const response =
-//           await getRentalDocuments(
-//             rentalId
-//           );
+//   //       const response =
+//   //         await getRentalDocuments(
+//   //           rentalId
+//   //         );
 
-//         console.log(
-//           "Rental Documents Response:",
-//           response
-//         );
+//   //       console.log(
+//   //         "Rental Documents Response:",
+//   //         response
+//   //       );
 
-//         const documentList =
-//           extractDocuments(response);
+//   //       const documentList =
+//   //         extractDocuments(response);
 
-//         console.log(
-//           "Normalized Documents:",
-//           documentList
-//         );
+//   //       console.log(
+//   //         "Normalized Documents:",
+//   //         documentList
+//   //       );
 
-//         setDocuments(
-//           Array.isArray(documentList)
-//             ? documentList
-//             : []
-//         );
-//       } catch (err) {
-//         console.error(
-//           "GET RENTAL DOCUMENTS ERROR:",
-//           err
-//         );
+//   //       setDocuments(
+//   //         Array.isArray(documentList)
+//   //           ? documentList
+//   //           : []
+//   //       );
+//   //     } catch (err) {
+//   //       console.error(
+//   //         "GET RENTAL DOCUMENTS ERROR:",
+//   //         err
+//   //       );
 
-//         setDocumentsError(
-//           err?.message ||
-//             err?.response?.data?.message ||
-//             "Failed to load customer documents."
-//         );
+//   //       setDocumentsError(
+//   //         err?.response?.data?.message ||
+//   //           err?.message ||
+//   //           "Failed to load customer documents."
+//   //       );
 
-//         setDocuments([]);
-//       } finally {
-//         setDocumentsLoading(false);
-//       }
-//     },
-//     [rentalId]
-//   );
+//   //       setDocuments([]);
+//   //     } finally {
+//   //       setDocumentsLoading(false);
+//   //     }
+//   //   },
+//   //   [rentalId]
+//   // );
+
+  
+// const loadDocuments = useCallback(async () => {
+//   if (!rentalId) {
+//     setDocuments([]);
+//     setDocumentsError("Rental ID is missing.");
+//     return;
+//   }
+
+//   try {
+//     setDocumentsLoading(true);
+//     setDocumentsError("");
+
+//     console.log("Loading documents for rental:", rentalId);
+
+//     const response = await getRentalDocuments(rentalId);
+
+//     // Actual API response inspect karne ke liye
+//     console.log(
+//       "RAW RENTAL DOCUMENT RESPONSE:",
+//       JSON.stringify(response, null, 2)
+//     );
+
+//     const documentList = extractDocuments(response);
+
+//     // Normalize common file field names
+//     const normalizedDocuments = documentList
+//       .filter((doc) => doc && typeof doc === "object")
+//       .map((doc, index) => {
+//         const fileUrl =
+//           doc.fileUrl ||
+//           doc.url ||
+//           doc.path ||
+//           doc.filePath ||
+//           doc.documentUrl ||
+//           doc.imageUrl ||
+//           doc.secure_url ||
+//           doc.location ||
+//           "";
+
+//         return {
+//           ...doc,
+//           _id: doc._id || doc.id || `document-${index}`,
+//           documentType:
+//             doc.documentType ||
+//             doc.type ||
+//             doc.name ||
+//             doc.fileName ||
+//             "CUSTOMER_DOCUMENT",
+//           fileName:
+//             doc.fileName ||
+//             doc.originalName ||
+//             doc.originalname ||
+//             doc.name ||
+//             "Uploaded document",
+//           fileUrl,
+//           mimeType:
+//             doc.mimeType ||
+//             doc.mimetype ||
+//             doc.contentType ||
+//             doc.fileType ||
+//             "",
+//         };
+//       });
+
+//     console.log(
+//       "NORMALIZED RENTAL DOCUMENTS:",
+//       normalizedDocuments
+//     );
+
+//     setDocuments(normalizedDocuments);
+
+//     if (normalizedDocuments.length === 0) {
+//       console.warn(
+//         "No documents found in the documents API response."
+//       );
+//     }
+//   } catch (err) {
+//     console.error("GET RENTAL DOCUMENTS ERROR:", err);
+
+//     setDocumentsError(
+//       err?.response?.data?.message ||
+//         err?.message ||
+//         "Unable to load customer documents."
+//     );
+
+//     setDocuments([]);
+//   } finally {
+//     setDocumentsLoading(false);
+//   }
+// }, [rentalId]);
 
 //   // ==========================================================
 //   // INITIAL LOAD
@@ -2321,6 +891,10 @@
 //         rental?.customerType ||
 //           "INDIVIDUAL"
 //       ).toUpperCase();
+
+//     // --------------------------------------------------------
+//     // CUSTOMER
+//     // --------------------------------------------------------
 
 //     const customer =
 //       customerType === "COMPANY"
@@ -2376,11 +950,48 @@
 //             gstNumber: "",
 //           };
 
+//     // --------------------------------------------------------
+//     // PRODUCT
+//     // --------------------------------------------------------
+
 //     const product =
 //       rental?.productId || {};
 
 //     const rentalProduct =
 //       rental?.rentalProductId || {};
+
+//     // --------------------------------------------------------
+//     // RENTAL DURATION TYPE
+//     // --------------------------------------------------------
+
+//     const rentalDurationType =
+//       String(
+//         rental?.rentalDurationType ||
+//           rental?.durationType ||
+//           (
+//             rental?.rentalMonths
+//               ? "MONTHS"
+//               : "DAYS"
+//           )
+//       ).toUpperCase();
+
+//     // --------------------------------------------------------
+//     // RENTAL DURATION
+//     // --------------------------------------------------------
+
+//     const rentalDuration =
+//       getNumber(
+//         rental?.rentalDuration,
+//         rental?.duration,
+//         rental?.rentalMonths,
+//         rental?.durationMonths,
+//         rental?.months,
+//         1
+//       );
+
+//     // --------------------------------------------------------
+//     // MONTHLY RENT
+//     // --------------------------------------------------------
 
 //     const monthlyRent =
 //       getNumber(
@@ -2390,6 +1001,23 @@
 //         rentalProduct?.pricing?.monthlyRent
 //       );
 
+//     // --------------------------------------------------------
+//     // DAILY RENT
+//     // --------------------------------------------------------
+
+//     const dailyRent =
+//       getNumber(
+//         rental?.dailyRent,
+//         rental?.pricing?.dailyRent,
+//         rentalProduct?.dailyRent,
+//         rentalProduct?.pricing?.dailyRent,
+//         monthlyRent / 30
+//       );
+
+//     // --------------------------------------------------------
+//     // SECURITY DEPOSIT
+//     // --------------------------------------------------------
+
 //     const securityDeposit =
 //       getNumber(
 //         rental?.securityDeposit,
@@ -2397,6 +1025,10 @@
 //         rentalProduct?.securityDeposit,
 //         rentalProduct?.pricing?.securityDeposit
 //       );
+
+//     // --------------------------------------------------------
+//     // GST
+//     // --------------------------------------------------------
 
 //     const gstPercentage =
 //       getNumber(
@@ -2406,27 +1038,77 @@
 //         rentalProduct?.pricing?.gstPercentage
 //       );
 
-//     const rentalMonths =
-//       getNumber(
-//         rental?.rentalMonths,
-//         rental?.durationMonths,
-//         rental?.months,
-//         1
-//       );
+//     // --------------------------------------------------------
+//     // RENT SUBTOTAL
+//     // --------------------------------------------------------
 
-//     const rentSubtotal =
-//       monthlyRent * rentalMonths;
+//     let rentSubtotal = 0;
+
+//     if (
+//       rentalDurationType === "DAYS"
+//     ) {
+//       rentSubtotal =
+//         dailyRent *
+//         rentalDuration;
+//     } else {
+//       rentSubtotal =
+//         monthlyRent *
+//         rentalDuration;
+//     }
+
+//     // --------------------------------------------------------
+//     // GST AMOUNT
+//     // --------------------------------------------------------
 
 //     const gstAmount =
 //       rentSubtotal *
 //       (gstPercentage / 100);
 
-//     const totalRent =
-//       rentSubtotal + gstAmount;
+//     // --------------------------------------------------------
+//     // RENT TOTAL
+//     //
+//     // IMPORTANT:
+//     // Security deposit is NOT included here.
+//     // It is shown separately as refundable deposit.
+//     // --------------------------------------------------------
 
-//     // ========================================================
-//     // PRODUCT IMAGE LIST
-//     // ========================================================
+//     const totalRent =
+//       rentSubtotal +
+//       gstAmount;
+
+//     // --------------------------------------------------------
+//     // DEPOSIT STATUS
+//     // --------------------------------------------------------
+
+//     const depositStatus =
+//       String(
+//         rental?.depositStatus ||
+//           rental?.securityDepositStatus ||
+//           ""
+//       ).toUpperCase();
+
+//     const depositReceived =
+//       rental?.depositReceived === true ||
+//       rental?.isDepositReceived === true ||
+//       rental?.securityDepositPaid === true ||
+//       rental?.securityDepositReceived === true ||
+//       depositStatus === "PAID" ||
+//       depositStatus === "RECEIVED";
+
+//     // --------------------------------------------------------
+//     // DEPOSIT PAYMENT DATE
+//     // --------------------------------------------------------
+
+//     const depositReceivedAt =
+//       rental?.depositReceivedAt ||
+//       rental?.securityDepositPaidAt ||
+//       rental?.securityDepositReceivedAt ||
+//       rental?.depositPaymentDate ||
+//       null;
+
+//     // --------------------------------------------------------
+//     // PRODUCT IMAGES
+//     // --------------------------------------------------------
 
 //     const images =
 //       getProductImages(
@@ -2469,13 +1151,17 @@
 
 //       monthlyRent,
 
+//       dailyRent,
+
 //       securityDeposit,
 
 //       gstPercentage,
 
 //       gstAmount,
 
-//       rentalMonths,
+//       rentalDuration,
+
+//       rentalDurationType,
 
 //       rentSubtotal,
 
@@ -2500,11 +1186,9 @@
 //         rental?.rentalSource ||
 //         "WALK_IN",
 
-//       depositReceived:
-//         Boolean(
-//           rental?.depositReceived ||
-//             rental?.isDepositReceived
-//         ),
+//       depositReceived,
+
+//       depositReceivedAt,
 
 //       allocatedAt:
 //         rental?.allocatedAt,
@@ -2641,12 +1325,42 @@
 
 //       let response;
 
-//       if (action === "deposit") {
-//         response =
-//           await markDepositReceived(
-//             rentalId
-//           );
-//       }
+//       // ------------------------------------------------------
+//       // SECURITY DEPOSIT
+//       // ------------------------------------------------------
+
+//    if (action === "deposit") {
+
+//     const paymentMethod =
+//         window.prompt(
+//             "Enter payment method: CASH / UPI / CARD / BANK_TRANSFER"
+//         );
+
+//     if (!paymentMethod) {
+//         return;
+//     }
+
+//     await markRentalDepositReceived(
+//         rentalId,
+//         {
+//             paymentMethod:
+//                 paymentMethod.trim().toUpperCase()
+//         }
+//     );
+
+//     toast.success(
+//         "Security deposit received successfully"
+//     );
+
+//     // Reload rental
+//     await loadRentalDetails();
+
+//     return;
+// }
+
+//       // ------------------------------------------------------
+//       // ALLOCATE
+//       // ------------------------------------------------------
 
 //       if (action === "allocate") {
 //         response =
@@ -2654,6 +1368,10 @@
 //             rentalId
 //           );
 //       }
+
+//       // ------------------------------------------------------
+//       // RETURN
+//       // ------------------------------------------------------
 
 //       if (action === "return") {
 //         response =
@@ -2671,6 +1389,12 @@
 //         successMessage ||
 //           "Rental updated successfully."
 //       );
+
+//       // ------------------------------------------------------
+//       // IMPORTANT:
+//       // Reload rental after action so the latest
+//       // depositReceived/status comes from backend.
+//       // ------------------------------------------------------
 
 //       await loadRental();
 //     } catch (err) {
@@ -2704,7 +1428,7 @@
 
 //     runAction(
 //       "deposit",
-//       "Security deposit marked as received."
+//       "Security deposit marked as paid / received."
 //     );
 //   };
 
@@ -2892,7 +1616,7 @@
 //             className="wir-btn wir-btn-secondary"
 //             onClick={() =>
 //               navigate(
-//                 "/receptionist/rental/walkin-orders"
+//                 "/receptionist-dashboard/rental/new-orders"
 //               )
 //             }
 //           >
@@ -2901,6 +1625,7 @@
 //           </button>
 
 //         </div>
+
 //       </div>
 
 //       {/* ======================================================
@@ -2991,10 +1716,15 @@
 //             </span>
 
 //             <strong>
-//               {details.rentalMonths} month
-//               {details.rentalMonths !== 1
-//                 ? "s"
-//                 : ""}
+//               {details.rentalDuration}{" "}
+//               {details.rentalDurationType ===
+//               "DAYS"
+//                 ? details.rentalDuration === 1
+//                   ? "Day"
+//                   : "Days"
+//                 : details.rentalDuration === 1
+//                 ? "Month"
+//                 : "Months"}
 //             </strong>
 //           </div>
 
@@ -3003,9 +1733,15 @@
 //               Security Deposit
 //             </span>
 
-//             <strong>
+//             <strong
+//               className={
+//                 details.depositReceived
+//                   ? "wir-deposit-paid"
+//                   : "wir-deposit-pending"
+//               }
+//             >
 //               {details.depositReceived
-//                 ? "Received"
+//                 ? "Paid / Received"
 //                 : "Pending"}
 //             </strong>
 //           </div>
@@ -3021,6 +1757,7 @@
 //       <div className="wir-action-card">
 
 //         <div>
+
 //           <h3>
 //             Rental Actions
 //           </h3>
@@ -3029,39 +1766,57 @@
 //             Manage deposit, allocation and
 //             return status from here.
 //           </p>
+
 //         </div>
 
 //         <div className="wir-action-buttons">
 
-//           {/* Deposit action intentionally kept
-//               as in your original code */}
+//           {/* ==================================================
+//               SECURITY DEPOSIT BUTTON
+//           ================================================== */}
 
-//           {/*
-//           {!details.depositReceived && (
-//             <button
-//               className="wir-btn wir-btn-warning"
-//               onClick={handleDeposit}
-//               disabled={actionLoading}
-//             >
-//               {actionLoading ? (
-//                 <Loader2
-//                   size={17}
-//                   className="wir-spin"
-//                 />
-//               ) : (
-//                 <ShieldCheck size={17} />
-//               )}
+//           {!details.depositReceived &&
+//             String(
+//               details.status
+//             ).toUpperCase() !==
+//               "RETURNED" &&
+//             String(
+//               details.status
+//             ).toUpperCase() !==
+//               "COMPLETED" && (
 
-//               Mark Deposit Received
-//             </button>
-//           )}
-//           */}
+//               <button
+//                 className="wir-btn wir-btn-warning"
+//                 onClick={handleDeposit}
+//                 disabled={actionLoading}
+//               >
+//                 {actionLoading ? (
+//                   <Loader2
+//                     size={17}
+//                     className="wir-spin"
+//                   />
+//                 ) : (
+//                   <ShieldCheck size={17} />
+//                 )}
+
+//                 Mark Security Deposit Paid
+//               </button>
+//             )}
+
+//           {/* ==================================================
+//               ALLOCATE
+//           ================================================== */}
 
 //           {!details.allocatedAt &&
 //             String(
 //               details.status
 //             ).toUpperCase() !==
-//               "RETURNED" && (
+//               "RETURNED" &&
+//             String(
+//               details.status
+//             ).toUpperCase() !==
+//               "COMPLETED" && (
+
 //               <button
 //                 className="wir-btn wir-btn-primary"
 //                 onClick={handleAllocate}
@@ -3080,10 +1835,15 @@
 //               </button>
 //             )}
 
+//           {/* ==================================================
+//               RETURN
+//           ================================================== */}
+
 //           {String(
 //             details.status
 //           ).toUpperCase() ===
 //             "ACTIVE" && (
+
 //             <button
 //               className="wir-btn wir-btn-danger"
 //               onClick={handleReturn}
@@ -3103,6 +1863,7 @@
 //           )}
 
 //         </div>
+
 //       </div>
 
 //       {/* ======================================================
@@ -3180,6 +1941,7 @@
 
 //             {details.customer
 //               .contactPerson && (
+
 //               <div className="wir-info-item">
 
 //                 <span className="wir-info-icon">
@@ -3269,6 +2031,7 @@
 
 //             {details.customer
 //               .gstNumber && (
+
 //               <div className="wir-info-item">
 
 //                 <span className="wir-info-icon">
@@ -3329,14 +2092,13 @@
 
 //           <div className="wir-product-gallery">
 
-//             {/* MAIN IMAGE */}
-
 //             <div className="wir-product-main-image">
 
 //               {selectedImage &&
 //               !imageErrors[
 //                 selectedImage
 //               ] ? (
+
 //                 <img
 //                   src={selectedImage}
 //                   alt={
@@ -3349,22 +2111,25 @@
 //                     )
 //                   }
 //                 />
+
 //               ) : (
+
 //                 <div className="wir-product-placeholder">
+
 //                   <Package size={38} />
 
 //                   <span>
 //                     Product image
 //                     unavailable
 //                   </span>
+
 //                 </div>
 //               )}
 
 //             </div>
 
-//             {/* SMALL THUMBNAILS */}
-
 //             {details.images?.length > 0 && (
+
 //               <div className="wir-product-thumbnails">
 
 //                 {details.images.map(
@@ -3380,6 +2145,7 @@
 //                     }
 
 //                     return (
+
 //                       <button
 //                         type="button"
 //                         key={`${image}-${index}`}
@@ -3398,6 +2164,7 @@
 //                           index + 1
 //                         }`}
 //                       >
+
 //                         <img
 //                           src={image}
 //                           alt={`${details.productName} ${
@@ -3409,6 +2176,7 @@
 //                             )
 //                           }
 //                         />
+
 //                       </button>
 //                     );
 //                   }
@@ -3419,7 +2187,9 @@
 
 //           </div>
 
-//           {/* PRODUCT DETAILS */}
+//           {/* ==================================================
+//               PRODUCT DETAILS
+//           ================================================== */}
 
 //           <div className="wir-product">
 
@@ -3454,6 +2224,7 @@
 //               {getId(
 //                 details.rentalProduct
 //               ) && (
+
 //                 <p className="wir-small-id">
 //                   Rental Product ID:{" "}
 //                   {getId(
@@ -3465,6 +2236,7 @@
 //               {getId(
 //                 details.product
 //               ) && (
+
 //                 <p className="wir-small-id">
 //                   Product ID:{" "}
 //                   {getId(
@@ -3599,6 +2371,8 @@
 
 //           <div className="wir-pricing">
 
+//             {/* MONTHLY RENT */}
+
 //             <div className="wir-price-row">
 
 //               <span>
@@ -3613,6 +2387,28 @@
 
 //             </div>
 
+//             {/* DAILY RENT */}
+
+//             {details.rentalDurationType ===
+//               "DAYS" && (
+
+//               <div className="wir-price-row">
+
+//                 <span>
+//                   Daily Rent
+//                 </span>
+
+//                 <strong>
+//                   {formatMoney(
+//                     details.dailyRent
+//                   )}
+//                 </strong>
+
+//               </div>
+//             )}
+
+//             {/* RENTAL DURATION */}
+
 //             <div className="wir-price-row">
 
 //               <span>
@@ -3620,13 +2416,20 @@
 //               </span>
 
 //               <strong>
-//                 {details.rentalMonths} month
-//                 {details.rentalMonths !== 1
-//                   ? "s"
-//                   : ""}
+//                 {details.rentalDuration}{" "}
+//                 {details.rentalDurationType ===
+//                 "DAYS"
+//                   ? details.rentalDuration === 1
+//                     ? "Day"
+//                     : "Days"
+//                   : details.rentalDuration === 1
+//                   ? "Month"
+//                   : "Months"}
 //               </strong>
 
 //             </div>
+
+//             {/* RENT SUBTOTAL */}
 
 //             <div className="wir-price-row">
 
@@ -3641,6 +2444,8 @@
 //               </strong>
 
 //             </div>
+
+//             {/* GST */}
 
 //             <div className="wir-price-row">
 
@@ -3658,6 +2463,24 @@
 
 //             </div>
 
+//             {/* RENT TOTAL */}
+
+//             <div className="wir-price-total">
+
+//               <span>
+//                 Total Rental Amount
+//               </span>
+
+//               <strong>
+//                 {formatMoney(
+//                   details.totalRent
+//                 )}
+//               </strong>
+
+//             </div>
+
+//             {/* SECURITY DEPOSIT */}
+
 //             <div className="wir-price-row">
 
 //               <span>
@@ -3672,15 +2495,88 @@
 
 //             </div>
 
+//             {/* DEPOSIT STATUS */}
+
+//             <div className="wir-price-row">
+
+//               <span>
+//                 Security Deposit Status
+//               </span>
+
+//               <strong
+//                 className={
+//                   details.depositReceived
+//                     ? "wir-deposit-paid"
+//                     : "wir-deposit-pending"
+//                 }
+//               >
+//                 {details.depositReceived
+//                   ? "PAID / RECEIVED"
+//                   : "PENDING"}
+//               </strong>
+
+//             </div>
+
+//             {/* DEPOSIT RECEIVED DATE */}
+
+//             {details.depositReceived &&
+//               details.depositReceivedAt && (
+
+//                 <div className="wir-price-row">
+
+//                   <span>
+//                     Deposit Received At
+//                   </span>
+
+//                   <strong>
+//                     {formatDateTime(
+//                       details.depositReceivedAt
+//                     )}
+//                   </strong>
+
+//                 </div>
+//               )}
+
+//             {/* GRAND TOTAL */}
+
 //             <div className="wir-price-total">
 
 //               <span>
-//                 Total Rental Amount
+//                 Rent + GST
 //               </span>
 
 //               <strong>
 //                 {formatMoney(
 //                   details.totalRent
+//                 )}
+//               </strong>
+
+//             </div>
+
+//             <div className="wir-price-row">
+
+//               <span>
+//                 Refundable Security Deposit
+//               </span>
+
+//               <strong>
+//                 {formatMoney(
+//                   details.securityDeposit
+//                 )}
+//               </strong>
+
+//             </div>
+
+//             <div className="wir-price-total">
+
+//               <span>
+//                 Total Collected / Payable
+//               </span>
+
+//               <strong>
+//                 {formatMoney(
+//                   details.totalRent +
+//                     details.securityDeposit
 //                 )}
 //               </strong>
 
@@ -3711,16 +2607,20 @@
 //             </h2>
 
 //             <p>
-//               Documents uploaded during rental creation
+//               Documents uploaded during rental
+//               creation
 //             </p>
 
 //           </div>
 
 //           <div className="wir-documents-count">
+
 //             {documents.length}{" "}
+
 //             {documents.length === 1
 //               ? "Document"
 //               : "Documents"}
+
 //           </div>
 
 //         </div>
@@ -3728,6 +2628,7 @@
 //         {/* DOCUMENT LOADING */}
 
 //         {documentsLoading && (
+
 //           <div className="wir-documents-loading">
 
 //             <Loader2
@@ -3746,11 +2647,13 @@
 
 //         {!documentsLoading &&
 //           documentsError && (
+
 //             <div className="wir-documents-error">
 
 //               <AlertCircle size={20} />
 
 //               <div>
+
 //                 <strong>
 //                   Unable to load documents
 //                 </strong>
@@ -3758,6 +2661,7 @@
 //                 <p>
 //                   {documentsError}
 //                 </p>
+
 //               </div>
 
 //               <button
@@ -3777,6 +2681,7 @@
 //         {!documentsLoading &&
 //           !documentsError &&
 //           documents.length === 0 && (
+
 //             <div className="wir-documents-empty">
 
 //               <div className="wir-documents-empty-icon">
@@ -3800,6 +2705,7 @@
 //         {!documentsLoading &&
 //           !documentsError &&
 //           documents.length > 0 && (
+
 //             <div className="wir-documents-grid">
 
 //               {documents.map(
@@ -3838,6 +2744,7 @@
 //                     ).toUpperCase();
 
 //                   return (
+
 //                     <article
 //                       className="wir-document-card"
 //                       key={documentId}
@@ -3850,6 +2757,7 @@
 //                         {image &&
 //                         documentUrl &&
 //                         !imageBroken ? (
+
 //                           <img
 //                             src={documentUrl}
 //                             alt={getDocumentLabel(
@@ -3862,8 +2770,10 @@
 //                               )
 //                             }
 //                           />
+
 //                         ) : pdf &&
 //                           documentUrl ? (
+
 //                           <iframe
 //                             src={`${documentUrl}#toolbar=0&navpanes=0&scrollbar=1`}
 //                             title={getDocumentLabel(
@@ -3871,7 +2781,9 @@
 //                             )}
 //                             className="wir-document-pdf"
 //                           />
+
 //                         ) : (
+
 //                           <div className="wir-document-file-placeholder">
 
 //                             <FileText
@@ -3930,15 +2842,20 @@
 
 //                             {status ===
 //                             "APPROVED" ? (
+
 //                               <CheckCircle2
 //                                 size={14}
 //                               />
+
 //                             ) : status ===
 //                               "REJECTED" ? (
+
 //                               <XCircle
 //                                 size={14}
 //                               />
+
 //                             ) : (
+
 //                               <Clock3
 //                                 size={14}
 //                               />
@@ -3953,6 +2870,7 @@
 //                         {/* UPLOADED DATE */}
 
 //                         {document?.createdAt && (
+
 //                           <div className="wir-document-meta">
 
 //                             <span>
@@ -3971,6 +2889,7 @@
 //                         {/* VERIFIED DATE */}
 
 //                         {document?.verifiedAt && (
+
 //                           <div className="wir-document-meta">
 
 //                             <span>
@@ -3991,6 +2910,7 @@
 //                         {status ===
 //                           "REJECTED" &&
 //                           document?.rejectionReason && (
+
 //                             <div className="wir-document-rejection">
 
 //                               <XCircle
@@ -4020,7 +2940,6 @@
 
 //                           {documentUrl && (
 //                             <>
-
 //                               <a
 //                                 href={
 //                                   documentUrl
@@ -4066,7 +2985,6 @@
 //                                 />
 //                                 Open
 //                               </a>
-
 //                             </>
 //                           )}
 
@@ -4089,6 +3007,7 @@
 //       ====================================================== */}
 
 //       {details.notes && (
+
 //         <section className="wir-card wir-notes-card">
 
 //           <div className="wir-card-header">
@@ -4146,6 +3065,8 @@
 
 //         <div className="wir-timeline">
 
+//           {/* CREATED */}
+
 //           <div className="wir-timeline-item completed">
 
 //             <div className="wir-timeline-dot">
@@ -4168,6 +3089,8 @@
 
 //           </div>
 
+//           {/* DEPOSIT */}
+
 //           <div
 //             className={`wir-timeline-item ${
 //               details.depositReceived
@@ -4187,14 +3110,22 @@
 //               </strong>
 
 //               <span>
+
 //                 {details.depositReceived
-//                   ? "Deposit received"
-//                   : "Deposit pending"}
+//                   ? details.depositReceivedAt
+//                     ? `Paid / Received on ${formatDateTime(
+//                         details.depositReceivedAt
+//                       )}`
+//                     : "Paid / Received"
+//                   : "Security deposit pending"}
+
 //               </span>
 
 //             </div>
 
 //           </div>
+
+//           {/* ALLOCATED */}
 
 //           <div
 //             className={`wir-timeline-item ${
@@ -4215,16 +3146,20 @@
 //               </strong>
 
 //               <span>
+
 //                 {details.allocatedAt
 //                   ? formatDateTime(
 //                       details.allocatedAt
 //                     )
 //                   : "Not allocated yet"}
+
 //               </span>
 
 //             </div>
 
 //           </div>
+
+//           {/* RETURNED */}
 
 //           <div
 //             className={`wir-timeline-item ${
@@ -4245,11 +3180,13 @@
 //               </strong>
 
 //               <span>
+
 //                 {details.returnedAt
 //                   ? formatDateTime(
 //                       details.returnedAt
 //                     )
 //                   : "Not returned yet"}
+
 //               </span>
 
 //             </div>
@@ -4280,7 +3217,7 @@
 //           className="wir-btn wir-btn-primary"
 //           onClick={() =>
 //             navigate(
-//               "/receptionist/rental/walkin"
+//               "/receptionist-dashboard/rental/new"
 //             )
 //           }
 //         >
@@ -4295,10 +3232,6 @@
 // }
 
 // export default WalkInRentalDetails;
-
-
-
-
 
 
 
@@ -4333,14 +3266,15 @@ import {
   Eye,
   FileCheck2,
   XCircle,
+  Camera,
+  Image as ImageIcon,
+  Wallet,
+  BadgePercent,
 } from "lucide-react";
 
 import {
   getRentalById,
   getRentalDocuments,
-  markDepositReceived,
-  allocateRental,
-  markRentalReturned,
 } from "../../services/rentalApi";
 
 import "./WalkInRentalDetails.css";
@@ -4352,24 +3286,15 @@ import "./WalkInRentalDetails.css";
 const getId = (value) => {
   if (!value) return "";
 
-  if (typeof value === "string") {
-    return value;
-  }
+  if (typeof value === "string") return value;
 
-  return (
-    value?._id ||
-    value?.id ||
-    value?.$oid ||
-    ""
-  );
+  return value?._id || value?.id || value?.$oid || "";
 };
 
 const getName = (value) => {
   if (!value) return "";
 
-  if (typeof value === "string") {
-    return value;
-  }
+  if (typeof value === "string") return value;
 
   return (
     value?.name ||
@@ -4380,13 +3305,21 @@ const getName = (value) => {
   );
 };
 
+const firstDefined = (...values) =>
+  values.find(
+    (value) =>
+      value !== undefined &&
+      value !== null &&
+      value !== ""
+  );
+
 const getNumber = (...values) => {
   for (const value of values) {
     if (
       value !== undefined &&
       value !== null &&
       value !== "" &&
-      !Number.isNaN(Number(value))
+      Number.isFinite(Number(value))
     ) {
       return Number(value);
     }
@@ -4395,23 +3328,23 @@ const getNumber = (...values) => {
   return 0;
 };
 
-const formatMoney = (value) => {
-  const number = Number(value || 0);
+const round2 = (value) =>
+  Math.round(
+    (getNumber(value) + Number.EPSILON) * 100
+  ) / 100;
 
-  return `₹${number.toLocaleString("en-IN", {
-    minimumFractionDigits: 0,
+const formatMoney = (value) =>
+  `₹${getNumber(value).toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
-};
 
 const formatDate = (value) => {
   if (!value) return "—";
 
   const date = new Date(value);
 
-  if (Number.isNaN(date.getTime())) {
-    return "—";
-  }
+  if (Number.isNaN(date.getTime())) return "—";
 
   return date.toLocaleDateString("en-IN", {
     day: "2-digit",
@@ -4425,9 +3358,7 @@ const formatDateTime = (value) => {
 
   const date = new Date(value);
 
-  if (Number.isNaN(date.getTime())) {
-    return "—";
-  }
+  if (Number.isNaN(date.getTime())) return "—";
 
   return date.toLocaleString("en-IN", {
     day: "2-digit",
@@ -4438,123 +3369,133 @@ const formatDateTime = (value) => {
   });
 };
 
+const normalizeBillingType = (value) => {
+  const normalized = String(value ?? "")
+    .trim()
+    .toUpperCase()
+    .replace(/[\s-]+/g, "_");
+
+  if (
+    [
+      "NON_GST",
+      "NONGST",
+      "WITHOUT_GST",
+      "NO_GST",
+      "EXEMPT",
+    ].includes(normalized)
+  ) {
+    return "NON_GST";
+  }
+
+  if (
+    ["GST", "WITH_GST", "INCLUSIVE_GST"].includes(
+      normalized
+    )
+  ) {
+    return "GST";
+  }
+
+  return "";
+};
+
 const getStatusClass = (status) => {
   const value = String(status || "").toUpperCase();
 
   if (
-    value === "ACTIVE" ||
-    value === "ALLOCATED" ||
-    value === "APPROVED" ||
-    value === "COMPLETED"
+    [
+      "ACTIVE",
+      "ALLOCATED",
+      "APPROVED",
+      "COMPLETED",
+    ].includes(value)
   ) {
     return "success";
   }
 
   if (
-    value === "PENDING" ||
-    value === "REQUESTED" ||
-    value === "DEPOSIT_PENDING"
+    [
+      "PENDING",
+      "REQUESTED",
+      "DEPOSIT_PENDING",
+      "SETTLEMENT_PENDING",
+    ].includes(value)
   ) {
     return "warning";
   }
 
-  if (
-    value === "REJECTED" ||
-    value === "CANCELLED"
-  ) {
+  if (["REJECTED", "CANCELLED"].includes(value)) {
     return "danger";
   }
 
-  if (
-    value === "RETURNED" ||
-    value === "CLOSED"
-  ) {
+  if (["RETURNED", "CLOSED"].includes(value)) {
     return "info";
   }
 
   return "neutral";
 };
 
-// ============================================================
-// EXTRACT RENTAL
-// ============================================================
+const getApiError = (error, fallback) => {
+  const message =
+    error?.response?.data?.message ||
+    error?.response?.data?.error ||
+    error?.message;
 
-const extractRental = (response) => {
-  if (!response) return null;
-
-  const data = response?.data;
-
-  if (data?.rental) {
-    return data.rental;
-  }
-
-  if (data?.data?.rental) {
-    return data.data.rental;
-  }
-
-  if (data?.data) {
-    return data.data;
-  }
-
-  if (response?.rental) {
-    return response.rental;
-  }
-
-  return data || response;
+  return typeof message === "string"
+    ? message
+    : fallback;
 };
 
 // ============================================================
-// EXTRACT DOCUMENTS
+// API RESPONSE HELPERS
 // ============================================================
 
-// const extractDocuments = (response) => {
-//   if (!response) {
-//     return [];
-//   }
+const extractRental = (response) => {
+  let current = response;
 
-//   const data = response?.data;
+  for (let i = 0; i < 6; i++) {
+    if (!current || typeof current !== "object") {
+      return null;
+    }
 
-//   if (Array.isArray(data)) {
-//     return data;
-//   }
+    if (current.rental) {
+      current = current.rental;
+      continue;
+    }
 
-//   if (Array.isArray(data?.documents)) {
-//     return data.documents;
-//   }
-
-//   if (Array.isArray(data?.data)) {
-//     return data.data;
-//   }
-
-//   if (Array.isArray(data?.data?.documents)) {
-//     return data.data.documents;
-//   }
-
-//   if (Array.isArray(response?.documents)) {
-//     return response.documents;
-//   }
-
-//   return [];
-// };
-
-
-const extractDocuments = (response) => {
-  if (!response) return [];
-
-  // Axios response ya direct API response
-  let current = response?.data ?? response;
-
-  // Nested API response support
-  for (let i = 0; i < 6 && current; i++) {
-    if (Array.isArray(current)) {
+    if (
+      current._id ||
+      current.rentalNumber ||
+      current.customerType
+    ) {
       return current;
     }
 
-    if (typeof current !== "object") {
-      return [];
+    if (current.data) {
+      current = current.data;
+      continue;
     }
 
-    // Different backend field names
+    if (current.result) {
+      current = current.result;
+      continue;
+    }
+
+    break;
+  }
+
+  return null;
+};
+
+const extractDocuments = (response) => {
+  let current = response;
+
+  for (let i = 0; i < 7; i++) {
+    if (!current) return [];
+
+    if (Array.isArray(current)) return current;
+
+    if (typeof current !== "object") return [];
+
     const keys = [
       "documents",
       "customerDocuments",
@@ -4570,104 +3511,67 @@ const extractDocuments = (response) => {
       }
     }
 
-    if (current.document) {
-      current = current.document;
-      continue;
-    }
-
-    if (current.data !== undefined) {
-      current = current.data;
-      continue;
-    }
-
-    if (current.result !== undefined) {
-      current = current.result;
-      continue;
-    }
-
-    if (current.rental) {
-      current = current.rental;
-      continue;
-    }
-
-    break;
+    current =
+      current.data ||
+      current.result ||
+      current.rental ||
+      null;
   }
 
   return [];
 };
 
 // ============================================================
-// SERVER URL
+// FILE HELPERS
 // ============================================================
 
 const getServerUrl = () => {
-  const apiUrl =
-    import.meta.env.VITE_API_URL || "";
+  const apiUrl = String(
+    import.meta.env.VITE_API_URL || ""
+  );
 
-  return apiUrl.replace(/\/api\/?$/, "");
+  return apiUrl
+    .replace(/\/api\/?$/, "")
+    .replace(/\/$/, "");
 };
 
-// ============================================================
-// NORMALIZE FILE URL
-// ============================================================
-
 const normalizeFileUrl = (file) => {
-  if (!file) {
-    return "";
-  }
+  if (!file) return "";
 
   if (typeof file === "object") {
     file =
-      file?.url ||
-      file?.fileUrl ||
-      file?.imageUrl ||
-      file?.path ||
-      file?.src ||
-      file?.secure_url ||
+      file.url ||
+      file.fileUrl ||
+      file.imageUrl ||
+      file.path ||
+      file.src ||
+      file.secure_url ||
       "";
-
-    if (!file) {
-      return "";
-    }
   }
 
-  file = String(file).trim();
+  const value = String(file).trim();
 
-  if (!file) {
-    return "";
+  if (!value) return "";
+
+  if (/^https?:\/\//i.test(value)) {
+    return value;
   }
 
-  // Already complete URL
+  if (value.startsWith("data:")) {
+    return value;
+  }
+
   if (
-    file.startsWith("http://") ||
-    file.startsWith("https://") ||
-    file.startsWith("data:")
+    value.startsWith("blob:") ||
+    value.startsWith("//")
   ) {
-    return file;
+    return value;
   }
 
-  const serverUrl = getServerUrl();
+  const server = getServerUrl();
 
-  // /uploads/rental-documents/file.jpg
-  if (file.startsWith("/")) {
-    return `${serverUrl}${file}`;
-  }
-
-  // uploads/rental-documents/file.jpg
-  return `${serverUrl}/${file}`;
+  return `${server}/${value.replace(/^\/+/, "")}`;
 };
-
-// ============================================================
-// IMAGE HELPERS
-// ============================================================
-
-const normalizeImageUrl = (image) => {
-  return normalizeFileUrl(image);
-};
-
-// ============================================================
-// GET ALL PRODUCT IMAGES
-// ============================================================
 
 const getProductImages = (
   product = {},
@@ -4678,271 +3582,202 @@ const getProductImages = (
   const addImage = (value) => {
     if (!value) return;
 
-    // Array
     if (Array.isArray(value)) {
       value.forEach(addImage);
       return;
     }
 
-    // Object
     if (typeof value === "object") {
-      const objectImage =
-        value?.url ||
-        value?.imageUrl ||
-        value?.fileUrl ||
-        value?.path ||
-        value?.src ||
-        value?.secure_url ||
-        "";
-
-      if (objectImage) {
-        addImage(objectImage);
-      }
-
+      addImage(
+        value.url ||
+        value.imageUrl ||
+        value.fileUrl ||
+        value.path ||
+        value.src ||
+        value.secure_url
+      );
       return;
     }
 
-    const normalized =
-      normalizeImageUrl(value);
+    const url = normalizeFileUrl(value);
 
-    if (
-      normalized &&
-      !images.includes(normalized)
-    ) {
-      images.push(normalized);
+    if (url && !images.includes(url)) {
+      images.push(url);
     }
   };
 
-  // ----------------------------------------------------------
-  // PRODUCT PRIMARY IMAGE
-  // ----------------------------------------------------------
-
-  addImage(product?.primaryImage);
-  addImage(product?.image);
-  addImage(product?.thumbnail);
-  addImage(product?.imageUrl);
-  addImage(product?.mainImage);
-
-  // ----------------------------------------------------------
-  // PRODUCT IMAGES ARRAY
-  // ----------------------------------------------------------
-
-  addImage(product?.images);
-  addImage(product?.productImages);
-  addImage(product?.gallery);
-
-  // ----------------------------------------------------------
-  // RENTAL PRODUCT IMAGES
-  // ----------------------------------------------------------
-
-  addImage(rentalProduct?.primaryImage);
-  addImage(rentalProduct?.image);
-  addImage(rentalProduct?.thumbnail);
-  addImage(rentalProduct?.imageUrl);
-  addImage(rentalProduct?.mainImage);
-  addImage(rentalProduct?.images);
-  addImage(rentalProduct?.productImages);
-  addImage(rentalProduct?.gallery);
+  [
+    product.primaryImage,
+    product.image,
+    product.thumbnail,
+    product.imageUrl,
+    product.mainImage,
+    product.images,
+    product.productImages,
+    product.gallery,
+    rentalProduct.primaryImage,
+    rentalProduct.image,
+    rentalProduct.thumbnail,
+    rentalProduct.imageUrl,
+    rentalProduct.mainImage,
+    rentalProduct.images,
+    rentalProduct.productImages,
+    rentalProduct.gallery,
+  ].forEach(addImage);
 
   return images;
 };
 
 // ============================================================
-// DOCUMENT LABEL
+// DOCUMENT HELPERS
 // ============================================================
 
 const getDocumentLabel = (documentType) => {
   const labels = {
-    PASSPORT_PHOTO:
-      "Passport Size Photograph",
-
-    PAN_CARD:
-      "PAN Card",
-
-    AADHAAR_CARD:
-      "Aadhaar Card",
-
-    HOUSE_RENTAL_AGREEMENT:
-      "House Rental Agreement",
-
-    COLLEGE_ID:
-      "College ID",
-
-    OFFICE_ID:
-      "Office ID",
-
-    GST_REGISTRATION:
-      "GST Registration",
-
-    AUTHORIZATION_LETTER:
-      "Authorization Letter",
+    PASSPORT_PHOTO: "Passport Size Photograph",
+    PAN_CARD: "PAN Card",
+    AADHAAR_CARD: "Aadhaar Card",
+    HOUSE_RENTAL_AGREEMENT: "House Rental Agreement",
+    COLLEGE_ID: "College ID",
+    OFFICE_ID: "Office ID",
+    GST_REGISTRATION: "GST Registration",
+    AUTHORIZATION_LETTER: "Authorization Letter",
+    LAPTOP_CONDITION: "Laptop Condition Photo",
   };
 
   const value = String(
-    documentType || ""
+    documentType || "DOCUMENT"
   ).toUpperCase();
 
   return (
     labels[value] ||
     value
       .replaceAll("_", " ")
-      .replace(/\b\w/g, (char) =>
-        char.toUpperCase()
-      ) ||
-    "Document"
+      .replace(/\b\w/g, (char) => char.toUpperCase())
   );
 };
 
-// ============================================================
-// DOCUMENT FILE TYPE
-// ============================================================
-
-const getFileExtension = (
-  fileUrl = "",
-  fileName = ""
-) => {
-  const source =
-    fileName || fileUrl || "";
-
-  const cleanSource = String(source)
+const getFileExtension = (url = "", name = "") => {
+  const source = String(name || url)
     .split("?")[0]
     .split("#")[0];
 
-  const parts =
-    cleanSource.split(".");
+  const parts = source.split(".");
 
-  if (parts.length < 2) {
-    return "";
-  }
-
-  return parts[
-    parts.length - 1
-  ].toLowerCase();
+  return parts.length > 1
+    ? parts[parts.length - 1].toLowerCase()
+    : "";
 };
 
 const isPdfDocument = (document) => {
-  const extension =
-    getFileExtension(
-      document?.fileUrl,
-      document?.fileName
-    );
-
-  const mimeType = String(
-    document?.mimeType ||
-      document?.mimetype ||
-      document?.fileType ||
-      ""
-  ).toLowerCase();
+  const extension = getFileExtension(
+    document.fileUrl,
+    document.fileName
+  );
 
   return (
     extension === "pdf" ||
-    mimeType === "application/pdf"
+    String(document.mimeType || "").toLowerCase() ===
+      "application/pdf"
   );
 };
 
 const isImageDocument = (document) => {
-  const extension =
-    getFileExtension(
-      document?.fileUrl,
-      document?.fileName
-    );
-
-  const mimeType = String(
-    document?.mimeType ||
-      document?.mimetype ||
-      document?.fileType ||
-      ""
-  ).toLowerCase();
+  const extension = getFileExtension(
+    document.fileUrl,
+    document.fileName
+  );
 
   return (
-    mimeType.startsWith("image/") ||
-    [
-      "jpg",
-      "jpeg",
-      "png",
-      "webp",
-      "gif",
-    ].includes(extension)
+    String(document.mimeType || "")
+      .toLowerCase()
+      .startsWith("image/") ||
+    ["jpg", "jpeg", "png", "webp", "gif"].includes(
+      extension
+    )
   );
 };
 
-// ============================================================
-// DOCUMENT STATUS CLASS
-// ============================================================
-
-const getDocumentStatusClass = (
-  status
-) => {
+const getDocumentStatusClass = (status) => {
   const value = String(
     status || "PENDING"
   ).toUpperCase();
 
-  if (value === "APPROVED") {
-    return "approved";
-  }
-
-  if (value === "REJECTED") {
-    return "rejected";
-  }
+  if (value === "APPROVED") return "approved";
+  if (value === "REJECTED") return "rejected";
 
   return "pending";
 };
 
+const PHOTO_SIDES = [
+  { key: "FRONT", label: "Front Image" },
+  { key: "BACK", label: "Back Image" },
+  { key: "FULL", label: "Full Image" },
+];
+
 // ============================================================
-// COMPONENT
+// REUSABLE COMPONENTS
+// ============================================================
+
+function PriceRow({
+  label,
+  value,
+  total = false,
+  className = "",
+}) {
+  return (
+    <div
+      className={
+        total
+          ? `wir-price-total ${className}`
+          : `wir-price-row ${className}`
+      }
+    >
+      <span>{label}</span>
+      <strong>{formatMoney(value)}</strong>
+    </div>
+  );
+}
+
+function InfoItem({ icon: Icon, label, children }) {
+  return (
+    <div className="wir-info-item">
+      <span className="wir-info-icon">
+        <Icon size={18} />
+      </span>
+
+      <div>
+        <span>{label}</span>
+        <strong>{children || "—"}</strong>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
+// MAIN COMPONENT
 // ============================================================
 
 function WalkInRentalDetails() {
   const navigate = useNavigate();
   const { rentalId } = useParams();
 
-  // ==========================================================
-  // RENTAL STATE
-  // ==========================================================
+  const [rental, setRental] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const [rental, setRental] =
-    useState(null);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [actionLoading, setActionLoading] =
-    useState(false);
-
-  const [error, setError] =
-    useState("");
-
-  const [actionError, setActionError] =
-    useState("");
-
-  const [actionSuccess, setActionSuccess] =
-    useState("");
-
-  // ==========================================================
-  // DOCUMENT STATE
-  // ==========================================================
-
-  const [documents, setDocuments] =
-    useState([]);
-
+  const [documents, setDocuments] = useState([]);
   const [documentsLoading, setDocumentsLoading] =
     useState(false);
-
   const [documentsError, setDocumentsError] =
     useState("");
 
-  const [documentImageErrors, setDocumentImageErrors] =
-    useState({});
-
-  // ==========================================================
-  // PRODUCT IMAGE STATE
-  // ==========================================================
-
-  const [selectedImage, setSelectedImage] =
-    useState("");
-
-  const [imageErrors, setImageErrors] =
-    useState({});
+  const [selectedImage, setSelectedImage] = useState("");
+  const [imageErrors, setImageErrors] = useState({});
+  const [
+    documentImageErrors,
+    setDocumentImageErrors,
+  ] = useState({});
 
   // ==========================================================
   // LOAD RENTAL
@@ -4959,48 +3794,23 @@ function WalkInRentalDetails() {
       setLoading(true);
       setError("");
 
-      console.log(
-        "========== WALK-IN RENTAL DETAILS =========="
-      );
+      const response = await getRentalById(rentalId);
+      const data = extractRental(response);
 
-      console.log(
-        "Rental ID:",
-        rentalId
-      );
-
-      const response =
-        await getRentalById(rentalId);
-
-      console.log(
-        "Rental Details Response:",
-        response
-      );
-
-      const rentalData =
-        extractRental(response);
-
-      console.log(
-        "Normalized Rental:",
-        rentalData
-      );
-
-      if (!rentalData) {
-        throw new Error(
-          "Rental details not found."
-        );
+      if (!data) {
+        throw new Error("Rental details not found.");
       }
 
-      setRental(rentalData);
+      setRental(data);
+      setImageErrors({});
     } catch (err) {
-      console.error(
-        "GET WALK-IN RENTAL DETAILS ERROR:",
-        err
-      );
+      console.error("GET RENTAL ERROR:", err);
 
       setError(
-        err?.response?.data?.message ||
-          err?.message ||
+        getApiError(
+          err,
           "Failed to load rental details."
+        )
       );
     } finally {
       setLoading(false);
@@ -5008,425 +3818,486 @@ function WalkInRentalDetails() {
   }, [rentalId]);
 
   // ==========================================================
-  // LOAD CUSTOMER DOCUMENTS
+  // LOAD DOCUMENTS
   // ==========================================================
 
-  // const loadDocuments = useCallback(
-  //   async () => {
-  //     if (!rentalId) {
-  //       setDocuments([]);
-  //       return;
-  //     }
+  const loadDocuments = useCallback(async () => {
+    if (!rentalId) return;
 
-  //     try {
-  //       setDocumentsLoading(true);
-  //       setDocumentsError("");
+    try {
+      setDocumentsLoading(true);
+      setDocumentsError("");
 
-  //       console.log(
-  //         "========== RENTAL DOCUMENTS =========="
-  //       );
+      const response = await getRentalDocuments(
+        rentalId
+      );
 
-  //       console.log(
-  //         "Loading documents for rental:",
-  //         rentalId
-  //       );
+      const list = extractDocuments(response);
 
-  //       const response =
-  //         await getRentalDocuments(
-  //           rentalId
-  //         );
-
-  //       console.log(
-  //         "Rental Documents Response:",
-  //         response
-  //       );
-
-  //       const documentList =
-  //         extractDocuments(response);
-
-  //       console.log(
-  //         "Normalized Documents:",
-  //         documentList
-  //       );
-
-  //       setDocuments(
-  //         Array.isArray(documentList)
-  //           ? documentList
-  //           : []
-  //       );
-  //     } catch (err) {
-  //       console.error(
-  //         "GET RENTAL DOCUMENTS ERROR:",
-  //         err
-  //       );
-
-  //       setDocumentsError(
-  //         err?.response?.data?.message ||
-  //           err?.message ||
-  //           "Failed to load customer documents."
-  //       );
-
-  //       setDocuments([]);
-  //     } finally {
-  //       setDocumentsLoading(false);
-  //     }
-  //   },
-  //   [rentalId]
-  // );
-
-  
-const loadDocuments = useCallback(async () => {
-  if (!rentalId) {
-    setDocuments([]);
-    setDocumentsError("Rental ID is missing.");
-    return;
-  }
-
-  try {
-    setDocumentsLoading(true);
-    setDocumentsError("");
-
-    console.log("Loading documents for rental:", rentalId);
-
-    const response = await getRentalDocuments(rentalId);
-
-    // Actual API response inspect karne ke liye
-    console.log(
-      "RAW RENTAL DOCUMENT RESPONSE:",
-      JSON.stringify(response, null, 2)
-    );
-
-    const documentList = extractDocuments(response);
-
-    // Normalize common file field names
-    const normalizedDocuments = documentList
-      .filter((doc) => doc && typeof doc === "object")
-      .map((doc, index) => {
-        const fileUrl =
-          doc.fileUrl ||
-          doc.url ||
-          doc.path ||
-          doc.filePath ||
-          doc.documentUrl ||
-          doc.imageUrl ||
-          doc.secure_url ||
-          doc.location ||
-          "";
-
-        return {
+      const normalized = list
+        .filter(
+          (doc) =>
+            doc && typeof doc === "object"
+        )
+        .map((doc, index) => ({
           ...doc,
-          _id: doc._id || doc.id || `document-${index}`,
-          documentType:
+
+          _id:
+            doc._id ||
+            doc.id ||
+            `document-${index}`,
+
+          documentType: String(
             doc.documentType ||
-            doc.type ||
-            doc.name ||
-            doc.fileName ||
-            "CUSTOMER_DOCUMENT",
+              doc.type ||
+              "CUSTOMER_DOCUMENT"
+          ).toUpperCase(),
+
+          imageSide: String(
+            doc.imageSide ||
+              doc.side ||
+              ""
+          ).toUpperCase(),
+
           fileName:
             doc.fileName ||
             doc.originalName ||
             doc.originalname ||
             doc.name ||
             "Uploaded document",
-          fileUrl,
+
+          fileUrl:
+            doc.fileUrl ||
+            doc.url ||
+            doc.path ||
+            doc.filePath ||
+            doc.documentUrl ||
+            doc.imageUrl ||
+            doc.secure_url ||
+            doc.location ||
+            "",
+
           mimeType:
             doc.mimeType ||
             doc.mimetype ||
             doc.contentType ||
             doc.fileType ||
             "",
-        };
-      });
+        }));
 
-    console.log(
-      "NORMALIZED RENTAL DOCUMENTS:",
-      normalizedDocuments
-    );
+      setDocuments(normalized);
+      setDocumentImageErrors({});
+    } catch (err) {
+      console.error("GET DOCUMENTS ERROR:", err);
 
-    setDocuments(normalizedDocuments);
-
-    if (normalizedDocuments.length === 0) {
-      console.warn(
-        "No documents found in the documents API response."
+      setDocumentsError(
+        getApiError(
+          err,
+          "Unable to load rental documents."
+        )
       );
+
+      setDocuments([]);
+    } finally {
+      setDocumentsLoading(false);
     }
-  } catch (err) {
-    console.error("GET RENTAL DOCUMENTS ERROR:", err);
-
-    setDocumentsError(
-      err?.response?.data?.message ||
-        err?.message ||
-        "Unable to load customer documents."
-    );
-
-    setDocuments([]);
-  } finally {
-    setDocumentsLoading(false);
-  }
-}, [rentalId]);
-
-  // ==========================================================
-  // INITIAL LOAD
-  // ==========================================================
+  }, [rentalId]);
 
   useEffect(() => {
     loadRental();
-  }, [loadRental]);
-
-  useEffect(() => {
     loadDocuments();
-  }, [loadDocuments]);
+  }, [loadRental, loadDocuments]);
 
   // ==========================================================
-  // NORMALIZED DATA
+  // DOCUMENT GROUPS
+  // ==========================================================
+
+  const customerDocuments = useMemo(
+    () =>
+      documents.filter(
+        (doc) =>
+          doc.documentType !== "LAPTOP_CONDITION"
+      ),
+    [documents]
+  );
+
+  const laptopConditionPhotos = useMemo(
+    () =>
+      documents.filter(
+        (doc) =>
+          doc.documentType === "LAPTOP_CONDITION"
+      ),
+    [documents]
+  );
+
+  const conditionPhotoMap = useMemo(() => {
+    const map = {};
+
+    for (const photo of laptopConditionPhotos) {
+      if (
+        PHOTO_SIDES.some(
+          (side) => side.key === photo.imageSide
+        )
+      ) {
+        map[photo.imageSide] = photo;
+      }
+    }
+
+    return map;
+  }, [laptopConditionPhotos]);
+
+  // ==========================================================
+  // NORMALIZE RENTAL + FINANCIAL DATA
   // ==========================================================
 
   const details = useMemo(() => {
     if (!rental) return null;
 
     const individual =
-      rental?.individualDetails || {};
+      rental.individualDetails || {};
 
     const company =
-      rental?.companyDetails || {};
+      rental.companyDetails || {};
 
-    const customerType =
-      String(
-        rental?.customerType ||
-          "INDIVIDUAL"
-      ).toUpperCase();
-
-    // --------------------------------------------------------
-    // CUSTOMER
-    // --------------------------------------------------------
+    const customerType = String(
+      rental.customerType || "INDIVIDUAL"
+    ).toUpperCase();
 
     const customer =
       customerType === "COMPANY"
         ? {
             name:
-              company?.companyName ||
-              company?.contactPerson ||
+              company.companyName ||
+              company.contactPerson ||
+              rental.customer?.name ||
               "Company Customer",
 
             contactPerson:
-              company?.contactPerson ||
-              "",
+              company.contactPerson || "",
 
             phone:
-              company?.phone ||
+              company.phone ||
+              rental.customer?.phone ||
               "",
 
             email:
-              company?.email ||
+              company.email ||
+              rental.customer?.email ||
               "",
 
             address:
-              company?.officeAddress ||
+              company.officeAddress ||
+              company.address ||
               "",
 
             gstNumber:
-              company?.gstNumber ||
-              "",
+              company.gstNumber || "",
           }
         : {
             name:
-              individual?.fullName ||
-              rental?.customer?.name ||
-              rental?.customerId?.name ||
+              individual.fullName ||
+              rental.customer?.name ||
+              rental.customerId?.name ||
               "Individual Customer",
 
             contactPerson: "",
 
             phone:
-              individual?.phone ||
-              rental?.customer?.phone ||
+              individual.phone ||
+              rental.customer?.phone ||
               "",
 
             email:
-              individual?.email ||
-              rental?.customer?.email ||
+              individual.email ||
+              rental.customer?.email ||
               "",
 
             address:
-              individual?.address ||
-              "",
+              individual.address || "",
 
             gstNumber: "",
           };
 
-    // --------------------------------------------------------
-    // PRODUCT
-    // --------------------------------------------------------
-
     const product =
-      rental?.productId || {};
+      rental.productId ||
+      rental.product ||
+      {};
 
     const rentalProduct =
-      rental?.rentalProductId || {};
+      rental.rentalProductId ||
+      rental.rentalProduct ||
+      {};
+
+    const rentalDurationType = String(
+      rental.rentalDurationType ||
+        rental.durationType ||
+        "MONTHS"
+    ).toUpperCase();
+
+    const rentalDuration = getNumber(
+      rental.rentalDuration,
+      rental.duration,
+      rental.rentalMonths,
+      rental.durationMonths,
+      rental.months,
+      1
+    );
 
     // --------------------------------------------------------
-    // RENTAL DURATION TYPE
+    // PRICING: AGREED / NEGOTIATED RENT
     // --------------------------------------------------------
 
-    const rentalDurationType =
-      String(
-        rental?.rentalDurationType ||
-          rental?.durationType ||
-          (
-            rental?.rentalMonths
-              ? "MONTHS"
-              : "DAYS"
-          )
-      ).toUpperCase();
+    const originalMonthlyRent = getNumber(
+      rental.originalMonthlyRent,
+      rental.pricing?.originalMonthlyRent,
+      rentalProduct.monthlyRent,
+      rentalProduct.pricing?.monthlyRent,
+      rental.monthlyRent
+    );
 
-    // --------------------------------------------------------
-    // RENTAL DURATION
-    // --------------------------------------------------------
+    const negotiatedValue = firstDefined(
+      rental.negotiatedMonthlyRent,
+      rental.pricing?.negotiatedMonthlyRent
+    );
 
-    const rentalDuration =
-      getNumber(
-        rental?.rentalDuration,
-        rental?.duration,
-        rental?.rentalMonths,
-        rental?.durationMonths,
-        rental?.months,
-        1
+    const savedMonthlyRent = firstDefined(
+      rental.monthlyRent,
+      rental.agreedMonthlyRent,
+      rental.pricing?.monthlyRent
+    );
+
+    const pricingTypeRaw = String(
+      rental.pricingType ||
+        rental.pricing?.pricingType ||
+        ""
+    ).toUpperCase();
+
+    const isNegotiated =
+      pricingTypeRaw === "NEGOTIATED" ||
+      (
+        negotiatedValue !== undefined &&
+        getNumber(negotiatedValue) !==
+          originalMonthlyRent
       );
 
+    // Prefer explicitly negotiated rent for negotiated agreements.
+    // Otherwise use saved monthlyRent from the rental agreement.
+    const monthlyRent = getNumber(
+      isNegotiated
+        ? negotiatedValue
+        : savedMonthlyRent,
+      savedMonthlyRent,
+      negotiatedValue,
+      rentalProduct.monthlyRent,
+      rentalProduct.pricing?.monthlyRent
+    );
+
+    const pricingType = isNegotiated
+      ? "NEGOTIATED"
+      : "STANDARD";
+
+    const negotiationReason =
+      rental.negotiationReason ||
+      rental.pricing?.negotiationReason ||
+      "";
+
+    const dailyRent = getNumber(
+      rental.dailyRent,
+      rental.pricing?.dailyRent,
+      monthlyRent / 30
+    );
+
     // --------------------------------------------------------
-    // MONTHLY RENT
+    // GST / NON-GST
     // --------------------------------------------------------
 
-    const monthlyRent =
+    const explicitBillingType = normalizeBillingType(
+      firstDefined(
+        rental.billingType,
+        rental.invoiceType,
+        rental.taxType,
+        rental.pricing?.billingType
+      )
+    );
+
+    const savedGstRate = getNumber(
+      rental.gstPercentage,
+      rental.pricing?.gstPercentage,
+      rental.gst
+    );
+
+    // Do not infer NON_GST from a missing GST rate.
+    // Billing type should ideally be saved by the backend.
+    const billingType =
+      explicitBillingType ||
+      (savedGstRate > 0 ? "GST" : "UNKNOWN");
+
+    const isNonGst = billingType === "NON_GST";
+
+    const gstPercentage = isNonGst
+      ? 0
+      : savedGstRate;
+
+    // --------------------------------------------------------
+    // RENT TOTALS
+    // --------------------------------------------------------
+
+    const calculatedSubtotal =
+      rentalDurationType === "DAYS"
+        ? round2(dailyRent * rentalDuration)
+        : round2(monthlyRent * rentalDuration);
+
+    const savedSubtotal = firstDefined(
+      rental.rentSubtotal,
+      rental.rentSubtotalAmount
+    );
+
+    const rentSubtotal = round2(
+      savedSubtotal !== undefined
+        ? savedSubtotal
+        : calculatedSubtotal
+    );
+
+    const calculatedGst = round2(
+      (rentSubtotal * gstPercentage) / 100
+    );
+
+    const savedGst = firstDefined(
+      rental.rentGstAmount,
+      rental.rentGSTAmount,
+      rental.gstAmount
+    );
+
+    const storedGstAmount = getNumber(savedGst);
+
+    const gstAmount = isNonGst
+      ? 0
+      : round2(
+          savedGst !== undefined
+            ? savedGst
+            : calculatedGst
+        );
+
+    const calculatedTotal = round2(
+      rentSubtotal + gstAmount
+    );
+
+    const savedTotal = firstDefined(
+      rental.rentTotalAmount,
+      rental.totalRentAmount
+    );
+
+    const totalRent =
+      isNonGst
+        ? rentSubtotal
+        : round2(
+            savedTotal !== undefined
+              ? savedTotal
+              : calculatedTotal
+          );
+
+    const rentPaidAmount = round2(
       getNumber(
-        rental?.monthlyRent,
-        rental?.pricing?.monthlyRent,
-        rentalProduct?.monthlyRent,
-        rentalProduct?.pricing?.monthlyRent
-      );
+        rental.rentPaidAmount,
+        rental.totalRentPaid,
+        rental.paidRentAmount
+      )
+    );
 
-    // --------------------------------------------------------
-    // DAILY RENT
-    // --------------------------------------------------------
-
-    const dailyRent =
-      getNumber(
-        rental?.dailyRent,
-        rental?.pricing?.dailyRent,
-        rentalProduct?.dailyRent,
-        rentalProduct?.pricing?.dailyRent,
-        monthlyRent / 30
-      );
+    const rentBalanceAmount = round2(
+      Math.max(0, totalRent - rentPaidAmount)
+    );
 
     // --------------------------------------------------------
     // SECURITY DEPOSIT
     // --------------------------------------------------------
 
-    const securityDeposit =
+    const securityDeposit = getNumber(
+      rental.securityDeposit,
+      rental.pricing?.securityDeposit,
+      rentalProduct.securityDeposit
+    );
+
+    const depositStatus = String(
+      rental.depositStatus ||
+        rental.securityDepositStatus ||
+        ""
+    ).toUpperCase();
+
+    const depositAmountPaid = round2(
       getNumber(
-        rental?.securityDeposit,
-        rental?.pricing?.securityDeposit,
-        rentalProduct?.securityDeposit,
-        rentalProduct?.pricing?.securityDeposit
-      );
-
-    // --------------------------------------------------------
-    // GST
-    // --------------------------------------------------------
-
-    const gstPercentage =
-      getNumber(
-        rental?.gstPercentage,
-        rental?.pricing?.gstPercentage,
-        rentalProduct?.gstPercentage,
-        rentalProduct?.pricing?.gstPercentage
-      );
-
-    // --------------------------------------------------------
-    // RENT SUBTOTAL
-    // --------------------------------------------------------
-
-    let rentSubtotal = 0;
-
-    if (
-      rentalDurationType === "DAYS"
-    ) {
-      rentSubtotal =
-        dailyRent *
-        rentalDuration;
-    } else {
-      rentSubtotal =
-        monthlyRent *
-        rentalDuration;
-    }
-
-    // --------------------------------------------------------
-    // GST AMOUNT
-    // --------------------------------------------------------
-
-    const gstAmount =
-      rentSubtotal *
-      (gstPercentage / 100);
-
-    // --------------------------------------------------------
-    // RENT TOTAL
-    //
-    // IMPORTANT:
-    // Security deposit is NOT included here.
-    // It is shown separately as refundable deposit.
-    // --------------------------------------------------------
-
-    const totalRent =
-      rentSubtotal +
-      gstAmount;
-
-    // --------------------------------------------------------
-    // DEPOSIT STATUS
-    // --------------------------------------------------------
-
-    const depositStatus =
-      String(
-        rental?.depositStatus ||
-          rental?.securityDepositStatus ||
-          ""
-      ).toUpperCase();
+        rental.depositAmountPaid,
+        rental.securityDepositAmountPaid,
+        rental.depositPaidAmount,
+        rental.depositPaid === true ||
+          rental.depositReceived === true ||
+          rental.isDepositReceived === true ||
+          rental.securityDepositPaid === true ||
+          depositStatus === "PAID" ||
+          depositStatus === "RECEIVED"
+          ? securityDeposit
+          : 0
+      )
+    );
 
     const depositReceived =
-      rental?.depositReceived === true ||
-      rental?.isDepositReceived === true ||
-      rental?.securityDepositPaid === true ||
-      rental?.securityDepositReceived === true ||
-      depositStatus === "PAID" ||
-      depositStatus === "RECEIVED";
+      depositAmountPaid >= securityDeposit &&
+      securityDeposit > 0;
 
-    // --------------------------------------------------------
-    // DEPOSIT PAYMENT DATE
-    // --------------------------------------------------------
+    const depositBalance = round2(
+      Math.max(
+        0,
+        securityDeposit - depositAmountPaid
+      )
+    );
 
     const depositReceivedAt =
-      rental?.depositReceivedAt ||
-      rental?.securityDepositPaidAt ||
-      rental?.securityDepositReceivedAt ||
-      rental?.depositPaymentDate ||
+      rental.depositReceivedAt ||
+      rental.securityDepositPaidAt ||
+      rental.securityDepositReceivedAt ||
+      rental.depositPaymentDate ||
       null;
 
     // --------------------------------------------------------
-    // PRODUCT IMAGES
+    // FINANCIAL SUMMARY
     // --------------------------------------------------------
 
-    const images =
-      getProductImages(
-        product,
-        rentalProduct
+    const totalContractAmount = round2(
+      totalRent + securityDeposit
+    );
+
+    const totalCollected = round2(
+      rentPaidAmount + depositAmountPaid
+    );
+
+    const totalOutstanding = round2(
+      rentBalanceAmount + depositBalance
+    );
+
+    const taxMismatch =
+      isNonGst &&
+      (
+        storedGstAmount > 0.009 ||
+        (
+          savedTotal !== undefined &&
+          getNumber(savedTotal) >
+            rentSubtotal + 0.009
+        )
       );
+
+    const images = getProductImages(
+      product,
+      rentalProduct
+    );
+
+    const brandValue =
+      product.brand ||
+      rentalProduct.brand;
 
     return {
       customerType,
-
       customer,
-
       product,
-
       rentalProduct,
 
       productName:
@@ -5435,334 +4306,286 @@ const loadDocuments = useCallback(async () => {
         "Rental Product",
 
       productBrand:
-        product?.brand?.name ||
-        product?.brand ||
-        rentalProduct?.brand?.name ||
-        rentalProduct?.brand ||
+        getName(brandValue) ||
         "",
 
       productModel:
-        product?.model ||
-        product?.modelNumber ||
-        rentalProduct?.model ||
-        rentalProduct?.modelNumber ||
+        product.model ||
+        product.modelNumber ||
+        rentalProduct.model ||
+        rentalProduct.modelNumber ||
         "",
-
-      image:
-        images?.[0] || "",
 
       images,
 
+      originalMonthlyRent,
       monthlyRent,
-
       dailyRent,
+      pricingType,
+      negotiationReason,
 
-      securityDeposit,
-
+      billingType,
+      isNonGst,
       gstPercentage,
-
       gstAmount,
+      storedGstAmount,
+      taxMismatch,
 
       rentalDuration,
-
       rentalDurationType,
 
       rentSubtotal,
-
       totalRent,
+      rentPaidAmount,
+      rentBalanceAmount,
 
-      startDate:
-        rental?.startDate,
-
-      expectedEndDate:
-        rental?.expectedEndDate,
-
-      nextPaymentDate:
-        rental?.nextPaymentDate,
-
-      lastPaymentDate:
-        rental?.lastPaymentDate,
-
-      status:
-        rental?.status || "—",
-
-      rentalSource:
-        rental?.rentalSource ||
-        "WALK_IN",
-
+      securityDeposit,
+      depositAmountPaid,
+      depositBalance,
       depositReceived,
-
       depositReceivedAt,
 
-      allocatedAt:
-        rental?.allocatedAt,
+      totalContractAmount,
+      totalCollected,
+      totalOutstanding,
+
+      startDate: rental.startDate,
+      expectedEndDate: rental.expectedEndDate,
+      nextPaymentDate: rental.nextPaymentDate,
+      lastPaymentDate: rental.lastPaymentDate,
+
+      status: rental.status || "—",
+
+      rentalSource:
+        rental.rentalSource || "WALK_IN",
+
+      allocatedAt: rental.allocatedAt,
 
       returnedAt:
-        rental?.returnedAt,
+        rental.returnedAt ||
+        rental.actualReturnDate ||
+        rental.returnDate,
 
       notes:
-        rental?.notes ||
-        rental?.handoverDescription ||
-        rental?.handoverNotes ||
+        rental.notes ||
+        rental.handoverDescription ||
+        rental.handoverNotes ||
         "",
 
-      createdAt:
-        rental?.createdAt,
-
-      updatedAt:
-        rental?.updatedAt,
+      createdAt: rental.createdAt,
+      updatedAt: rental.updatedAt,
     };
   }, [rental]);
 
   // ==========================================================
-  // SET FIRST PRODUCT IMAGE
+  // PRODUCT IMAGE
   // ==========================================================
 
   useEffect(() => {
-    if (
-      details?.images?.length &&
-      !selectedImage
-    ) {
-      setSelectedImage(
-        details.images[0]
-      );
-    }
-  }, [
-    details?.images,
-    selectedImage,
-  ]);
+    const images = details?.images || [];
 
-  // ==========================================================
-  // RESET PRODUCT IMAGE WHEN RENTAL CHANGES
-  // ==========================================================
-
-  useEffect(() => {
-    if (!details?.images?.length) {
+    if (!images.length) {
       setSelectedImage("");
       return;
     }
 
     if (
       selectedImage &&
-      details.images.includes(
-        selectedImage
-      )
+      images.includes(selectedImage)
     ) {
       return;
     }
 
-    setSelectedImage(
-      details.images[0]
-    );
-  }, [
-    rentalId,
-    details?.images,
-    selectedImage,
-  ]);
+    setSelectedImage(images[0]);
+  }, [details?.images, selectedImage]);
 
-  // ==========================================================
-  // IMAGE ERROR HANDLER
-  // ==========================================================
-
-  const handleImageError = (
-    imageUrl
-  ) => {
+  const handleImageError = (url) => {
     setImageErrors((previous) => ({
       ...previous,
-      [imageUrl]: true,
+      [url]: true,
     }));
 
-    if (
-      selectedImage === imageUrl &&
-      details?.images?.length
-    ) {
-      const nextImage =
-        details.images.find(
-          (image) =>
-            image !== imageUrl &&
-            !imageErrors[image]
-        );
+    if (selectedImage === url) {
+      const next = details?.images.find(
+        (image) =>
+          image !== url &&
+          !imageErrors[image]
+      );
 
-      if (nextImage) {
-        setSelectedImage(
-          nextImage
-        );
-      }
+      setSelectedImage(next || "");
     }
   };
 
+  const handleDocumentImageError = (id) => {
+    setDocumentImageErrors((previous) => ({
+      ...previous,
+      [id]: true,
+    }));
+  };
+
   // ==========================================================
-  // DOCUMENT IMAGE ERROR
+  // DOCUMENT CARD
   // ==========================================================
 
-  const handleDocumentImageError = (
-    documentId
+  const renderDocumentCard = (
+    document,
+    index,
+    customTitle = ""
   ) => {
-    setDocumentImageErrors(
-      (previous) => ({
-        ...previous,
-        [documentId]: true,
-      })
-    );
-  };
+    const id =
+      getId(document) ||
+      `${document.documentType}-${index}`;
 
-  // ==========================================================
-  // ACTION HANDLER
-  // ==========================================================
-
-  const runAction = async (
-    action,
-    successMessage
-  ) => {
-    if (!rentalId) return;
-
-    try {
-      setActionLoading(true);
-      setActionError("");
-      setActionSuccess("");
-
-      console.log(
-        "Rental Action:",
-        action,
-        rentalId
-      );
-
-      let response;
-
-      // ------------------------------------------------------
-      // SECURITY DEPOSIT
-      // ------------------------------------------------------
-
-   if (action === "deposit") {
-
-    const paymentMethod =
-        window.prompt(
-            "Enter payment method: CASH / UPI / CARD / BANK_TRANSFER"
-        );
-
-    if (!paymentMethod) {
-        return;
-    }
-
-    await markRentalDepositReceived(
-        rentalId,
-        {
-            paymentMethod:
-                paymentMethod.trim().toUpperCase()
-        }
+    const url = normalizeFileUrl(
+      document.fileUrl
     );
 
-    toast.success(
-        "Security deposit received successfully"
-    );
+    const pdf = isPdfDocument(document);
+    const image = isImageDocument(document);
 
-    // Reload rental
-    await loadRentalDetails();
+    const imageBroken =
+      documentImageErrors[id];
 
-    return;
-}
+    const status = String(
+      document.verificationStatus || "PENDING"
+    ).toUpperCase();
 
-      // ------------------------------------------------------
-      // ALLOCATE
-      // ------------------------------------------------------
+    const title =
+      customTitle ||
+      getDocumentLabel(document.documentType);
 
-      if (action === "allocate") {
-        response =
-          await allocateRental(
-            rentalId
-          );
-      }
+    return (
+      <article
+        className="wir-document-card"
+        key={id}
+      >
+        <div className="wir-document-preview">
+          {image && url && !imageBroken ? (
+            <img
+              src={url}
+              alt={title}
+              className="wir-document-image"
+              onError={() =>
+                handleDocumentImageError(id)
+              }
+            />
+          ) : pdf && url ? (
+            <iframe
+              src={`${url}#toolbar=0&navpanes=0`}
+              title={title}
+              className="wir-document-pdf"
+            />
+          ) : (
+            <div className="wir-document-file-placeholder">
+              <FileText size={48} />
+              <span>
+                {imageBroken
+                  ? "Image unavailable"
+                  : pdf
+                  ? "PDF Document"
+                  : "Document File"}
+              </span>
+            </div>
+          )}
 
-      // ------------------------------------------------------
-      // RETURN
-      // ------------------------------------------------------
+          <span className="wir-document-file-type">
+            {pdf ? "PDF" : image ? "IMAGE" : "FILE"}
+          </span>
+        </div>
 
-      if (action === "return") {
-        response =
-          await markRentalReturned(
-            rentalId
-          );
-      }
+        <div className="wir-document-content">
+          <div className="wir-document-title-row">
+            <div>
+              <h3>{title}</h3>
+              <p>{document.fileName}</p>
+            </div>
 
-      console.log(
-        "Rental Action Response:",
-        response
-      );
+            <span
+              className={`wir-document-status ${getDocumentStatusClass(
+                status
+              )}`}
+            >
+              {status === "APPROVED" ? (
+                <CheckCircle2 size={14} />
+              ) : status === "REJECTED" ? (
+                <XCircle size={14} />
+              ) : (
+                <Clock3 size={14} />
+              )}
 
-      setActionSuccess(
-        successMessage ||
-          "Rental updated successfully."
-      );
+              {status}
+            </span>
+          </div>
 
-      // ------------------------------------------------------
-      // IMPORTANT:
-      // Reload rental after action so the latest
-      // depositReceived/status comes from backend.
-      // ------------------------------------------------------
+          {document.createdAt && (
+            <div className="wir-document-meta">
+              <span>Uploaded</span>
+              <strong>
+                {formatDateTime(document.createdAt)}
+              </strong>
+            </div>
+          )}
 
-      await loadRental();
-    } catch (err) {
-      console.error(
-        "RENTAL ACTION ERROR:",
-        err
-      );
+          {document.verifiedAt && (
+            <div className="wir-document-meta">
+              <span>Verified</span>
+              <strong>
+                {formatDateTime(document.verifiedAt)}
+              </strong>
+            </div>
+          )}
 
-      setActionError(
-        err?.response?.data?.message ||
-          err?.message ||
-          "Unable to update rental."
-      );
-    } finally {
-      setActionLoading(false);
-    }
-  };
+          {status === "REJECTED" &&
+            document.rejectionReason && (
+              <div className="wir-document-rejection">
+                <XCircle size={16} />
+                <div>
+                  <strong>Rejection Reason</strong>
+                  <p>
+                    {document.rejectionReason}
+                  </p>
+                </div>
+              </div>
+            )}
 
-  // ==========================================================
-  // BUTTON ACTIONS
-  // ==========================================================
+          <div className="wir-document-actions">
+            {url && (
+              <>
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="wir-document-action-btn primary"
+                >
+                  <Eye size={16} />
+                  View
+                </a>
 
-  const handleDeposit = () => {
-    if (
-      !window.confirm(
-        "Mark security deposit as received?"
-      )
-    ) {
-      return;
-    }
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="wir-document-action-btn secondary"
+                  download={document.fileName}
+                >
+                  <Download size={16} />
+                  Download
+                </a>
 
-    runAction(
-      "deposit",
-      "Security deposit marked as paid / received."
-    );
-  };
-
-  const handleAllocate = () => {
-    if (
-      !window.confirm(
-        "Allocate this rental?"
-      )
-    ) {
-      return;
-    }
-
-    runAction(
-      "allocate",
-      "Rental allocated successfully."
-    );
-  };
-
-  const handleReturn = () => {
-    if (
-      !window.confirm(
-        "Mark this rental as returned?"
-      )
-    ) {
-      return;
-    }
-
-    runAction(
-      "return",
-      "Rental marked as returned."
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="wir-document-action-btn secondary"
+                >
+                  <ExternalLink size={16} />
+                  Open
+                </a>
+              </>
+            )}
+          </div>
+        </div>
+      </article>
     );
   };
 
@@ -5770,7 +4593,7 @@ const loadDocuments = useCallback(async () => {
   // LOADING
   // ==========================================================
 
-  if (loading) {
+  if (loading && !rental) {
     return (
       <div className="wir-details-page">
         <div className="wir-details-loading">
@@ -5778,51 +4601,27 @@ const loadDocuments = useCallback(async () => {
             size={40}
             className="wir-spin"
           />
-
-          <h3>
-            Loading rental details...
-          </h3>
-
-          <p>
-            Please wait while we fetch the
-            rental information.
-          </p>
+          <h3>Loading rental details...</h3>
         </div>
       </div>
     );
   }
 
-  // ==========================================================
-  // ERROR
-  // ==========================================================
-
-  if (
-    error ||
-    !rental ||
-    !details
-  ) {
+  if (error || !rental || !details) {
     return (
       <div className="wir-details-page">
         <div className="wir-details-error">
-          <div className="wir-error-icon">
-            <AlertCircle size={34} />
-          </div>
+          <AlertCircle size={34} />
 
-          <h2>
-            Unable to load rental
-          </h2>
-
+          <h2>Unable to load rental</h2>
           <p>
-            {error ||
-              "Rental details were not found."}
+            {error || "Rental details not found."}
           </p>
 
           <div className="wir-error-actions">
             <button
               className="wir-btn wir-btn-secondary"
-              onClick={() =>
-                navigate(-1)
-              }
+              onClick={() => navigate(-1)}
             >
               <ArrowLeft size={18} />
               Back
@@ -5842,43 +4641,34 @@ const loadDocuments = useCallback(async () => {
   }
 
   // ==========================================================
-  // RENDER
+  // MAIN UI
   // ==========================================================
 
   return (
     <div className="wir-details-page">
 
-      {/* ======================================================
-          HEADER
-      ====================================================== */}
+      {/* HEADER */}
 
       <div className="wir-details-header">
-
         <div className="wir-header-left">
-
           <button
+            type="button"
             className="wir-back-btn"
-            onClick={() =>
-              navigate(-1)
-            }
-            title="Go Back"
+            onClick={() => navigate(-1)}
           >
             <ArrowLeft size={20} />
           </button>
 
           <div>
-
             <div className="wir-breadcrumb">
               Receptionist
               <span>/</span>
               Rental
               <span>/</span>
-              Rental Details
+              Details
             </div>
 
-            <h1>
-              Walk-In Rental Details
-            </h1>
+            <h1>Walk-In Rental Details</h1>
 
             <p>
               Rental ID:{" "}
@@ -5886,37 +4676,25 @@ const loadDocuments = useCallback(async () => {
                 {getId(rental)}
               </strong>
             </p>
-
           </div>
-
         </div>
 
         <div className="wir-header-actions">
-
           <button
+            type="button"
             className="wir-btn wir-btn-secondary"
             onClick={() => {
               loadRental();
               loadDocuments();
             }}
-            disabled={
-              actionLoading ||
-              documentsLoading
-            }
+            disabled={loading || documentsLoading}
           >
-            <RefreshCw
-              size={17}
-              className={
-                documentsLoading
-                  ? "wir-spin"
-                  : ""
-              }
-            />
-
+            <RefreshCw size={17} />
             Refresh
           </button>
 
           <button
+            type="button"
             className="wir-btn wir-btn-secondary"
             onClick={() =>
               navigate(
@@ -5927,90 +4705,48 @@ const loadDocuments = useCallback(async () => {
             <FileText size={17} />
             All Rentals
           </button>
-
         </div>
-
       </div>
 
-      {/* ======================================================
-          ALERTS
-      ====================================================== */}
-
-      {actionSuccess && (
-        <div className="wir-alert wir-alert-success">
-          <CheckCircle2 size={20} />
-
-          <span>
-            {actionSuccess}
-          </span>
-        </div>
-      )}
-
-      {actionError && (
-        <div className="wir-alert wir-alert-danger">
-          <AlertCircle size={20} />
-
-          <span>
-            {actionError}
-          </span>
-        </div>
-      )}
-
-      {/* ======================================================
-          STATUS BAR
-      ====================================================== */}
+      {/* STATUS */}
 
       <div className="wir-status-card">
-
         <div className="wir-status-main">
-
           <div className="wir-status-icon">
             <Package size={24} />
           </div>
 
           <div>
-
             <span className="wir-label">
               Rental Status
             </span>
 
             <div className="wir-status-row">
-
               <span
                 className={`wir-status-badge ${getStatusClass(
                   details.status
                 )}`}
               >
-                {String(
-                  details.status ||
-                    "UNKNOWN"
-                ).replaceAll(
+                {String(details.status).replaceAll(
                   "_",
                   " "
                 )}
               </span>
 
               <span className="wir-source-badge">
-                WALK-IN
+                {details.rentalSource}
               </span>
-
             </div>
-
           </div>
-
         </div>
 
         <div className="wir-status-meta">
-
           <div>
             <span className="wir-label">
               Created
             </span>
-
             <strong>
-              {formatDateTime(
-                details.createdAt
-              )}
+              {formatDateTime(details.createdAt)}
             </strong>
           </div>
 
@@ -6018,23 +4754,17 @@ const loadDocuments = useCallback(async () => {
             <span className="wir-label">
               Rental Period
             </span>
-
             <strong>
               {details.rentalDuration}{" "}
-              {details.rentalDurationType ===
-              "DAYS"
-                ? details.rentalDuration === 1
-                  ? "Day"
-                  : "Days"
-                : details.rentalDuration === 1
-                ? "Month"
+              {details.rentalDurationType === "DAYS"
+                ? "Days"
                 : "Months"}
             </strong>
           </div>
 
           <div>
             <span className="wir-label">
-              Security Deposit
+              Deposit Status
             </span>
 
             <strong
@@ -6045,767 +4775,416 @@ const loadDocuments = useCallback(async () => {
               }
             >
               {details.depositReceived
-                ? "Paid / Received"
-                : "Pending"}
+                ? "PAID"
+                : details.depositAmountPaid > 0
+                ? "PARTIALLY PAID"
+                : "PENDING"}
             </strong>
           </div>
-
         </div>
-
       </div>
 
-      {/* ======================================================
-          ACTION BUTTONS
-      ====================================================== */}
+      {/* BILLING WARNING */}
 
-      <div className="wir-action-card">
-
-        <div>
-
-          <h3>
-            Rental Actions
-          </h3>
-
-          <p>
-            Manage deposit, allocation and
-            return status from here.
-          </p>
-
+      {details.billingType === "UNKNOWN" && (
+        <div className="wir-documents-error">
+          <AlertCircle size={20} />
+          <div>
+            <strong>Billing type missing</strong>
+            <p>
+              Backend response does not contain
+              a valid GST / NON_GST billing type.
+              Verify the saved rental agreement.
+            </p>
+          </div>
         </div>
+      )}
 
-        <div className="wir-action-buttons">
+      {details.taxMismatch && (
+        <div className="wir-documents-error">
+          <AlertCircle size={20} />
 
-          {/* ==================================================
-              SECURITY DEPOSIT BUTTON
-          ================================================== */}
+          <div>
+            <strong>
+              Non-GST amount mismatch
+            </strong>
 
-          {!details.depositReceived &&
-            String(
-              details.status
-            ).toUpperCase() !==
-              "RETURNED" &&
-            String(
-              details.status
-            ).toUpperCase() !==
-              "COMPLETED" && (
-
-              <button
-                className="wir-btn wir-btn-warning"
-                onClick={handleDeposit}
-                disabled={actionLoading}
-              >
-                {actionLoading ? (
-                  <Loader2
-                    size={17}
-                    className="wir-spin"
-                  />
-                ) : (
-                  <ShieldCheck size={17} />
-                )}
-
-                Mark Security Deposit Paid
-              </button>
-            )}
-
-          {/* ==================================================
-              ALLOCATE
-          ================================================== */}
-
-          {!details.allocatedAt &&
-            String(
-              details.status
-            ).toUpperCase() !==
-              "RETURNED" &&
-            String(
-              details.status
-            ).toUpperCase() !==
-              "COMPLETED" && (
-
-              <button
-                className="wir-btn wir-btn-primary"
-                onClick={handleAllocate}
-                disabled={actionLoading}
-              >
-                {actionLoading ? (
-                  <Loader2
-                    size={17}
-                    className="wir-spin"
-                  />
-                ) : (
-                  <CheckCircle2 size={17} />
-                )}
-
-                Allocate Rental
-              </button>
-            )}
-
-          {/* ==================================================
-              RETURN
-          ================================================== */}
-
-          {String(
-            details.status
-          ).toUpperCase() ===
-            "ACTIVE" && (
-
-            <button
-              className="wir-btn wir-btn-danger"
-              onClick={handleReturn}
-              disabled={actionLoading}
-            >
-              {actionLoading ? (
-                <Loader2
-                  size={17}
-                  className="wir-spin"
-                />
-              ) : (
-                <RefreshCw size={17} />
-              )}
-
-              Mark Returned
-            </button>
-          )}
-
+            <p>
+              This rental is marked NON_GST,
+              but backend saved GST-inclusive
+              financial values. Displayed GST
+              is zero, but payment schedule
+              and backend totals must also
+              be corrected before settlement.
+            </p>
+          </div>
         </div>
+      )}
 
-      </div>
-
-      {/* ======================================================
-          MAIN GRID
-      ====================================================== */}
+      {/* MAIN GRID */}
 
       <div className="wir-details-grid">
 
-        {/* ====================================================
-            CUSTOMER
-        ==================================================== */}
+        {/* CUSTOMER */}
 
         <section className="wir-card">
-
           <div className="wir-card-header">
-
             <div className="wir-card-title-icon">
-
-              {details.customerType ===
-              "COMPANY" ? (
+              {details.customerType === "COMPANY" ? (
                 <Building2 size={20} />
               ) : (
                 <User size={20} />
               )}
-
             </div>
 
             <div>
-
-              <h2>
-                Customer Information
-              </h2>
-
-              <p>
-                {details.customerType ===
-                "COMPANY"
-                  ? "Company customer"
-                  : "Individual customer"}
-              </p>
-
+              <h2>Customer Information</h2>
+              <p>{details.customerType}</p>
             </div>
-
           </div>
 
           <div className="wir-info-list">
+            <InfoItem
+              icon={User}
+              label={
+                details.customerType === "COMPANY"
+                  ? "Company Name"
+                  : "Full Name"
+              }
+            >
+              {details.customer.name}
+            </InfoItem>
 
-            <div className="wir-info-item">
-
-              <span className="wir-info-icon">
-                {details.customerType ===
-                "COMPANY" ? (
-                  <Building2 size={18} />
-                ) : (
-                  <User size={18} />
-                )}
-              </span>
-
-              <div>
-
-                <span>
-                  {details.customerType ===
-                  "COMPANY"
-                    ? "Company Name"
-                    : "Full Name"}
-                </span>
-
-                <strong>
-                  {details.customer.name ||
-                    "—"}
-                </strong>
-
-              </div>
-
-            </div>
-
-            {details.customer
-              .contactPerson && (
-
-              <div className="wir-info-item">
-
-                <span className="wir-info-icon">
-                  <User size={18} />
-                </span>
-
-                <div>
-
-                  <span>
-                    Contact Person
-                  </span>
-
-                  <strong>
-                    {
-                      details.customer
-                        .contactPerson
-                    }
-                  </strong>
-
-                </div>
-
-              </div>
+            {details.customer.contactPerson && (
+              <InfoItem
+                icon={User}
+                label="Contact Person"
+              >
+                {details.customer.contactPerson}
+              </InfoItem>
             )}
 
-            <div className="wir-info-item">
+            <InfoItem icon={Phone} label="Phone">
+              {details.customer.phone}
+            </InfoItem>
 
-              <span className="wir-info-icon">
-                <Phone size={18} />
-              </span>
+            <InfoItem icon={Mail} label="Email">
+              {details.customer.email}
+            </InfoItem>
 
-              <div>
+            <InfoItem icon={MapPin} label="Address">
+              {details.customer.address}
+            </InfoItem>
 
-                <span>
-                  Phone
-                </span>
-
-                <strong>
-                  {details.customer.phone ||
-                    "—"}
-                </strong>
-
-              </div>
-
-            </div>
-
-            <div className="wir-info-item">
-
-              <span className="wir-info-icon">
-                <Mail size={18} />
-              </span>
-
-              <div>
-
-                <span>
-                  Email
-                </span>
-
-                <strong>
-                  {details.customer.email ||
-                    "—"}
-                </strong>
-
-              </div>
-
-            </div>
-
-            <div className="wir-info-item">
-
-              <span className="wir-info-icon">
-                <MapPin size={18} />
-              </span>
-
-              <div>
-
-                <span>
-                  Address
-                </span>
-
-                <strong>
-                  {details.customer.address ||
-                    "—"}
-                </strong>
-
-              </div>
-
-            </div>
-
-            {details.customer
-              .gstNumber && (
-
-              <div className="wir-info-item">
-
-                <span className="wir-info-icon">
-                  <FileText size={18} />
-                </span>
-
-                <div>
-
-                  <span>
-                    GST Number
-                  </span>
-
-                  <strong>
-                    {
-                      details.customer
-                        .gstNumber
-                    }
-                  </strong>
-
-                </div>
-
-              </div>
+            {details.customer.gstNumber && (
+              <InfoItem
+                icon={FileText}
+                label="GST Number"
+              >
+                {details.customer.gstNumber}
+              </InfoItem>
             )}
-
           </div>
-
         </section>
 
-        {/* ====================================================
-            PRODUCT
-        ==================================================== */}
+        {/* PRODUCT */}
 
         <section className="wir-card">
-
           <div className="wir-card-header">
-
             <div className="wir-card-title-icon">
               <Package size={20} />
             </div>
 
             <div>
-
-              <h2>
-                Product Information
-              </h2>
-
-              <p>
-                Rented product details
-              </p>
-
+              <h2>Product Information</h2>
+              <p>Rented laptop details</p>
             </div>
-
           </div>
-
-          {/* ==================================================
-              PRODUCT IMAGE GALLERY
-          ================================================== */}
 
           <div className="wir-product-gallery">
-
             <div className="wir-product-main-image">
-
               {selectedImage &&
-              !imageErrors[
-                selectedImage
-              ] ? (
-
+              !imageErrors[selectedImage] ? (
                 <img
                   src={selectedImage}
-                  alt={
-                    details.productName
-                  }
+                  alt={details.productName}
                   className="wir-product-image"
                   onError={() =>
-                    handleImageError(
-                      selectedImage
-                    )
+                    handleImageError(selectedImage)
                   }
                 />
-
               ) : (
-
                 <div className="wir-product-placeholder">
-
                   <Package size={38} />
-
                   <span>
-                    Product image
-                    unavailable
+                    Product image unavailable
                   </span>
-
                 </div>
               )}
-
             </div>
 
-            {details.images?.length > 0 && (
-
+            {details.images.length > 0 && (
               <div className="wir-product-thumbnails">
-
-                {details.images.map(
-                  (image, index) => {
-
-                    const broken =
-                      imageErrors[
-                        image
-                      ];
-
-                    if (broken) {
-                      return null;
-                    }
-
-                    return (
-
-                      <button
-                        type="button"
-                        key={`${image}-${index}`}
-                        className={`wir-product-thumbnail ${
-                          selectedImage ===
-                          image
-                            ? "active"
-                            : ""
-                        }`}
-                        onClick={() =>
-                          setSelectedImage(
-                            image
-                          )
+                {details.images.map((image, index) =>
+                  imageErrors[image] ? null : (
+                    <button
+                      type="button"
+                      key={`${image}-${index}`}
+                      className={`wir-product-thumbnail ${
+                        selectedImage === image
+                          ? "active"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        setSelectedImage(image)
+                      }
+                    >
+                      <img
+                        src={image}
+                        alt={`Product ${index + 1}`}
+                        onError={() =>
+                          handleImageError(image)
                         }
-                        title={`View image ${
-                          index + 1
-                        }`}
-                      >
-
-                        <img
-                          src={image}
-                          alt={`${details.productName} ${
-                            index + 1
-                          }`}
-                          onError={() =>
-                            handleImageError(
-                              image
-                            )
-                          }
-                        />
-
-                      </button>
-                    );
-                  }
+                      />
+                    </button>
+                  )
                 )}
-
               </div>
             )}
-
           </div>
-
-          {/* ==================================================
-              PRODUCT DETAILS
-          ================================================== */}
 
           <div className="wir-product">
-
             <div className="wir-product-info">
+              <h3>{details.productName}</h3>
 
-              <h3>
-                {details.productName}
-              </h3>
+              <p>
+                Brand:{" "}
+                <strong>
+                  {details.productBrand || "—"}
+                </strong>
+              </p>
 
-              {details.productBrand && (
-                <p>
-                  Brand:{" "}
-                  <strong>
-                    {
-                      details.productBrand
-                    }
-                  </strong>
-                </p>
-              )}
+              <p>
+                Model:{" "}
+                <strong>
+                  {details.productModel || "—"}
+                </strong>
+              </p>
 
-              {details.productModel && (
-                <p>
-                  Model:{" "}
-                  <strong>
-                    {
-                      details.productModel
-                    }
-                  </strong>
-                </p>
-              )}
-
-              {getId(
-                details.rentalProduct
-              ) && (
-
+              {getId(details.rentalProduct) && (
                 <p className="wir-small-id">
                   Rental Product ID:{" "}
-                  {getId(
-                    details.rentalProduct
-                  )}
+                  {getId(details.rentalProduct)}
                 </p>
               )}
 
-              {getId(
-                details.product
-              ) && (
-
+              {getId(details.product) && (
                 <p className="wir-small-id">
                   Product ID:{" "}
-                  {getId(
-                    details.product
-                  )}
+                  {getId(details.product)}
                 </p>
               )}
-
             </div>
-
           </div>
-
         </section>
 
-        {/* ====================================================
-            RENTAL PERIOD
-        ==================================================== */}
+        {/* RENTAL PERIOD */}
 
         <section className="wir-card">
-
           <div className="wir-card-header">
-
             <div className="wir-card-title-icon">
               <CalendarDays size={20} />
             </div>
 
             <div>
-
-              <h2>
-                Rental Period
-              </h2>
-
-              <p>
-                Start and expected return
-              </p>
-
+              <h2>Rental Period</h2>
+              <p>Rental dates and payment dates</p>
             </div>
-
           </div>
 
           <div className="wir-date-grid">
+            {[
+              [
+                "Start Date",
+                details.startDate,
+                CalendarDays,
+              ],
+              [
+                "Expected End Date",
+                details.expectedEndDate,
+                Clock3,
+              ],
+              [
+                "Next Payment",
+                details.nextPaymentDate,
+                IndianRupee,
+              ],
+              [
+                "Last Payment",
+                details.lastPaymentDate,
+                Wallet,
+              ],
+            ].map(([label, date, Icon]) => (
+              <div
+                className="wir-date-box"
+                key={label}
+              >
+                <span>
+                  <Icon size={17} />
+                  {label}
+                </span>
+
+                <strong>
+                  {formatDate(date)}
+                </strong>
+              </div>
+            ))}
 
             <div className="wir-date-box">
-
-              <span>
-                <CalendarDays size={17} />
-                Start Date
-              </span>
-
-              <strong>
-                {formatDate(
-                  details.startDate
-                )}
-              </strong>
-
-            </div>
-
-            <div className="wir-date-box">
-
-              <span>
-                <Clock3 size={17} />
-                Expected End Date
-              </span>
-
-              <strong>
-                {formatDate(
-                  details.expectedEndDate
-                )}
-              </strong>
-
-            </div>
-
-            <div className="wir-date-box">
-
-              <span>
-                <IndianRupee size={17} />
-                Next Payment
-              </span>
-
-              <strong>
-                {formatDate(
-                  details.nextPaymentDate
-                )}
-              </strong>
-
-            </div>
-
-            <div className="wir-date-box">
-
               <span>
                 <RefreshCw size={17} />
                 Returned At
               </span>
-
               <strong>
-                {formatDateTime(
-                  details.returnedAt
-                )}
+                {formatDateTime(details.returnedAt)}
               </strong>
-
             </div>
-
           </div>
-
         </section>
 
-        {/* ====================================================
-            PRICING
-        ==================================================== */}
+        {/* RENTAL PRICING */}
 
         <section className="wir-card">
-
           <div className="wir-card-header">
-
             <div className="wir-card-title-icon">
               <IndianRupee size={20} />
             </div>
 
             <div>
-
-              <h2>
-                Rental Pricing
-              </h2>
-
+              <h2>Rental Pricing</h2>
               <p>
-                Complete rental calculation
+                Agreed rent, GST and deposit
               </p>
-
             </div>
-
           </div>
 
           <div className="wir-pricing">
 
-            {/* MONTHLY RENT */}
-
             <div className="wir-price-row">
-
-              <span>
-                Monthly Rent
-              </span>
-
+              <span>Billing Type</span>
               <strong>
-                {formatMoney(
-                  details.monthlyRent
-                )}
+                {details.billingType === "NON_GST"
+                  ? "NON-GST"
+                  : details.billingType}
               </strong>
-
             </div>
 
-            {/* DAILY RENT */}
+            <div className="wir-price-row">
+              <span>Pricing Type</span>
+              <strong>
+                {details.pricingType}
+              </strong>
+            </div>
 
-            {details.rentalDurationType ===
-              "DAYS" && (
+            {details.originalMonthlyRent !==
+              details.monthlyRent && (
+              <PriceRow
+                label="Original Monthly Rent"
+                value={
+                  details.originalMonthlyRent
+                }
+              />
+            )}
 
+            <PriceRow
+              label={
+                details.pricingType === "NEGOTIATED"
+                  ? "Negotiated Monthly Rent"
+                  : "Monthly Rent"
+              }
+              value={details.monthlyRent}
+            />
+
+            {details.negotiationReason && (
               <div className="wir-price-row">
-
-                <span>
-                  Daily Rent
-                </span>
-
+                <span>Negotiation Reason</span>
                 <strong>
-                  {formatMoney(
-                    details.dailyRent
-                  )}
+                  {details.negotiationReason}
                 </strong>
-
               </div>
             )}
 
-            {/* RENTAL DURATION */}
+            {details.rentalDurationType === "DAYS" && (
+              <PriceRow
+                label="Daily Rent"
+                value={details.dailyRent}
+              />
+            )}
 
             <div className="wir-price-row">
-
-              <span>
-                Rental Duration
-              </span>
-
+              <span>Rental Duration</span>
               <strong>
                 {details.rentalDuration}{" "}
-                {details.rentalDurationType ===
-                "DAYS"
-                  ? details.rentalDuration === 1
-                    ? "Day"
-                    : "Days"
-                  : details.rentalDuration === 1
-                  ? "Month"
+                {details.rentalDurationType === "DAYS"
+                  ? "Days"
                   : "Months"}
               </strong>
-
             </div>
 
-            {/* RENT SUBTOTAL */}
+            <PriceRow
+              label="Rent Subtotal"
+              value={details.rentSubtotal}
+            />
+
+            <PriceRow
+              label={
+                details.isNonGst
+                  ? "GST (Non-GST Billing)"
+                  : `GST (${details.gstPercentage}%)`
+              }
+              value={details.gstAmount}
+            />
+
+            <PriceRow
+              label="Total Rental Amount"
+              value={details.totalRent}
+              total
+            />
+
+            <PriceRow
+              label="Rent Paid"
+              value={details.rentPaidAmount}
+            />
+
+            <PriceRow
+              label="Rent Outstanding"
+              value={details.rentBalanceAmount}
+            />
 
             <div className="wir-price-row">
-
               <span>
-                Rent Subtotal
+                <ShieldCheck size={16} />
+                Security Deposit Required
               </span>
-
-              <strong>
-                {formatMoney(
-                  details.rentSubtotal
-                )}
-              </strong>
-
-            </div>
-
-            {/* GST */}
-
-            <div className="wir-price-row">
-
-              <span>
-                GST (
-                {details.gstPercentage}
-                %)
-              </span>
-
-              <strong>
-                {formatMoney(
-                  details.gstAmount
-                )}
-              </strong>
-
-            </div>
-
-            {/* RENT TOTAL */}
-
-            <div className="wir-price-total">
-
-              <span>
-                Total Rental Amount
-              </span>
-
-              <strong>
-                {formatMoney(
-                  details.totalRent
-                )}
-              </strong>
-
-            </div>
-
-            {/* SECURITY DEPOSIT */}
-
-            <div className="wir-price-row">
-
-              <span>
-                Security Deposit
-              </span>
-
               <strong>
                 {formatMoney(
                   details.securityDeposit
                 )}
               </strong>
-
             </div>
 
-            {/* DEPOSIT STATUS */}
+            <PriceRow
+              label="Deposit Received"
+              value={details.depositAmountPaid}
+            />
+
+            <PriceRow
+              label="Deposit Balance"
+              value={details.depositBalance}
+            />
 
             <div className="wir-price-row">
-
-              <span>
-                Security Deposit Status
-              </span>
+              <span>Deposit Status</span>
 
               <strong
                 className={
@@ -6815,621 +5194,271 @@ const loadDocuments = useCallback(async () => {
                 }
               >
                 {details.depositReceived
-                  ? "PAID / RECEIVED"
+                  ? "PAID"
+                  : details.depositAmountPaid > 0
+                  ? "PARTIAL"
                   : "PENDING"}
               </strong>
-
             </div>
 
-            {/* DEPOSIT RECEIVED DATE */}
+            {details.depositReceivedAt && (
+              <div className="wir-price-row">
+                <span>Deposit Payment Date</span>
+                <strong>
+                  {formatDateTime(
+                    details.depositReceivedAt
+                  )}
+                </strong>
+              </div>
+            )}
 
-            {details.depositReceived &&
-              details.depositReceivedAt && (
+            <PriceRow
+              label="Total Contract Value (Including Deposit)"
+              value={details.totalContractAmount}
+              total
+            />
 
-                <div className="wir-price-row">
+            <PriceRow
+              label="Total Recorded Collection"
+              value={details.totalCollected}
+            />
 
-                  <span>
-                    Deposit Received At
-                  </span>
+            <PriceRow
+              label="Total Outstanding"
+              value={details.totalOutstanding}
+              total
+            />
 
-                  <strong>
-                    {formatDateTime(
-                      details.depositReceivedAt
-                    )}
-                  </strong>
-
-                </div>
-              )}
-
-            {/* GRAND TOTAL */}
-
-            <div className="wir-price-total">
-
+            <div
+              className="wir-price-row"
+              style={{ marginTop: 12 }}
+            >
               <span>
-                Rent + GST
+                <BadgePercent size={16} />
+                GST Applied
               </span>
 
               <strong>
-                {formatMoney(
-                  details.totalRent
-                )}
+                {details.isNonGst
+                  ? "No — 0%"
+                  : details.billingType === "UNKNOWN"
+                  ? "Not confirmed"
+                  : `Yes — ${details.gstPercentage}%`}
               </strong>
-
-            </div>
-
-            <div className="wir-price-row">
-
-              <span>
-                Refundable Security Deposit
-              </span>
-
-              <strong>
-                {formatMoney(
-                  details.securityDeposit
-                )}
-              </strong>
-
-            </div>
-
-            <div className="wir-price-total">
-
-              <span>
-                Total Collected / Payable
-              </span>
-
-              <strong>
-                {formatMoney(
-                  details.totalRent +
-                    details.securityDeposit
-                )}
-              </strong>
-
             </div>
 
           </div>
-
         </section>
-
       </div>
 
-      {/* ======================================================
-          CUSTOMER DOCUMENTS
-      ====================================================== */}
+      {/* LAPTOP CONDITION PHOTOS */}
 
       <section className="wir-card wir-documents-card">
-
         <div className="wir-card-header">
+          <div className="wir-card-title-icon">
+            <Camera size={20} />
+          </div>
 
+          <div>
+            <h2>Laptop Condition Photos</h2>
+            <p>
+              Front, Back and Full Image uploaded
+              during handover
+            </p>
+          </div>
+
+          <div className="wir-documents-count">
+            {Object.keys(conditionPhotoMap).length}
+            {" / 3 Photos"}
+          </div>
+        </div>
+
+        {documentsLoading ? (
+          <div className="wir-documents-loading">
+            <Loader2
+              size={26}
+              className="wir-spin"
+            />
+            Loading laptop photos...
+          </div>
+        ) : documentsError ? (
+          <div className="wir-documents-error">
+            <AlertCircle size={20} />
+            <p>{documentsError}</p>
+
+            <button
+              type="button"
+              className="wir-btn wir-btn-secondary"
+              onClick={loadDocuments}
+            >
+              Retry
+            </button>
+          </div>
+        ) : (
+          <div className="wir-condition-details-grid">
+            {PHOTO_SIDES.map(({ key, label }) => {
+              const photo = conditionPhotoMap[key];
+
+              return photo ? (
+                renderDocumentCard(
+                  photo,
+                  key,
+                  label
+                )
+              ) : (
+                <div
+                  className="wir-condition-missing"
+                  key={key}
+                >
+                  <ImageIcon size={34} />
+                  <h3>{label}</h3>
+                  <p>Not uploaded yet</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {/* CUSTOMER DOCUMENTS */}
+
+      <section className="wir-card wir-documents-card">
+        <div className="wir-card-header">
           <div className="wir-card-title-icon">
             <FileCheck2 size={20} />
           </div>
 
           <div>
-
-            <h2>
-              Customer Documents
-            </h2>
-
+            <h2>Customer Documents</h2>
             <p>
-              Documents uploaded during rental
-              creation
+              Identity and verification documents
             </p>
-
           </div>
 
           <div className="wir-documents-count">
-
-            {documents.length}{" "}
-
-            {documents.length === 1
-              ? "Document"
-              : "Documents"}
-
+            {customerDocuments.length} Documents
           </div>
-
         </div>
 
-        {/* DOCUMENT LOADING */}
-
-        {documentsLoading && (
-
+        {documentsLoading ? (
           <div className="wir-documents-loading">
-
             <Loader2
               size={26}
               className="wir-spin"
             />
+            Loading documents...
+          </div>
+        ) : documentsError ? (
+          <div className="wir-documents-error">
+            <AlertCircle size={20} />
+            <p>{documentsError}</p>
 
-            <span>
-              Loading customer documents...
-            </span>
+            <button
+              type="button"
+              className="wir-btn wir-btn-secondary"
+              onClick={loadDocuments}
+            >
+              Retry
+            </button>
+          </div>
+        ) : customerDocuments.length === 0 ? (
+          <div className="wir-documents-empty">
+            <div className="wir-documents-empty-icon">
+              <FileText size={34} />
+            </div>
 
+            <h3>No documents uploaded</h3>
+            <p>
+              Customer documents will appear
+              here after upload.
+            </p>
+          </div>
+        ) : (
+          <div className="wir-documents-grid">
+            {customerDocuments.map(
+              (document, index) =>
+                renderDocumentCard(
+                  document,
+                  index
+                )
+            )}
           </div>
         )}
-
-        {/* DOCUMENT ERROR */}
-
-        {!documentsLoading &&
-          documentsError && (
-
-            <div className="wir-documents-error">
-
-              <AlertCircle size={20} />
-
-              <div>
-
-                <strong>
-                  Unable to load documents
-                </strong>
-
-                <p>
-                  {documentsError}
-                </p>
-
-              </div>
-
-              <button
-                type="button"
-                className="wir-btn wir-btn-secondary"
-                onClick={loadDocuments}
-              >
-                <RefreshCw size={16} />
-                Retry
-              </button>
-
-            </div>
-          )}
-
-        {/* NO DOCUMENTS */}
-
-        {!documentsLoading &&
-          !documentsError &&
-          documents.length === 0 && (
-
-            <div className="wir-documents-empty">
-
-              <div className="wir-documents-empty-icon">
-                <FileText size={34} />
-              </div>
-
-              <h3>
-                No documents uploaded
-              </h3>
-
-              <p>
-                Customer documents uploaded during
-                rental creation will appear here.
-              </p>
-
-            </div>
-          )}
-
-        {/* DOCUMENT GRID */}
-
-        {!documentsLoading &&
-          !documentsError &&
-          documents.length > 0 && (
-
-            <div className="wir-documents-grid">
-
-              {documents.map(
-                (document, index) => {
-
-                  const documentId =
-                    getId(document) ||
-                    `${document?.documentType}-${index}`;
-
-                  const documentUrl =
-                    normalizeFileUrl(
-                      document?.fileUrl ||
-                        document?.url ||
-                        document?.path
-                    );
-
-                  const pdf =
-                    isPdfDocument(
-                      document
-                    );
-
-                  const image =
-                    isImageDocument(
-                      document
-                    );
-
-                  const imageBroken =
-                    documentImageErrors[
-                      documentId
-                    ];
-
-                  const status =
-                    String(
-                      document?.verificationStatus ||
-                        "PENDING"
-                    ).toUpperCase();
-
-                  return (
-
-                    <article
-                      className="wir-document-card"
-                      key={documentId}
-                    >
-
-                      {/* DOCUMENT PREVIEW */}
-
-                      <div className="wir-document-preview">
-
-                        {image &&
-                        documentUrl &&
-                        !imageBroken ? (
-
-                          <img
-                            src={documentUrl}
-                            alt={getDocumentLabel(
-                              document?.documentType
-                            )}
-                            className="wir-document-image"
-                            onError={() =>
-                              handleDocumentImageError(
-                                documentId
-                              )
-                            }
-                          />
-
-                        ) : pdf &&
-                          documentUrl ? (
-
-                          <iframe
-                            src={`${documentUrl}#toolbar=0&navpanes=0&scrollbar=1`}
-                            title={getDocumentLabel(
-                              document?.documentType
-                            )}
-                            className="wir-document-pdf"
-                          />
-
-                        ) : (
-
-                          <div className="wir-document-file-placeholder">
-
-                            <FileText
-                              size={48}
-                            />
-
-                            <span>
-                              {pdf
-                                ? "PDF Document"
-                                : "Document File"}
-                            </span>
-
-                          </div>
-                        )}
-
-                        {/* FILE TYPE BADGE */}
-
-                        <span className="wir-document-file-type">
-
-                          {pdf
-                            ? "PDF"
-                            : image
-                            ? "IMAGE"
-                            : "FILE"}
-
-                        </span>
-
-                      </div>
-
-                      {/* DOCUMENT INFORMATION */}
-
-                      <div className="wir-document-content">
-
-                        <div className="wir-document-title-row">
-
-                          <div>
-
-                            <h3>
-                              {getDocumentLabel(
-                                document?.documentType
-                              )}
-                            </h3>
-
-                            <p>
-                              {document?.fileName ||
-                                "Uploaded document"}
-                            </p>
-
-                          </div>
-
-                          <span
-                            className={`wir-document-status ${getDocumentStatusClass(
-                              status
-                            )}`}
-                          >
-
-                            {status ===
-                            "APPROVED" ? (
-
-                              <CheckCircle2
-                                size={14}
-                              />
-
-                            ) : status ===
-                              "REJECTED" ? (
-
-                              <XCircle
-                                size={14}
-                              />
-
-                            ) : (
-
-                              <Clock3
-                                size={14}
-                              />
-                            )}
-
-                            {status}
-
-                          </span>
-
-                        </div>
-
-                        {/* UPLOADED DATE */}
-
-                        {document?.createdAt && (
-
-                          <div className="wir-document-meta">
-
-                            <span>
-                              Uploaded
-                            </span>
-
-                            <strong>
-                              {formatDateTime(
-                                document.createdAt
-                              )}
-                            </strong>
-
-                          </div>
-                        )}
-
-                        {/* VERIFIED DATE */}
-
-                        {document?.verifiedAt && (
-
-                          <div className="wir-document-meta">
-
-                            <span>
-                              Verified
-                            </span>
-
-                            <strong>
-                              {formatDateTime(
-                                document.verifiedAt
-                              )}
-                            </strong>
-
-                          </div>
-                        )}
-
-                        {/* REJECTION REASON */}
-
-                        {status ===
-                          "REJECTED" &&
-                          document?.rejectionReason && (
-
-                            <div className="wir-document-rejection">
-
-                              <XCircle
-                                size={16}
-                              />
-
-                              <div>
-
-                                <strong>
-                                  Rejection Reason
-                                </strong>
-
-                                <p>
-                                  {
-                                    document.rejectionReason
-                                  }
-                                </p>
-
-                              </div>
-
-                            </div>
-                          )}
-
-                        {/* DOCUMENT ACTIONS */}
-
-                        <div className="wir-document-actions">
-
-                          {documentUrl && (
-                            <>
-                              <a
-                                href={
-                                  documentUrl
-                                }
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="wir-document-action-btn primary"
-                              >
-                                <Eye
-                                  size={16}
-                                />
-                                View
-                              </a>
-
-                              <a
-                                href={
-                                  documentUrl
-                                }
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                download={
-                                  document?.fileName ||
-                                  true
-                                }
-                                className="wir-document-action-btn secondary"
-                              >
-                                <Download
-                                  size={16}
-                                />
-                                Download
-                              </a>
-
-                              <a
-                                href={
-                                  documentUrl
-                                }
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="wir-document-action-btn secondary"
-                              >
-                                <ExternalLink
-                                  size={16}
-                                />
-                                Open
-                              </a>
-                            </>
-                          )}
-
-                        </div>
-
-                      </div>
-
-                    </article>
-                  );
-                }
-              )}
-
-            </div>
-          )}
-
       </section>
 
-      {/* ======================================================
-          NOTES
-      ====================================================== */}
+      {/* NOTES */}
 
       {details.notes && (
-
         <section className="wir-card wir-notes-card">
-
           <div className="wir-card-header">
-
             <div className="wir-card-title-icon">
               <FileText size={20} />
             </div>
 
             <div>
-
-              <h2>
-                Handover / Rental Notes
-              </h2>
-
-              <p>
-                Notes saved during rental creation
-              </p>
-
+              <h2>Handover / Rental Notes</h2>
+              <p>Saved rental notes</p>
             </div>
-
           </div>
 
           <div className="wir-notes">
             {details.notes}
           </div>
-
         </section>
       )}
 
-      {/* ======================================================
-          TIMELINE
-      ====================================================== */}
+      {/* TIMELINE */}
 
       <section className="wir-card">
-
         <div className="wir-card-header">
-
           <div className="wir-card-title-icon">
             <Clock3 size={20} />
           </div>
 
           <div>
-
-            <h2>
-              Rental Timeline
-            </h2>
-
-            <p>
-              Important rental events
-            </p>
-
+            <h2>Rental Timeline</h2>
+            <p>Important rental events</p>
           </div>
-
         </div>
 
         <div className="wir-timeline">
-
-          {/* CREATED */}
-
           <div className="wir-timeline-item completed">
-
             <div className="wir-timeline-dot">
               <CheckCircle2 size={16} />
             </div>
 
             <div>
-
-              <strong>
-                Rental Created
-              </strong>
-
+              <strong>Rental Created</strong>
               <span>
-                {formatDateTime(
-                  details.createdAt
-                )}
+                {formatDateTime(details.createdAt)}
               </span>
-
             </div>
-
           </div>
-
-          {/* DEPOSIT */}
 
           <div
             className={`wir-timeline-item ${
-              details.depositReceived
+              details.depositAmountPaid > 0
                 ? "completed"
                 : ""
             }`}
           >
-
             <div className="wir-timeline-dot">
               <ShieldCheck size={16} />
             </div>
 
             <div>
-
-              <strong>
-                Security Deposit
-              </strong>
-
+              <strong>Security Deposit</strong>
               <span>
-
                 {details.depositReceived
-                  ? details.depositReceivedAt
-                    ? `Paid / Received on ${formatDateTime(
-                        details.depositReceivedAt
-                      )}`
-                    : "Paid / Received"
-                  : "Security deposit pending"}
-
+                  ? "Fully received"
+                  : details.depositAmountPaid > 0
+                  ? `Partially received: ${formatMoney(
+                      details.depositAmountPaid
+                    )}`
+                  : "Pending"}
               </span>
-
             </div>
-
           </div>
-
-          {/* ALLOCATED */}
 
           <div
             className={`wir-timeline-item ${
@@ -7438,32 +5467,21 @@ const loadDocuments = useCallback(async () => {
                 : ""
             }`}
           >
-
             <div className="wir-timeline-dot">
               <Package size={16} />
             </div>
 
             <div>
-
-              <strong>
-                Rental Allocated
-              </strong>
-
+              <strong>Rental Allocated</strong>
               <span>
-
                 {details.allocatedAt
                   ? formatDateTime(
                       details.allocatedAt
                     )
                   : "Not allocated yet"}
-
               </span>
-
             </div>
-
           </div>
-
-          {/* RETURNED */}
 
           <div
             className={`wir-timeline-item ${
@@ -7472,52 +5490,38 @@ const loadDocuments = useCallback(async () => {
                 : ""
             }`}
           >
-
             <div className="wir-timeline-dot">
               <RefreshCw size={16} />
             </div>
 
             <div>
-
-              <strong>
-                Rental Returned
-              </strong>
-
+              <strong>Rental Returned</strong>
               <span>
-
                 {details.returnedAt
                   ? formatDateTime(
                       details.returnedAt
                     )
                   : "Not returned yet"}
-
               </span>
-
             </div>
-
           </div>
-
         </div>
-
       </section>
 
-      {/* ======================================================
-          FOOTER ACTIONS
-      ====================================================== */}
+      {/* FOOTER */}
 
       <div className="wir-footer-actions">
-
         <button
+          type="button"
           className="wir-btn wir-btn-secondary"
-          onClick={() =>
-            navigate(-1)
-          }
+          onClick={() => navigate(-1)}
         >
           <ArrowLeft size={18} />
           Back to Rentals
         </button>
 
         <button
+          type="button"
           className="wir-btn wir-btn-primary"
           onClick={() =>
             navigate(
@@ -7528,12 +5532,9 @@ const loadDocuments = useCallback(async () => {
           <Package size={18} />
           Create New Walk-In Rental
         </button>
-
       </div>
-
     </div>
   );
 }
 
 export default WalkInRentalDetails;
-

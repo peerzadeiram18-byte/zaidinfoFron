@@ -1,352 +1,11 @@
-// // // import { useEffect, useState } from "react";
-// // // import axios from "axios";
-// // // import "./EmployeeList.css";
-// // // import {
-
-// // // updateEmployeeStatus
-
-// // // } from "../../../services/authService";
-
-
-// // // function EmployeeList() {
-
-// // //   const token = localStorage.getItem("token");
-
-// // //   const [employees, setEmployees] = useState([]);
-
-// // //   useEffect(() => {
-// // //     fetchEmployees();
-// // //   }, []);
-
-// // //   const fetchEmployees = async () => {
-
-// // //     try {
-
-// // //       const res = await axios.get(
-// // //         "http://localhost:5000/api/users/employees",
-// // //         {
-// // //           headers: {
-// // //             Authorization: `Bearer ${token}`,
-// // //           },
-// // //         }
-// // //       );
-
-// // //       console.log(res.data);
-
-// // //       setEmployees(res.data.data || []);
-
-// // //     } catch (err) {
-
-// // //       console.log(err);
-
-// // //     }
-
-// // //   };
-
-
-// // //   const changeStatus = async (
-
-// // // id,
-
-// // // status
-
-// // // )=>{
-
-// // // try{
-
-// // // await updateEmployeeStatus(
-
-// // // id,
-
-// // // status
-
-// // // );
-
-// // // fetchEmployees();
-
-// // // }
-
-// // // catch(error){
-
-// // // console.log(error);
-
-// // // alert("Unable To Update Status");
-
-// // // }
-
-// // // };
-
-// // //   return (
-
-// // //     <div className="employee-list-page">
-
-// // //       <h2>Employee List</h2>
-
-// // //       <table>
-
-// // //         <thead>
-
-// // //           <tr>
-
-// // //             <th>Name</th>
-// // //             <th>Email</th>
-// // //             <th>Phone</th>
-// // //             <th>Role</th>
-// // //             <th>Department</th>
-// // //             <th>Designation</th>
-// // //              <th>Joining Date</th>
-// // //             <th>Status</th>
-
-// // //           </tr>
-
-// // //         </thead>
-
-// // //         <tbody>
-
-// // //           {employees.length === 0 ? (
-
-// // //             <tr>
-
-// // //               <td colSpan="5">
-// // //                 No Employee Found
-// // //               </td>
-
-// // //             </tr>
-
-// // //           ) : (
-
-// // //             employees.map((employee) => (
-
-// // //               <tr key={employee._id}>
-
-// // //                 <td>
-// // //                   {employee.firstName} {employee.lastName}
-// // //                 </td>
-
-// // //                 <td>{employee.email}</td>
-
-// // //                 <td>{employee.phone}</td>
-
-// // //                 <td>{employee.role}</td>
-
-// // //                 <td>{employee.department}</td>
-
-// // // <td>{employee.designation}</td>
-
-// // // <td>
-// // //   {employee.joiningDate
-// // //     ? new Date(employee.joiningDate).toLocaleDateString()
-// // //     : "-"}
-// // // </td>
-
-// // //                 <td>
-
-// // // <select
-
-// // // value={employee.status}
-
-// // // onChange={(e)=>
-
-// // // changeStatus(
-
-// // // employee._id,
-
-// // // e.target.value
-
-// // // )
-
-// // // }
-
-// // // >
-
-// // // <option value="ACTIVE">
-
-// // // ACTIVE
-
-// // // </option>
-
-// // // <option value="INACTIVE">
-
-// // // INACTIVE
-
-// // // </option>
-
-// // // <option value="BLOCKED">
-
-// // // BLOCKED
-
-// // // </option>
-
-// // // <option value="DELETED">
-
-// // // DELETED
-
-// // // </option>
-
-// // // </select>
-
-// // // </td>
-
-// // //               </tr>
-
-// // //             ))
-
-// // //           )}
-
-// // //         </tbody>
-
-// // //       </table>
-
-// // //     </div>
-
-// // //   );
-
-// // // }
-
-// // // export default EmployeeList;
-
-
-
-// // import { useEffect, useState } from "react";
-// // import axios from "axios";
-// // import { useNavigate } from "react-router-dom"; // Added for routing
-// // import "./EmployeeList.css";
-// // import { updateEmployeeStatus } from "../../../services/authService";
-// // import SalaryModal from "../../../components/Admin/Salary/SalaryModal"; // Adjust relative path to SalaryModal
-
-// // function EmployeeList() {
-// //   const token = localStorage.getItem("token");
-// //   const navigate = useNavigate();
-
-// //   const [employees, setEmployees] = useState([]);
-// //   const [selectedSalaryEmployeeId, setSelectedSalaryEmployeeId] = useState(null);
-
-// //   useEffect(() => {
-// //     fetchEmployees();
-// //   }, []);
-
-// //   const fetchEmployees = async () => {
-// //     try {
-// //       const res = await axios.get("http://localhost:5000/api/users/employees", {
-// //         headers: {
-// //           Authorization: `Bearer ${token}`,
-// //         },
-// //       });
-// //       setEmployees(res.data.data || []);
-// //     } catch (err) {
-// //       console.log(err);
-// //     }
-// //   };
-
-// //   const changeStatus = async (id, status) => {
-// //     try {
-// //       await updateEmployeeStatus(id, status);
-// //       fetchEmployees();
-// //     } catch (error) {
-// //       console.log(error);
-// //       alert("Unable To Update Status");
-// //     }
-// //   };
-
-// //   return (
-// //     <div className="employee-list-page">
-// //       <h2>Employee List</h2>
-// //       <table>
-// //         <thead>
-// //           <tr>
-// //             <th>Name</th>
-// //             <th>Email</th>
-// //             <th>Phone</th>
-// //             <th>Role</th>
-// //             <th>Department</th>
-// //             <th>Designation</th>
-// //             <th>Joining Date</th>
-// //             <th>Status</th>
-// //             <th>Actions</th> {/* Added Action Column */}
-// //           </tr>
-// //         </thead>
-
-// //         <tbody>
-// //           {employees.length === 0 ? (
-// //             <tr>
-// //               <td colSpan="9">No Employee Found</td>
-// //             </tr>
-// //           ) : (
-// //             employees.map((employee) => (
-// //               <tr key={employee._id}>
-// //                 <td>{employee.firstName} {employee.lastName}</td>
-// //                 <td>{employee.email}</td>
-// //                 <td>{employee.phone}</td>
-// //                 <td>{employee.role}</td>
-// //                 <td>{employee.department}</td>
-// //                 <td>{employee.designation}</td>
-// //                 <td>
-// //                   {employee.joiningDate
-// //                     ? new Date(employee.joiningDate).toLocaleDateString()
-// //                     : "-"}
-// //                 </td>
-
-// //                 <td>
-// //                   <select
-// //                     value={employee.status}
-// //                     onChange={(e) => changeStatus(employee._id, e.target.value)}
-// //                   >
-// //                     <option value="ACTIVE">ACTIVE</option>
-// //                     <option value="INACTIVE">INACTIVE</option>
-// //                     <option value="BLOCKED">BLOCKED</option>
-// //                     <option value="DELETED">DELETED</option>
-// //                   </select>
-// //                 </td>
-
-// //                 {/* ACTION BUTTONS */}
-// //                 <td>
-// //                   <div style={{ display: "flex", gap: "8px" }}>
-// //                     <button
-// //                       onClick={() => navigate(`/admin/edit-employee/${employee._id}`)}
-// //                       className="btn-edit"
-// //                     >
-// //                       Edit
-// //                     </button>
-// //                     <button
-// //                       onClick={() => setSelectedSalaryEmployeeId(employee._id)}
-// //                       className="btn-salary"
-// //                       style={{ backgroundColor: "#059669", color: "#fff", border: "none", padding: "4px 8px", borderRadius: "4px", cursor: "pointer" }}
-// //                     >
-// //                       Salary
-// //                     </button>
-// //                   </div>
-// //                 </td>
-// //               </tr>
-// //             ))
-// //           )}
-// //         </tbody>
-// //       </table>
-
-// //       {/* Salary Modal Drawer */}
-// //       {selectedSalaryEmployeeId && (
-// //         <SalaryModal
-// //           employeeId={selectedSalaryEmployeeId}
-// //           onClose={() => setSelectedSalaryEmployeeId(null)}
-// //         />
-// //       )}
-// //     </div>
-// //   );
-// // }
-
-// // export default EmployeeList;
-
-
-
 // import { useEffect, useState } from "react";
 // import axios from "axios";
 // import { useNavigate } from "react-router-dom";
 // import "./EmployeeList.css";
 // import { updateEmployeeStatus } from "../../../services/authService";
 // import SalaryModal from "../../../components/Admin/Salary/SalaryModal";
-// import { toast } from "react-toastify";
+// const API_URL = import.meta.env.VITE_API_URL;
 
-
-// const API = import.meta.env.VITE_API_URL;
 
 // function EmployeeList() {
 //   const navigate = useNavigate();
@@ -374,8 +33,8 @@
 //       //   }
 //       // );
 
-//       const res = await axios.get(
-//   `${API}/users/employees`,
+// const res = await axios.get(
+//   `${API_URL}/users/employees`,
 //   {
 //     headers: {
 //       Authorization: `Bearer ${token}`,
@@ -386,7 +45,7 @@
 //       setEmployees(res.data.data || []);
 //     } catch (error) {
 //       console.log(error);
-//       toast.error("Unable to fetch employees");
+//       alert("Unable to fetch employees");
 //     } finally {
 //       setLoading(false);
 //     }
@@ -398,7 +57,7 @@
 //       fetchEmployees();
 //     } catch (error) {
 //       console.log(error);
-//       toast.error("Unable To Update Status");
+//       alert("Unable To Update Status");
 //     }
 //   };
 
@@ -545,7 +204,6 @@
 
 // export default EmployeeList;
 
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -572,23 +230,14 @@ function EmployeeList() {
     try {
       setLoading(true);
 
-      // const res = await axios.get(
-      //   "http://localhost:5000/api/users/employees",
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
-
-const res = await axios.get(
-  `${API_URL}/users/employees`,
-  {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }
-);
+      const res = await axios.get(
+        `${API_URL}/users/employees`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       setEmployees(res.data.data || []);
     } catch (error) {
@@ -636,21 +285,21 @@ const res = await axios.get(
 
           {loading ? (
             <tr>
-              <td colSpan="11">Loading...</td>
+              <td colSpan="11" className="emp-state">Loading...</td>
             </tr>
           ) : employees.length === 0 ? (
             <tr>
-              <td colSpan="11">No Employee Found</td>
+              <td colSpan="11" className="emp-state">No Employee Found</td>
             </tr>
           ) : (
             employees.map((employee) => (
               <tr key={employee._id}>
 
                 {/* Employee ID */}
-                <td>{employee.employeeId || "-"}</td>
+                <td className="emp-id">{employee.employeeId || "-"}</td>
 
                 {/* Employee Name */}
-                <td>
+                <td className="emp-name">
                   {employee.firstName} {employee.lastName}
                 </td>
 
@@ -680,12 +329,19 @@ const res = await axios.get(
 
                 {/* System Access */}
                 <td>
-                  {employee.hasSystemAccess ? "YES" : "NO"}
+                  <span
+                    className={`emp-pill ${
+                      employee.hasSystemAccess ? "is-yes" : "is-no"
+                    }`}
+                  >
+                    {employee.hasSystemAccess ? "YES" : "NO"}
+                  </span>
                 </td>
 
                 {/* Status */}
                 <td>
                   <select
+                    data-status={employee.status}
                     value={employee.status}
                     onChange={(e) =>
                       changeStatus(employee._id, e.target.value)
@@ -701,13 +357,7 @@ const res = await axios.get(
                 {/* Actions */}
                 <td>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "8px",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div className="emp-actions">
                     <button
                       className="btn-edit"
                       onClick={() =>

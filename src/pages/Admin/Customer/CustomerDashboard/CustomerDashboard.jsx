@@ -19,6 +19,7 @@
 // import {
 //   useLocation,
 //   useNavigate,
+//   useParams,
 // } from "react-router-dom";
 
 // import "./CustomerDashboard.css";
@@ -37,12 +38,10 @@
 // } from "../../../../services/notificationService";
 
 // // =====================================================
-// // API
+// // API (sirf .env se: VITE_API_URL)
 // // =====================================================
 
-// const API =
-//   import.meta.env.VITE_API_URL ||
-//   "http://localhost:5000/api";
+// const API = import.meta.env.VITE_API_URL || "";
 
 // // =====================================================
 // // SERVER URL
@@ -57,6 +56,7 @@
 // const CustomerDashboard = () => {
 //   const location = useLocation();
 //   const navigate = useNavigate();
+//   const { id: orderId } = useParams();
 
 //   // ===================================================
 //   // ACTIVE MENU
@@ -326,6 +326,15 @@
 
 //       case "orders":
 //         return <MyOrders />;
+
+        
+// // case "order-details":
+// //   return <OrderDetails />;
+
+// case "order-details":
+//   return orderId
+//     ? <OrderDetails orderId={orderId} />
+//     : <p>Order ID not found.</p>;
 
 //       // -----------------------------------------------
 //       // WISHLIST
@@ -926,6 +935,7 @@ import {
   FaCheck,
   FaBars,
   FaTimes,
+  FaChevronDown,
 } from "react-icons/fa";
 
 import {
@@ -949,6 +959,11 @@ import {
   markAllNotificationsAsRead,
 } from "../../../../services/notificationService";
 
+// Full-colour logo (same file the Corporate / HR layouts use).
+// NOTE: path assumes this file sits 4 folders below /src, like the
+// services import above. Adjust if your assets folder is elsewhere.
+import logo from "../../../../assets/images/zaidlogo-light.png";
+
 // =====================================================
 // API (sirf .env se: VITE_API_URL)
 // =====================================================
@@ -960,6 +975,28 @@ const API = import.meta.env.VITE_API_URL || "";
 // =====================================================
 
 const SERVER_URL = API.replace(/\/api\/?$/, "");
+
+// =====================================================
+// MENU LABELS (UI only: shown in the top bar)
+// =====================================================
+
+const MENU_LABELS = {
+  profile: "My Profile",
+  orders: "My Orders",
+  "order-details": "Order Details",
+  wishlist: "Wishlist",
+  cart: "Cart",
+  address: "My Address",
+  notifications: "Notifications",
+  password: "Change Password",
+};
+
+// =====================================================
+// PAGES THAT GET THE SHARED "CART-STYLE" THEME (UI only)
+// Cart and Notifications already ship their own styling.
+// =====================================================
+
+const SELF_STYLED_MENUS = ["cart", "notifications"];
 
 // =====================================================
 // CUSTOMER DASHBOARD
@@ -984,6 +1021,9 @@ const CustomerDashboard = () => {
 
   const [customerSidebarOpen, setCustomerSidebarOpen] =
     useState(false);
+
+  // Desktop collapse (UI only, same behaviour as the corporate layout)
+  const [collapsed, setCollapsed] = useState(false);
 
   // ===================================================
   // USER
@@ -1182,7 +1222,7 @@ const CustomerDashboard = () => {
 
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(
       user.fullName
-    )}&background=16a34a&color=fff&bold=true`;
+    )}&background=57a41d&color=fff&bold=true`;
   };
 
   // ===================================================
@@ -1201,6 +1241,18 @@ const CustomerDashboard = () => {
   const handleMenuChange = (menu) => {
     setActiveMenu(menu);
     setCustomerSidebarOpen(false);
+  };
+
+  // ===================================================
+  // HAMBURGER: drawer on small screens, collapse on desktop
+  // ===================================================
+
+  const handleToggle = () => {
+    if (window.matchMedia("(min-width: 1025px)").matches) {
+      setCollapsed((current) => !current);
+    } else {
+      setCustomerSidebarOpen(true);
+    }
   };
 
   // ===================================================
@@ -1239,14 +1291,10 @@ const CustomerDashboard = () => {
       case "orders":
         return <MyOrders />;
 
-        
-// case "order-details":
-//   return <OrderDetails />;
-
-case "order-details":
-  return orderId
-    ? <OrderDetails orderId={orderId} />
-    : <p>Order ID not found.</p>;
+      case "order-details":
+        return orderId
+          ? <OrderDetails orderId={orderId} />
+          : <p>Order ID not found.</p>;
 
       // -----------------------------------------------
       // WISHLIST
@@ -1435,47 +1483,104 @@ case "order-details":
   }, [customerSidebarOpen]);
 
   // ===================================================
+  // CONTENT WRAPPER CLASSES (UI only)
+  //   customer-page-<menu>   -> per-page hook
+  //   customer-page-themed   -> shared Cart-style theme for
+  //                             Orders / Wishlist / Address /
+  //                             Profile / Password
+  // ===================================================
+
+  const contentClassName = [
+    "customer-dashboard-content-card",
+    `customer-page-${activeMenu}`,
+    SELF_STYLED_MENUS.includes(activeMenu)
+      ? ""
+      : "customer-page-themed",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  // ===================================================
   // JSX
   // ===================================================
 
   return (
-    <div className="customer-dashboard-root">
+    <div
+      className={`customer-dashboard-root${
+        collapsed ? " is-collapsed" : ""
+      }`}
+    >
 
       {/* =================================================
-          MOBILE TOP BAR
+          TOP BAR (all screen sizes, like the corporate layout)
       ================================================= */}
 
-      <div className="customer-dashboard-mobile-topbar">
+      <header className="customer-dashboard-topbar">
         <button
           type="button"
-          className="customer-dashboard-mobile-menu-btn"
-          onClick={() =>
-            setCustomerSidebarOpen(true)
-          }
-          aria-label="Open customer menu"
+          className="customer-dashboard-menu-toggle"
+          onClick={handleToggle}
+          aria-label="Toggle customer menu"
+          aria-expanded={customerSidebarOpen}
         >
           <FaBars />
         </button>
 
-        <div className="customer-dashboard-mobile-brand">
-          <span className="customer-dashboard-mobile-logo">
-            Z
-          </span>
+        <h2 className="customer-dashboard-topbar-title">
+          {MENU_LABELS[activeMenu] || "My Profile"}
+        </h2>
 
-          <span>
-            Zaid Infotech
-          </span>
+        <div className="customer-dashboard-topbar-right">
+          <button
+            type="button"
+            className="customer-dashboard-bell"
+            onClick={() =>
+              handleMenuChange("notifications")
+            }
+            aria-label={
+              unreadCount > 0
+                ? `Notifications, ${unreadCount} unread`
+                : "Notifications"
+            }
+          >
+            <FaBell />
+
+            {unreadCount > 0 && (
+              <span className="customer-dashboard-bell-badge">
+                {unreadCount > 99
+                  ? "99+"
+                  : unreadCount}
+              </span>
+            )}
+          </button>
+
+          <div className="customer-dashboard-topbar-user">
+            <img
+              src={getAvatarUrl()}
+              alt={user.fullName}
+              className="customer-dashboard-topbar-avatar"
+              onError={(event) => {
+                event.currentTarget.src =
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                    user.fullName
+                  )}&background=57a41d&color=fff&bold=true`;
+              }}
+            />
+
+            <div className="customer-dashboard-topbar-meta">
+              <span className="customer-dashboard-topbar-name">
+                {user.fullName}
+              </span>
+
+              <span className="customer-dashboard-topbar-role">
+                {user.role}
+              </span>
+            </div>
+
+            <FaChevronDown className="customer-dashboard-topbar-chevron" />
+          </div>
         </div>
-
-        <button
-          type="button"
-          className="customer-dashboard-mobile-home-btn"
-          onClick={handleHome}
-          aria-label="Home"
-        >
-          <FaHome />
-        </button>
-      </div>
+      </header>
 
       {/* =================================================
           MOBILE OVERLAY
@@ -1505,16 +1610,39 @@ case "order-details":
             SIDEBAR HEADER
         ================================================= */}
 
+        {/* Decorative wave (same SVG as the corporate sidebar) */}
+        <svg
+          className="customer-dashboard-sidebar-wave"
+          viewBox="0 0 260 260"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {Array.from({ length: 14 }).map((_, i) => (
+            <path
+              key={i}
+              d={`M-10 ${190 + i * 3} C 50 ${150 + i * 2}, 90 ${230 - i * 2}, 150 ${
+                170 + i * 2
+              } S 230 ${110 + i * 3}, 280 ${120 + i * 2}`}
+              fill="none"
+              stroke="#57a41d"
+              strokeWidth="0.6"
+              opacity={0.14 + i * 0.03}
+            />
+          ))}
+        </svg>
+
         <div className="customer-dashboard-sidebar-header">
 
           <div className="customer-dashboard-brand">
-            <div className="customer-dashboard-brand-mark">
-              Z
-            </div>
-
-            <div className="customer-dashboard-brand-content">
-              <h2>Zaid Infotech</h2>
-              <span>Customer Account</span>
+            {/* Logo sits on a light card so it keeps its colours */}
+            <div className="customer-dashboard-brand-card">
+              <img
+                src={logo}
+                alt="Zaid Infotech"
+                className="customer-dashboard-logo"
+                decoding="async"
+                draggable={false}
+              />
             </div>
 
             <button
@@ -1543,7 +1671,7 @@ case "order-details":
                   event.currentTarget.src =
                     `https://ui-avatars.com/api/?name=${encodeURIComponent(
                       user.fullName
-                    )}&background=16a34a&color=fff&bold=true`;
+                    )}&background=57a41d&color=fff&bold=true`;
                 }}
               />
 
@@ -1778,7 +1906,6 @@ case "order-details":
 
       {/* =================================================
           RIGHT CONTENT
-          NO GLOBAL HEADER HERE
       ================================================= */}
 
       <main className="customer-dashboard-main">
@@ -1799,7 +1926,7 @@ case "order-details":
 
               <h1>
                 Welcome Back,{" "}
-                {user.fullName.split(" ")[0]} 👋
+                <span>{user.fullName.split(" ")[0]}</span> 👋
               </h1>
 
               <p>
@@ -1818,7 +1945,7 @@ case "order-details":
               DYNAMIC CONTENT
           ================================================= */}
 
-          <div className="customer-dashboard-content-card">
+          <div className={contentClassName}>
             {renderPage()}
           </div>
 

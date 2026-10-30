@@ -1,255 +1,663 @@
+
+/* =========================================================
+   TECHNICIAN DASHBOARD — SIDEBAR DESIGN
+   Reference: Dark navy sidebar with emerald active state
+   ========================================================= */
+
 :root {
-  --primary-blue: #3b82f6;
-  --primary-soft: #eff6ff;
-  --bg-page: #f8fafc;
-  --bg-white: #ffffff;
-  --text-dark: #1e293b;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
-  --border-light: #e2e8f0;
-  --sidebar-w: 240px;
+  --tech-sidebar-width: 272px;
+  --tech-sidebar-bg: #061c2b;
+  --tech-sidebar-bg-light: #092536;
+  --tech-sidebar-text: #f1f5f9;
+  --tech-sidebar-muted: #b8c7d5;
+  --tech-sidebar-active: #078b70;
+  --tech-sidebar-active-light: #079b7b;
+  --tech-sidebar-border: rgba(255, 255, 255, 0.09);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+/* Main layout */
 .tech-container {
   display: flex;
-  min-height: 100vh;
   width: 100%;
-  background-color: var(--bg-page);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  background: #f4f7fb;
+  font-family: "Poppins", "Segoe UI", Arial, sans-serif;
 }
 
-/* Sidebar */
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
 .tech-sidebar {
-  width: var(--sidebar-w);
-  min-width: var(--sidebar-w);
-  background: var(--bg-white);
-  border-right: 1px solid var(--border-light);
+  width: var(--tech-sidebar-width);
+  min-width: var(--tech-sidebar-width);
+  min-height: 100vh;
+  height: 100vh;
+
   display: flex;
   flex-direction: column;
-  height: 100vh;
+
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 100;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      ellipse at 80% 100%,
+      rgba(0, 142, 116, 0.12),
+      transparent 35%
+    ),
+    linear-gradient(
+      165deg,
+      #071b29 0%,
+      #061d2d 55%,
+      #041827 100%
+    );
+
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--tech-sidebar-text);
 }
 
+/* Subtle decorative wave effect at bottom */
+.tech-sidebar::after {
+  content: "";
+  position: absolute;
+  bottom: 34px;
+  left: -40px;
+  width: 360px;
+  height: 145px;
+  pointer-events: none;
+  opacity: 0.6;
+
+  background:
+    radial-gradient(
+      ellipse at 65% 100%,
+      transparent 42%,
+      rgba(0, 170, 140, 0.2) 43%,
+      transparent 44%
+    ),
+    radial-gradient(
+      ellipse at 45% 100%,
+      transparent 48%,
+      rgba(0, 133, 123, 0.22) 49%,
+      transparent 50%
+    );
+
+  border-radius: 50%;
+}
+
+/* =========================================================
+   PROFILE / BRAND AREA
+   ========================================================= */
+
 .tech-profile {
-  padding: 20px 18px;
+  position: relative;
+  z-index: 1;
+
+  min-height: 112px;
+  padding: 22px 20px;
+
   display: flex;
-  /* flex-direction: column; */
   align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid var(--border-light);
+  gap: 13px;
+
+  background: transparent;
+  border-bottom: 1px solid var(--tech-sidebar-border);
 }
 
 .tech-profile-img {
-  width: 44px;
-  height: 44px;
+  display: block;
+  flex-shrink: 0;
+
+  width: 48px;
+  height: 48px;
+
   border-radius: 50%;
   object-fit: cover;
+
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  background: #102f40;
 }
 
 .tech-profile-info {
+  min-width: 0;
   display: flex;
-  align-items: start;
   flex-direction: column;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 5px;
   overflow: hidden;
 }
 
 .tech-profile-info h3 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-dark);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
+
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .tech-badge {
-  background: #dbeafe;
-  color: #2563eb;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
 
+  max-width: 100%;
+  padding: 3px 8px;
+
+  color: #69e0c0;
+  background: rgba(0, 153, 119, 0.14);
+  border: 1px solid rgba(45, 212, 168, 0.15);
+  border-radius: 5px;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.65px;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-/* Sidebar Nav */
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
 .tech-nav-list {
-  padding: 16px 12px;
+  position: relative;
+  z-index: 2;
+
+  flex: 1;
+  min-height: 0;
+
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 7px;
+
+  padding: 20px 14px 18px;
+  overflow-x: hidden;
   overflow-y: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
 }
 
+.tech-nav-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tech-nav-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tech-nav-list::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 10px;
+}
+
+/* Individual navigation link */
 .tech-nav-item {
+  position: relative;
+
+  width: 100%;
+  min-height: 47px;
+  flex-shrink: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
+
+  padding: 0 15px;
+
+  color: var(--tech-sidebar-text);
+  background: transparent;
+
+  border: 1px solid transparent;
+  border-radius: 11px;
+
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: 500;
-  color: var(--text-muted);
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  line-height: 1.4;
+
+  transition:
+    background 0.22s ease,
+    color 0.22s ease,
+    border-color 0.22s ease,
+    transform 0.22s ease;
 }
 
-.tech-nav-item:hover {
-  background-color: #f1f5f9;
-  color: var(--text-dark);
-}
-
-.tech-nav-item.active {
-  background-color: var(--primary-soft);
-  color: var(--primary-blue);
-  font-weight: 600;
-}
-
+/* Icon + label */
 .nav-item-left {
+  min-width: 0;
+
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
 .nav-icon {
-  font-size: 1rem;
-  display: flex;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #e4edf5;
+  font-size: 19px;
+
+  transition: color 0.22s ease;
 }
 
-/* Main Content */
+.nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Hover state */
+.tech-nav-item:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.075);
+  border-color: rgba(255, 255, 255, 0.035);
+}
+
+.tech-nav-item:hover .nav-icon {
+  color: #55d6b1;
+}
+
+/* Active navigation item — reference image green */
+.tech-nav-item.active {
+  color: #ffffff;
+
+  background: linear-gradient(
+    110deg,
+    #078c70 0%,
+    #079a78 100%
+  );
+
+  border-color: rgba(45, 212, 168, 0.16);
+
+  box-shadow:
+    0 5px 16px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+
+  font-weight: 600;
+}
+
+.tech-nav-item.active .nav-icon {
+  color: #ffffff;
+}
+
+/* Keyboard accessibility */
+.tech-nav-item:focus-visible,
+.topbar-bell-btn:focus-visible,
+.topbar-logout-btn:focus-visible {
+  outline: 2px solid #4adeb5;
+  outline-offset: 3px;
+}
+
+/* Notification counter in sidebar */
+.nav-unread-badge {
+  flex-shrink: 0;
+
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+  background: #ef4444;
+
+  border: 2px solid #092536;
+  border-radius: 20px;
+
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
 .tech-main-content {
   flex: 1;
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
-  min-width: 0;
 }
 
-/* Topbar */
 .tech-topbar {
-  background: var(--bg-white);
-  padding: 16px 36px;
-  border-bottom: 1px solid var(--border-light);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 40;
+
+  min-height: 80px;
+  padding: 15px 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  background: #ffffff;
+  border-bottom: 1px solid #e6edf3;
 }
 
 .tech-topbar-left h2 {
-  font-size: 1.25rem;
+  color: #122638;
+  font-size: clamp(17px, 1.25vw, 21px);
   font-weight: 700;
-  color: var(--text-dark);
+  line-height: 1.4;
 }
 
 .tech-topbar-left p {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 2px;
+  margin-top: 4px;
+  color: #718096;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .tech-topbar-info {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: flex-end;
+  gap: 20px;
 }
 
 .topbar-bell-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-muted);
-  font-size: 1.15rem;
   position: relative;
-  display: flex;
+
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #17364b;
+  background: #f8fafc;
+
+  border: 1px solid #e7edf3;
+  border-radius: 12px;
+
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s ease;
 }
 
 .topbar-bell-btn:hover {
-  color: var(--text-dark);
+  color: #078c70;
+  background: #ecfdf5;
+  border-color: #a7f3d0;
 }
 
 .topbar-bell-badge {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  background: #ef4444;
+  top: -5px;
+  right: -5px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   color: #ffffff;
-  font-size: 0.65rem;
-  border-radius: 10px;
-  padding: 1px 5px;
+  background: #ef4444;
+
+  border: 2px solid #ffffff;
+  border-radius: 20px;
+
+  font-size: 10px;
   font-weight: 700;
 }
 
 .tech-topbar-date {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  color: #64748b;
+  font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .topbar-logout-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  border: 1px solid var(--border-light);
-  background: var(--bg-white);
-  color: var(--text-muted);
-  padding: 6px 12px;
-  border-radius: 6px;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 14px;
+
+  color: #526579;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  font-size: 0.82rem;
-  transition: all 0.2s;
+
+  transition: all 0.2s ease;
 }
 
 .topbar-logout-btn:hover {
-  background: #fee2e2;
   color: #dc2626;
-  border-color: #fca5a5;
+  background: #fff1f2;
+  border-color: #fecdd3;
 }
 
 .tech-content-body {
-  padding: 32px 48px;
   flex: 1;
+  min-width: 0;
+  padding: 28px 32px;
 }
 
-/* Responsiveness for Dashboard */
-@media (max-width: 900px) {
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+  :root {
+    --tech-sidebar-width: 230px;
+  }
+
+  .tech-profile {
+    padding: 18px 15px;
+    gap: 10px;
+  }
+
+  .tech-nav-list {
+    padding: 16px 11px;
+    gap: 6px;
+  }
+
+  .tech-nav-item {
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  .nav-item-left {
+    gap: 12px;
+  }
+
+  .nav-icon {
+    font-size: 17px;
+  }
+
+  .tech-topbar {
+    padding: 14px 20px;
+  }
+
+  .tech-content-body {
+    padding: 24px 20px;
+  }
+}
+
+/* =========================================================
+   MOBILE — HORIZONTAL NAVIGATION
+   ========================================================= */
+
+@media (max-width: 700px) {
   .tech-container {
     flex-direction: column;
   }
+
   .tech-sidebar {
     width: 100%;
-    min-width: 100%;
+    min-width: 0;
+    min-height: auto;
     height: auto;
+
     position: relative;
+    top: auto;
+
+    overflow: visible;
   }
+
+  .tech-sidebar::after {
+    display: none;
+  }
+
+  .tech-profile {
+    min-height: 76px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--tech-sidebar-border);
+  }
+
+  .tech-profile-img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .tech-profile-info h3 {
+    font-size: 14px;
+  }
+
   .tech-nav-list {
+    flex: none;
     flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 12px 12px;
     overflow-x: auto;
-    padding: 8px 12px;
+    overflow-y: hidden;
   }
+
   .tech-nav-item {
-    white-space: nowrap;
-    padding: 6px 12px;
+    width: auto;
+    min-height: 42px;
+    min-width: max-content;
+
+    padding: 0 13px;
+    border-radius: 9px;
   }
+
+  .nav-item-left {
+    gap: 9px;
+  }
+
+  .nav-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 16px;
+  }
+
   .tech-topbar {
-    padding: 12px 20px;
+    position: relative;
+    min-height: 68px;
+    padding: 12px 16px;
+    gap: 12px;
   }
+
+  .tech-topbar-left h2 {
+    font-size: 16px;
+  }
+
+  .tech-topbar-info {
+    gap: 10px;
+  }
+
   .tech-content-body {
-    padding: 20px 16px;
+    padding: 18px 14px;
   }
 }
 
-@media (max-width: 520px) {
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+  .tech-profile {
+    min-height: 68px;
+    padding: 10px 12px;
+  }
+
+  .tech-profile-img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .tech-nav-list {
+    padding: 8px 10px 10px;
+  }
+
+  .tech-nav-item {
+    min-height: 39px;
+    padding: 0 11px;
+    font-size: 12px;
+  }
+
+  .tech-topbar {
+    padding: 12px;
+  }
+
+  .tech-topbar-left h2 {
+    font-size: 14px;
+  }
+
   .tech-topbar-date,
   .tech-topbar-left p {
     display: none;
+  }
+
+  .topbar-bell-btn {
+    width: 35px;
+    height: 35px;
+  }
+
+  .topbar-logout-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .tech-content-body {
+    padding: 14px 10px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .tech-nav-item,
+  .nav-icon,
+  .topbar-bell-btn,
+  .topbar-logout-btn {
+    transition: none;
   }
 }

@@ -1,17 +1,7 @@
-// import React, {
-//     useEffect,
-//     useState,
-//     useMemo
-// } from "react";
-
+// import React, { useEffect, useState, useMemo } from "react";
 // import { toast } from "react-toastify";
-
 // import "./Cart.css";
-
-// import {
-//     Link,
-//     useNavigate
-// } from "react-router-dom";
+// import { Link, useNavigate } from "react-router-dom";
 
 // import {
 //     getCart,
@@ -19,64 +9,67 @@
 //     removeCartItem
 // } from "../../../services/cartService";
 
-// import {
-//     applyCoupon
-// } from "../../../services/couponService";
+// import { applyCoupon } from "../../../services/couponService";
 
 
-// const API_URL =
-//     import.meta.env.VITE_API_URL;
+// const API_URL = import.meta.env.VITE_API_URL;
+// const BASE_URL = API_URL.replace("/api", "");
 
-// const BASE_URL =
-//     API_URL.replace("/api", "");
+
+// // ==================================================
+// // UNIT PRICE
+// // Uses the price saved on the cart item first
+// // (backend picks retail / wholesale by customer type).
+// // Falls back to product fields for old cart items.
+// // ==================================================
+
+// const getUnitPrice = (item) => {
+
+//     const candidates = [
+//         item?.finalPrice,
+//         item?.price,
+//         item?.product?.pricing?.sellingPrice,
+//         item?.product?.pricing?.retailPrice
+//     ];
+
+//     const found = candidates
+//         .map(Number)
+//         .find((n) => Number.isFinite(n) && n > 0);
+
+//     return found ?? 0;
+// };
 
 
 // const Cart = () => {
 
-//     const navigate =
-//         useNavigate();
+//     const navigate = useNavigate();
 
 
 //     // ==================================================
 //     // CART STATES
 //     // ==================================================
 
-//     const [cartItems, setCartItems] =
-//         useState([]);
-
-//     const [subtotal, setSubtotal] =
-//         useState(0);
-
-//     const [loading, setLoading] =
-//         useState(true);
-
-//     const [updatingProduct, setUpdatingProduct] =
-//         useState(null);
+//     const [cartItems, setCartItems] = useState([]);
+//     const [subtotal, setSubtotal] = useState(0);
+//     const [loading, setLoading] = useState(true);
+//     const [updatingProduct, setUpdatingProduct] = useState(null);
 
 
 //     // ==================================================
 //     // INVENTORY / STOCK STATES
 //     // ==================================================
 
-//     const [inventoryList, setInventoryList] =
-//         useState([]);
+//     const [inventoryList, setInventoryList] = useState([]);
 
 
 //     // ==================================================
 //     // COUPON STATES
 //     // ==================================================
 
-//     const [couponCode, setCouponCode] =
-//         useState("");
-
-//     const [appliedCoupon, setAppliedCoupon] =
-//         useState(null);
-
-//     const [couponLoading, setCouponLoading] =
-//         useState(false);
-
-//     const [couponDiscount, setCouponDiscount] =
-//         useState(0);
+//     const [couponCode, setCouponCode] = useState("");
+//     const [appliedCoupon, setAppliedCoupon] = useState(null);
+//     const [couponLoading, setCouponLoading] = useState(false);
+//     const [couponDiscount, setCouponDiscount] = useState(0);
 
 
 //     // ==================================================
@@ -84,7 +77,6 @@
 //     // ==================================================
 
 //     const shippingCharge = 100;
-
 //     const gst = 18;
 
 
@@ -93,9 +85,7 @@
 //     // ==================================================
 
 //     useEffect(() => {
-
 //         loadCart();
-
 //     }, []);
 
 
@@ -105,68 +95,25 @@
 
 //             setLoading(true);
 
+//             const [cartRes, inventoryRes] = await Promise.all([
+//                 getCart(),
+//                 fetch(`${API_URL}/inventory/shop`).then((res) => res.json())
+//             ]);
 
-//             const [cartRes, inventoryRes] =
-//                 await Promise.all([
+//             console.log("CART RESPONSE:", cartRes.data);
+//             console.log("INVENTORY RESPONSE:", inventoryRes);
 
-//                     getCart(),
+//             const items = cartRes.data?.data?.items || [];
+//             setCartItems(Array.isArray(items) ? items : []);
 
-//                     fetch(
-//                         `${API_URL}/inventory/shop`
-//                     ).then(
-//                         (res) => res.json()
-//                     )
-
-//                 ]);
-
-
-//             console.log(
-//                 "CART RESPONSE:",
-//                 cartRes.data
-//             );
-
-//             console.log(
-//                 "INVENTORY RESPONSE:",
-//                 inventoryRes
-//             );
-
-
-//             const items =
-//                 cartRes.data?.data?.items || [];
-
-
-//             setCartItems(
-
-//                 Array.isArray(items)
-//                     ? items
-//                     : []
-
-//             );
-
-
-//             const inventoryItems =
-//                 inventoryRes?.data || [];
-
-
-//             setInventoryList(
-
-//                 Array.isArray(inventoryItems)
-//                     ? inventoryItems
-//                     : []
-
-//             );
+//             const inventoryItems = inventoryRes?.data || [];
+//             setInventoryList(Array.isArray(inventoryItems) ? inventoryItems : []);
 
 //         }
 //         catch (error) {
 
-//             console.error(
-//                 "CART/INVENTORY LOAD ERROR:",
-//                 error
-//             );
-
-
+//             console.error("CART/INVENTORY LOAD ERROR:", error);
 //             setCartItems([]);
-
 //             setInventoryList([]);
 
 //         }
@@ -188,33 +135,18 @@
 
 //         const map = new Map();
 
-
 //         inventoryList.forEach((inv) => {
 
-//             const prodId =
-//                 inv?.product?._id ||
-//                 inv?.product;
-
+//             const prodId = inv?.product?._id || inv?.product;
 
 //             if (prodId) {
-
-//                 map.set(
-//                     prodId,
-//                     {
-//                         status:
-//                             inv.status,
-
-//                         availableStock:
-//                             Number(
-//                                 inv.availableStock || 0
-//                             )
-//                     }
-//                 );
-
+//                 map.set(prodId, {
+//                     status: inv.status,
+//                     availableStock: Number(inv.availableStock || 0)
+//                 });
 //             }
 
 //         });
-
 
 //         return map;
 
@@ -231,29 +163,19 @@
 //             return null;
 //         }
 
-//         return (
-//             stockMap.get(productId) ||
-//             null
-//         );
+//         return stockMap.get(productId) || null;
 
 //     };
 
 
 //     const isItemOutOfStock = (item) => {
 
-//         const productId =
-//             item.product?._id;
-
-
-//         const stockInfo =
-//             getStockInfo(productId);
-
+//         const stockInfo = getStockInfo(item.product?._id);
 
 //         // Not found in inventory at all -> treat as unavailable
 //         if (!stockInfo) {
 //             return true;
 //         }
-
 
 //         return (
 //             stockInfo.status !== "IN_STOCK" ||
@@ -263,8 +185,7 @@
 //     };
 
 
-//     const hasOutOfStockItems =
-//         cartItems.some(isItemOutOfStock);
+//     const hasOutOfStockItems = cartItems.some(isItemOutOfStock);
 
 
 //     // ==================================================
@@ -273,34 +194,14 @@
 
 //     useEffect(() => {
 
-//         const total =
-//             cartItems.reduce(
+//         const total = cartItems.reduce((sum, item) => {
 
-//                 (sum, item) => {
+//             const price = getUnitPrice(item);
+//             const quantity = Number(item.quantity || 0);
 
-//                     const price =
-//                         Number(
-//                             item.product?.pricing?.sellingPrice || 0
-//                         );
+//             return sum + price * quantity;
 
-
-//                     const quantity =
-//                         Number(
-//                             item.quantity || 0
-//                         );
-
-
-//                     return (
-//                         sum +
-//                         price * quantity
-//                     );
-
-//                 },
-
-//                 0
-
-//             );
-
+//         }, 0);
 
 //         setSubtotal(total);
 
@@ -314,9 +215,7 @@
 //     const resetCoupon = () => {
 
 //         setCouponCode("");
-
 //         setAppliedCoupon(null);
-
 //         setCouponDiscount(0);
 
 //     };
@@ -326,119 +225,49 @@
 //     // UPDATE QUANTITY
 //     // ==================================================
 
-//     const handleUpdateQuantity = async (
-//         item,
-//         change
-//     ) => {
+//     const handleUpdateQuantity = async (item, change) => {
 
-//         const productId =
-//             item.product?._id;
-
+//         const productId = item.product?._id;
 
 //         if (!productId) {
-
-//             toast.error(
-//                 "Product information missing"
-//             );
-
+//             toast.error("Product information missing");
 //             return;
-
 //         }
 
-
-//         const currentQuantity =
-//             Number(
-//                 item.quantity || 1
-//             );
-
-
-//         const newQuantity =
-//             currentQuantity + change;
-
+//         const currentQuantity = Number(item.quantity || 1);
+//         const newQuantity = currentQuantity + change;
 
 //         if (newQuantity < 1) {
-
 //             return;
-
 //         }
-
 
 //         try {
 
-//             setUpdatingProduct(
-//                 productId
-//             );
+//             setUpdatingProduct(productId);
 
+//             console.log("Updating quantity:", { productId, newQuantity });
 
-//             console.log(
-//                 "Updating quantity:",
-//                 {
-//                     productId,
-//                     newQuantity
-//                 }
-//             );
+//             const res = await updateCartQuantity(productId, newQuantity);
 
+//             console.log("UPDATED CART:", res.data);
 
-//             const res =
-//                 await updateCartQuantity(
+//             const updatedItems = res.data?.data?.items || [];
+//             setCartItems(Array.isArray(updatedItems) ? updatedItems : []);
 
-//                     productId,
-
-//                     newQuantity
-
-//                 );
-
-
-//             console.log(
-//                 "UPDATED CART:",
-//                 res.data
-//             );
-
-
-//             const updatedItems =
-//                 res.data?.data?.items || [];
-
-
-//             setCartItems(
-
-//                 Array.isArray(updatedItems)
-//                     ? updatedItems
-//                     : []
-
-//             );
-
-
-//             // ==================================================
-//             // IMPORTANT
-//             // Cart total changed, so old coupon discount
-//             // should not remain active.
-//             // ==================================================
-
+//             // Cart total changed, so old coupon discount must not stay active.
 //             if (appliedCoupon) {
-
 //                 resetCoupon();
-
-//                 toast.info(
-//                     "Cart changed. Please apply coupon again."
-//                 );
-
+//                 toast.info("Cart changed. Please apply coupon again.");
 //             }
 
 //         }
 //         catch (error) {
 
-//             console.error(
-//                 "UPDATE QUANTITY ERROR:",
-//                 error
-//             );
-
+//             console.error("UPDATE QUANTITY ERROR:", error);
 
 //             toast.error(
-
 //                 error.response?.data?.message ||
-
 //                 "Failed to update quantity"
-
 //             );
 
 //         }
@@ -455,108 +284,51 @@
 //     // REMOVE ITEM
 //     // ==================================================
 
-//     const handleRemoveItem = async (
-//         item
-//     ) => {
+//     const handleRemoveItem = async (item) => {
 
-//         const productId =
-//             item.product?._id;
-
+//         const productId = item.product?._id;
 
 //         if (!productId) {
-
-//             toast.error(
-//                 "Product information missing"
-//             );
-
+//             toast.error("Product information missing");
 //             return;
-
 //         }
 
-
-//         const confirmRemove =
-//             window.confirm(
-
-//                 "Are you sure you want to remove this product?"
-
-//             );
-
+//         const confirmRemove = window.confirm(
+//             "Are you sure you want to remove this product?"
+//         );
 
 //         if (!confirmRemove) {
-
 //             return;
-
 //         }
-
 
 //         try {
 
-//             setUpdatingProduct(
-//                 productId
-//             );
+//             setUpdatingProduct(productId);
 
+//             const res = await removeCartItem(productId);
 
-//             const res =
-//                 await removeCartItem(
-//                     productId
-//                 );
+//             console.log("REMOVE CART RESPONSE:", res.data);
 
+//             const updatedItems = res.data?.data?.items || [];
+//             setCartItems(Array.isArray(updatedItems) ? updatedItems : []);
 
-//             console.log(
-//                 "REMOVE CART RESPONSE:",
-//                 res.data
-//             );
-
-
-//             const updatedItems =
-//                 res.data?.data?.items || [];
-
-
-//             setCartItems(
-
-//                 Array.isArray(updatedItems)
-//                     ? updatedItems
-//                     : []
-
-//             );
-
-
-//             // ==================================================
-//             // IMPORTANT
 //             // Cart changed, reset coupon.
-//             // ==================================================
-
 //             if (appliedCoupon) {
-
 //                 resetCoupon();
-
-//                 toast.info(
-//                     "Cart changed. Coupon removed."
-//                 );
-
+//                 toast.info("Cart changed. Coupon removed.");
 //             }
 
-
-//              // dispatch here — item count actually changed
-//     window.dispatchEvent(new CustomEvent("cart-updated"));
-
-
+//             // item count actually changed
+//             window.dispatchEvent(new CustomEvent("cart-updated"));
 
 //         }
 //         catch (error) {
 
-//             console.error(
-//                 "REMOVE ITEM ERROR:",
-//                 error
-//             );
-
+//             console.error("REMOVE ITEM ERROR:", error);
 
 //             toast.error(
-
 //                 error.response?.data?.message ||
-
 //                 "Failed to remove product"
-
 //             );
 
 //         }
@@ -573,26 +345,11 @@
 //     // COUPON CALCULATIONS
 //     // ==================================================
 
-//     const discountedSubtotal =
-//         Math.max(
+//     const discountedSubtotal = Math.max(subtotal - couponDiscount, 0);
 
-//             subtotal -
-//             couponDiscount,
-
-//             0
-
-//         );
-
-
-//     const discountedGstAmount =
-//         Math.round(
-
-//             discountedSubtotal *
-//             gst /
-//             100
-
-//         );
-
+//     const discountedGstAmount = Math.round(
+//         discountedSubtotal * gst / 100
+//     );
 
 //     const grandTotal =
 //         discountedSubtotal +
@@ -606,122 +363,45 @@
 
 //     const handleApplyCoupon = async () => {
 
-//         const code =
-//             couponCode
-//                 .trim()
-//                 .toUpperCase();
-
-
-//         // --------------------------------------------------
-//         // EMPTY CODE
-//         // --------------------------------------------------
+//         const code = couponCode.trim().toUpperCase();
 
 //         if (!code) {
-
-//             toast.error(
-//                 "Please enter coupon code"
-//             );
-
+//             toast.error("Please enter coupon code");
 //             return;
-
 //         }
-
-
-//         // --------------------------------------------------
-//         // EMPTY CART
-//         // --------------------------------------------------
 
 //         if (subtotal <= 0) {
-
-//             toast.error(
-//                 "Your cart is empty"
-//             );
-
+//             toast.error("Your cart is empty");
 //             return;
-
 //         }
-
 
 //         try {
 
 //             setCouponLoading(true);
 
+//             console.log("APPLYING COUPON:", { code, cartTotal: subtotal });
 
-//             console.log(
-//                 "APPLYING COUPON:",
-//                 {
-//                     code,
-//                     cartTotal: subtotal
-//                 }
-//             );
+//             const res = await applyCoupon(code, subtotal);
 
+//             console.log("APPLY COUPON RESPONSE:", res.data);
 
-//             const res =
-//                 await applyCoupon(
+//             if (res.data?.success) {
 
-//                     code,
+//                 const discount = Number(res.data?.discountAmount || 0);
+//                 const coupon = res.data?.coupon;
 
-//                     subtotal
+//                 setAppliedCoupon(coupon || null);
+//                 setCouponCode(coupon?.code || code);
+//                 setCouponDiscount(discount);
 
-//                 );
-
-
-//             console.log(
-//                 "APPLY COUPON RESPONSE:",
-//                 res.data
-//             );
-
-
-//             // ==================================================
-//             // SUCCESS
-//             // ==================================================
-
-//             if (
-//                 res.data?.success
-//             ) {
-
-//                 const discount =
-//                     Number(
-//                         res.data?.discountAmount || 0
-//                     );
-
-
-//                 const coupon =
-//                     res.data?.coupon;
-
-
-//                 setAppliedCoupon(
-//                     coupon || null
-//                 );
-
-
-//                 setCouponCode(
-//                     coupon?.code ||
-//                     code
-//                 );
-
-
-//                 setCouponDiscount(
-//                     discount
-//                 );
-
-
-//                 toast.success(
-//                     "Coupon applied successfully"
-//                 );
-
+//                 toast.success("Coupon applied successfully");
 
 //                 return;
 
 //             }
 
-
-//             // ==================================================
-//             // UNEXPECTED RESPONSE
-//             // ==================================================
-
+//             // Unexpected response
 //             resetCoupon();
-
 
 //             toast.error(
 //                 res.data?.message ||
@@ -731,21 +411,13 @@
 //         }
 //         catch (error) {
 
-//             console.error(
-//                 "APPLY COUPON ERROR:",
-//                 error
-//             );
-
+//             console.error("APPLY COUPON ERROR:", error);
 
 //             resetCoupon();
 
-
 //             toast.error(
-
 //                 error.response?.data?.message ||
-
 //                 "Invalid or unavailable coupon"
-
 //             );
 
 //         }
@@ -765,11 +437,7 @@
 //     const handleRemoveCoupon = () => {
 
 //         resetCoupon();
-
-
-//         toast.success(
-//             "Coupon removed"
-//         );
+//         toast.success("Coupon removed");
 
 //     };
 
@@ -780,12 +448,7 @@
 
 //     const handleProceedCheckout = () => {
 
-//         // ==================================================
-//         // STOCK GUARD
-//         // Block navigation if any cart item is out of stock,
-//         // even if the button is somehow triggered anyway.
-//         // ==================================================
-
+//         // Stock guard, even if the button is triggered anyway.
 //         if (hasOutOfStockItems) {
 
 //             toast.error(
@@ -796,47 +459,18 @@
 
 //         }
 
-
-//         // ==================================================
-//         // NO COUPON
-//         // ==================================================
-
 //         if (!appliedCoupon) {
-
-//             navigate(
-//                 "/checkout"
-//             );
-
+//             navigate("/checkout");
 //             return;
-
 //         }
 
-
-//         // ==================================================
-//         // WITH COUPON
-//         // ==================================================
-
-//         navigate(
-//             "/checkout",
-//             {
-
-//                 state: {
-
-//                     coupon:
-//                         appliedCoupon,
-
-//                     couponCode:
-//                         appliedCoupon.code ||
-//                         couponCode,
-
-//                     couponDiscount:
-//                         couponDiscount
-
-//                 }
-
+//         navigate("/checkout", {
+//             state: {
+//                 coupon: appliedCoupon,
+//                 couponCode: appliedCoupon.code || couponCode,
+//                 couponDiscount: couponDiscount
 //             }
-
-//         );
+//         });
 
 //     };
 
@@ -848,17 +482,11 @@
 //     if (loading) {
 
 //         return (
-
 //             <div className="cart-page">
-
 //                 <div className="cart-loading">
-
 //                     Loading Cart...
-
 //                 </div>
-
 //             </div>
-
 //         );
 
 //     }
@@ -872,44 +500,25 @@
 
 //         <div className="cart-page">
 
-
-//             {/* ==================================================
-//                 HEADER
-//             ================================================== */}
+//             {/* HEADER */}
 
 //             <div className="cart-header">
-
-//                 <h2>
-//                     Shopping Cart
-//                 </h2>
-
-//                 <p>
-//                     Review Your Selected Products
-//                 </p>
-
+//                 <h2>Shopping Cart</h2>
+//                 <p>Review Your Selected Products</p>
 //             </div>
 
 
-//             {/* ==================================================
-//                 EMPTY CART
-//             ================================================== */}
+//             {/* EMPTY CART */}
 
 //             {cartItems.length === 0 ? (
 
 //                 <div className="empty-cart">
 
-//                     <h3>
-//                         Your Cart Is Empty
-//                     </h3>
+//                     <h3>Your Cart Is Empty</h3>
 
-//                     <p>
-//                         Add some products to continue shopping.
-//                     </p>
+//                     <p>Add some products to continue shopping.</p>
 
-//                     <Link
-//                         to="/shop"
-//                         className="continue-shopping"
-//                     >
+//                     <Link to="/shop" className="continue-shopping">
 //                         Continue Shopping
 //                     </Link>
 
@@ -919,320 +528,160 @@
 
 //                 <>
 
-
-//                     {/* ==================================================
-//                         CART TABLE
-//                     ================================================== */}
+//                     {/* CART TABLE */}
 
 //                     <div className="cart-table">
 
-
-//                         {/* --------------------------------------------------
-//                             HEADER
-//                         -------------------------------------------------- */}
-
 //                         <div className="cart-head">
-
-//                             <div>
-//                                 Product
-//                             </div>
-
-//                             <div>
-//                                 Price
-//                             </div>
-
-//                             <div>
-//                                 Quantity
-//                             </div>
-
-//                             <div>
-//                                 Total
-//                             </div>
-
-//                             <div>
-//                                 Action
-//                             </div>
-
+//                             <div>Product</div>
+//                             <div>Price</div>
+//                             <div>Quantity</div>
+//                             <div>Total</div>
+//                             <div>Action</div>
 //                         </div>
 
 
-//                         {/* --------------------------------------------------
-//                             ITEMS
-//                         -------------------------------------------------- */}
+//                         {cartItems.map((item, index) => {
 
-//                         {cartItems.map(
-//                             (
-//                                 item,
-//                                 index
-//                             ) => {
+//                             const product = item.product;
 
-//                                 const product =
-//                                     item.product;
+//                             const price = getUnitPrice(item);
 
+//                             const quantity = Number(item.quantity || 1);
 
-//                                 const price =
-//                                     Number(
-//                                         product?.pricing?.sellingPrice || 0
-//                                     );
+//                             const itemTotal = price * quantity;
 
+//                             const productId = product?._id;
 
-//                                 const quantity =
-//                                     Number(
-//                                         item.quantity || 1
-//                                     );
+//                             const isUpdating = updatingProduct === productId;
 
+//                             const outOfStock = isItemOutOfStock(item);
 
-//                                 const itemTotal =
-//                                     price *
-//                                     quantity;
+//                             return (
 
+//                                 <div
+//                                     className={
+//                                         outOfStock
+//                                             ? "cart-row cart-row-out-of-stock"
+//                                             : "cart-row"
+//                                     }
+//                                     key={productId || index}
+//                                 >
 
-//                                 const productId =
-//                                     product?._id;
+//                                     {/* PRODUCT */}
 
+//                                     <div className="cart-product">
 
-//                                 const isUpdating =
-//                                     updatingProduct ===
-//                                     productId;
-
-
-//                                 const outOfStock =
-//                                     isItemOutOfStock(item);
-
-
-//                                 return (
-
-//                                     <div
-//                                         className={
-//                                             outOfStock
-//                                                 ? "cart-row cart-row-out-of-stock"
-//                                                 : "cart-row"
-//                                         }
-//                                         key={
-//                                             productId ||
-//                                             index
-//                                         }
-//                                     >
-
-
-//                                         {/* --------------------------------------------------
-//                                             PRODUCT
-//                                         -------------------------------------------------- */}
-
-//                                         <div className="cart-product">
-
-//                                             <img
-//                                                 src={
-//                                                     product?.images?.length
-//                                                         ? (
-
-//                                                             product.images[0]?.url?.startsWith("http")
-
-//                                                                 ? product.images[0].url
-
-//                                                                 : `${BASE_URL}${product.images[0].url}`
-
-//                                                         )
-
-//                                                         : "/no-image.png"
-//                                                 }
-
-//                                                 alt={
-//                                                     product?.name ||
-//                                                     "Product"
-//                                                 }
-
-//                                                 onError={(
-//                                                     e
-//                                                 ) => {
-
-//                                                     e.currentTarget.src =
-//                                                         "/no-image.png";
-
-//                                                 }}
-
-//                                             />
-
-
-//                                             <div>
-
-//                                                 <h4>
-
-//                                                     {
-//                                                         product?.name ||
-//                                                         "Product"
-//                                                     }
-
-//                                                 </h4>
-
-
-//                                                 <p>
-
-//                                                     {
-//                                                         product?.brand?.name ||
-//                                                         "No Brand"
-//                                                     }
-
-//                                                 </p>
-
-
-//                                                 {outOfStock && (
-
-//                                                     <span className="out-of-stock-badge">
-//                                                         Out Of Stock
-//                                                     </span>
-
-//                                                 )}
-
-//                                             </div>
-
-//                                         </div>
-
-
-//                                         {/* --------------------------------------------------
-//                                             PRICE
-//                                         -------------------------------------------------- */}
-
-//                                         <div className="cart-price">
-
-//                                             ₹ {price}
-
-//                                         </div>
-
-
-//                                         {/* --------------------------------------------------
-//                                             QUANTITY
-//                                         -------------------------------------------------- */}
-
-//                                         <div className="cart-quantity">
-
-//                                             <button
-//                                                 type="button"
-
-//                                                 disabled={
-//                                                     isUpdating ||
-//                                                     outOfStock ||
-//                                                     quantity <= 1
-//                                                 }
-
-//                                                 onClick={() =>
-//                                                     handleUpdateQuantity(
-//                                                         item,
-//                                                         -1
+//                                         <img
+//                                             src={
+//                                                 product?.images?.length
+//                                                     ? (
+//                                                         product.images[0]?.url?.startsWith("http")
+//                                                             ? product.images[0].url
+//                                                             : `${BASE_URL}${product.images[0].url}`
 //                                                     )
-//                                                 }
-//                                             >
-//                                                 −
-//                                             </button>
-
-
-//                                             <span>
-
-//                                                 {
-//                                                     isUpdating
-//                                                         ? "..."
-//                                                         : quantity
-//                                                 }
-
-//                                             </span>
-
-
-//                                             <button
-//                                                 type="button"
-
-//                                                 disabled={
-//                                                     isUpdating ||
-//                                                     outOfStock
-//                                                 }
-
-//                                                 onClick={() =>
-//                                                     handleUpdateQuantity(
-//                                                         item,
-//                                                         1
-//                                                     )
-//                                                 }
-//                                             >
-//                                                 +
-//                                             </button>
-
-//                                         </div>
-
-
-//                                         {/* --------------------------------------------------
-//                                             TOTAL
-//                                         -------------------------------------------------- */}
-
-//                                         <div className="cart-item-total">
-
-//                                             ₹ {itemTotal}
-
-//                                         </div>
-
-
-//                                         {/* --------------------------------------------------
-//                                             REMOVE
-//                                         -------------------------------------------------- */}
+//                                                     : "/no-image.png"
+//                                             }
+//                                             alt={product?.name || "Product"}
+//                                             onError={(e) => {
+//                                                 e.currentTarget.src = "/no-image.png";
+//                                             }}
+//                                         />
 
 //                                         <div>
 
-//                                             <button
-//                                                 type="button"
+//                                             <h4>{product?.name || "Product"}</h4>
 
-//                                                 className="remove-btn"
+//                                             <p>{product?.brand?.name || "No Brand"}</p>
 
-//                                                 disabled={
-//                                                     isUpdating
-//                                                 }
-
-//                                                 onClick={() =>
-//                                                     handleRemoveItem(
-//                                                         item
-//                                                     )
-//                                                 }
-//                                             >
-
-//                                                 {
-//                                                     isUpdating
-//                                                         ? "Please Wait..."
-//                                                         : "Remove"
-//                                                 }
-
-//                                             </button>
+//                                             {outOfStock && (
+//                                                 <span className="out-of-stock-badge">
+//                                                     Out Of Stock
+//                                                 </span>
+//                                             )}
 
 //                                         </div>
 
 //                                     </div>
 
-//                                 );
 
-//                             }
+//                                     {/* PRICE */}
 
-//                         )}
+//                                     <div className="cart-price">
+//                                         ₹ {price}
+//                                     </div>
+
+
+//                                     {/* QUANTITY */}
+
+//                                     <div className="cart-quantity">
+
+//                                         <button
+//                                             type="button"
+//                                             disabled={isUpdating || outOfStock || quantity <= 1}
+//                                             onClick={() => handleUpdateQuantity(item, -1)}
+//                                         >
+//                                             −
+//                                         </button>
+
+//                                         <span>
+//                                             {isUpdating ? "..." : quantity}
+//                                         </span>
+
+//                                         <button
+//                                             type="button"
+//                                             disabled={isUpdating || outOfStock}
+//                                             onClick={() => handleUpdateQuantity(item, 1)}
+//                                         >
+//                                             +
+//                                         </button>
+
+//                                     </div>
+
+
+//                                     {/* TOTAL */}
+
+//                                     <div className="cart-item-total">
+//                                         ₹ {itemTotal}
+//                                     </div>
+
+
+//                                     {/* REMOVE */}
+
+//                                     <div>
+
+//                                         <button
+//                                             type="button"
+//                                             className="remove-btn"
+//                                             disabled={isUpdating}
+//                                             onClick={() => handleRemoveItem(item)}
+//                                         >
+//                                             {isUpdating ? "Please Wait..." : "Remove"}
+//                                         </button>
+
+//                                     </div>
+
+//                                 </div>
+
+//                             );
+
+//                         })}
 
 //                     </div>
 
 
-//                     {/* ==================================================
-//                         SUMMARY
-//                     ================================================== */}
+//                     {/* SUMMARY */}
 
 //                     <div className="cart-summary">
 
-//                         <h3>
-//                             Order Summary
-//                         </h3>
+//                         <h3>Order Summary</h3>
 
 
-//                         {/* ==================================================
-//                             COUPON SECTION
-//                         ================================================== */}
+//                         {/* COUPON SECTION */}
 
 //                         <div className="coupon-section">
 
-//                             <h4>
-//                                 Have a Coupon?
-//                             </h4>
-
+//                             <h4>Have a Coupon?</h4>
 
 //                             {!appliedCoupon ? (
 
@@ -1240,47 +689,20 @@
 
 //                                     <input
 //                                         type="text"
-
 //                                         placeholder="Enter coupon code"
-
-//                                         value={
-//                                             couponCode
+//                                         value={couponCode}
+//                                         onChange={(e) =>
+//                                             setCouponCode(e.target.value.toUpperCase())
 //                                         }
-
-//                                         onChange={(
-//                                             e
-//                                         ) =>
-//                                             setCouponCode(
-//                                                 e.target.value.toUpperCase()
-//                                             )
-//                                         }
-
-//                                         disabled={
-//                                             couponLoading
-//                                         }
-
+//                                         disabled={couponLoading}
 //                                     />
-
 
 //                                     <button
 //                                         type="button"
-
-//                                         onClick={
-//                                             handleApplyCoupon
-//                                         }
-
-//                                         disabled={
-//                                             couponLoading ||
-//                                             !couponCode.trim()
-//                                         }
+//                                         onClick={handleApplyCoupon}
+//                                         disabled={couponLoading || !couponCode.trim()}
 //                                     >
-
-//                                         {
-//                                             couponLoading
-//                                                 ? "Applying..."
-//                                                 : "Apply"
-//                                         }
-
+//                                         {couponLoading ? "Applying..." : "Apply"}
 //                                     </button>
 
 //                                 </div>
@@ -1290,30 +712,11 @@
 //                                 <div className="applied-coupon">
 
 //                                     <div>
-
-//                                         <strong>
-
-//                                             {
-//                                                 appliedCoupon.code
-//                                             }
-
-//                                         </strong>
-
-
-//                                         <p>
-//                                             Coupon applied
-//                                         </p>
-
+//                                         <strong>{appliedCoupon.code}</strong>
+//                                         <p>Coupon applied</p>
 //                                     </div>
 
-
-//                                     <button
-//                                         type="button"
-
-//                                         onClick={
-//                                             handleRemoveCoupon
-//                                         }
-//                                     >
+//                                     <button type="button" onClick={handleRemoveCoupon}>
 //                                         Remove
 //                                     </button>
 
@@ -1324,127 +727,66 @@
 //                         </div>
 
 
-//                         {/* ==================================================
-//                             SUBTOTAL
-//                         ================================================== */}
+//                         {/* SUBTOTAL */}
 
 //                         <div className="summary-row">
-
-//                             <span>
-//                                 Subtotal
-//                             </span>
-
-//                             <span>
-//                                 ₹ {subtotal}
-//                             </span>
-
+//                             <span>Subtotal</span>
+//                             <span>₹ {subtotal}</span>
 //                         </div>
 
 
-//                         {/* ==================================================
-//                             COUPON DISCOUNT
-//                         ================================================== */}
+//                         {/* COUPON DISCOUNT */}
 
 //                         {couponDiscount > 0 && (
-
 //                             <div className="summary-row">
-
-//                                 <span>
-//                                     Coupon Discount
-//                                 </span>
-
-//                                 <span>
-//                                     - ₹ {couponDiscount}
-//                                 </span>
-
+//                                 <span>Coupon Discount</span>
+//                                 <span>- ₹ {couponDiscount}</span>
 //                             </div>
-
 //                         )}
 
 
-//                         {/* ==================================================
-//                             SHIPPING
-//                         ================================================== */}
+//                         {/* SHIPPING */}
 
 //                         <div className="summary-row">
-
-//                             <span>
-//                                 Shipping
-//                             </span>
-
-//                             <span>
-//                                 ₹ {shippingCharge}
-//                             </span>
-
+//                             <span>Shipping</span>
+//                             <span>₹ {shippingCharge}</span>
 //                         </div>
 
 
-//                         {/* ==================================================
-//                             GST
-//                         ================================================== */}
+//                         {/* GST */}
 
 //                         <div className="summary-row">
-
-//                             <span>
-//                                 GST ({gst}%)
-//                             </span>
-
-//                             <span>
-//                                 ₹ {discountedGstAmount}
-//                             </span>
-
+//                             <span>GST ({gst}%)</span>
+//                             <span>₹ {discountedGstAmount}</span>
 //                         </div>
-
 
 //                         <hr />
 
 
-//                         {/* ==================================================
-//                             GRAND TOTAL
-//                         ================================================== */}
+//                         {/* GRAND TOTAL */}
 
 //                         <div className="summary-total">
-
-//                             <span>
-//                                 Grand Total
-//                             </span>
-
-//                             <span>
-//                                 ₹ {grandTotal}
-//                             </span>
-
+//                             <span>Grand Total</span>
+//                             <span>₹ {grandTotal}</span>
 //                         </div>
 
 
-//                         {/* ==================================================
-//                             OUT OF STOCK WARNING
-//                         ================================================== */}
+//                         {/* OUT OF STOCK WARNING */}
 
 //                         {hasOutOfStockItems && (
-
 //                             <div className="out-of-stock-warning">
 //                                 Some items in your cart are out of stock. Please remove them to proceed to checkout.
 //                             </div>
-
 //                         )}
 
 
-//                         {/* ==================================================
-//                             CHECKOUT
-//                         ================================================== */}
+//                         {/* CHECKOUT */}
 
 //                         <button
 //                             type="button"
-
 //                             className="checkout-btn"
-
-//                             disabled={
-//                                 hasOutOfStockItems
-//                             }
-
-//                             onClick={
-//                                 handleProceedCheckout
-//                             }
+//                             disabled={hasOutOfStockItems}
+//                             onClick={handleProceedCheckout}
 //                         >
 //                             {
 //                                 hasOutOfStockItems
@@ -1452,7 +794,6 @@
 //                                     : "Proceed Checkout"
 //                             }
 //                         </button>
-
 
 //                     </div>
 
@@ -1468,6 +809,7 @@
 
 
 // export default Cart;
+
 
 
 import React, { useEffect, useState, useMemo } from "react";
@@ -1956,7 +1298,8 @@ const Cart = () => {
         return (
             <div className="cart-page">
                 <div className="cart-loading">
-                    Loading Cart...
+                    <span className="cart-spinner" aria-hidden="true" />
+                    Loading cart...
                 </div>
             </div>
         );
@@ -1975,8 +1318,18 @@ const Cart = () => {
             {/* HEADER */}
 
             <div className="cart-header">
-                <h2>Shopping Cart</h2>
-                <p>Review Your Selected Products</p>
+                <div className="cart-header-text">
+                    <h2>
+                        Shopping <span>cart</span>
+                    </h2>
+                    <p>Review your selected products</p>
+                </div>
+
+                {cartItems.length > 0 && (
+                    <span className="cart-count-pill">
+                        {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
+                    </span>
+                )}
             </div>
 
 
@@ -1986,12 +1339,20 @@ const Cart = () => {
 
                 <div className="empty-cart">
 
-                    <h3>Your Cart Is Empty</h3>
+                    <div className="empty-cart-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="9" cy="20" r="1.4" />
+                            <circle cx="18" cy="20" r="1.4" />
+                            <path d="M2.5 3.5h2.7l2.3 11.2a1.6 1.6 0 0 0 1.6 1.3h8.1a1.6 1.6 0 0 0 1.6-1.2l1.3-6.5H6.2" />
+                        </svg>
+                    </div>
+
+                    <h3>Your cart is empty</h3>
 
                     <p>Add some products to continue shopping.</p>
 
                     <Link to="/shop" className="continue-shopping">
-                        Continue Shopping
+                        Continue shopping
                     </Link>
 
                 </div>
@@ -2060,7 +1421,7 @@ const Cart = () => {
                                             }}
                                         />
 
-                                        <div>
+                                        <div className="cart-product-info">
 
                                             <h4>{product?.name || "Product"}</h4>
 
@@ -2079,48 +1440,54 @@ const Cart = () => {
 
                                     {/* PRICE */}
 
-                                    <div className="cart-price">
+                                    <div className="cart-price" data-label="Price">
                                         ₹ {price}
                                     </div>
 
 
                                     {/* QUANTITY */}
 
-                                    <div className="cart-quantity">
+                                    <div className="cart-quantity-cell" data-label="Quantity">
 
-                                        <button
-                                            type="button"
-                                            disabled={isUpdating || outOfStock || quantity <= 1}
-                                            onClick={() => handleUpdateQuantity(item, -1)}
-                                        >
-                                            −
-                                        </button>
+                                        <div className="cart-quantity">
 
-                                        <span>
-                                            {isUpdating ? "..." : quantity}
-                                        </span>
+                                            <button
+                                                type="button"
+                                                aria-label="Decrease quantity"
+                                                disabled={isUpdating || outOfStock || quantity <= 1}
+                                                onClick={() => handleUpdateQuantity(item, -1)}
+                                            >
+                                                −
+                                            </button>
 
-                                        <button
-                                            type="button"
-                                            disabled={isUpdating || outOfStock}
-                                            onClick={() => handleUpdateQuantity(item, 1)}
-                                        >
-                                            +
-                                        </button>
+                                            <span>
+                                                {isUpdating ? "..." : quantity}
+                                            </span>
+
+                                            <button
+                                                type="button"
+                                                aria-label="Increase quantity"
+                                                disabled={isUpdating || outOfStock}
+                                                onClick={() => handleUpdateQuantity(item, 1)}
+                                            >
+                                                +
+                                            </button>
+
+                                        </div>
 
                                     </div>
 
 
                                     {/* TOTAL */}
 
-                                    <div className="cart-item-total">
+                                    <div className="cart-item-total" data-label="Total">
                                         ₹ {itemTotal}
                                     </div>
 
 
                                     {/* REMOVE */}
 
-                                    <div>
+                                    <div className="cart-action">
 
                                         <button
                                             type="button"
@@ -2146,14 +1513,14 @@ const Cart = () => {
 
                     <div className="cart-summary">
 
-                        <h3>Order Summary</h3>
+                        <h3>Order summary</h3>
 
 
                         {/* COUPON SECTION */}
 
                         <div className="coupon-section">
 
-                            <h4>Have a Coupon?</h4>
+                            <h4>Have a coupon?</h4>
 
                             {!appliedCoupon ? (
 
@@ -2210,8 +1577,8 @@ const Cart = () => {
                         {/* COUPON DISCOUNT */}
 
                         {couponDiscount > 0 && (
-                            <div className="summary-row">
-                                <span>Coupon Discount</span>
+                            <div className="summary-row summary-row-discount">
+                                <span>Coupon discount</span>
                                 <span>- ₹ {couponDiscount}</span>
                             </div>
                         )}
@@ -2238,7 +1605,7 @@ const Cart = () => {
                         {/* GRAND TOTAL */}
 
                         <div className="summary-total">
-                            <span>Grand Total</span>
+                            <span>Grand total</span>
                             <span>₹ {grandTotal}</span>
                         </div>
 
