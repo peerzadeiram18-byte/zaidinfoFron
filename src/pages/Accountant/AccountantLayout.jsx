@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+
+import React, { useEffect, useState } from "react";
+import {
+  NavLink,
+  Outlet,
+  useNavigate,
+  useLocation
+} from "react-router-dom";
 
 import {
   FaCalculator,
@@ -12,15 +18,50 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
-  FaWallet,
+  FaWallet
 } from "react-icons/fa";
 
 import "./AccountantLayout.css";
 
-export default function AccountantLayout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+// =====================================================
+// ACCOUNTANT LAYOUT
+// =====================================================
 
+export default function AccountantLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(
+    typeof window !== "undefined" && window.innerWidth > 768
+  );
+
+  // =====================================================
+  // CLOSE SIDEBAR AFTER MOBILE ROUTE CHANGE
+  // =====================================================
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setIsSidebarOpen(false);
+    }
+  }, [location.pathname]);
 
   // =====================================================
   // LOGOUT
@@ -32,43 +73,141 @@ export default function AccountantLayout() {
     localStorage.removeItem("user");
     localStorage.removeItem("isLoggedIn");
 
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
+
+  // =====================================================
+  // SIDEBAR NAVIGATION
+  // PATHS MATCH APP.JSX ROUTES
+  // =====================================================
+
+
+const navigationSections = [
+  {
+    heading: "ACCOUNTANT",
+    links: [
+      {
+        name: "Dashboard",
+        path: "/accountant-dashboard",
+        icon: FaTachometerAlt,
+        end: true
+      }
+    ]
+  },
+  {
+    heading: "SALES & PAYMENT",
+    links: [
+      {
+        name: "Sales & Payments",
+        path: "/accountant-dashboard/accountant/sales-payments",
+        icon: FaCashRegister
+      }
+    ]
+  },
+  {
+    heading: "INVOICES",
+    links: [
+      {
+        name: "Invoices",
+        path: "/accountant-dashboard/accountant/invoices",
+        icon: FaFileInvoiceDollar
+      }
+    ]
+  },
+  {
+    heading: "SALARY",
+    links: [
+      {
+        name: "Salary Management",
+        path: "/accountant-dashboard/accountant/salary",
+        icon: FaMoneyCheckAlt
+      }
+    ]
+  },
+  {
+    heading: "EXPENSES",
+    links: [
+      {
+        name: "Expense Management",
+        path: "/accountant-dashboard/accountant/expenses",
+        icon: FaWallet
+      }
+    ]
+  },
+  {
+    heading: "PURCHASE / PROCUREMENT",
+    links: [
+      {
+        name: "Purchase Management",
+        path: "/accountant-dashboard/accountant/purchases",
+        icon: FaShoppingCart
+      }
+    ]
+  },
+  {
+    heading: "REPORTS",
+    links: [
+      {
+        name: "Financial Reports",
+        path: "/accountant-dashboard/accountant/financial-reports",
+        icon: FaChartLine
+      }
+    ]
+  }
+];
+
+
+  // =====================================================
+  // SIDEBAR TOGGLE
+  // =====================================================
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
+
+  const closeMobileSidebar = () => {
+    if (window.innerWidth <= 768) {
+      setIsSidebarOpen(false);
+    }
+  };
+
+  // =====================================================
+  // RENDER
+  // =====================================================
 
   return (
     <div className="acc-layout-root">
 
-      {/* =====================================================
-          MOBILE TOPBAR
-      ===================================================== */}
-
+      {/* MOBILE TOPBAR */}
       <header className="acc-mobile-topbar">
 
         <div className="acc-brand-badge">
-
           <FaCalculator className="acc-brand-icon" />
-
           <span>ZAID INFOTECH</span>
-
         </div>
 
         <button
           type="button"
           className="acc-menu-toggle-btn"
-          onClick={() =>
-            setIsSidebarOpen((prev) => !prev)
-          }
+          onClick={toggleSidebar}
+          aria-label="Toggle accountant menu"
+          aria-expanded={isSidebarOpen}
         >
           {isSidebarOpen ? <FaTimes /> : <FaBars />}
         </button>
 
       </header>
 
+      {/* MOBILE OVERLAY */}
+      {isSidebarOpen && (
+        <div
+          className="acc-sidebar-overlay"
+          onClick={closeMobileSidebar}
+          aria-hidden="true"
+        />
+      )}
 
-      {/* =====================================================
-          SIDEBAR
-      ===================================================== */}
-
+      {/* SIDEBAR */}
       <aside
         className={`acc-sidebar ${
           isSidebarOpen
@@ -77,10 +216,7 @@ export default function AccountantLayout() {
         }`}
       >
 
-        {/* =================================================
-            BRAND
-        ================================================= */}
-
+        {/* BRAND */}
         <div className="acc-sidebar-brand">
 
           <div className="acc-brand-avatar">
@@ -88,204 +224,57 @@ export default function AccountantLayout() {
           </div>
 
           <div className="acc-brand-text">
-
             <h3>ZAID INFOTECH</h3>
-
             <span>Accounts & Finance</span>
-
           </div>
 
         </div>
 
-
-        {/* =================================================
-            NAVIGATION
-        ================================================= */}
-
+        {/* NAVIGATION */}
         <nav className="acc-nav-section">
 
-          {/* =================================================
-              DASHBOARD
-          ================================================= */}
+          {navigationSections.map((section) => (
+            <div
+              className="acc-nav-group"
+              key={section.heading}
+            >
 
-          <span className="acc-nav-heading">
-            ACCOUNTANT
-          </span>
+              <span className="acc-nav-heading">
+                {section.heading}
+              </span>
 
-          <NavLink
-            to="/accountant-dashboard"
-            end
-            className={({ isActive }) =>
-              `acc-nav-item ${
-                isActive
-                  ? "acc-nav-item-active"
-                  : ""
-              }`
-            }
-          >
-            <FaTachometerAlt className="acc-nav-icon" />
+              {section.links.map((link) => {
+                const Icon = link.icon;
 
-            <span>Dashboard</span>
+                return (
+                  <NavLink
+                    key={link.path}
+                    to={link.path}
+                    end={link.end || false}
+                    onClick={closeMobileSidebar}
+                    className={({ isActive }) =>
+                      `acc-nav-item ${
+                        isActive
+                          ? "acc-nav-item-active"
+                          : ""
+                      }`
+                    }
+                  >
 
-          </NavLink>
+                    <Icon className="acc-nav-icon" />
 
+                    <span>{link.name}</span>
 
-          {/* =================================================
-              SALES & PAYMENT
-          ================================================= */}
+                  </NavLink>
+                );
+              })}
 
-          <span className="acc-nav-heading">
-            SALES & PAYMENT
-          </span>
-
-          <NavLink
-            to="/accountant-dashboard/sales-payments"
-            className={({ isActive }) =>
-              `acc-nav-item ${
-                isActive
-                  ? "acc-nav-item-active"
-                  : ""
-              }`
-            }
-          >
-            <FaCashRegister className="acc-nav-icon" />
-
-            <span>Sales & Payments</span>
-
-          </NavLink>
-
-
-          {/* =================================================
-              INVOICES
-          ================================================= */}
-
-          <span className="acc-nav-heading">
-            INVOICES
-          </span>
-
-          <NavLink
-            to="/accountant-dashboard/invoices"
-            className={({ isActive }) =>
-              `acc-nav-item ${
-                isActive
-                  ? "acc-nav-item-active"
-                  : ""
-              }`
-            }
-          >
-            <FaFileInvoiceDollar className="acc-nav-icon" />
-
-            <span>Invoices</span>
-
-          </NavLink>
-
-
-          {/* =================================================
-              SALARY
-          ================================================= */}
-
-          <span className="acc-nav-heading">
-            SALARY
-          </span>
-
-          <NavLink
-            to="/accountant-dashboard/salary"
-            className={({ isActive }) =>
-              `acc-nav-item ${
-                isActive
-                  ? "acc-nav-item-active"
-                  : ""
-              }`
-            }
-          >
-            <FaMoneyCheckAlt className="acc-nav-icon" />
-
-            <span>Salary Management</span>
-
-          </NavLink>
-
-
-          {/* =================================================
-              EXPENSES
-          ================================================= */}
-
-          <span className="acc-nav-heading">
-            EXPENSES
-          </span>
-
-          <NavLink
-            to="/accountant-dashboard/expenses"
-            className={({ isActive }) =>
-              `acc-nav-item ${
-                isActive
-                  ? "acc-nav-item-active"
-                  : ""
-              }`
-            }
-          >
-            <FaWallet className="acc-nav-icon" />
-
-            <span>Expense Management</span>
-
-          </NavLink>
-
-
-          {/* =================================================
-              PURCHASE / PROCUREMENT
-          ================================================= */}
-
-          <span className="acc-nav-heading">
-            PURCHASE / PROCUREMENT
-          </span>
-
-          <NavLink
-            to="/accountant-dashboard/purchase-management"
-            className={({ isActive }) =>
-              `acc-nav-item ${
-                isActive
-                  ? "acc-nav-item-active"
-                  : ""
-              }`
-            }
-          >
-            <FaShoppingCart className="acc-nav-icon" />
-
-            <span>Purchase Management</span>
-
-          </NavLink>
-
-
-          {/* =================================================
-              FINANCIAL REPORTS
-          ================================================= */}
-
-          <span className="acc-nav-heading">
-            REPORTS
-          </span>
-
-          <NavLink
-            to="/accountant-dashboard/financial-reports"
-            className={({ isActive }) =>
-              `acc-nav-item ${
-                isActive
-                  ? "acc-nav-item-active"
-                  : ""
-              }`
-            }
-          >
-            <FaChartLine className="acc-nav-icon" />
-
-            <span>Financial Reports</span>
-
-          </NavLink>
+            </div>
+          ))}
 
         </nav>
 
-
-        {/* =====================================================
-            FOOTER
-        ===================================================== */}
-
+        {/* SIDEBAR FOOTER */}
         <div className="acc-sidebar-footer">
 
           <div className="acc-user-profile">
@@ -295,21 +284,18 @@ export default function AccountantLayout() {
             </div>
 
             <div className="acc-user-meta">
-
               <strong>Accountant</strong>
-
               <small>Finance Session</small>
-
             </div>
 
           </div>
-
 
           <button
             type="button"
             className="acc-logout-btn"
             onClick={handleLogout}
             title="Logout"
+            aria-label="Logout"
           >
             <FaSignOutAlt />
           </button>
@@ -318,20 +304,11 @@ export default function AccountantLayout() {
 
       </aside>
 
-
-      {/* =====================================================
-          MAIN CONTENT
-          IMPORTANT:
-          Only this area changes when clicking sidebar.
-      ===================================================== */}
-
+      {/* MAIN CONTENT */}
       <main className="acc-main-canvas">
-
         <Outlet />
-
       </main>
 
     </div>
   );
 }
-

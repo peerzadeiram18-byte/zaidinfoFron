@@ -2352,9 +2352,9 @@ function AddEmployee() {
                                         Inventory
                                     </option>
 
-                                    <option value="ACCOUNTS">
-                                        Accounts
-                                    </option>
+                                  <option value="ACCOUNTING">
+    Accounting
+</option>
 
                                     <option value="HR">
                                         HR
