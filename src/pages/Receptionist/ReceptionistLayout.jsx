@@ -42,6 +42,7 @@ import {
   FaBell,
   FaChevronDown,
 } from "react-icons/fa";
+import { FiGitBranch } from "react-icons/fi";
 
 import "./ReceptionistLayout.css";
 
@@ -133,6 +134,12 @@ const NAV_SECTIONS = [
         icon: FaPlusCircle,
         path: `${BASE}/add-product`,
       },
+      {
+  name: "Branch Management",
+  icon: FiGitBranch,
+  path: `${BASE}/branch-management`,
+},
+
       {
         name: "Offers",
         icon: FaPercent,

@@ -361,7 +361,7 @@ import RepairTerms from "./pages/Legal/RepairTerms/RepairTerms";
 import TermsConditions from "./pages/TermsConditions/TermsConditions";
 
 import CorporateNotifications from "./pages/corporate/CorporateNotifications";
-
+import BranchManagement from "./pages/branch/BranchManagement";
 // =====================================================
 // APP
 // =====================================================
@@ -803,6 +803,11 @@ const hideGlobalHeader =
               element={<EditSubCategory />}
             />
 
+            <Route
+                  path="/branch-management"
+                  element={<BranchManagement />}
+            />
+
             {/* BRAND */}
 
             <Route path="/add-brand" element={<AddBrand />} />
@@ -1083,6 +1088,11 @@ const hideGlobalHeader =
               path="rental/orders/:rentalId"
               element={<WalkInRentalDetails />}
             />
+
+            <Route
+  path="branch-management"
+  element={<BranchManagement />}
+/>
 
             {/* RENTAL INVOICE */}
             <Route

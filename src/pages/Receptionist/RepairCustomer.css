@@ -978,3 +978,292 @@
     background: #ffffff !important;
   }
 }
+/* =====================================================
+   APPEND THIS AT THE VERY END OF RepairCustomer.css
+   (purana CSS delete mat karein, bas neeche paste karein)
+   ===================================================== */
+
+/* ---------- Latest Ticket column + More / Less button ---------- */
+
+.rc-ticket-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 210px;
+  max-width: 280px;
+}
+
+.rc-ticket-col .rc-device-tag {
+  display: block;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+.rc-ticket-more {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 2px;
+  padding: 8px 10px;
+  border-left: 3px solid #c7d2fe;
+  border-radius: 6px;
+  background: #f8fafc;
+  animation: rcMoreFade 0.18s ease-out;
+}
+
+@keyframes rcMoreFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rc-btn-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  padding: 4px 12px;
+  border: 1px solid #c7d2fe;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4338ca;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.rc-btn-more:hover {
+  background: #4f46e5;
+  border-color: #4f46e5;
+  color: #fff;
+}
+
+.rc-btn-more:active {
+  transform: scale(0.97);
+}
+
+.rc-btn-more svg {
+  width: 14px;
+  height: 14px;
+}
+
+.rc-status-cell {
+  min-width: 170px;
+}
+
+/* ---------- Tablet (<= 1024px): table horizontal scroll ---------- */
+
+@media (max-width: 1024px) {
+  .rc-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .rc-table {
+    min-width: 980px;
+  }
+
+  .rc-card-toolbar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .rc-search-wrap {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .rc-toolbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* ---------- Mobile (<= 768px): table rows become cards ---------- */
+
+@media (max-width: 768px) {
+  .rc-dashboard {
+    padding: 14px 12px;
+  }
+
+  .rc-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .rc-header .rc-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rc-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .rc-table-scroll {
+    overflow-x: visible;
+  }
+
+  .rc-table {
+    min-width: 0;
+    width: 100%;
+    border: 0;
+  }
+
+  .rc-table thead {
+    display: none;
+  }
+
+  .rc-table tbody,
+  .rc-table tr,
+  .rc-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .rc-table tr {
+    margin-bottom: 14px;
+    padding: 6px 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  }
+
+  .rc-table td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 0;
+    text-align: left;
+  }
+
+  .rc-table td::before {
+    content: attr(data-label);
+    flex: 0 0 92px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+
+  .rc-table td > * {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .rc-ticket-col {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .rc-status-cell {
+    min-width: 0;
+  }
+
+  .rc-td-right {
+    justify-content: flex-start;
+  }
+
+  .rc-table-actions-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  .rc-table-actions-group .rc-btn-action {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
+/* ---------- Modals + forms on small screens (<= 640px) ---------- */
+
+@media (max-width: 640px) {
+  .rc-modal-overlay {
+    padding: 8px;
+    align-items: flex-end;
+  }
+
+  .rc-modal-box,
+  .rc-modal-large,
+  .rc-receipt-modal-box {
+    width: 100%;
+    max-width: 100%;
+    max-height: 94vh;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    overflow-y: auto;
+  }
+
+  .rc-grid-2,
+  .rc-grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .rc-meta-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rc-modal-footer {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .rc-modal-footer .rc-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rc-payment-summary,
+  .rc-bill-summary {
+    grid-template-columns: 1fr !important;
+  }
+
+  .rc-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+/* ---------- Very small phones (<= 420px) ---------- */
+
+@media (max-width: 420px) {
+  .rc-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rc-meta-row {
+    grid-template-columns: 1fr;
+  }
+
+  .rc-table td::before {
+    flex-basis: 78px;
+  }
+}
+
+/* ---------- Print: More / Less button kabhi print na ho ---------- */
+
+@media print {
+  .rc-btn-more {
+    display: none !important;
+  }
+}

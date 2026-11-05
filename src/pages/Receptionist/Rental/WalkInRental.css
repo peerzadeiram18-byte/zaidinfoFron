@@ -1325,4 +1325,3 @@
 .wir-condition-file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 @media (max-width: 800px) { .wir-condition-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .wir-condition-grid { grid-template-columns: 1fr; } .wir-pricing-item { padding: 12px; } }
-
