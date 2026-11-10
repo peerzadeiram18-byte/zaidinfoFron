@@ -8070,7 +8070,14 @@ import {
 } from "react-icons/fi";
 import { toast } from "react-toastify";
 import "./CustomerTicket.css";
+import JobExtraFields, {
+    WarrantyBadge,
+    JobExtraSummary
+} from "../../components/repair/JobExtraFields";
 
+import TransferJobModal from "../../components/repair/TransferJobModal";
+
+import { getSalespersonNames } from "../../services/repairJobService";
 // =====================================================
 // API
 // =====================================================
@@ -8308,11 +8315,16 @@ const initialForm = {
   issueDescription: "",
   estimatedCompletionDate: "",
   repairCost: "",
-  technicianName: "",
+   technicianName: "",
   assignedTechnician: "",
   remarks: "",
-};
 
+  warrantyStatus: "",
+  warrantyProvider: "",
+  warrantyExpiryDate: "",
+  warrantyDetails: "",
+  salespersonName: "",
+};
 // =====================================================
 // COMPONENT
 // =====================================================
@@ -8328,7 +8340,8 @@ const CusromerTicket = () => {
   const [technicians, setTechnicians] = useState([]);
   const [branches, setBranches] = useState([]);
   const [branchesLoading, setBranchesLoading] = useState(false);
-
+  const [transferRepairItem, setTransferRepairItem] = useState(null);
+  const [salespersons, setSalespersons] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [submitting, setSubmitting] =
@@ -8678,10 +8691,11 @@ const CusromerTicket = () => {
   // INITIAL LOAD
   // ===================================================
 
-  useEffect(() => {
+    useEffect(() => {
     fetchRepairs();
     fetchTechnicians();
     fetchBranches();
+    getSalespersonNames().then(setSalespersons);
   }, []);
 
 
@@ -8779,7 +8793,11 @@ const CusromerTicket = () => {
       );
     }
 
-
+    if (!form.warrantyStatus) {
+      return toast.error(
+        "Please select Warranty Status (Under Warranty / Out of Warranty)."
+      );
+    }
     // NOTE: "How did you come to know about ZAID Infotech?" is OPTIONAL,
     // so there is intentionally no validation for customerSource here.
 
@@ -8830,6 +8848,17 @@ const CusromerTicket = () => {
 
         remarks:
           form.remarks.trim(),
+          
+        warrantyStatus: form.warrantyStatus,
+
+        warrantyProvider: form.warrantyProvider.trim(),
+
+        warrantyExpiryDate:
+          form.warrantyExpiryDate || undefined,
+
+        warrantyDetails: form.warrantyDetails.trim(),
+
+        salespersonName: form.salespersonName.trim(),
 
       };
 
@@ -9426,6 +9455,11 @@ const CusromerTicket = () => {
 
   };
 
+  const handleTransferred = async () => {
+    setTransferRepairItem(null);
+
+    await fetchRepairs();
+  };
 
   // ===================================================
   // CALCULATED SELECTED PAYMENT VALUES
@@ -10006,6 +10040,16 @@ const CusromerTicket = () => {
                             <span className="rc-device-tag" style={{ display: "block", whiteSpace: "normal" }}>
                               Branch: {getBranchLabel(latestRepair)}
                             </span>
+                            
+                            <span className="rc-device-tag" style={{ display: "block", whiteSpace: "normal" }}>
+                              <WarrantyBadge repair={latestRepair} />
+                            </span>
+
+                            {latestRepair?.salespersonName && (
+                              <span className="rc-device-tag" style={{ display: "block", whiteSpace: "normal" }}>
+                                Salesperson: {latestRepair.salespersonName}
+                              </span>
+                            )}
 
                           </div>
 
@@ -10119,6 +10163,23 @@ const CusromerTicket = () => {
 
                               <span>
                                 Receipt
+                              </span>
+
+                            </button>
+                            
+                            <button
+                              type="button"
+                              className="rc-btn-action"
+                              onClick={() =>
+                                setTransferRepairItem(latestRepair)
+                              }
+                              title="Transfer / reassign to another technician"
+                            >
+
+                              <FiUserCheck />
+
+                              <span>
+                                Transfer
                               </span>
 
                             </button>
@@ -10681,8 +10742,19 @@ const CusromerTicket = () => {
                 </div>
 
               </div>
+              <div className="rc-field-group">
 
+                <span className="rc-group-title">
+                  Warranty & Sales Details
+                </span>
 
+                <JobExtraFields
+                  form={form}
+                  onChange={handleChange}
+                  salespersons={salespersons}
+                />
+
+              </div>
               <div className="rc-modal-footer">
 
                 <button
@@ -11079,6 +11151,12 @@ const CusromerTicket = () => {
                       )}
 
 
+                      <JobExtraSummary
+                        repair={repair}
+                        showNotes
+                        showTransfers
+                      />
+
                       {/* CUSTOMER SOURCE */}
 
                       {getCustomerSourceLabel(repair) && (
@@ -11171,7 +11249,15 @@ const CusromerTicket = () => {
 
       )}
 
+      {/* TRANSFER JOB MODAL */}
 
+      {transferRepairItem && (
+        <TransferJobModal
+          repair={transferRepairItem}
+          onClose={() => setTransferRepairItem(null)}
+          onDone={handleTransferred}
+        />
+      )}
       {/* =================================================
           SERVICE DELIVERY INVOICE MODAL
       ================================================= */}
@@ -11744,6 +11830,7 @@ const CusromerTicket = () => {
                 <div><strong>Physical Condition:</strong> {getRepairProblemDetails(selectedInvoice).condition || "N/A"}</div>
                 <div><strong>Technician:</strong> {selectedInvoice.technicianName || "Unassigned"}</div>
                 <div><strong>Job Status:</strong> {selectedInvoice.status || "Received"}</div>
+                                <JobExtraSummary repair={selectedInvoice} />
               </section>
 
               {/* =========================================

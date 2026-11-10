@@ -155,3 +155,39 @@ export const deleteInventory = async (inventoryId) => {
   );
 };
 
+// ======================================================
+// WAREHOUSE / TRANSFER
+// ======================================================
+
+export const addWarehouseStock = async (data) => {
+
+    return await axios.patch(
+        `${API}/add-warehouse-stock`,
+        data,
+        getConfig()
+    );
+
+};
+
+export const transferStock = async (data) => {
+
+    return await axios.patch(
+        `${API}/transfer-stock`,
+        data,
+        getConfig()
+    );
+
+};
+
+export const getStockTransfers = async (productId) => {
+
+    return await axios.get(
+        `${API}/transfers`,
+        {
+            ...getConfig(),
+            params: productId ? { productId } : {}
+        }
+    );
+
+};
+

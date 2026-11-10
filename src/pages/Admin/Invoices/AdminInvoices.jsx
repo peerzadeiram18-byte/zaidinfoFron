@@ -1631,10 +1631,15 @@ import {
   FiPhone,
   FiMail,
   FiTool,
+  FiEdit2,
+  FiTrash2,
 } from "react-icons/fi";
 
-import { getInvoices } from "../../../services/invoiceService";
-import { getAllRentals } from "../../../services/rentalApi";
+import {
+  getInvoices,
+  updateInvoice,
+  deleteInvoice,
+} from "../../../services/invoiceService";import { getAllRentals } from "../../../services/rentalApi";
 import { toast } from "react-toastify";
 
 import WalkInInvoice from "../../Receptionist/WalkInOrders/WalkInInvoice/WalkInInvoice";
@@ -1744,6 +1749,29 @@ function AdminInvoices() {
   const [invoiceFilter, setInvoiceFilter] = useState("ALL");
   const [searchText, setSearchText] = useState("");
 
+    const [gstFilter, setGstFilter] = useState("ALL");
+
+  // ---------------- EDIT / DELETE INVOICE ----------------
+
+  const [editInvoice, setEditInvoice] = useState(null);
+
+  const [editForm, setEditForm] = useState({
+    invoiceType: "GST",
+    gstPercentage: 18,
+    shippingCharge: 0,
+    otherCharges: 0,
+    notes: "",
+    fullName: "",
+    phone: "",
+    addressLine: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+
+  const [savingEdit, setSavingEdit] = useState(false);
+
+  const [deletingId, setDeletingId] = useState("");
   // ---------------- MORE / LESS ----------------
 
 const [expandedCards, setExpandedCards] = useState({});
@@ -1973,7 +2001,17 @@ const toggleCardDetails = (recordId) => {
       null
     );
   };
+  // ===================================================
+  // INVOICE TYPE (GST / NON_GST)
+  // ===================================================
 
+  const getInvoiceType = (invoice) =>
+    String(invoice?.invoiceType || "GST")
+      .trim()
+      .toUpperCase()
+      .replace(/[\s-]+/g, "_") === "NON_GST"
+      ? "NON_GST"
+      : "GST";
   // ===================================================
   // TECHNICIAN HELPERS
   // ===================================================
@@ -2556,7 +2594,30 @@ const toggleCardDetails = (recordId) => {
       invoiceNumber: invoice?.invoiceNumber,
       invoiceId: invoice?._id,
       invoiceDate: invoice?.invoiceDate,
-      invoiceFor: invoice?.invoiceFor || "ORDER",
+       invoiceFor: invoice?.invoiceFor || "ORDER",
+
+      // ===== GST / NON-GST + EDITED AMOUNTS =====
+      invoiceType: getInvoiceType(invoice),
+
+      notes: invoice?.notes || originalOrder?.notes || "",
+
+      ...(Number(invoice?.finalAmount) > 0
+        ? {
+            taxableAmount: Number(invoice.taxableAmount || 0),
+            gstPercentage: Number(invoice.gstPercentage || 0),
+            gstAmount: Number(invoice.gstAmount || 0),
+            shippingCharge: Number(invoice.shippingCharge || 0),
+            otherCharges: Number(invoice.otherCharges || 0),
+            couponDiscount: Number(invoice.couponDiscount || 0),
+            finalAmount: Number(invoice.finalAmount),
+            paidAmount: Number(invoice.paidAmount || 0),
+            balanceAmount: Number(invoice.balanceAmount || 0),
+          }
+        : {}),
+
+      ...(getInvoiceType(invoice) === "NON_GST"
+        ? { gstPercentage: 0, gstAmount: 0 }
+        : {}),
     };
   };
 
@@ -2583,6 +2644,151 @@ const toggleCardDetails = (recordId) => {
   const closeInvoice = () => setSelectedInvoice(null);
   const closeTechnicianReceipt = () => setSelectedTechnicianReceipt(null);
   const closeRentalInvoice = () => setSelectedRentalInvoice(null);
+  
+  // ===================================================
+  // EDIT INVOICE
+  // ===================================================
+
+  const editInputStyle = {
+    width: "100%",
+    padding: "10px 12px",
+    border: "1px solid #d1d5db",
+    borderRadius: "8px",
+    boxSizing: "border-box",
+    marginTop: "4px",
+  };
+
+  const setEditField = (name, value) => {
+    setEditForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const openEditInvoice = (invoice) => {
+    if (!invoice?._id) return;
+
+    const billing = invoice?.billingAddress || {};
+
+    setEditForm({
+      invoiceType: getInvoiceType(invoice),
+      gstPercentage:
+        Number(invoice?.gstPercentage) > 0
+          ? Number(invoice.gstPercentage)
+          : 18,
+      shippingCharge: Number(invoice?.shippingCharge || 0),
+      otherCharges: Number(invoice?.otherCharges || 0),
+      notes: invoice?.notes || "",
+      fullName: billing.fullName || "",
+      phone: billing.phone || "",
+      addressLine: billing.addressLine || "",
+      city: billing.city || "",
+      state: billing.state || "",
+      pincode: billing.pincode || "",
+    });
+
+    setEditInvoice(invoice);
+  };
+
+  const saveEditInvoice = async () => {
+    if (!editInvoice?._id) return;
+
+    const original = editInvoice;
+
+    // Sirf badli hui values bhejte hain, taaki
+    // bina wajah ke amount dobara calculate na ho.
+    const payload = {
+      notes: editForm.notes,
+      billingAddress: {
+        fullName: editForm.fullName,
+        phone: editForm.phone,
+        addressLine: editForm.addressLine,
+        city: editForm.city,
+        state: editForm.state,
+        pincode: editForm.pincode,
+      },
+    };
+
+    if (editForm.invoiceType !== getInvoiceType(original)) {
+      payload.invoiceType = editForm.invoiceType;
+    }
+
+    if (
+      editForm.invoiceType === "GST" &&
+      Number(editForm.gstPercentage) !==
+        Number(original?.gstPercentage || 0)
+    ) {
+      payload.gstPercentage = Number(editForm.gstPercentage || 0);
+    }
+
+    if (
+      Number(editForm.shippingCharge || 0) !==
+      Number(original?.shippingCharge || 0)
+    ) {
+      payload.shippingCharge = Number(editForm.shippingCharge || 0);
+    }
+
+    if (
+      Number(editForm.otherCharges || 0) !==
+      Number(original?.otherCharges || 0)
+    ) {
+      payload.otherCharges = Number(editForm.otherCharges || 0);
+    }
+
+    try {
+      setSavingEdit(true);
+
+      await updateInvoice(original._id, payload);
+
+      toast.success("Invoice updated successfully");
+
+      setEditInvoice(null);
+
+      await loadInvoices();
+    } catch (error) {
+      console.error("UPDATE INVOICE ERROR:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Unable to update invoice"
+      );
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
+  // ===================================================
+  // DELETE INVOICE
+  // ===================================================
+
+  const handleDeleteInvoice = async (invoice) => {
+    if (!invoice?._id) return;
+
+    const confirmed = window.confirm(
+      `Delete invoice ${invoice?.invoiceNumber || ""}?\n\nYe invoice list se hat jayega.`
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(invoice._id);
+
+      await deleteInvoice(invoice._id);
+
+      toast.success("Invoice deleted successfully");
+
+      await loadInvoices();
+    } catch (error) {
+      console.error("DELETE INVOICE ERROR:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Unable to delete invoice"
+      );
+    } finally {
+      setDeletingId("");
+    }
+  };
 
 const handleTechnicianPrint = () => {
   const receipt = document.getElementById("technician-printable-receipt");
@@ -2743,6 +2949,7 @@ const handleTechnicianPrint = () => {
       amount: getAmount(invoice),
       date: getInvoiceDate(invoice),
       status: String(invoice?.paymentStatus || "PAID").toUpperCase(),
+      invoiceType: getInvoiceType(invoice),
     }));
 
     const rentalRecords = rentalInvoices.map((rental) => ({
@@ -2755,6 +2962,7 @@ const handleTechnicianPrint = () => {
       amount: getRentalGrandTotal(rental),
       date: getRentalDate(rental),
       status: getRentalStatus(rental),
+      invoiceType: getRentalGST(rental) > 0 ? "GST" : "NON_GST",   
     }));
 
     const repairRecords = technicianRepairs.map((repair) => ({
@@ -2782,9 +2990,16 @@ const handleTechnicianPrint = () => {
 
     let records = [...unifiedRecords];
 
-    if (invoiceFilter !== "ALL") {
+    // if (invoiceFilter !== "ALL") {
+    //   records = records.filter(
+    //     (record) => record.type === invoiceFilter
+    //   );
+    // }
+
+    
+    if (gstFilter !== "ALL") {
       records = records.filter(
-        (record) => record.type === invoiceFilter
+        (record) => record.invoiceType === gstFilter
       );
     }
 
@@ -2850,8 +3065,7 @@ const handleTechnicianPrint = () => {
 
     return records;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [unifiedRecords, invoiceFilter, searchText, branches]);
-
+  }, [unifiedRecords, invoiceFilter, searchText, branches, gstFilter]);
   // ===================================================
   // FILTER COUNTS
   // ===================================================
@@ -3041,6 +3255,21 @@ const handleTechnicianPrint = () => {
             <option value="WALK_IN_RENTAL">Walk-In Rentals</option>
             <option value="REPAIR">Technician / Repair</option>
           </select>
+          
+          <select
+            value={gstFilter}
+            onChange={(e) => setGstFilter(e.target.value)}
+            style={{
+              padding: "10px 12px",
+              border: "1px solid #d1d5db",
+              borderRadius: "8px",
+              background: "#ffffff",
+            }}
+          >
+            <option value="ALL">GST + Non-GST</option>
+            <option value="GST">GST Only</option>
+            <option value="NON_GST">Non-GST Only</option>
+          </select>
         </div>
       </div>
 
@@ -3095,6 +3324,32 @@ const handleTechnicianPrint = () => {
     expandedCards[record.id] ? "expanded" : "collapsed"
   }`}
 >                    <h3>{invoiceNumber}</h3>
+
+
+                    <p>
+                      <strong>Invoice Type:</strong>{" "}
+                      <span
+                        className="invoice-source"
+                        style={{
+                          background:
+                            getInvoiceType(data) === "NON_GST"
+                              ? "#fee2e2"
+                              : "#dcfce7",
+                          color:
+                            getInvoiceType(data) === "NON_GST"
+                              ? "#b91c1c"
+                              : "#166534",
+                          border:
+                            getInvoiceType(data) === "NON_GST"
+                              ? "1px solid #fecaca"
+                              : "1px solid #bbf7d0",
+                        }}
+                      >
+                        {getInvoiceType(data) === "NON_GST"
+                          ? "NON-GST"
+                          : "GST"}
+                      </span>
+                    </p>
 
                     <p>
                       <strong>Type:</strong>{" "}
@@ -3156,6 +3411,52 @@ const handleTechnicianPrint = () => {
                     <FiEye style={{ marginRight: 6 }} />
                     View Invoice
                   </button>
+
+                  
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "8px",
+                      marginTop: "8px",
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => openEditInvoice(data)}
+                      style={{
+                        flex: 1,
+                        padding: "9px 12px",
+                        border: "1px solid #2563eb",
+                        background: "#eff6ff",
+                        color: "#1d4ed8",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <FiEdit2 style={{ marginRight: 6 }} />
+                      Edit
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={deletingId === data?._id}
+                      onClick={() => handleDeleteInvoice(data)}
+                      style={{
+                        flex: 1,
+                        padding: "9px 12px",
+                        border: "1px solid #dc2626",
+                        background: "#fef2f2",
+                        color: "#b91c1c",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      <FiTrash2 style={{ marginRight: 6 }} />
+                      {deletingId === data?._id
+                        ? "Deleting..."
+                        : "Delete"}
+                    </button>
+                  </div>
                 </div>
               );
             }
@@ -3410,6 +3711,249 @@ const handleTechnicianPrint = () => {
 
             return null;
           })}
+        </div>
+      )}
+            {/* EDIT INVOICE MODAL */}
+
+      {editInvoice && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 2000,
+            padding: "16px",
+          }}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget && !savingEdit) {
+              setEditInvoice(null);
+            }
+          }}
+        >
+          <div
+            style={{
+              background: "#ffffff",
+              borderRadius: "12px",
+              width: "100%",
+              maxWidth: "540px",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              padding: "20px",
+            }}
+          >
+            <h2 style={{ margin: 0 }}>Edit Invoice</h2>
+
+            <p style={{ color: "#6b7280", marginTop: "4px" }}>
+              {editInvoice?.invoiceNumber}
+            </p>
+
+            <label>
+              Invoice Type
+              <select
+                value={editForm.invoiceType}
+                onChange={(e) =>
+                  setEditField("invoiceType", e.target.value)
+                }
+                style={editInputStyle}
+              >
+                <option value="GST">GST Invoice</option>
+                <option value="NON_GST">Non-GST Invoice</option>
+              </select>
+            </label>
+
+            {editForm.invoiceType === "GST" && (
+              <label
+                style={{ display: "block", marginTop: "12px" }}
+              >
+                GST Percentage (%)
+                <input
+                  type="number"
+                  min="0"
+                  value={editForm.gstPercentage}
+                  onChange={(e) =>
+                    setEditField("gstPercentage", e.target.value)
+                  }
+                  style={editInputStyle}
+                />
+              </label>
+            )}
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "12px",
+                marginTop: "12px",
+              }}
+            >
+              <label>
+                Shipping Charge
+                <input
+                  type="number"
+                  min="0"
+                  value={editForm.shippingCharge}
+                  onChange={(e) =>
+                    setEditField("shippingCharge", e.target.value)
+                  }
+                  style={editInputStyle}
+                />
+              </label>
+
+              <label>
+                Other Charges
+                <input
+                  type="number"
+                  min="0"
+                  value={editForm.otherCharges}
+                  onChange={(e) =>
+                    setEditField("otherCharges", e.target.value)
+                  }
+                  style={editInputStyle}
+                />
+              </label>
+            </div>
+
+            <h4 style={{ margin: "16px 0 4px" }}>
+              Billing Details
+            </h4>
+
+            <input
+              type="text"
+              placeholder="Customer Name"
+              value={editForm.fullName}
+              onChange={(e) =>
+                setEditField("fullName", e.target.value)
+              }
+              style={editInputStyle}
+            />
+
+            <input
+              type="text"
+              placeholder="Phone"
+              value={editForm.phone}
+              onChange={(e) =>
+                setEditField("phone", e.target.value)
+              }
+              style={editInputStyle}
+            />
+
+            <input
+              type="text"
+              placeholder="Address"
+              value={editForm.addressLine}
+              onChange={(e) =>
+                setEditField("addressLine", e.target.value)
+              }
+              style={editInputStyle}
+            />
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gap: "8px",
+              }}
+            >
+              <input
+                type="text"
+                placeholder="City"
+                value={editForm.city}
+                onChange={(e) =>
+                  setEditField("city", e.target.value)
+                }
+                style={editInputStyle}
+              />
+
+              <input
+                type="text"
+                placeholder="State"
+                value={editForm.state}
+                onChange={(e) =>
+                  setEditField("state", e.target.value)
+                }
+                style={editInputStyle}
+              />
+
+              <input
+                type="text"
+                placeholder="Pincode"
+                value={editForm.pincode}
+                onChange={(e) =>
+                  setEditField("pincode", e.target.value)
+                }
+                style={editInputStyle}
+              />
+            </div>
+
+            <label
+              style={{ display: "block", marginTop: "12px" }}
+            >
+              Notes
+              <textarea
+                rows={3}
+                value={editForm.notes}
+                onChange={(e) =>
+                  setEditField("notes", e.target.value)
+                }
+                style={editInputStyle}
+              />
+            </label>
+
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#b45309",
+                marginTop: "12px",
+              }}
+            >
+              Note: GST ya charges badalne se sirf invoice ka total
+              badalta hai. Order aur Razorpay payment ka amount nahi
+              badalta.
+            </p>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px",
+                marginTop: "16px",
+              }}
+            >
+              <button
+                type="button"
+                disabled={savingEdit}
+                onClick={() => setEditInvoice(null)}
+                style={{
+                  padding: "10px 16px",
+                  border: "1px solid #d1d5db",
+                  background: "#ffffff",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                disabled={savingEdit}
+                onClick={saveEditInvoice}
+                style={{
+                  padding: "10px 16px",
+                  border: "none",
+                  background: "#2563eb",
+                  color: "#ffffff",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                }}
+              >
+                {savingEdit ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

@@ -78,19 +78,40 @@
 // };
 
 
+
+// // ==========================================
+// // GET MY INVOICES (logged-in user only)
+// // ==========================================
+
+// export const getMyInvoices = async () => {
+//   const response = await axios.get(
+//     "/invoices/my"
+//   );
+
+//   return response.data;
+// };
+
 import axios from "../api/axios";
 
 // ==========================================
 // CREATE INVOICE
+// invoiceType: "GST" ya "NON_GST" (optional)
 // ==========================================
 
-export const createInvoice = async (orderId) => {
+export const createInvoice = async (
+  orderId,
+  invoiceType
+) => {
   try {
+    const body = { orderId };
+
+    if (invoiceType) {
+      body.invoiceType = invoiceType;
+    }
+
     const response = await axios.post(
       "/invoices",
-      {
-        orderId,
-      }
+      body
     );
 
     console.log(
@@ -142,11 +163,15 @@ export const getInvoiceById =
 
 // ==========================================
 // GET ALL INVOICES
+// params: { invoiceType: "GST" | "NON_GST" }
 // ==========================================
 
-export const getInvoices = async () => {
+export const getInvoices = async (
+  params = {}
+) => {
   const response = await axios.get(
-    "/invoices"
+    "/invoices",
+    { params }
   );
 
   console.log(
@@ -157,8 +182,6 @@ export const getInvoices = async () => {
   return response.data;
 };
 
-
-
 // ==========================================
 // GET MY INVOICES (logged-in user only)
 // ==========================================
@@ -166,6 +189,38 @@ export const getInvoices = async () => {
 export const getMyInvoices = async () => {
   const response = await axios.get(
     "/invoices/my"
+  );
+
+  return response.data;
+};
+
+// ==========================================
+// UPDATE INVOICE
+// PUT /invoices/:id
+// ==========================================
+
+export const updateInvoice = async (
+  invoiceId,
+  data
+) => {
+  const response = await axios.put(
+    `/invoices/${invoiceId}`,
+    data
+  );
+
+  return response.data;
+};
+
+// ==========================================
+// DELETE INVOICE (soft delete)
+// DELETE /invoices/:id
+// ==========================================
+
+export const deleteInvoice = async (
+  invoiceId
+) => {
+  const response = await axios.delete(
+    `/invoices/${invoiceId}`
   );
 
   return response.data;

@@ -1,0 +1,214 @@
+/* =====================================================
+   SHARED REPAIR JOB STYLES (rjx-)
+   JobExtraFields + TransferJobModal ke liye
+===================================================== */
+
+.rjx-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+}
+
+.rjx-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.rjx-field.rjx-full {
+    grid-column: 1 / -1;
+}
+
+.rjx-field label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.rjx-field label .rjx-req {
+    color: #dc2626;
+}
+
+.rjx-field input,
+.rjx-field select,
+.rjx-field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    color: #111827;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.rjx-field input:focus,
+.rjx-field select:focus,
+.rjx-field textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.rjx-field textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.rjx-hint {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.rjx-warn {
+    font-size: 12px;
+    color: #b45309;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 6px 8px;
+}
+
+/* ---------- Buttons ---------- */
+
+.rjx-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    min-height: 40px;
+}
+
+.rjx-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.rjx-btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.rjx-btn-primary:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.rjx-btn-outline {
+    background: #ffffff;
+    color: #1d4ed8;
+    border-color: #2563eb;
+}
+
+.rjx-btn-outline:hover:not(:disabled) {
+    background: #eff6ff;
+}
+
+.rjx-btn-sm {
+    padding: 6px 10px;
+    min-height: 32px;
+    font-size: 12px;
+}
+
+/* ---------- Modal ---------- */
+
+.rjx-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(15, 23, 42, 0.55);
+}
+
+.rjx-modal {
+    width: 100%;
+    max-width: 520px;
+    max-height: 92vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.rjx-modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.rjx-modal-head h3 {
+    margin: 0 0 4px;
+    font-size: 18px;
+}
+
+.rjx-modal-head p {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.rjx-close {
+    border: none;
+    background: #f3f4f6;
+    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.rjx-modal-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.rjx-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.rjx-current {
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    font-size: 13px;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 600px) {
+    .rjx-fields {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .rjx-modal {
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    .rjx-modal-actions .rjx-btn {
+        flex: 1 1 140px;
+    }
+}

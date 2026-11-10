@@ -1,171 +1,620 @@
-.walkin-page{
-    display:flex;
-    gap:20px;
-    padding:20px;
-    background:#f5f7fb;
-    min-height:100vh;
+/* =====================================================
+   NEW WALK-IN ORDER
+   File: NewWalkInOrder.css
+   Everything is scoped under .walkin-page, so it will not
+   affect (or be affected by) other pages.
+===================================================== */
+
+.walkin-page {
+    /* ---- Theme ---- */
+    --wk-primary: #2563eb;
+    --wk-primary-dark: #1d4ed8;
+    --wk-primary-soft: #eff6ff;
+    --wk-text: #111827;
+    --wk-muted: #6b7280;
+    --wk-border: #e5e7eb;
+    --wk-surface: #ffffff;
+    --wk-soft: #f9fafb;
+    --wk-danger: #dc2626;
+    --wk-danger-soft: #fef2f2;
+    --wk-radius: 12px;
+    --wk-shadow: 0 1px 3px rgba(15, 23, 42, 0.08),
+                 0 4px 12px rgba(15, 23, 42, 0.05);
+
+    /* Agar tumhare layout me fixed header hai to
+       isko badal do, jaise: --walkin-sticky-top: 70px; */
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
+    gap: 20px;
+    align-items: start;
+
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 16px;
+    box-sizing: border-box;
+
+    color: var(--wk-text);
 }
 
-.left-side{
-    width:65%;
-    background:#fff;
-    border-radius:10px;
-    padding:20px;
-    box-shadow:0 2px 10px rgba(0,0,0,.1);
+.walkin-page *,
+.walkin-page *::before,
+.walkin-page *::after {
+    box-sizing: border-box;
 }
 
-.right-side{
-    width:35%;
-    background:#fff;
-    border-radius:10px;
-    padding:20px;
-    box-shadow:0 2px 10px rgba(0,0,0,.1);
-    position:sticky;
-    top:20px;
-    height:fit-content;
+/* =====================================================
+   LEFT SIDE (PRODUCTS)
+===================================================== */
+
+.walkin-page .left-side {
+    min-width: 0;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: var(--wk-radius);
+    box-shadow: var(--wk-shadow);
+    padding: 18px;
 }
 
-.search-box{
-    width:100%;
-    padding:12px;
-    border:1px solid #ddd;
-    border-radius:6px;
-    margin-bottom:20px;
-    font-size:15px;
+.walkin-page .left-side > h2 {
+    margin: 0 0 12px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--wk-text);
 }
 
-.product-list{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:20px;
+.walkin-page .left-side > p {
+    margin: 24px 0;
+    padding: 24px 12px;
+    text-align: center;
+    color: var(--wk-muted);
+    background: var(--wk-soft);
+    border: 1px dashed var(--wk-border);
+    border-radius: 10px;
 }
 
-.product-card{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-start;
-    gap:8px;
-    padding:16px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    background:#fff;
-    min-height:360px;
-    transition:.3s;
-    overflow:hidden;
+/* ---------- Search ---------- */
+
+.walkin-page .search-box {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    color: var(--wk-text);
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.product-card:hover{
-    transform:translateY(-4px);
-    box-shadow:0 5px 12px rgba(0,0,0,.15);
+.walkin-page .search-box::placeholder {
+    color: #9ca3af;
 }
 
-.product-card img{
-    width:120px;
-    height:120px;
-    object-fit:contain;
-    margin-bottom:10px;
+.walkin-page .search-box:focus {
+    border-color: var(--wk-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-.product-card h4{
-    margin:8px 0;
+/* ---------- Product Grid ---------- */
+
+.walkin-page .product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
 }
 
-.product-card p{
-    margin:5px 0;
-    color:#555;
+.walkin-page .product-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding: 12px;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: var(--wk-radius);
+    transition: box-shadow 0.18s ease,
+                border-color 0.18s ease,
+                transform 0.18s ease;
 }
 
-.product-card h3{
-    color:#0f766e;
+.walkin-page .product-card:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12);
+    transform: translateY(-2px);
 }
 
-.product-card button{
-    width:100%;
-    padding:10px;
-    border:none;
-    background:#2563eb;
-    color:white;
-    border-radius:6px;
-    cursor:pointer;
+.walkin-page .product-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    background: var(--wk-soft);
+    border-radius: 8px;
 }
 
-.product-card button:hover{
-    background:#1d4ed8;
+.walkin-page .product-card h4 {
+    margin: 6px 0 0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    min-height: 2.6em;
+    color: var(--wk-text);
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
 }
 
-.cart-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid #eee;
-    padding:10px 0;
+.walkin-page .product-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--wk-muted);
+    word-break: break-word;
 }
 
-.qty-box{
-    display:flex;
-    align-items:center;
-    gap:10px;
+.walkin-page .product-card h3 {
+    margin: 4px 0 2px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--wk-primary-dark);
 }
 
-.qty-box button{
-    width:30px;
-    height:30px;
-    border:none;
-    background:#2563eb;
-    color:#fff;
-    border-radius:4px;
-    cursor:pointer;
+.walkin-page .product-card button {
+    margin-top: auto;
+    width: 100%;
+    min-height: 40px;
+    padding: 9px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    background: var(--wk-primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
 }
 
-.remove-btn{
-    background:#dc2626;
-    color:#fff;
-    border:none;
-    padding:6px 12px;
-    border-radius:4px;
-    cursor:pointer;
+.walkin-page .product-card button:hover:not(:disabled) {
+    background: var(--wk-primary-dark);
 }
 
-.right-side input,
-.right-side select{
-    width:100%;
-    margin-bottom:12px;
-    padding:10px;
-    border:1px solid #ddd;
-    border-radius:6px;
+.walkin-page .product-card button:active:not(:disabled) {
+    transform: scale(0.98);
 }
 
-/* Customer source label */
-.right-side .source-label{
-    display:block;
-    font-size:14px;
-    margin-bottom:6px;
-    color:#333;
+.walkin-page .product-card button:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
 }
 
-/* "(Optional)" hint next to the customer source label */
-.right-side .optional-text{
-    color:#64748b;
-    font-weight:400;
+/* =====================================================
+   RIGHT SIDE (CART + CUSTOMER)
+===================================================== */
+
+.walkin-page .right-side {
+    min-width: 0;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: var(--wk-radius);
+    box-shadow: var(--wk-shadow);
+    padding: 18px;
+
+    position: sticky;
+    top: var(--walkin-sticky-top, 12px);
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
-.place-order-btn{
-    width:100%;
-    padding:14px;
-    border:none;
-    background:#16a34a;
-    color:white;
-    font-size:17px;
-    border-radius:8px;
-    cursor:pointer;
+/* ---------- Section headings ---------- */
+
+.walkin-page .right-side > h2 {
+    margin: 20px 0 10px;
+    padding-left: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--wk-text);
+    border-left: 4px solid var(--wk-primary);
 }
 
-.place-order-btn:hover{
-    background:#15803d;
+.walkin-page .right-side > h2:first-child {
+    margin-top: 0;
 }
 
-.place-order-btn:disabled{
-    background:#9ca3af;
-    cursor:not-allowed;
+.walkin-page .right-side > hr {
+    border: 0;
+    border-top: 1px dashed var(--wk-border);
+    margin: 14px 0;
+}
+
+/* ---------- Empty cart ---------- */
+
+.walkin-page .right-side > p {
+    margin: 0;
+    padding: 20px 12px;
+    text-align: center;
+    color: var(--wk-muted);
+    background: var(--wk-soft);
+    border: 1px dashed var(--wk-border);
+    border-radius: 10px;
+}
+
+/* ---------- Cart item ---------- */
+
+.walkin-page .cart-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 10px 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    background: var(--wk-soft);
+    border: 1px solid var(--wk-border);
+    border-radius: 10px;
+}
+
+.walkin-page .cart-item > div:first-child {
+    min-width: 0;
+}
+
+.walkin-page .cart-item h4 {
+    margin: 0 0 3px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--wk-text);
+    word-break: break-word;
+}
+
+.walkin-page .cart-item p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--wk-muted);
+}
+
+.walkin-page .cart-item small {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--wk-muted);
+}
+
+/* ---------- Quantity ---------- */
+
+.walkin-page .qty-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px;
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 999px;
+}
+
+.walkin-page .qty-box button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--wk-primary);
+    background: var(--wk-primary-soft);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.walkin-page .qty-box button:hover {
+    background: #dbeafe;
+}
+
+.walkin-page .qty-box span {
+    min-width: 26px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* ---------- Remove ---------- */
+
+.walkin-page .remove-btn {
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wk-danger);
+    background: var(--wk-danger-soft);
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.walkin-page .remove-btn:hover {
+    background: #fee2e2;
+}
+
+/* ---------- Grand total ---------- */
+
+.walkin-page .right-side > h3 {
+    margin: 0;
+    padding: 12px 14px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--wk-primary-dark);
+    background: var(--wk-primary-soft);
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+}
+
+/* ---------- Form fields ---------- */
+
+.walkin-page .right-side input,
+.walkin-page .right-side select {
+    display: block;
+    width: 100%;
+    margin: 0 0 10px;
+    padding: 11px 12px;
+    font-size: 16px; /* iOS zoom na kare */
+    color: var(--wk-text);
+    background: var(--wk-surface);
+    border: 1px solid var(--wk-border);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.walkin-page .right-side input::placeholder {
+    color: #9ca3af;
+}
+
+.walkin-page .right-side input:focus,
+.walkin-page .right-side select:focus {
+    border-color: var(--wk-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.walkin-page .right-side input:disabled,
+.walkin-page .right-side select:disabled {
+    background: var(--wk-soft);
+    color: var(--wk-muted);
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.walkin-page .right-side select {
+    cursor: pointer;
+}
+
+/* ---------- Labels ---------- */
+
+.walkin-page .source-label {
+    display: block;
+    margin: 4px 0 6px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--wk-text);
+}
+
+.walkin-page .optional-text {
+    font-weight: 400;
+    color: var(--wk-muted);
+}
+
+.walkin-page .right-side > small {
+    display: block;
+    margin: -4px 0 10px;
+    font-size: 12.5px;
+    line-height: 1.4;
+}
+
+/* ---------- Create order button ---------- */
+/* Scroll karte waqt neeche chipka rehta hai */
+
+.walkin-page .place-order-btn {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+
+    display: block;
+    width: 100%;
+    min-height: 50px;
+    margin: 14px 0 10px;
+    padding: 13px 16px;
+
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, var(--wk-primary), var(--wk-primary-dark));
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+    /* white ring = niche ka content button ke peeche na dikhe */
+    box-shadow: 0 0 0 10px var(--wk-surface),
+                0 6px 16px rgba(37, 99, 235, 0.35);
+
+    transition: filter 0.15s ease, transform 0.1s ease;
+}
+
+.walkin-page .place-order-btn:hover:not(:disabled) {
+    filter: brightness(1.08);
+}
+
+.walkin-page .place-order-btn:active:not(:disabled) {
+    transform: scale(0.99);
+}
+
+.walkin-page .place-order-btn:disabled {
+    background: #d1d5db;
+    color: #6b7280;
+    box-shadow: 0 0 0 10px var(--wk-surface);
+    cursor: not-allowed;
+}
+
+/* ---------- Keyboard focus ---------- */
+
+.walkin-page button:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.45);
+    outline-offset: 2px;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+/* ---------- Large laptops ---------- */
+@media (max-width: 1280px) {
+    .walkin-page {
+        grid-template-columns: minmax(0, 1fr) 380px;
+        gap: 16px;
+    }
+}
+
+/* ---------- Small laptops / tablets landscape ---------- */
+@media (max-width: 1024px) {
+    .walkin-page {
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 14px;
+        padding: 12px;
+    }
+
+    .walkin-page .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+    }
+
+    .walkin-page .left-side,
+    .walkin-page .right-side {
+        padding: 14px;
+    }
+}
+
+/* ---------- Tablets portrait + phones: ONE COLUMN ---------- */
+@media (max-width: 900px) {
+    .walkin-page {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .walkin-page .right-side {
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+
+    /* Product list ki height limit, taaki cart tak jaldi pahunchein.
+       Agar ye pasand na ho to neeche ki 3 lines hata do. */
+    .walkin-page .product-list {
+        max-height: 60vh;
+        overflow-y: auto;
+        padding-right: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 600px) {
+    .walkin-page {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .walkin-page .left-side,
+    .walkin-page .right-side {
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .walkin-page .left-side > h2 {
+        font-size: 18px;
+    }
+
+    .walkin-page .product-list {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 10px;
+        max-height: 65vh;
+    }
+
+    .walkin-page .product-card {
+        padding: 10px;
+    }
+
+    .walkin-page .product-card h4 {
+        font-size: 14px;
+    }
+
+    .walkin-page .product-card h3 {
+        font-size: 16px;
+    }
+
+    /* Cart item: naam upar, qty + remove neeche */
+    .walkin-page .cart-item {
+        grid-template-columns: 1fr auto;
+    }
+
+    .walkin-page .cart-item > div:first-child {
+        grid-column: 1 / -1;
+    }
+
+    .walkin-page .remove-btn {
+        justify-self: end;
+    }
+
+    .walkin-page .right-side > h3 {
+        font-size: 17px;
+    }
+}
+
+/* ---------- Very small phones ---------- */
+@media (max-width: 360px) {
+    .walkin-page {
+        padding: 8px;
+    }
+
+    .walkin-page .product-list {
+        grid-template-columns: 1fr;
+    }
+
+    .walkin-page .product-card img {
+        aspect-ratio: 16 / 9;
+    }
+}
+
+/* ---------- Touch screens: bade tap targets ---------- */
+@media (pointer: coarse) {
+    .walkin-page .product-card button,
+    .walkin-page .remove-btn {
+        min-height: 44px;
+    }
+
+    .walkin-page .qty-box button {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+/* ---------- Animations band (accessibility) ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .walkin-page * {
+        transition: none !important;
+    }
+
+    .walkin-page .product-card:hover {
+        transform: none;
+    }
 }

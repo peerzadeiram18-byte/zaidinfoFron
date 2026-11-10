@@ -625,6 +625,8 @@ import { FaRupeeSign } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "./TechnicianRepairHistory.css";
 
+import { JobExtraSummary } from "../../components/repair/JobExtraFields";
+
 // ======================================================
 // API CONFIG
 // ======================================================
@@ -2786,6 +2788,19 @@ const getBranchLabel = useCallback(
                             Note: {item.remarks}
                           </span>
                         )}
+                        
+                        {item.technicianNotes && (
+                          <span
+                            className="trh-remark-tag"
+                            style={{
+                              display: "block",
+                              whiteSpace: "pre-wrap",
+                              marginTop: 4,
+                            }}
+                          >
+                            Technician Notes: {item.technicianNotes}
+                          </span>
+                        )}
 
                         {Array.isArray(item.services) &&
                           item.services.length > 0 && (
@@ -3694,6 +3709,8 @@ const getBranchLabel = useCallback(
 
               <ProblemDetails repair={selectedInvoice} />
 
+
+              <JobExtraSummary repair={selectedInvoice} />
               {/* SERVICE TABLE */}
 
               <div className="invoice-table-section">

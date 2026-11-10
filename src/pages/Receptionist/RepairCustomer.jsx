@@ -5368,7 +5368,14 @@ import {
 import { FaRupeeSign } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "./RepairCustomer.css";
+import JobExtraFields, {
+    WarrantyBadge,
+    JobExtraSummary
+} from "../../components/repair/JobExtraFields";
 
+import TransferJobModal from "../../components/repair/TransferJobModal";
+
+import { getSalespersonNames } from "../../services/repairJobService";
 // =====================================================
 // API CONFIGURATION (sirf .env se - VITE_API_URL)
 // =====================================================
@@ -5592,10 +5599,15 @@ const initialForm = {
   serviceName: "",
   partCost: 0,
   laborCost: 0,
-
   technicianName: "",
   assignedTechnician: "",
   remarks: "",
+
+  warrantyStatus: "",
+  warrantyProvider: "",
+  warrantyExpiryDate: "",
+  warrantyDetails: "",
+  salespersonName: "",
 };
 
 // =====================================================
@@ -5639,6 +5651,9 @@ const RepairCustomer = () => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
   const [selectedPaymentRepair, setSelectedPaymentRepair] = useState(null);
+
+    const [transferRepairItem, setTransferRepairItem] = useState(null);
+  const [salespersons, setSalespersons] = useState([]);
 
   // Latest Ticket "More / Less" toggle (key = repair id)
   const [expandedTickets, setExpandedTickets] = useState({});
@@ -5969,6 +5984,7 @@ const RepairCustomer = () => {
     fetchTechnicians();
     fetchServices();
     fetchBranches();
+    getSalespersonNames().then(setSalespersons);
   }, []);
 
   // ===================================================
@@ -6066,7 +6082,11 @@ const RepairCustomer = () => {
     if (form.customerSource === "OTHER" && !form.customerSourceOther.trim()) {
       return toast.error("Please specify the source when selecting Other.");
     }
-
+    if (!form.warrantyStatus) {
+      return toast.error(
+        "Please select Warranty Status (Under Warranty / Out of Warranty)."
+      );
+    }
     // Keep the user-selected problem in issueDescription for legacy backend compatibility.
     const isLaptop = form.deviceType === "Laptop";
     if (isLaptop && (!form.problemCategory || !form.specificProblem)) {
@@ -6133,7 +6153,13 @@ const RepairCustomer = () => {
 
         assignedTechnician: form.assignedTechnician || null,
 
-        remarks: form.remarks.trim(),
+              remarks: form.remarks.trim(),
+
+        warrantyStatus: form.warrantyStatus,
+        warrantyProvider: form.warrantyProvider.trim(),
+        warrantyExpiryDate: form.warrantyExpiryDate || undefined,
+        warrantyDetails: form.warrantyDetails.trim(),
+        salespersonName: form.salespersonName.trim(),
       };
 
       const email = form.customerEmail.trim();
@@ -6523,6 +6549,28 @@ const RepairCustomer = () => {
     window.print();
   };
 
+  
+  const handleTransferred = async (updatedRepair) => {
+    setTransferRepairItem(null);
+
+    if (updatedRepair?._id) {
+      setSelectedCustomer((previous) =>
+        previous
+          ? {
+              ...previous,
+              repairs: previous.repairs.map((item) =>
+                item._id === updatedRepair._id
+                  ? { ...item, ...updatedRepair }
+                  : item
+              ),
+            }
+          : previous
+      );
+    }
+
+    await fetchRepairs();
+  };
+
   // Receipt ke liye branch details (render se pehle compute)
   const invoiceBranch = selectedInvoice ? getBranchInfo(selectedInvoice) : null;
   const invoiceBranchAddress = formatBranchAddress(invoiceBranch);
@@ -6831,6 +6879,25 @@ const RepairCustomer = () => {
                                 </span>
                               )}
 
+                                                            <span className="rc-device-tag">
+                                <WarrantyBadge repair={latestRepair} />
+                              </span>
+
+                              {latestRepair?.salespersonName && (
+                                <span className="rc-device-tag">
+                                  Salesperson: {latestRepair.salespersonName}
+                                </span>
+                              )}
+
+                              {latestRepair?.technicianNotes && (
+                                <span
+                                  className="rc-device-tag"
+                                  style={{ whiteSpace: "pre-wrap" }}
+                                >
+                                  Tech Notes: {latestRepair.technicianNotes}
+                                </span>
+                              )}
+
                               {latestRepair?.serviceName && (
                                 <span className="rc-device-tag">
                                   Service: {latestRepair.serviceName}
@@ -6976,6 +7043,17 @@ const RepairCustomer = () => {
                           >
                             <FiCreditCard />
                             <span>Payment</span>
+                          </button>
+
+                          
+                          <button
+                            type="button"
+                            className="rc-btn-action"
+                            onClick={() => setTransferRepairItem(latestRepair)}
+                            title="Transfer / reassign to another technician"
+                          >
+                            <FiUserCheck />
+                            <span>Transfer</span>
                           </button>
                         </div>
                       </td>
@@ -7392,6 +7470,18 @@ const RepairCustomer = () => {
                 </div>
               </div>
 
+                            <div className="rc-field-group">
+                <span className="rc-group-title">
+                  Warranty & Sales Details
+                </span>
+
+                <JobExtraFields
+                  form={form}
+                  onChange={handleChange}
+                  salespersons={salespersons}
+                />
+              </div>
+
               <div className="rc-modal-footer">
                 <button
                   type="button"
@@ -7676,6 +7766,14 @@ const RepairCustomer = () => {
 
                       <ProblemDetails repair={repair} />
 
+                      
+                      <JobExtraSummary
+                        repair={repair}
+                        showNotes
+                        showTransfers
+                      />
+
+
                       <div className="rc-note-card">
                         <FiMessageSquare className="rc-note-ico" />
 
@@ -7734,6 +7832,16 @@ const RepairCustomer = () => {
             </div>
           </div>
         </div>
+      )}
+
+            {/* TRANSFER JOB MODAL */}
+
+      {transferRepairItem && (
+        <TransferJobModal
+          repair={transferRepairItem}
+          onClose={() => setTransferRepairItem(null)}
+          onDone={handleTransferred}
+        />
       )}
 
       {/* =================================================
@@ -8085,6 +8193,7 @@ const RepairCustomer = () => {
               {/* CUSTOMER'S SELECTED PROBLEM DETAILS - INCLUDED WHEN PRINTING */}
               <ProblemDetails repair={selectedInvoice} />
 
+              <JobExtraSummary repair={selectedInvoice} />
               {/* SERVICE TABLE */}
 
               <div className="invoice-table-wrapper">

@@ -2364,6 +2364,21 @@ function WalkInInvoice({
         };
     }, [order]);
 
+    
+    // ========================================================
+    // GST / NON-GST
+    // ========================================================
+
+    const isNonGst =
+        String(
+            data.invoiceType ||
+            order.invoiceType ||
+            "GST"
+        )
+            .trim()
+            .toUpperCase()
+            .replace(/[\s-]+/g, "_") === "NON_GST";
+
     // ========================================================
     // PRINT INVOICE
     // ========================================================
@@ -3151,8 +3166,7 @@ function WalkInInvoice({
                 100
         );
 
-    const gstAmount = round2(
-        data.gstAmount !== undefined &&
+    const gstAmount = isNonGst ? 0 : round2(        data.gstAmount !== undefined &&
             data.gstAmount !== null
             ? data.gstAmount
             : data.taxAmount !==
@@ -3681,7 +3695,7 @@ function WalkInInvoice({
                 <div className="wkinv-document-top">
 
                     <span className="wkinv-document-title">
-                        TAX INVOICE
+                        {isNonGst ? "NON-GST INVOICE" : "TAX INVOICE"}
                     </span>
 
                     <span className="wkinv-recipient-label">
@@ -3726,12 +3740,21 @@ function WalkInInvoice({
 
                             <div className="wkinv-company-meta-grid">
 
-                                <p>
+                                {/* <p>
                                     <strong>
                                         GSTIN:
                                     </strong>{" "}
                                     {company.gstin}
-                                </p>
+                                </p> */}
+                                {!isNonGst && (
+                                    <p>
+                                        <strong>
+                                            GSTIN:
+                                        </strong>{" "}
+                                        {company.gstin}
+                                    </p>
+                                )}
+                                
 
                                 <p>
                                     <strong>
@@ -4110,8 +4133,8 @@ function WalkInInvoice({
                     TAX SUMMARY
                 ================================================== */}
 
+                {!isNonGst && (
                 <div className="wkinv-tax-summary">
-
                     <table className="wkinv-tax-table">
 
                         <thead>
@@ -4378,6 +4401,7 @@ function WalkInInvoice({
                     </table>
 
                 </div>
+                                )}
 
                 {/* ==================================================
                     TOTAL SUMMARY
@@ -4437,6 +4461,15 @@ function WalkInInvoice({
                                         "_",
                                         " "
                                     )}
+                                </strong>
+                            </div>
+                                                        <div className="wkinv-payment-row">
+                                <span>
+                                    Invoice Type
+                                </span>
+
+                                <strong>
+                                    {isNonGst ? "NON GST" : "GST"}
                                 </strong>
                             </div>
 
@@ -4574,6 +4607,8 @@ function WalkInInvoice({
                         )}
 
                         {/* TAXABLE */}
+                                                {!isNonGst && (
+                        <>
 
                         <div className="wkinv-grand-row">
 
@@ -4655,6 +4690,8 @@ function WalkInInvoice({
 
                             </>
 
+                        )}
+                                                </>
                         )}
 
                         {/* SHIPPING */}

@@ -1023,6 +1023,12 @@ import {
 import { toast } from "react-toastify";
 import "./TechnicianWorkOrders2.css";
 
+import { saveTechnicianNotes } from "../../services/repairJobService";
+
+import TransferJobModal from "../../components/repair/TransferJobModal";
+
+import { WarrantyBadge } from "../../components/repair/JobExtraFields";
+
 // ======================================================
 // API CONFIG
 // ======================================================
@@ -1263,6 +1269,13 @@ export default function TechnicianAssignedTasks() {
   // Expanded issue descriptions
   const [expandedIssues, setExpandedIssues] = useState({});
 
+  
+  // Technician notes (draft text per job)
+  const [notesDraft, setNotesDraft] = useState({});
+  const [savingNotesId, setSavingNotesId] = useState(null);
+
+  // Transfer job modal
+  const [transferJob, setTransferJob] = useState(null);
   // ====================================================
   // LOGGED-IN USER
   // ====================================================
@@ -1745,7 +1758,62 @@ export default function TechnicianAssignedTasks() {
       setUpdatingId(null);
     }
   };
+  // ====================================================
+  // TECHNICIAN NOTES
+  // ====================================================
 
+  const getNotesValue = (job) =>
+    notesDraft[job._id] !== undefined
+      ? notesDraft[job._id]
+      : job.technicianNotes || "";
+
+  const handleSaveNotes = async (job) => {
+    const text = String(getNotesValue(job)).trim();
+
+    if (text === String(job.technicianNotes || "").trim()) {
+      toast.info("No changes to save.");
+      return;
+    }
+
+    try {
+      setSavingNotesId(job._id);
+
+      await saveTechnicianNotes(job._id, text);
+
+      setRepairs((previous) =>
+        previous.map((repair) =>
+          repair._id === job._id
+            ? { ...repair, technicianNotes: text }
+            : repair
+        )
+      );
+
+      setNotesDraft((previous) => {
+        const next = { ...previous };
+        delete next[job._id];
+        return next;
+      });
+
+      toast.success("Technician notes saved.");
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to save technician notes."
+      );
+    } finally {
+      setSavingNotesId(null);
+    }
+  };
+
+  // ====================================================
+  // TRANSFER JOB
+  // ====================================================
+
+  const handleTransferred = async () => {
+    setTransferJob(null);
+
+    await fetchAssignedRepairs();
+  };
   // ====================================================
   // SUMMARY COUNTS
   // ====================================================
@@ -1949,6 +2017,7 @@ export default function TechnicianAssignedTasks() {
                   <th>Branch</th>
                   <th>Reported Issue</th>
                   <th>Counter Remarks</th>
+                  <th>Technician Notes</th>
                   <th>Job Date</th>
                   <th>Est. Target Date</th>
                   <th>Current Status</th>
@@ -2065,6 +2134,11 @@ export default function TechnicianAssignedTasks() {
                               S/N: {job.serialNumber}
                             </span>
                           )}
+
+                          
+                          <span className="tat-sub-txt">
+                            <WarrantyBadge repair={job} />
+                          </span>
                         </div>
                       </td>
 
@@ -2184,6 +2258,45 @@ export default function TechnicianAssignedTasks() {
                         )}
                       </td>
 
+                                            {/* TECHNICIAN NOTES */}
+
+                      <td style={{ minWidth: 230 }}>
+                        <textarea
+                          rows={3}
+                          maxLength={3000}
+                          placeholder="Diagnosis, observations, repair actions..."
+                          value={getNotesValue(job)}
+                          onChange={(event) =>
+                            setNotesDraft((previous) => ({
+                              ...previous,
+                              [job._id]: event.target.value,
+                            }))
+                          }
+                          style={{
+                            width: "100%",
+                            padding: 8,
+                            border: "1px solid #cbd5e1",
+                            borderRadius: 6,
+                            fontSize: 13,
+                            fontFamily: "inherit",
+                            boxSizing: "border-box",
+                            resize: "vertical",
+                          }}
+                        />
+
+                        <button
+                          type="button"
+                          className="rjx-btn rjx-btn-primary rjx-btn-sm"
+                          style={{ marginTop: 6 }}
+                          disabled={savingNotesId === job._id}
+                          onClick={() => handleSaveNotes(job)}
+                        >
+                          {savingNotesId === job._id
+                            ? "Saving..."
+                            : "Save Notes"}
+                        </button>
+                      </td>
+
                       {/* JOB DATE */}
 
                       <td>
@@ -2255,6 +2368,15 @@ export default function TechnicianAssignedTasks() {
                             Updating...
                           </span>
                         )}
+                        
+                        <button
+                          type="button"
+                          className="rjx-btn rjx-btn-outline rjx-btn-sm"
+                          style={{ marginTop: 6 }}
+                          onClick={() => setTransferJob(job)}
+                        >
+                          Transfer Job
+                        </button>
                       </td>
 
                     </tr>
@@ -2266,12 +2388,22 @@ export default function TechnicianAssignedTasks() {
           </div>
         )}
 
-        <div className="tat-table-footer">
+               <div className="tat-table-footer">
           Showing {filteredJobs.length} of{" "}
           {myAssignedJobs.length} assigned tasks
         </div>
 
       </section>
+
+      {/* TRANSFER JOB MODAL */}
+
+      {transferJob && (
+        <TransferJobModal
+          repair={transferJob}
+          onClose={() => setTransferJob(null)}
+          onDone={handleTransferred}
+        />
+      )}
     </div>
   );
 }

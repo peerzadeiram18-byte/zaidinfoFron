@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import "./WalkInOrders.css";
+import { toast } from "react-toastify";
+
 import {
     getAllOrders
 } from "../../../services/orderService";
+
+import {
+    getInvoiceByOrderId,
+    createInvoice
+} from "../../../services/invoiceService";
+
+import WalkInInvoice from "./WalkInInvoice/WalkInInvoice";
 
 
 // ======================================
@@ -64,6 +73,34 @@ const getCustomerSource = (order) => {
 };
 
 
+// ======================================
+// INVOICE RESPONSE -> INVOICE OBJECT
+// Backend: { success, data: invoice }
+// ======================================
+
+const extractInvoice = (response) => {
+
+    const invoice =
+        response?.data?.invoice ||
+        response?.data ||
+        response?.invoice ||
+        null;
+
+    if (
+        invoice &&
+        typeof invoice === "object" &&
+        !Array.isArray(invoice)
+    ) {
+
+        return invoice;
+
+    }
+
+    return null;
+
+};
+
+
 function WalkInOrders() {
 
     const [orders, setOrders] = useState([]);
@@ -73,6 +110,16 @@ function WalkInOrders() {
     const [search, setSearch] = useState("");
 
     const [loading, setLoading] = useState(true);
+
+    // ======================================
+    // INVOICE POPUP STATES
+    // ======================================
+
+    const [invoiceData, setInvoiceData] = useState(null);
+
+    const [autoPrint, setAutoPrint] = useState(false);
+
+    const [openingId, setOpeningId] = useState("");
 
     useEffect(() => {
 
@@ -212,6 +259,50 @@ function WalkInOrders() {
     }, [selectedDate, orders]);
 
     // ======================================
+    // AUTO PRINT
+    //
+    // Print button dabane par invoice popup khulta hai,
+    // phir popup ka "PRINT INVOICE" button apne aap
+    // click ho jata hai.
+    // ======================================
+
+    useEffect(() => {
+
+        if (!invoiceData || !autoPrint) {
+
+            return;
+
+        }
+
+        const timer = setTimeout(() => {
+
+            const printButton =
+                document.querySelector(
+                    ".wkinv-print-btn"
+                );
+
+            if (printButton) {
+
+                printButton.click();
+
+            }
+            else {
+
+                toast.error(
+                    "Print button not found. Please use PRINT INVOICE in the popup."
+                );
+
+            }
+
+            setAutoPrint(false);
+
+        }, 600);
+
+        return () => clearTimeout(timer);
+
+    }, [invoiceData, autoPrint]);
+
+    // ======================================
     // TOTAL SALES
     // ======================================
 
@@ -232,14 +323,128 @@ function WalkInOrders() {
     const totalOrders = filteredOrders.length;
 
     // ======================================
+    // OPEN INVOICE (VIEW / PRINT)
+    //
+    // 1. Order ka invoice backend se lao
+    // 2. Invoice na ho aur order PAID ho
+    //    to poochkar naya invoice banao
+    // 3. Kuch bhi fail ho to order ki details
+    //    dikha do (blank screen kabhi nahi)
+    // ======================================
+
+    const openInvoice = async (
+        order,
+        shouldPrint = false
+    ) => {
+
+        if (!order?._id) {
+
+            toast.error("Order ID not found");
+
+            return;
+
+        }
+
+        try {
+
+            setOpeningId(order._id);
+
+            let invoice = null;
+
+            try {
+
+                const response =
+                    await getInvoiceByOrderId(
+                        order._id
+                    );
+
+                invoice = extractInvoice(response);
+
+            }
+
+            catch (error) {
+
+                // 404 = invoice abhi bana hi nahi
+                if (error?.response?.status !== 404) {
+
+                    throw error;
+
+                }
+
+                const isPaid =
+                    String(
+                        order.paymentStatus || ""
+                    ).toUpperCase() === "PAID";
+
+                if (!isPaid) {
+
+                    toast.warning(
+                        "Invoice sirf paid order ka banta hai. Order details dikha rahe hain."
+                    );
+
+                }
+                else if (
+                    window.confirm(
+                        "Is order ka invoice abhi bana nahi hai. Abhi bana dein?"
+                    )
+                ) {
+
+                    const created =
+                        await createInvoice(
+                            order._id
+                        );
+
+                    invoice = extractInvoice(created);
+
+                    toast.success(
+                        "Invoice created successfully"
+                    );
+
+                }
+
+            }
+
+            setInvoiceData(invoice || order);
+
+            setAutoPrint(shouldPrint);
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "OPEN INVOICE ERROR:",
+                error
+            );
+
+            toast.error(
+                error?.response?.data?.message ||
+                error?.message ||
+                "Unable to load invoice. Showing order details."
+            );
+
+            // Fallback: order ki details dikhao
+            setInvoiceData(order);
+
+            setAutoPrint(shouldPrint);
+
+        }
+
+        finally {
+
+            setOpeningId("");
+
+        }
+
+    };
+
+    // ======================================
     // VIEW ORDER
     // ======================================
 
     const viewOrder = (order) => {
 
-        console.log(order);
-
-        // Next Part me Invoice Modal open hoga
+        openInvoice(order, false);
 
     };
 
@@ -249,13 +454,19 @@ function WalkInOrders() {
 
     const printInvoice = (order) => {
 
-        window.open(
+        openInvoice(order, true);
 
-            `/walkin-invoice/${order._id}`,
+    };
 
-            "_blank"
+    // ======================================
+    // CLOSE INVOICE
+    // ======================================
 
-        );
+    const closeInvoice = () => {
+
+        setInvoiceData(null);
+
+        setAutoPrint(false);
 
     };
 
@@ -425,6 +636,9 @@ function WalkInOrders() {
 
                                 const source =
                                     getCustomerSource(order);
+
+                                const isOpening =
+                                    openingId === order._id;
 
                                 return (
 
@@ -618,7 +832,11 @@ function WalkInOrders() {
 
                                             <button
 
+                                                type="button"
+
                                                 className="view-btn"
+
+                                                disabled={isOpening}
 
                                                 onClick={()=>
 
@@ -628,13 +846,27 @@ function WalkInOrders() {
 
                                             >
 
-                                                View
+                                                {
+
+                                                    isOpening ?
+
+                                                    "Opening..."
+
+                                                    :
+
+                                                    "View"
+
+                                                }
 
                                             </button>
 
                                             <button
 
+                                                type="button"
+
                                                 className="print-btn"
+
+                                                disabled={isOpening}
 
                                                 onClick={()=>
 
@@ -665,6 +897,24 @@ function WalkInOrders() {
                 </table>
 
             </div>
+
+            {/* INVOICE POPUP */}
+
+            {
+
+                invoiceData && (
+
+                    <WalkInInvoice
+
+                        order={invoiceData}
+
+                        onClose={closeInvoice}
+
+                    />
+
+                )
+
+            }
 
         </div>
 
