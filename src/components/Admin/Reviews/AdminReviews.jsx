@@ -1,885 +1,480 @@
-import React, {
-  useEffect,
-  useState
-} from "react";
-
-import {
-  toast
-} from "react-toastify";
-
-import {
-  getAllReviews,
-  approveReview,
-  rejectReview
-} from "../../../services/reviewService";
-
-import "./AdminReviews.css";
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import "./CustomerList.css";
+// import { toast } from "react-toastify";
+// const API_URL = import.meta.env.VITE_API_URL;
 
 
-const AdminReviews = () => {
+// function CustomerList() {
+//   const [customers, setCustomers] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
 
-  // =======================================
-  // STATES
-  // =======================================
+//   useEffect(() => {
+//     getCustomers();
+//   }, []);
 
-  const [reviews, setReviews] =
-    useState([]);
+//   const getCustomers = async () => {
+//     try {
+//       setLoading(true);
+//       const token = localStorage.getItem("token");
 
-  const [loading, setLoading] =
-    useState(true);
+//       // const res = await axios.get("http://localhost:5000/api/users", {
+//       //   headers: {
+//       //     Authorization: `Bearer ${token}`,
+//       //   },
+//       // });
 
-  const [actionLoading, setActionLoading] =
-    useState(null);
+//       // Filter only users with role "CUSTOMER"
+      
+// const res = await axios.get(
+//   `${API_URL}/users`,
+//   {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   }
+// );  
+      
+//       const userList = res.data?.users || res.data || [];
+//       const onlyCustomers = userList.filter(
+//         (item) => item.role === "CUSTOMER" || item.role === "customer"
+//       );
 
-  const [filter, setFilter] =
-    useState("ALL");
+//       setCustomers(onlyCustomers);
+//       setError("");
+//     } catch (err) {
+//       console.error(err);
+//       setError(err.response?.data?.message || "Failed to fetch customer data.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-  const [rejectModal, setRejectModal] =
-    useState(null);
+//   // Filter customers by search term
+//   const filteredCustomers = customers.filter((customer) => {
+//     const fullName = `${customer.firstName || ""} ${customer.lastName || ""}`.toLowerCase();
+//     const email = (customer.email || "").toLowerCase();
+//     const phone = (customer.phone || "").toLowerCase();
+//     const query = searchTerm.toLowerCase();
 
-  const [rejectionReason, setRejectionReason] =
-    useState("");
+//     return fullName.includes(query) || email.includes(query) || phone.includes(query);
+//   });
+
+//   return (
+//     <div className="customer-list-container">
+//       <div className="customer-card">
+        
+//         {/* Header Section */}
+//         <div className="card-header">
+//           <div>
+//             <h2>Customer Directory</h2>
+//             <p>View and manage all registered customers.</p>
+//           </div>
+//           <span className="customer-badge">{filteredCustomers.length} Total</span>
+//         </div>
+
+//         {/* Toolbar Section */}
+//         <div className="toolbar">
+//           <input
+//             type="text"
+//             className="search-input"
+//             placeholder="Search by name, email, or phone..."
+//             value={searchTerm}
+//             onChange={(e) => setSearchTerm(e.target.value)}
+//           />
+//           <button className="refresh-btn" onClick={getCustomers} disabled={loading}>
+//             {loading ? "Refreshing..." : "Refresh List"}
+//           </button>
+//         </div>
+
+//         {/* Error Alert */}
+//         {error && <div className="alert-error">{error}</div>}
+
+//         {/* Table Content */}
+//         <div className="table-wrapper">
+//           {loading ? (
+//             <div className="loading-state">
+//               <div className="spinner"></div>
+//               <p>Loading customers...</p>
+//             </div>
+//           ) : filteredCustomers.length === 0 ? (
+//             <div className="empty-state">
+//               <p>No customers found.</p>
+//             </div>
+//           ) : (
+//             <table className="custom-table">
+//               <thead>
+//                 <tr>
+//                   <th>Customer Name</th>
+//                   <th>Email Address</th>
+//                   <th>Phone Number</th>
+//                   <th>Status</th>
+//                 </tr>
+//               </thead>
+//               <tbody>
+//                 {filteredCustomers.map((item) => (
+//                   <tr key={item._id}>
+//                     <td>
+//                       <div className="user-avatar-group">
+//                         <div className="avatar">
+//                           {(item.firstName?.[0] || item.email?.[0] || "C").toUpperCase()}
+//                         </div>
+//                         <span className="user-name">
+//                           {item.firstName || item.lastName
+//                             ? `${item.firstName || ""} ${item.lastName || ""}`.trim()
+//                             : item.name || "N/A"}
+//                         </span>
+//                       </div>
+//                     </td>
+//                     <td className="text-muted">{item.email}</td>
+//                     <td className="text-muted">{item.phone || "N/A"}</td>
+//                     <td>
+//                       <span className={`status-pill ${item.isVerified ? "active" : "pending"}`}>
+//                         {item.isVerified ? "Active" : "Pending"}
+//                       </span>
+//                     </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           )}
+//         </div>
+
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default CustomerList;
 
 
-  // =======================================
-  // LOAD REVIEWS
-  // =======================================
 
-  const loadReviews = async () => {
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./CustomerList.css";
+import { toast } from "react-toastify";
 
-    try {
+const API_URL = import.meta.env.VITE_API_URL;
 
-      setLoading(true);
-
-      const response =
-        await getAllReviews();
-
-      console.log(
-        "ADMIN REVIEWS RESPONSE:",
-        response
-      );
-
-      const reviewList =
-        response?.data?.reviews || [];
-
-      setReviews(reviewList);
-
-    }
-    catch (error) {
-
-      console.error(
-        "GET ADMIN REVIEWS ERROR:",
-        error
-      );
-
-      toast.error(
-        error.response?.data?.message ||
-        "Failed to load reviews."
-      );
-
-    }
-    finally {
-
-      setLoading(false);
-
-    }
-
-  };
-
-
-  // =======================================
-  // INITIAL LOAD
-  // =======================================
+function CustomerList() {
+  const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-
-    loadReviews();
-
+    getCustomers();
   }, []);
 
-
-  // =======================================
-  // APPROVE REVIEW
-  // =======================================
-
-  const handleApprove = async (
-    reviewId
-  ) => {
-
+  const getCustomers = async () => {
     try {
+      setLoading(true);
+      setError("");
 
-      setActionLoading(reviewId);
+      const token = localStorage.getItem("token");
 
-      const response =
-        await approveReview(reviewId);
+      const res = await axios.get(`${API_URL}/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      toast.success(
-        response?.data?.message ||
-        "Review approved successfully."
+      const userList = res.data?.users || res.data || [];
+
+      const onlyCustomers = userList.filter(
+        (item) =>
+          item.role?.toUpperCase() === "CUSTOMER"
       );
 
-      // Update locally
-      setReviews((previous) =>
+      setCustomers(onlyCustomers);
+    } catch (err) {
+      console.error("Customer fetch error:", err);
 
-        previous.map((review) =>
+      const message =
+        err.response?.data?.message ||
+        "Failed to fetch customer data.";
 
-          review._id === reviewId
-
-            ? {
-                ...review,
-                status: "APPROVED"
-              }
-
-            : review
-
-        )
-
-      );
-
+      setError(message);
+      toast.error(message);
+    } finally {
+      setLoading(false);
     }
-    catch (error) {
-
-      console.error(
-        "APPROVE REVIEW ERROR:",
-        error
-      );
-
-      toast.error(
-        error.response?.data?.message ||
-        "Failed to approve review."
-      );
-
-    }
-    finally {
-
-      setActionLoading(null);
-
-    }
-
   };
 
+  const filteredCustomers = customers.filter((customer) => {
+    const fullName = `${
+      customer.firstName || ""
+    } ${customer.lastName || ""}`.toLowerCase();
 
-  // =======================================
-  // OPEN REJECT MODAL
-  // =======================================
+    const email = (customer.email || "").toLowerCase();
+    const phone = (customer.phone || "").toLowerCase();
+    const query = searchTerm.toLowerCase().trim();
 
-  const openRejectModal = (
-    review
-  ) => {
+    return (
+      fullName.includes(query) ||
+      email.includes(query) ||
+      phone.includes(query)
+    );
+  });
 
-    setRejectModal(review);
+  const getCustomerName = (customer) => {
+    if (customer.firstName || customer.lastName) {
+      return `${customer.firstName || ""} ${
+        customer.lastName || ""
+      }`.trim();
+    }
 
-    setRejectionReason("");
-
+    return customer.name || "N/A";
   };
 
-
-  // =======================================
-  // CLOSE REJECT MODAL
-  // =======================================
-
-  const closeRejectModal = () => {
-
-    setRejectModal(null);
-
-    setRejectionReason("");
-
+  const getInitial = (customer) => {
+    return (
+      customer.firstName?.[0] ||
+      customer.name?.[0] ||
+      customer.email?.[0] ||
+      "C"
+    ).toUpperCase();
   };
-
-
-  // =======================================
-  // REJECT REVIEW
-  // =======================================
-
-  const handleReject = async () => {
-
-    if (!rejectModal?._id) {
-      return;
-    }
-
-
-    try {
-
-      setActionLoading(
-        rejectModal._id
-      );
-
-
-      const response =
-        await rejectReview(
-
-          rejectModal._id,
-
-          rejectionReason.trim()
-
-        );
-
-
-      toast.success(
-        response?.data?.message ||
-        "Review rejected successfully."
-      );
-
-
-      // Update locally
-      setReviews((previous) =>
-
-        previous.map((review) =>
-
-          review._id ===
-          rejectModal._id
-
-            ? {
-                ...review,
-
-                status: "REJECTED",
-
-                rejectionReason:
-                  rejectionReason.trim()
-              }
-
-            : review
-
-        )
-
-      );
-
-
-      closeRejectModal();
-
-    }
-    catch (error) {
-
-      console.error(
-        "REJECT REVIEW ERROR:",
-        error
-      );
-
-      toast.error(
-        error.response?.data?.message ||
-        "Failed to reject review."
-      );
-
-    }
-    finally {
-
-      setActionLoading(null);
-
-    }
-
-  };
-
-
-  // =======================================
-  // FILTER REVIEWS
-  // =======================================
-
-  const filteredReviews =
-    reviews.filter((review) => {
-
-      if (filter === "ALL") {
-        return true;
-      }
-
-      return review.status === filter;
-
-    });
-
-
-  // =======================================
-  // COUNTS
-  // =======================================
-
-  const totalReviews =
-    reviews.length;
-
-  const pendingReviews =
-    reviews.filter(
-      (review) =>
-        review.status === "PENDING"
-    ).length;
-
-  const approvedReviews =
-    reviews.filter(
-      (review) =>
-        review.status === "APPROVED"
-    ).length;
-
-  const rejectedReviews =
-    reviews.filter(
-      (review) =>
-        review.status === "REJECTED"
-    ).length;
-
-
-  // =======================================
-  // RENDER
-  // =======================================
 
   return (
-
-    <div className="admin-reviews-page">
-
-
-      {/* =================================
-          HEADER
-      ================================= */}
-
-      <div className="admin-reviews-header">
-
-        <div>
-
-          <h1>
-            Product Reviews
-          </h1>
-
-          <p>
-            Manage customer product reviews
-            and approve or reject them.
-          </p>
-
-        </div>
-
-      </div>
-
-
-      {/* =================================
-          SUMMARY
-      ================================= */}
-
-      <div className="review-summary">
-
-
-        <div className="review-summary-card">
-
-          <span>
-            Total Reviews
-          </span>
-
-          <strong>
-            {totalReviews}
-          </strong>
-
-        </div>
-
-
-        <div className="review-summary-card pending">
-
-          <span>
-            Pending
-          </span>
-
-          <strong>
-            {pendingReviews}
-          </strong>
-
-        </div>
-
-
-        <div className="review-summary-card approved">
-
-          <span>
-            Approved
-          </span>
-
-          <strong>
-            {approvedReviews}
-          </strong>
-
-        </div>
-
-
-        <div className="review-summary-card rejected">
-
-          <span>
-            Rejected
-          </span>
-
-          <strong>
-            {rejectedReviews}
-          </strong>
-
-        </div>
-
-
-      </div>
-
-
-      {/* =================================
-          FILTER
-      ================================= */}
-
-      <div className="review-filter-bar">
-
-        <button
-          className={
-            filter === "ALL"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setFilter("ALL")
-          }
-        >
-          All
-        </button>
-
-
-        <button
-          className={
-            filter === "PENDING"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setFilter("PENDING")
-          }
-        >
-          Pending
-        </button>
-
-
-        <button
-          className={
-            filter === "APPROVED"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setFilter("APPROVED")
-          }
-        >
-          Approved
-        </button>
-
-
-        <button
-          className={
-            filter === "REJECTED"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setFilter("REJECTED")
-          }
-        >
-          Rejected
-        </button>
-
-      </div>
-
-
-      {/* =================================
-          REVIEWS
-      ================================= */}
-
-      {loading ? (
-
-        <div className="reviews-loading">
-
-          Loading reviews...
-
-        </div>
-
-      ) : filteredReviews.length === 0 ? (
-
-        <div className="reviews-empty">
-
-          <h3>
-            No reviews found
-          </h3>
-
-          <p>
-            There are no reviews in this category.
-          </p>
-
-        </div>
-
-      ) : (
-
-        <div className="reviews-table-wrapper">
-
-          <table className="reviews-table">
-
-            <thead>
-
-              <tr>
-
-                <th>
-                  Customer
-                </th>
-
-                <th>
-                  Product
-                </th>
-
-                <th>
-                  Rating
-                </th>
-
-                <th>
-                  Review
-                </th>
-
-                <th>
-                  Purchase
-                </th>
-
-                <th>
-                  Status
-                </th>
-
-                <th>
-                  Date
-                </th>
-
-                <th>
-                  Action
-                </th>
-
-              </tr>
-
-            </thead>
-
-
-            <tbody>
-
-              {filteredReviews.map(
-                (review) => (
-
-                  <tr
-                    key={review._id}
-                  >
-
-
-                    {/* CUSTOMER */}
-
-                    <td>
-
-                      <div className="review-customer">
-
-                        <strong>
-
-                          {review.user?.firstName ||
-                            ""}
-
-                          {" "}
-
-                          {review.user?.lastName ||
-                            ""}
-
-                        </strong>
-
-                        <small>
-
-                          {review.user?.email ||
-                            "N/A"}
-
-                        </small>
-
-                      </div>
-
-                    </td>
-
-
-                    {/* PRODUCT */}
-
-                    <td>
-
-                      <strong>
-
-                        {review.product?.name ||
-                          "Product unavailable"}
-
-                      </strong>
-
-                    </td>
-
-
-                    {/* RATING */}
-
-                    <td>
-
-                      <div className="review-stars">
-
-                        {[1, 2, 3, 4, 5].map(
-                          (star) => (
-
-                            <span
-                              key={star}
-                              className={
-                                star <=
-                                review.rating
-                                  ? "filled"
-                                  : ""
-                              }
-                            >
-                              ★
-                            </span>
-
-                          )
-                        )}
-
-                      </div>
-
-                      <small>
-
-                        {review.rating}/5
-
-                      </small>
-
-                    </td>
-
-
-                    {/* COMMENT */}
-
-                    <td>
-
-                      <div className="review-comment">
-
-                        {review.comment}
-
-                      </div>
-
-                    </td>
-
-
-                    {/* PURCHASE */}
-
-                    <td>
-
-                      {review.verifiedPurchase ? (
-
-                        <span className="verified-badge">
-
-                          ✓ Verified
-
-                        </span>
-
-                      ) : (
-
-                        <span className="not-verified">
-
-                          Not Verified
-
-                        </span>
-
-                      )}
-
-                    </td>
-
-
-                    {/* STATUS */}
-
-                    <td>
-
-                      <span
-                        className={`
-                          review-status
-                          ${String(
-                            review.status || ""
-                          ).toLowerCase()}
-                        `}
-                      >
-
-                        {review.status}
-
-                      </span>
-
-                    </td>
-
-
-                    {/* DATE */}
-
-                    <td>
-
-                      {review.createdAt
-                        ? new Date(
-                            review.createdAt
-                          ).toLocaleDateString(
-                            "en-IN"
-                          )
-                        : "N/A"}
-
-                    </td>
-
-
-                    {/* ACTION */}
-
-                    <td>
-
-                      <div className="review-actions">
-
-
-                        {review.status !==
-                          "APPROVED" && (
-
-                          <button
-                            className="approve-btn"
-                            disabled={
-                              actionLoading ===
-                              review._id
-                            }
-                            onClick={() =>
-                              handleApprove(
-                                review._id
-                              )
-                            }
-                          >
-
-                            {actionLoading ===
-                            review._id
-                              ? "..."
-                              : "Approve"}
-
-                          </button>
-
-                        )}
-
-
-                        {review.status !==
-                          "REJECTED" && (
-
-                          <button
-                            className="reject-btn"
-                            disabled={
-                              actionLoading ===
-                              review._id
-                            }
-                            onClick={() =>
-                              openRejectModal(
-                                review
-                              )
-                            }
-                          >
-
-                            Reject
-
-                          </button>
-
-                        )}
-
-                      </div>
-
-                    </td>
-
-
-                  </tr>
-
-                )
-              )}
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      )}
-
-
-      {/* =================================
-          REJECT MODAL
-      ================================= */}
-
-      {rejectModal && (
-
-        <div className="reject-modal-overlay">
-
-          <div className="reject-modal">
-
-            <div className="reject-modal-header">
-
-              <h2>
-                Reject Review
-              </h2>
-
-              <button
-                type="button"
-                onClick={
-                  closeRejectModal
-                }
-              >
-                ×
-              </button>
-
+    <div className="customer-list-container">
+      <div className="customer-card">
+
+        {/* Page Header */}
+        <div className="customer-page-header">
+          <div className="customer-heading-content">
+            <div className="customer-heading-icon">
+              <i className="fas fa-users" />
             </div>
 
+            <div>
+              <span className="customer-eyebrow">
+                CUSTOMER MANAGEMENT
+              </span>
 
-            <div className="reject-modal-body">
+              <h2>Customer Directory</h2>
 
               <p>
-                Please provide a reason
-                for rejecting this review.
+                Manage and monitor all your registered customers
+                from one place.
               </p>
-
-
-              <textarea
-                value={
-                  rejectionReason
-                }
-                onChange={(e) =>
-                  setRejectionReason(
-                    e.target.value
-                  )
-                }
-                placeholder="Enter rejection reason..."
-                maxLength={500}
-                rows={5}
-              />
-
-              <small>
-                {rejectionReason.length}/500
-              </small>
-
             </div>
-
-
-            <div className="reject-modal-actions">
-
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={
-                  closeRejectModal
-                }
-              >
-                Cancel
-              </button>
-
-
-              <button
-                type="button"
-                className="confirm-reject-btn"
-                disabled={
-                  actionLoading ===
-                  rejectModal._id
-                }
-                onClick={
-                  handleReject
-                }
-              >
-
-                {actionLoading ===
-                rejectModal._id
-                  ? "Rejecting..."
-                  : "Reject Review"}
-
-              </button>
-
-            </div>
-
           </div>
 
+          <div className="customer-header-stats">
+            <span className="stats-label">
+              TOTAL CUSTOMERS
+            </span>
+
+            <div className="stats-value">
+              {customers.length.toString().padStart(2, "0")}
+            </div>
+
+            <span className="stats-indicator">
+              <span className="stats-dot" />
+              Registered users
+            </span>
+          </div>
         </div>
 
-      )}
+        {/* Toolbar */}
+        <div className="customer-toolbar">
 
+          <div className="customer-search-wrapper">
+            <i className="fas fa-search search-icon" />
+
+            <input
+              type="text"
+              className="customer-search-input"
+              placeholder="Search customers by name, email or phone..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
+            {searchTerm && (
+              <button
+                className="clear-search-btn"
+                onClick={() => setSearchTerm("")}
+                aria-label="Clear search"
+              >
+                <i className="fas fa-times" />
+              </button>
+            )}
+          </div>
+
+          <button
+            className="customer-refresh-btn"
+            onClick={getCustomers}
+            disabled={loading}
+          >
+            <i className={`fas fa-sync-alt ${
+              loading ? "refresh-spinning" : ""
+            }`} />
+
+            <span>
+              {loading ? "Refreshing..." : "Refresh"}
+            </span>
+          </button>
+        </div>
+
+        {/* Table Information */}
+        <div className="customer-table-info">
+          <div>
+            <h3>All Customers</h3>
+            <p>
+              Showing {filteredCustomers.length} of {customers.length} customers
+            </p>
+          </div>
+
+          <span className="customer-results-badge">
+            {filteredCustomers.length} RESULTS
+          </span>
+        </div>
+
+        {/* Table */}
+        <div className="customer-table-container">
+
+          {loading ? (
+            <div className="customer-loading-state">
+              <div className="customer-loader" />
+              <h4>Loading customers</h4>
+              <p>Please wait while we fetch customer information.</p>
+            </div>
+          ) : error && customers.length === 0 ? (
+            <div className="customer-empty-state">
+              <div className="empty-icon error-icon">
+                <i className="fas fa-exclamation-triangle" />
+              </div>
+
+              <h3>Unable to load customers</h3>
+              <p>{error}</p>
+
+              <button
+                className="customer-retry-btn"
+                onClick={getCustomers}
+              >
+                <i className="fas fa-redo" />
+                Try Again
+              </button>
+            </div>
+          ) : filteredCustomers.length === 0 ? (
+            <div className="customer-empty-state">
+              <div className="empty-icon">
+                <i className="fas fa-user-slash" />
+              </div>
+
+              <h3>No customers found</h3>
+
+              <p>
+                {searchTerm
+                  ? "Try searching with a different name, email or phone number."
+                  : "There are no registered customers yet."}
+              </p>
+
+              {searchTerm && (
+                <button
+                  className="customer-retry-btn"
+                  onClick={() => setSearchTerm("")}
+                >
+                  Clear Search
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="customer-table-scroll">
+              <table className="customer-modern-table">
+
+                <thead>
+                  <tr>
+                    <th className="customer-name-column">
+                      CUSTOMER
+                    </th>
+                    <th>EMAIL ADDRESS</th>
+                    <th>PHONE NUMBER</th>
+                    <th>ACCOUNT STATUS</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {filteredCustomers.map((item) => (
+                    <tr key={item._id}>
+
+                      {/* Customer */}
+                      <td>
+                        <div className="customer-profile">
+                          <div className="customer-avatar">
+                            {getInitial(item)}
+                          </div>
+
+                          <div className="customer-profile-details">
+                            <span className="customer-full-name">
+                              {getCustomerName(item)}
+                            </span>
+
+                            <span className="customer-id">
+                              ID: {item._id?.slice(-8).toUpperCase() || "N/A"}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Email */}
+                      <td>
+                        <div className="customer-contact">
+                          <i className="far fa-envelope" />
+                          <span>{item.email || "N/A"}</span>
+                        </div>
+                      </td>
+
+                      {/* Phone */}
+                      <td>
+                        <div className="customer-contact">
+                          <i className="fas fa-phone-alt" />
+                          <span>{item.phone || "N/A"}</span>
+                        </div>
+                      </td>
+
+                      {/* Status */}
+                      <td>
+                        <span
+                          className={`customer-status ${
+                            item.isVerified ? "verified" : "unverified"
+                          }`}
+                        >
+                          <span className="status-dot" />
+                          {item.isVerified ? "Active" : "Pending"}
+                        </span>
+                      </td>
+
+                    </tr>
+                  ))}
+                </tbody>
+
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        {!loading && filteredCustomers.length > 0 && (
+          <div className="customer-table-footer">
+            <span>
+              Displaying <strong>{filteredCustomers.length}</strong> customer
+              {filteredCustomers.length !== 1 ? "s" : ""}
+            </span>
+
+            <span className="customer-footer-secure">
+              <i className="fas fa-shield-alt" />
+              Customer data is protected
+            </span>
+          </div>
+        )}
+
+      </div>
     </div>
-
   );
+}
 
-};
-
-
-export default AdminReviews;
+export default CustomerList;

@@ -8944,6 +8944,13 @@ export default function FinancialReports() {
                                 }
                             />
 
+                            <PaymentCard
+    title="Card"
+    value={
+        methods?.CARD
+    }
+/>
+
                         </div>
 
                     </section>
