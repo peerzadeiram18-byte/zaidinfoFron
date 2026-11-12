@@ -1,0 +1,720 @@
+
+/* =========================================================
+   EXPENSE MANAGEMENT - PREMIUM ACCOUNTING DASHBOARD
+========================================================= */
+
+:root {
+  --expense-primary: #172554;
+  --expense-primary-light: #1e3a8a;
+  --expense-green: #16a34a;
+  --expense-green-dark: #15803d;
+  --expense-green-soft: #f0fdf4;
+
+  --expense-bg: #f5f7fb;
+  --expense-white: #ffffff;
+  --expense-text: #1e293b;
+  --expense-muted: #64748b;
+  --expense-border: #e5eaf1;
+
+  --expense-radius: 13px;
+  --expense-shadow: 0 3px 14px rgba(15, 23, 42, 0.045);
+}
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
+.accounting-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 28px;
+  background: var(--expense-bg);
+  color: var(--expense-text);
+  font-family: "Poppins", "Inter", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.accounting-page *,
+.accounting-page *::before,
+.accounting-page *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.accounting-page .page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 25px;
+}
+
+.accounting-page .page-head h1 {
+  margin: 0;
+  color: var(--expense-primary);
+  font-size: clamp(23px, 2vw, 29px);
+  font-weight: 750;
+  letter-spacing: -0.8px;
+  line-height: 1.35;
+}
+
+.accounting-page .page-head p {
+  margin: 7px 0 0;
+  color: var(--expense-muted);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   TOTAL SUMMARY CARD
+========================================================= */
+
+.accounting-page .summary-card {
+  position: relative;
+  min-width: 185px;
+  padding: 17px 21px;
+  overflow: hidden;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+  box-shadow: var(--expense-shadow);
+}
+
+.accounting-page .summary-card::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--expense-green);
+  content: "";
+}
+
+.accounting-page .summary-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--expense-muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.accounting-page .summary-card strong {
+  display: block;
+  color: var(--expense-green-dark);
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   COMMON PANELS
+========================================================= */
+
+.accounting-page .panel {
+  width: 100%;
+  padding: 23px;
+  margin-bottom: 21px;
+  border: 1px solid var(--expense-border);
+  border-radius: var(--expense-radius);
+  background: var(--expense-white);
+  box-shadow: var(--expense-shadow);
+}
+
+/* =========================================================
+   FORM PANEL
+========================================================= */
+
+.accounting-page .form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 19px 17px;
+}
+
+.accounting-page .panel-title {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 15px;
+  margin-bottom: 1px;
+  border-bottom: 1px solid var(--expense-border);
+  color: var(--expense-primary);
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+.accounting-page .panel-title::before {
+  width: 4px;
+  height: 19px;
+  border-radius: 5px;
+  background: var(--expense-green);
+  content: "";
+}
+
+/* =========================================================
+   FORM LABELS
+========================================================= */
+
+.accounting-page .form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   INPUTS / SELECT / TEXTAREA
+========================================================= */
+
+.accounting-page .form-grid input,
+.accounting-page .form-grid select,
+.accounting-page .form-grid textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 43px;
+  padding: 10px 12px;
+  outline: none;
+  border: 1px solid #dce3eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--expense-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 450;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.accounting-page .form-grid input::placeholder,
+.accounting-page .form-grid textarea::placeholder {
+  color: #a0aaba;
+}
+
+.accounting-page .form-grid input:hover,
+.accounting-page .form-grid select:hover,
+.accounting-page .form-grid textarea:hover {
+  border-color: #b8c5d4;
+}
+
+.accounting-page .form-grid input:focus,
+.accounting-page .form-grid select:focus,
+.accounting-page .form-grid textarea:focus {
+  border-color: var(--expense-green);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.09);
+}
+
+.accounting-page .form-grid select {
+  cursor: pointer;
+}
+
+.accounting-page .form-grid textarea {
+  min-height: 88px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   FULL WIDTH FIELDS
+========================================================= */
+
+.accounting-page .form-grid .wide {
+  grid-column: 1 / -1;
+}
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.accounting-page .form-grid .actions {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 3px;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.accounting-page .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.accounting-page .btn.primary {
+  border-color: var(--expense-green);
+  background: var(--expense-green);
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(22, 163, 74, 0.13);
+}
+
+.accounting-page .btn.primary:hover:not(:disabled) {
+  border-color: var(--expense-green-dark);
+  background: var(--expense-green-dark);
+  box-shadow: 0 5px 12px rgba(22, 163, 74, 0.2);
+  transform: translateY(-1px);
+}
+
+.accounting-page .btn.ghost {
+  border-color: var(--expense-border);
+  background: #f8fafc;
+  color: #475569;
+}
+
+.accounting-page .btn.ghost:hover {
+  border-color: #cbd5e1;
+  background: #eef2f7;
+  color: var(--expense-primary);
+}
+
+.accounting-page .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* =========================================================
+   ERROR ALERT
+========================================================= */
+
+.accounting-page .alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  margin-bottom: 18px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fff7f7;
+  color: #b42318;
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   EXPENSE TABLE TOOLBAR
+========================================================= */
+
+.accounting-page .toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 19px;
+}
+
+.accounting-page .toolbar h2 {
+  margin: 0;
+  color: var(--expense-primary);
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.accounting-page .search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+  min-height: 41px;
+  padding: 0 12px;
+  border: 1px solid var(--expense-border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #94a3b8;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.accounting-page .search:focus-within {
+  border-color: var(--expense-green);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.08);
+}
+
+.accounting-page .search svg {
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+.accounting-page .search input {
+  width: 100%;
+  min-width: 0;
+  height: 39px;
+  padding: 0;
+  outline: none;
+  border: 0;
+  background: transparent;
+  color: var(--expense-text);
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.accounting-page .search input::placeholder {
+  color: #9aa6b5;
+}
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+
+.accounting-page .table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid var(--expense-border);
+  border-radius: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.accounting-page .table-wrap::-webkit-scrollbar {
+  height: 7px;
+}
+
+.accounting-page .table-wrap::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.accounting-page .table-wrap::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #cbd5e1;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.accounting-page .table-wrap table {
+  width: 100%;
+  min-width: 1050px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.accounting-page .table-wrap thead {
+  background: #f8fafc;
+}
+
+.accounting-page .table-wrap th {
+  height: 48px;
+  padding: 0 15px;
+  border-bottom: 1px solid var(--expense-border);
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.accounting-page .table-wrap td {
+  height: 58px;
+  padding: 11px 15px;
+  border-bottom: 1px solid #edf0f4;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 450;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.accounting-page .table-wrap tbody tr {
+  transition: background 0.15s ease;
+}
+
+.accounting-page .table-wrap tbody tr:hover {
+  background: #f8fdf9;
+}
+
+.accounting-page .table-wrap tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Expense number */
+
+.accounting-page .table-wrap td:first-child {
+  color: var(--expense-primary);
+  font-weight: 700;
+}
+
+/* Amount column */
+
+.accounting-page .table-wrap td:nth-child(6) {
+  color: var(--expense-primary);
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.accounting-page .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.2;
+  text-transform: capitalize;
+}
+
+.accounting-page .badge.paid {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.accounting-page .badge.pending {
+  border-color: #fde68a;
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.accounting-page .badge.cancelled {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+/* =========================================================
+   TABLE ACTION BUTTONS
+========================================================= */
+
+.accounting-page .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin-right: 6px;
+  border: 1px solid #dbeafe;
+  border-radius: 7px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.accounting-page .icon-btn:hover {
+  border-color: #93c5fd;
+  background: #dbeafe;
+  transform: translateY(-1px);
+}
+
+.accounting-page .icon-btn.danger {
+  border-color: #fee2e2;
+  background: #fff1f2;
+  color: #dc2626;
+}
+
+.accounting-page .icon-btn.danger:hover {
+  border-color: #fecaca;
+  background: #fee2e2;
+}
+
+/* =========================================================
+   EMPTY / LOADING STATE
+========================================================= */
+
+.accounting-page .empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 25px;
+  color: var(--expense-muted);
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* =========================================================
+   TABLET RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+  .accounting-page {
+    padding: 23px;
+  }
+
+  .accounting-page .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .accounting-page .table-wrap table {
+    min-width: 1000px;
+  }
+}
+
+/* =========================================================
+   MOBILE RESPONSIVE
+========================================================= */
+
+@media (max-width: 650px) {
+  .accounting-page {
+    padding: 17px 13px;
+  }
+
+  .accounting-page .page-head {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 19px;
+  }
+
+  .accounting-page .page-head h1 {
+    font-size: 23px;
+  }
+
+  .accounting-page .page-head p {
+    font-size: 12px;
+  }
+
+  .accounting-page .summary-card {
+    width: 100%;
+    min-width: 0;
+    padding: 14px 17px;
+  }
+
+  .accounting-page .summary-card strong {
+    font-size: 22px;
+  }
+
+  .accounting-page .panel {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 11px;
+  }
+
+  .accounting-page .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 15px;
+  }
+
+  .accounting-page .form-grid .wide {
+    grid-column: auto;
+  }
+
+  .accounting-page .panel-title {
+    font-size: 16px;
+  }
+
+  .accounting-page .form-grid label {
+    font-size: 12px;
+  }
+
+  .accounting-page .form-grid input,
+  .accounting-page .form-grid select,
+  .accounting-page .form-grid textarea {
+    min-height: 42px;
+    font-size: 12px;
+  }
+
+  .accounting-page .form-grid textarea {
+    min-height: 85px;
+  }
+
+  .accounting-page .form-grid .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .accounting-page .btn {
+    width: 100%;
+    min-height: 43px;
+  }
+
+  .accounting-page .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 13px;
+  }
+
+  .accounting-page .toolbar h2 {
+    font-size: 16px;
+  }
+
+  .accounting-page .search {
+    max-width: 100%;
+  }
+
+  .accounting-page .table-wrap th {
+    padding: 0 12px;
+    font-size: 9px;
+  }
+
+  .accounting-page .table-wrap td {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  .accounting-page .alert {
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   EXTRA SMALL DEVICES
+========================================================= */
+
+@media (max-width: 380px) {
+  .accounting-page {
+    padding: 13px 9px;
+  }
+
+  .accounting-page .panel {
+    padding: 13px;
+  }
+
+  .accounting-page .page-head h1 {
+    font-size: 21px;
+  }
+
+  .accounting-page .summary-card strong {
+    font-size: 20px;
+  }
+
+  .accounting-page .panel-title {
+    font-size: 15px;
+  }
+}

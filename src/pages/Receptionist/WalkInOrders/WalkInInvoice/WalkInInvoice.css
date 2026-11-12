@@ -753,3 +753,47 @@
         margin: 8mm;
     }
 }
+
+/* ============================================================
+   WALK-IN EMPLOYEE DETAILS
+============================================================ */
+
+.wkinv-employee-row {
+    border-top: 1px solid #d8d8d8;
+    padding-top: 7px;
+    margin-top: 5px;
+}
+
+.wkinv-invoice-meta .wkinv-meta-row strong {
+    overflow-wrap: anywhere;
+    text-align: right;
+}
+
+@media screen and (max-width: 768px) {
+    .wkinv-invoice-meta {
+        min-width: 0;
+    }
+
+    .wkinv-invoice-meta .wkinv-meta-row {
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .wkinv-invoice-meta .wkinv-meta-row span {
+        flex: 0 0 42%;
+    }
+
+    .wkinv-invoice-meta .wkinv-meta-row strong {
+        flex: 1;
+        min-width: 0;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media print {
+    .wkinv-employee-row {
+        display: flex !important;
+        visibility: visible !important;
+    }
+}

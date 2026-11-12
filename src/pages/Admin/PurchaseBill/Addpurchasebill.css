@@ -1,408 +1,833 @@
-/* ==========================================================
+
+/* =========================================================
    ADD PURCHASE BILL
-   Breakpoints: desktop (> 900px), tablet (641-900px),
-   mobile (640px and below)
-========================================================== */
+   Premium Procurement Dashboard
+   Theme: Navy + Green
+========================================================= */
+
+:root {
+  --apb-primary: #16a34a;
+  --apb-primary-dark: #15803d;
+  --apb-primary-light: #f0fdf4;
+  --apb-navy: #172554;
+  --apb-bg: #f3f6fb;
+  --apb-white: #ffffff;
+  --apb-text: #1e293b;
+  --apb-muted: #64748b;
+  --apb-border: #e2e8f0;
+  --apb-danger: #dc2626;
+  --apb-radius: 13px;
+  --apb-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+}
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
 
 .apb-page {
-    width: 100%;
-    max-width: 1150px;
-    padding: 24px 28px;
-    box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  padding: clamp(16px, 2.5vw, 30px);
+  background: var(--apb-bg);
+  color: var(--apb-text);
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.apb-page *,
+.apb-page *::before,
+.apb-page *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.apb-header {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 25px;
 }
 
 .apb-header h1 {
-    margin: 0 0 4px;
-    font-size: 26px;
-    font-weight: 600;
-    color: #111827;
+  margin: 0;
+  color: var(--apb-navy);
+  font-size: clamp(22px, 2vw, 29px);
+  font-weight: 750;
+  letter-spacing: -0.7px;
+  line-height: 1.3;
 }
 
 .apb-header p {
-    margin: 0 0 20px;
-    font-size: 14px;
-    color: #6b7280;
+  max-width: 650px;
+  margin: 0;
+  color: var(--apb-muted);
+  font-size: 13px;
+  line-height: 1.7;
 }
 
-/* Cards */
+/* =========================================================
+   FORM CARDS
+========================================================= */
+
 .apb-card {
-    margin-bottom: 20px;
-    padding: 20px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: clamp(17px, 2vw, 25px);
+  margin-bottom: 21px;
+  border: 1px solid var(--apb-border);
+  border-radius: var(--apb-radius);
+  background: var(--apb-white);
+  box-shadow: var(--apb-shadow);
+  transition: box-shadow 0.2s ease;
+}
+
+.apb-card:hover {
+  box-shadow: 0 5px 20px rgba(15, 23, 42, 0.05);
 }
 
 .apb-card-title {
-    margin: 0 0 16px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0 0 22px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #edf1f6;
+  color: var(--apb-navy);
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.2px;
 }
 
-/* Bill source toggle */
+.apb-card-title::before {
+  content: "";
+  width: 4px;
+  height: 21px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  background: var(--apb-primary);
+}
+
+/* =========================================================
+   BILL SOURCE MODE SELECTOR
+========================================================= */
+
 .apb-modes {
-    display: inline-flex;
-    flex-wrap: wrap;               /* labels can wrap instead of overflowing */
-    max-width: 100%;
-    margin-bottom: 16px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+  margin-bottom: 20px;
 }
 
 .apb-mode {
-    padding: 9px 16px;
-    border: none;
-    background: #ffffff;
-    color: #4b5563;
-    font-size: 14px;
-    cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 55px;
+  padding: 13px 15px;
+  border: 1px solid var(--apb-border);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #475569;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.apb-mode + .apb-mode {
-    border-left: 1px solid #d1d5db;
+.apb-mode:hover:not(.active) {
+  border-color: #86efac;
+  background: #f8fdf9;
+  color: var(--apb-primary-dark);
 }
 
 .apb-mode.active {
-    background: #16a34a;
-    color: #ffffff;
-    font-weight: 500;
+  border-color: #86efac;
+  background: var(--apb-primary-light);
+  color: var(--apb-primary-dark);
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.07);
 }
 
-/* Fields */
+.apb-mode:focus-visible {
+  outline: 3px solid rgba(22, 163, 74, 0.2);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   FORM FIELDS
+========================================================= */
+
 .apb-fields {
-    display: grid;
-    /* min(240px, 100%) lets a field shrink below 240px on very small screens */
-    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
-    gap: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 19px 20px;
 }
 
 .apb-field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-width: 0;                  /* lets grid children shrink */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
 }
 
-.apb-field span {
-    font-size: 14px;
-    color: #374151;
+.apb-field > span {
+  color: #334155;
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.1px;
 }
 
-.apb-page select,
-.apb-page input,
-.apb-page textarea {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 9px 10px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #111827;
-    font-size: 14px;
-    font-family: inherit;
+.apb-field input,
+.apb-field select,
+.apb-field textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 45px;
+  padding: 11px 13px;
+  border: 1px solid #dce3ed;
+  border-radius: 9px;
+  outline: none;
+  background: #ffffff;
+  color: var(--apb-text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
-.apb-page textarea {
-    resize: vertical;
+.apb-field select {
+  cursor: pointer;
 }
 
-.apb-page select:focus-visible,
-.apb-page input:focus-visible,
-.apb-page textarea:focus-visible,
-.apb-page button:focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 1px;
+.apb-field textarea {
+  min-height: 95px;
+  resize: vertical;
+  line-height: 1.6;
 }
+
+.apb-field input::placeholder,
+.apb-field textarea::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.apb-field input:hover,
+.apb-field select:hover,
+.apb-field textarea:hover {
+  border-color: #b6c5da;
+}
+
+.apb-field input:focus,
+.apb-field select:focus,
+.apb-field textarea:focus {
+  border-color: var(--apb-primary);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.09);
+}
+
+/* =========================================================
+   DROPDOWN / SOURCE SELECT
+========================================================= */
+
+.apb-card > .apb-field {
+  max-width: 650px;
+}
+
+.apb-card > .apb-field select {
+  min-height: 47px;
+}
+
+/* =========================================================
+   HELPER TEXT
+========================================================= */
 
 .apb-hint {
-    margin: 0 0 14px;
-    font-size: 14px;
-    color: #6b7280;
+  margin: 13px 0 17px;
+  padding: 12px 14px;
+  border: 1px solid #bbf7d0;
+  border-left: 3px solid var(--apb-primary);
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #166534;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.7;
 }
 
-/* Item rows
-   The scroll happens inside .apb-rows, never on the page. */
+/* =========================================================
+   PURCHASE ITEM TABLE
+========================================================= */
+
 .apb-rows {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--apb-border);
+  border-radius: 10px;
+  background: #ffffff;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
 }
 
-/* FIX: 8 columns for the 8 cells in each row
-   (type, item, quantity, HSN, price, GST, line total, remove).
-   The old rule had 7 columns, so the 8th cell wrapped onto a new row. */
+.apb-rows::-webkit-scrollbar {
+  height: 7px;
+}
+
+.apb-rows::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+.apb-rows::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+/* Manual mode and PO mode have different column counts.
+   Grid layouts below accommodate both. */
+
 .apb-row {
-    display: grid;
-    grid-template-columns:
-        120px minmax(180px, 1fr) 80px 100px 110px 90px 120px 80px;
-    gap: 10px;
-    align-items: center;
-    min-width: 950px;
-    padding: 8px 0;
+  display: grid;
+  grid-template-columns:
+    0.9fr
+    1.6fr
+    0.8fr
+    0.8fr
+    1fr
+    0.7fr
+    1.1fr
+    0.8fr;
+  align-items: center;
+  gap: 10px;
+  min-width: 1020px;
+  padding: 13px 14px;
+  border-bottom: 1px solid #edf1f6;
+  background: #ffffff;
+  transition: background 0.2s ease;
+}
+
+.apb-row:last-child {
+  border-bottom: none;
 }
 
 .apb-row-head {
-    padding-top: 0;
-    font-size: 13px;
-    color: #6b7280;
+  min-height: 47px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
-/* line total header lines up with the right-aligned amounts */
-.apb-row-head span:nth-child(7) {
-    text-align: right;
+.apb-row:not(.apb-row-head):hover {
+  background: #f5fcf7;
 }
 
-.apb-text {
-    font-size: 14px;
-    color: #111827;
-    min-width: 0;
-    overflow-wrap: anywhere;
+/* PO mode contains fixed text instead of item type,
+   item and quantity inputs. */
+
+.apb-row .apb-text {
+  min-width: 0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 550;
+  overflow-wrap: anywhere;
 }
+
+/* Item inputs */
+
+.apb-row select,
+.apb-row input {
+  width: 100%;
+  min-width: 0;
+  height: 39px;
+  padding: 8px 9px;
+  border: 1px solid #dce3ed;
+  border-radius: 7px;
+  outline: none;
+  background: #ffffff;
+  color: #334155;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.apb-row select:focus,
+.apb-row input:focus {
+  border-color: var(--apb-primary);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.09);
+}
+
+.apb-row input::placeholder {
+  color: #94a3b8;
+}
+
+/* =========================================================
+   LINE TOTAL
+========================================================= */
 
 .apb-line-total {
-    font-size: 14px;
-    color: #111827;
-    text-align: right;
-    white-space: nowrap;
+  color: var(--apb-navy);
+  font-size: 12px;
+  font-weight: 750;
+  white-space: nowrap;
 }
 
+/* =========================================================
+   REMOVE ITEM BUTTON
+========================================================= */
+
 .apb-remove {
-    padding: 6px;
-    border: none;
-    background: none;
-    font-size: 13px;
-    color: #b91c1c;
-    cursor: pointer;
+  min-height: 34px;
+  padding: 7px 10px;
+  border: 1px solid #fee2e2;
+  border-radius: 7px;
+  background: #fff7f7;
+  color: #dc2626;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.apb-remove:hover:not(:disabled) {
+  border-color: #dc2626;
+  background: #dc2626;
+  color: #ffffff;
 }
 
 .apb-remove:disabled {
-    color: #d1d5db;
-    cursor: not-allowed;
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
+/* =========================================================
+   ADD ITEM BUTTON
+========================================================= */
+
 .apb-add-row {
-    width: auto;
-    margin: 8px 0 14px;
-    padding: 8px 14px;
-    border: 1px dashed #9ca3af;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #374151;
-    font-size: 14px;
-    cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  margin-top: 16px;
+  padding: 9px 16px;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  background: var(--apb-primary-light);
+  color: var(--apb-primary-dark);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .apb-add-row:hover {
-    background: #f9fafb;
+  border-color: var(--apb-primary);
+  background: var(--apb-primary);
+  color: #ffffff;
 }
 
-/* Totals */
+/* =========================================================
+   BILL TOTALS
+========================================================= */
+
 .apb-totals {
-    width: 280px;
-    max-width: 100%;
-    margin: 16px 0 0 auto;
-    padding-top: 14px;
-    border-top: 1px solid #e5e7eb;
+  width: min(100%, 390px);
+  margin: 24px 0 0 auto;
+  padding: 17px 19px;
+  border: 1px solid var(--apb-border);
+  border-radius: 11px;
+  background: #f8fafc;
 }
 
 .apb-totals > div {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 4px 0;
-    font-size: 14px;
-    color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 9px 0;
 }
 
-.apb-totals dt,
+.apb-totals dt {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 550;
+}
+
 .apb-totals dd {
-    margin: 0;
+  margin: 0;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
 }
 
-.apb-totals-grand {
-    margin-top: 6px;
-    padding-top: 10px !important;
-    border-top: 1px solid #e5e7eb;
-    font-size: 17px !important;
-    font-weight: 600;
-    color: #111827 !important;
+.apb-totals .apb-totals-grand {
+  margin-top: 9px;
+  padding-top: 16px;
+  border-top: 1px dashed #cbd5e1;
 }
 
-/* Alerts */
+.apb-totals-grand dt {
+  color: var(--apb-navy);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.apb-totals-grand dd {
+  color: var(--apb-primary-dark);
+  font-size: clamp(19px, 2vw, 23px);
+  font-weight: 800;
+}
+
+/* =========================================================
+   NOTES SECTION
+========================================================= */
+
+.apb-card > .apb-field textarea {
+  width: 100%;
+  min-height: 100px;
+}
+
+/* =========================================================
+   ALERTS
+========================================================= */
+
 .apb-alert {
-    margin-bottom: 16px;
-    padding: 10px 14px;
-    border-radius: 6px;
-    font-size: 14px;
-    overflow-wrap: anywhere;
-}
-
-.apb-alert-error {
-    background: #fee2e2;
-    color: #991b1b;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 17px 0;
+  padding: 13px 15px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.6;
 }
 
 .apb-alert-warning {
-    background: #fef3c7;
-    color: #92400e;
+  border: 1px solid #fde68a;
+  background: #fffbeb;
+  color: #92400e;
 }
 
-/* Buttons */
+.apb-alert-error {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+/* =========================================================
+   FOOTER ACTIONS
+========================================================= */
+
 .apb-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 18px 0 8px;
 }
 
 .apb-btn {
-    width: auto;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.apb-btn-primary {
-    border: 1px solid #16a34a;
-    background: #16a34a;
-    color: #ffffff;
-}
-
-.apb-btn-primary:hover:not(:disabled) {
-    background: #15803d;
-}
-
-.apb-btn-secondary {
-    border: 1px solid #d1d5db;
-    background: #ffffff;
-    color: #111827;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 130px;
+  min-height: 44px;
+  padding: 11px 20px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .apb-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-/* Loading */
+/* Cancel */
+
+.apb-btn-secondary {
+  border-color: #dce3ed;
+  background: #ffffff;
+  color: #475569;
+}
+
+.apb-btn-secondary:hover:not(:disabled) {
+  border-color: #94a3b8;
+  background: #f8fafc;
+  color: var(--apb-navy);
+}
+
+/* Save Bill */
+
+.apb-btn-primary {
+  border-color: var(--apb-primary);
+  background: var(--apb-primary);
+  color: #ffffff;
+  box-shadow: 0 3px 9px rgba(22, 163, 74, 0.17);
+}
+
+.apb-btn-primary:hover:not(:disabled) {
+  border-color: var(--apb-primary-dark);
+  background: var(--apb-primary-dark);
+  box-shadow: 0 5px 13px rgba(22, 163, 74, 0.22);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   LOADING STATE
+========================================================= */
+
 .apb-state {
-    font-size: 15px;
-    color: #4b5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  margin: 0;
+  padding: 25px;
+  border: 1px solid var(--apb-border);
+  border-radius: var(--apb-radius);
+  background: #ffffff;
+  color: var(--apb-muted);
+  font-size: 14px;
+  font-weight: 600;
 }
 
-/* ==========================================================
-   TABLET  (641px - 900px)
-   Tighter spacing and columns. The items grid still scrolls
-   inside its own box if the card is narrower than min-width.
-========================================================== */
+/* =========================================================
+   TABLET RESPONSIVE
+========================================================= */
 
 @media (max-width: 900px) {
-    .apb-page {
-        padding: 20px;
-    }
 
-    .apb-card {
-        padding: 16px;
-    }
+  .apb-page {
+    padding: 20px;
+  }
 
-    .apb-row {
-        grid-template-columns:
-            100px minmax(150px, 1fr) 70px 90px 100px 80px 110px 70px;
-        gap: 8px;
-        min-width: 830px;
-    }
+  .apb-card {
+    padding: 19px;
+  }
+
+  .apb-fields {
+    gap: 16px;
+  }
+
+  .apb-row {
+    min-width: 1000px;
+  }
 }
 
-/* ==========================================================
-   MOBILE  (640px and below)
-========================================================== */
+/* =========================================================
+   MOBILE RESPONSIVE
+========================================================= */
 
-@media (max-width: 640px) {
-    .apb-page {
-        padding: 12px;
-    }
+@media (max-width: 600px) {
 
-    .apb-header h1 {
-        font-size: 22px;
-    }
+  .apb-page {
+    padding: 14px 12px;
+  }
 
-    .apb-header p {
-        margin-bottom: 16px;
-    }
+  .apb-header {
+    margin-bottom: 18px;
+  }
 
-    .apb-card {
-        margin-bottom: 14px;
-        padding: 14px;
-    }
+  .apb-header h1 {
+    font-size: 21px;
+  }
 
-    /* toggle: two full-width stacked buttons */
-    .apb-modes {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
+  .apb-header p {
+    font-size: 12px;
+  }
 
-    .apb-mode {
-        width: 100%;
-        padding: 12px 14px;
-        text-align: left;
-    }
+  .apb-card {
+    padding: 15px 12px;
+    margin-bottom: 16px;
+    border-radius: 11px;
+  }
 
-    .apb-mode + .apb-mode {
-        border-left: none;
-        border-top: 1px solid #d1d5db;
-    }
+  .apb-card-title {
+    margin-bottom: 17px;
+    padding-bottom: 12px;
+    font-size: 15px;
+  }
 
-    /* single column form */
-    .apb-fields {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
+  /* Bill source */
 
-    /* 16px stops iOS Safari from zooming in on focus;
-       44px height gives a comfortable tap target */
-    .apb-page select,
-    .apb-page input,
-    .apb-page textarea {
-        min-height: 44px;
-        font-size: 16px;
-    }
+  .apb-modes {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin-bottom: 17px;
+  }
 
-    .apb-page textarea {
-        min-height: 88px;
-    }
+  .apb-mode {
+    min-height: 46px;
+    font-size: 11px;
+  }
 
-    /* items grid scrolls sideways inside its own box */
-    .apb-row {
-        min-width: 780px;
-    }
+  /* Vendor fields */
 
-    .apb-add-row,
-    .apb-remove {
-        min-height: 44px;
-    }
+  .apb-fields {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
 
-    .apb-add-row {
-        width: 100%;
-    }
+  .apb-field {
+    gap: 7px;
+  }
 
-    /* totals use the full card width */
-    .apb-totals {
-        width: 100%;
-        margin-left: 0;
-    }
+  .apb-field input,
+  .apb-field select,
+  .apb-field textarea {
+    min-height: 43px;
+    font-size: 13px;
+  }
 
-    /* buttons stack, Save on top */
-    .apb-actions {
-        flex-direction: column-reverse;
-        gap: 10px;
-    }
+  .apb-field textarea {
+    min-height: 85px;
+  }
 
-    .apb-btn {
-        width: 100%;
-        min-height: 44px;
-    }
+  .apb-hint {
+    padding: 10px 11px;
+    font-size: 10px;
+  }
+
+  /* Items */
+
+  .apb-rows {
+    border-radius: 8px;
+  }
+
+  .apb-row {
+    min-width: 970px;
+    gap: 8px;
+    padding: 11px;
+  }
+
+  .apb-row-head {
+    font-size: 9px;
+  }
+
+  .apb-row select,
+  .apb-row input {
+    height: 37px;
+    font-size: 11px;
+  }
+
+  .apb-row .apb-text {
+    font-size: 11px;
+  }
+
+  .apb-line-total {
+    font-size: 11px;
+  }
+
+  .apb-add-row {
+    width: 100%;
+  }
+
+  /* Totals */
+
+  .apb-totals {
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px;
+  }
+
+  .apb-totals dt {
+    font-size: 11px;
+  }
+
+  .apb-totals dd {
+    font-size: 12px;
+  }
+
+  .apb-totals-grand dd {
+    font-size: 19px;
+  }
+
+  /* Footer */
+
+  .apb-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+    padding-top: 15px;
+  }
+
+  .apb-btn {
+    width: 100%;
+    min-height: 45px;
+  }
+
+  .apb-alert {
+    padding: 11px;
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .apb-page {
+    padding: 11px 9px;
+  }
+
+  .apb-header h1 {
+    font-size: 19px;
+  }
+
+  .apb-card {
+    padding: 13px 10px;
+  }
+
+  .apb-mode {
+    padding: 10px;
+    font-size: 10px;
+  }
+
+  .apb-totals-grand dd {
+    font-size: 18px;
+  }
+
+  .apb-btn {
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.apb-page button:focus-visible,
+.apb-page input:focus-visible,
+.apb-page select:focus-visible,
+.apb-page textarea:focus-visible {
+  outline: 3px solid rgba(22, 163, 74, 0.2);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .apb-page *,
+  .apb-page *::before,
+  .apb-page *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

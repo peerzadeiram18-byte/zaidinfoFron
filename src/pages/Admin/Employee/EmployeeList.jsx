@@ -1,398 +1,402 @@
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import { useNavigate } from "react-router-dom";
-// import "./EmployeeList.css";
-// import { updateEmployeeStatus } from "../../../services/authService";
-// import SalaryModal from "../../../components/Admin/Salary/SalaryModal";
-// const API_URL = import.meta.env.VITE_API_URL;
 
-
-// function EmployeeList() {
-//   const navigate = useNavigate();
-//   const token = localStorage.getItem("token");
-
-//   const [employees, setEmployees] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [selectedSalaryEmployeeId, setSelectedSalaryEmployeeId] =
-//     useState(null);
-
-//   useEffect(() => {
-//     fetchEmployees();
-//   }, []);
-
-//   const fetchEmployees = async () => {
-//     try {
-//       setLoading(true);
-
-//       // const res = await axios.get(
-//       //   "http://localhost:5000/api/users/employees",
-//       //   {
-//       //     headers: {
-//       //       Authorization: `Bearer ${token}`,
-//       //     },
-//       //   }
-//       // );
-
-// const res = await axios.get(
-//   `${API_URL}/users/employees`,
-//   {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   }
-// );
-
-//       setEmployees(res.data.data || []);
-//     } catch (error) {
-//       console.log(error);
-//       alert("Unable to fetch employees");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const changeStatus = async (id, status) => {
-//     try {
-//       await updateEmployeeStatus(id, status);
-//       fetchEmployees();
-//     } catch (error) {
-//       console.log(error);
-//       alert("Unable To Update Status");
-//     }
-//   };
-
-//   return (
-//     <div className="employee-list-page">
-
-//       <h2>Employee List</h2>
-
-//       <table className="employee-table">
-
-//         <thead>
-//           <tr>
-//             <th>Employee ID</th>
-//             <th>Employee Name</th>
-//             <th>Email</th>
-//             <th>Phone</th>
-//             <th>Role</th>
-//             <th>Department</th>
-//             <th>Designation</th>
-//             <th>Joining Date</th>
-//             <th>System Access</th>
-//             <th>Status</th>
-//             <th>Action</th>
-//           </tr>
-//         </thead>
-
-//         <tbody>
-
-//           {loading ? (
-//             <tr>
-//               <td colSpan="11">Loading...</td>
-//             </tr>
-//           ) : employees.length === 0 ? (
-//             <tr>
-//               <td colSpan="11">No Employee Found</td>
-//             </tr>
-//           ) : (
-//             employees.map((employee) => (
-//               <tr key={employee._id}>
-
-//                 {/* Employee ID */}
-//                 <td>{employee.employeeId || "-"}</td>
-
-//                 {/* Employee Name */}
-//                 <td>
-//                   {employee.firstName} {employee.lastName}
-//                 </td>
-
-//                 {/* Email */}
-//                 <td>{employee.email || "-"}</td>
-
-//                 {/* Phone */}
-//                 <td>{employee.phone || "-"}</td>
-
-//                 {/* Role */}
-//                 <td>{employee.role || "-"}</td>
-
-//                 {/* Department */}
-//                 <td>{employee.department || "-"}</td>
-
-//                 {/* Designation */}
-//                 <td>{employee.designation || "-"}</td>
-
-//                 {/* Joining Date */}
-//                 <td>
-//                   {employee.salaryDetails?.joiningDate
-//                     ? new Date(
-//                         employee.salaryDetails.joiningDate
-//                       ).toLocaleDateString()
-//                     : "-"}
-//                 </td>
-
-//                 {/* System Access */}
-//                 <td>
-//                   {employee.hasSystemAccess ? "YES" : "NO"}
-//                 </td>
-
-//                 {/* Status */}
-//                 <td>
-//                   <select
-//                     value={employee.status}
-//                     onChange={(e) =>
-//                       changeStatus(employee._id, e.target.value)
-//                     }
-//                   >
-//                     <option value="ACTIVE">ACTIVE</option>
-//                     <option value="INACTIVE">INACTIVE</option>
-//                     <option value="BLOCKED">BLOCKED</option>
-//                     <option value="DELETED">DELETED</option>
-//                   </select>
-//                 </td>
-
-//                 {/* Actions */}
-//                 <td>
-
-//                   <div
-//                     style={{
-//                       display: "flex",
-//                       gap: "8px",
-//                       alignItems: "center",
-//                     }}
-//                   >
-//                     <button
-//                       className="btn-edit"
-//                       onClick={() =>
-//                         navigate(
-//                           `/admin/edit-employee/${employee._id}`
-//                         )
-//                       }
-//                     >
-//                       Edit
-//                     </button>
-
-//                     <button
-//                       className="btn-salary"
-//                       onClick={() =>
-//                         setSelectedSalaryEmployeeId(employee._id)
-//                       }
-//                     >
-//                       Salary
-//                     </button>
-//                   </div>
-
-//                 </td>
-
-//               </tr>
-//             ))
-//           )}
-
-//         </tbody>
-
-//       </table>
-
-//       {selectedSalaryEmployeeId && (
-//         <SalaryModal
-//           employeeId={selectedSalaryEmployeeId}
-//           onClose={() => setSelectedSalaryEmployeeId(null)}
-//         />
-//       )}
-
-//     </div>
-//   );
-// }
-
-// export default EmployeeList;
-
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./EmployeeList.css";
-import { updateEmployeeStatus } from "../../../services/authService";
-import SalaryModal from "../../../components/Admin/Salary/SalaryModal";
-const API_URL = import.meta.env.VITE_API_URL;
+import { toast } from "react-toastify";
 
+import "./EmployeeList.css";
+
+import { updateEmployeeStatus } from "../../../services/authService";
+
+import {
+  getEmployees,
+  deleteEmployee,
+} from "../../../services/userService";
+
+import SalaryModal from "../../../components/Admin/Salary/SalaryModal";
 
 function EmployeeList() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
+  const [updatingStatusId, setUpdatingStatusId] = useState(null);
   const [selectedSalaryEmployeeId, setSelectedSalaryEmployeeId] =
     useState(null);
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
+  // =========================================
+  // FETCH EMPLOYEES
+  // =========================================
 
-  const fetchEmployees = async () => {
+  const fetchEmployees = useCallback(async () => {
     try {
       setLoading(true);
 
-      const res = await axios.get(
-        `${API_URL}/users/employees`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await getEmployees();
 
-      setEmployees(res.data.data || []);
+      const employeeData =
+        res?.data?.data ??
+        res?.data?.employees ??
+        [];
+
+      setEmployees(
+        Array.isArray(employeeData) ? employeeData : []
+      );
     } catch (error) {
-      console.log(error);
-      alert("Unable to fetch employees");
+      console.error("Fetch employees error:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Unable to fetch employees"
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchEmployees();
+  }, [fetchEmployees]);
+
+  // =========================================
+  // CHANGE EMPLOYEE STATUS
+  // =========================================
 
   const changeStatus = async (id, status) => {
     try {
+      setUpdatingStatusId(id);
+
       await updateEmployeeStatus(id, status);
-      fetchEmployees();
+
+      setEmployees((previous) =>
+        previous.map((employee) =>
+          employee._id === id
+            ? { ...employee, status }
+            : employee
+        )
+      );
+
+      toast.success("Employee status updated successfully");
     } catch (error) {
-      console.log(error);
-      alert("Unable To Update Status");
+      console.error("Status update error:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Unable to update employee status"
+      );
+
+      await fetchEmployees();
+    } finally {
+      setUpdatingStatusId(null);
     }
   };
+
+  // =========================================
+  // EDIT EMPLOYEE
+  // =========================================
+
+  const handleEdit = (employeeId) => {
+    if (!employeeId) {
+      toast.error("Employee ID not found");
+      return;
+    }
+
+    navigate(`/admin/edit-employee/${employeeId}`);
+  };
+
+  // =========================================
+  // DELETE EMPLOYEE
+  // =========================================
+
+  const handleDelete = async (employee) => {
+    if (!employee?._id) {
+      toast.error("Employee ID not found");
+      return;
+    }
+
+    const name = `${employee.firstName || ""} ${
+      employee.lastName || ""
+    }`.trim();
+
+    const confirmed = window.confirm(
+      `Delete "${name || "this employee"}"?\n\n` +
+        "Employee list se hat jayega aur login access band ho jayega. " +
+        "Salary history database mein safe rahegi."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(employee._id);
+
+      await deleteEmployee(employee._id);
+
+      setEmployees((previous) =>
+        previous.filter(
+          (item) => item._id !== employee._id
+        )
+      );
+
+      toast.success("Employee deleted successfully");
+    } catch (error) {
+      console.error("Delete employee error:", error);
+
+      toast.error(
+        error?.response?.data?.message ||
+          "Unable to delete employee"
+      );
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  // =========================================
+  // FORMAT DATE
+  // =========================================
+
+  const formatDate = (date) => {
+    if (!date) return "-";
+
+    const parsedDate = new Date(date);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return "-";
+    }
+
+    return parsedDate.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  // =========================================
+  // GET EMPLOYEE NAME
+  // =========================================
+
+  const getEmployeeName = (employee) => {
+    return (
+      `${employee?.firstName || ""} ${
+        employee?.lastName || ""
+      }`.trim() ||
+      employee?.name ||
+      "-"
+    );
+  };
+
+  // =========================================
+  // RENDER
+  // =========================================
 
   return (
     <div className="employee-list-page">
 
-      <h2>Employee List</h2>
+      {/* PAGE HEADER */}
+      <div className="employee-list-header">
+        <div className="employee-heading">
+          <h2>Employee List</h2>
+          <p>
+            Manage your employees, salary and system access.
+          </p>
+        </div>
 
-      <table className="employee-table">
+        <div className="employee-header-actions">
+          <span className="employee-total-count">
+            Total Employees: {employees.length}
+          </span>
 
-        <thead>
-          <tr>
-            <th>Employee ID</th>
-            <th>Employee Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Role</th>
-            <th>Department</th>
-            <th>Designation</th>
-            <th>Joining Date</th>
-            <th>System Access</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+          <button
+            type="button"
+            className="emp-refresh-btn"
+            onClick={fetchEmployees}
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Refresh"}
+          </button>
+        </div>
+      </div>
 
-        <tbody>
+      {/* EMPLOYEE TABLE */}
+      <div className="employee-table-container">
+        <table className="employee-table">
 
-          {loading ? (
+          <thead>
             <tr>
-              <td colSpan="11" className="emp-state">Loading...</td>
+              <th>Employee ID</th>
+              <th>Employee Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Role</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th>Joining Date</th>
+              <th>System Access</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
-          ) : employees.length === 0 ? (
-            <tr>
-              <td colSpan="11" className="emp-state">No Employee Found</td>
-            </tr>
-          ) : (
-            employees.map((employee) => (
-              <tr key={employee._id}>
+          </thead>
 
-                {/* Employee ID */}
-                <td className="emp-id">{employee.employeeId || "-"}</td>
-
-                {/* Employee Name */}
-                <td className="emp-name">
-                  {employee.firstName} {employee.lastName}
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={11} className="emp-state">
+                  <div className="emp-loading">
+                    <span className="emp-loader" />
+                    Loading employees...
+                  </div>
                 </td>
-
-                {/* Email */}
-                <td>{employee.email || "-"}</td>
-
-                {/* Phone */}
-                <td>{employee.phone || "-"}</td>
-
-                {/* Role */}
-                <td>{employee.role || "-"}</td>
-
-                {/* Department */}
-                <td>{employee.department || "-"}</td>
-
-                {/* Designation */}
-                <td>{employee.designation || "-"}</td>
-
-                {/* Joining Date */}
-                <td>
-                  {employee.salaryDetails?.joiningDate
-                    ? new Date(
-                        employee.salaryDetails.joiningDate
-                      ).toLocaleDateString()
-                    : "-"}
+              </tr>
+            ) : employees.length === 0 ? (
+              <tr>
+                <td colSpan={11} className="emp-state">
+                  No Employee Found
                 </td>
+              </tr>
+            ) : (
+              employees.map((employee) => (
+                <tr key={employee._id}>
 
-                {/* System Access */}
-                <td>
-                  <span
-                    className={`emp-pill ${
-                      employee.hasSystemAccess ? "is-yes" : "is-no"
-                    }`}
-                  >
-                    {employee.hasSystemAccess ? "YES" : "NO"}
-                  </span>
-                </td>
+                  {/* EMPLOYEE ID */}
+                  <td className="emp-id">
+                    {employee.employeeId || "-"}
+                  </td>
 
-                {/* Status */}
-                <td>
-                  <select
-                    data-status={employee.status}
-                    value={employee.status}
-                    onChange={(e) =>
-                      changeStatus(employee._id, e.target.value)
-                    }
-                  >
-                    <option value="ACTIVE">ACTIVE</option>
-                    <option value="INACTIVE">INACTIVE</option>
-                    <option value="BLOCKED">BLOCKED</option>
-                    <option value="DELETED">DELETED</option>
-                  </select>
-                </td>
+                  {/* NAME */}
+                  <td className="emp-name">
+                    {getEmployeeName(employee)}
+                  </td>
 
-                {/* Actions */}
-                <td>
+                  {/* EMAIL */}
+                  <td>{employee.email || "-"}</td>
 
-                  <div className="emp-actions">
-                    <button
-                      className="btn-edit"
-                      onClick={() =>
-                        navigate(
-                          `/admin/edit-employee/${employee._id}`
+                  {/* PHONE */}
+                  <td>{employee.phone || "-"}</td>
+
+                  {/* ROLE */}
+                  <td>{employee.role || "-"}</td>
+
+                  {/* DEPARTMENT */}
+                  <td>{employee.department || "-"}</td>
+
+                  {/* DESIGNATION */}
+                  <td>{employee.designation || "-"}</td>
+
+                  {/* JOINING DATE */}
+                  <td>
+                    {formatDate(
+                      employee.salaryDetails?.joiningDate
+                    )}
+                  </td>
+
+                  {/* SYSTEM ACCESS */}
+                  <td>
+                    <span
+                      className={`emp-pill ${
+                        employee.hasSystemAccess
+                          ? "is-yes"
+                          : "is-no"
+                      }`}
+                    >
+                      {employee.hasSystemAccess ? "YES" : "NO"}
+                    </span>
+                  </td>
+
+                  {/* STATUS */}
+                  <td>
+                    <select
+                      className={`emp-status-select status-${(
+                        employee.status || "INACTIVE"
+                      ).toLowerCase()}`}
+                      value={employee.status || "INACTIVE"}
+                      disabled={
+                        updatingStatusId === employee._id ||
+                        deletingId === employee._id
+                      }
+                      onChange={(e) =>
+                        changeStatus(
+                          employee._id,
+                          e.target.value
                         )
                       }
                     >
-                      Edit
-                    </button>
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="INACTIVE">INACTIVE</option>
+                      <option value="BLOCKED">BLOCKED</option>
 
-                    <button
-                      className="btn-salary"
-                      onClick={() =>
-                        setSelectedSalaryEmployeeId(employee._id)
-                      }
-                    >
-                      Salary
-                    </button>
-                  </div>
+                      {employee.status === "DELETED" && (
+                        <option value="DELETED">
+                          DELETED
+                        </option>
+                      )}
+                    </select>
 
-                </td>
+                    {updatingStatusId === employee._id && (
+                      <span className="emp-status-saving">
+                        Saving...
+                      </span>
+                    )}
+                  </td>
 
-              </tr>
-            ))
-          )}
+                  {/* ACTION BUTTONS */}
+                  <td>
+                    <div className="emp-actions">
 
-        </tbody>
+                      <button
+                        type="button"
+                        className="btn-edit"
+                        onClick={() =>
+                          handleEdit(employee._id)
+                        }
+                        disabled={deletingId === employee._id}
+                      >
+                        Edit
+                      </button>
 
-      </table>
+                      <button
+                        type="button"
+                        className="btn-salary"
+                        onClick={() =>
+                          setSelectedSalaryEmployeeId(
+                            employee._id
+                          )
+                        }
+                        disabled={deletingId === employee._id}
+                      >
+                        Salary
+                      </button>
 
+                      <button
+                        type="button"
+                        className="btn-delete"
+                        disabled={
+                          deletingId === employee._id
+                        }
+                        onClick={() =>
+                          handleDelete(employee)
+                        }
+                      >
+                        {deletingId === employee._id
+                          ? "Deleting..."
+                          : "Delete"}
+                      </button>
+
+                    </div>
+                  </td>
+
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* SALARY MODAL */}
       {selectedSalaryEmployeeId && (
         <SalaryModal
           employeeId={selectedSalaryEmployeeId}
-          onClose={() => setSelectedSalaryEmployeeId(null)}
+          onClose={() =>
+            setSelectedSalaryEmployeeId(null)
+          }
         />
       )}
 

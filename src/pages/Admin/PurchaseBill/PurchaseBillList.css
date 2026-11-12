@@ -1,316 +1,532 @@
-/* ==========================================================
+
+/* ======================================================
    PURCHASE BILL LIST
-   Breakpoints: desktop (> 900px), tablet (641-900px),
-   mobile (640px and below)
-========================================================== */
+   Premium Procurement Dashboard Design
+====================================================== */
+
+:root {
+  --pb-primary: #172554;
+  --pb-primary-light: #1e3a8a;
+  --pb-green: #16a34a;
+  --pb-green-dark: #15803d;
+  --pb-green-light: #f0fdf4;
+
+  --pb-bg: #f5f7fb;
+  --pb-white: #ffffff;
+  --pb-border: #e5eaf1;
+
+  --pb-text: #1e293b;
+  --pb-muted: #64748b;
+
+  --pb-radius: 12px;
+  --pb-shadow: 0 2px 10px rgba(15, 23, 42, 0.045);
+}
+
+/* ======================================================
+   MAIN PAGE
+====================================================== */
 
 .pb-list-page {
   width: 100%;
-  padding: 24px;
+  min-height: 100vh;
+  padding: 28px;
+  background: var(--pb-bg);
+  color: var(--pb-text);
+  font-family: "Inter", "Poppins", sans-serif;
   box-sizing: border-box;
 }
 
+.pb-list-page * {
+  box-sizing: border-box;
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
 .pb-list-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 26px;
 }
 
 .pb-list-header h1 {
-  margin: 0 0 6px;
-  font-size: 28px;
+  margin: 0;
+  color: var(--pb-primary);
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 750;
+  letter-spacing: -0.7px;
+  line-height: 1.3;
 }
 
 .pb-list-header p {
-  margin: 0;
-  color: #666;
+  margin: 7px 0 0;
+  color: var(--pb-muted);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
+/* ======================================================
+   CREATE BUTTON
+====================================================== */
+
 .pb-list-create {
-  border: none;
-  border-radius: 8px;
-  padding: 11px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 43px;
+  padding: 0 19px;
+  border: 1px solid var(--pb-green);
+  border-radius: 9px;
+  background: var(--pb-green);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 650;
+  white-space: nowrap;
   cursor: pointer;
-  font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
+.pb-list-create:hover {
+  background: var(--pb-green-dark);
+  border-color: var(--pb-green-dark);
+  box-shadow: 0 5px 14px rgba(22, 163, 74, 0.2);
+  transform: translateY(-1px);
+}
+
+.pb-list-create:active {
+  transform: translateY(0);
+}
+
+/* ======================================================
+   PAYMENT TABS
+====================================================== */
 
 .pb-list-tabs {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 7px;
   margin-bottom: 18px;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  background: var(--pb-white);
+  border: 1px solid var(--pb-border);
+  border-radius: 11px;
+  box-shadow: var(--pb-shadow);
+  scrollbar-width: thin;
 }
 
 .pb-list-tab {
-  border: 1px solid #ddd;
-  background: #fff;
-  padding: 9px 14px;
-  border-radius: 7px;
-  cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 9px;
+  min-height: 37px;
+  padding: 0 15px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--pb-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pb-list-tab:hover {
+  background: #f8fafc;
+  color: var(--pb-primary);
 }
 
 .pb-list-tab.active {
-  font-weight: 600;
+  background: var(--pb-green-light);
+  border-color: #bbf7d0;
+  color: var(--pb-green-dark);
 }
 
 .pb-list-tab-count {
-  min-width: 22px;
-  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 21px;
+  height: 21px;
+  padding: 0 6px;
+  border-radius: 20px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 700;
 }
 
+.pb-list-tab.active .pb-list-tab-count {
+  background: #dcfce7;
+  color: var(--pb-green-dark);
+}
+
+/* ======================================================
+   SEARCH TOOLBAR
+====================================================== */
+
 .pb-list-toolbar {
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 18px;
 }
 
 .pb-list-toolbar input {
   width: 100%;
-  max-width: 500px;
-  padding: 11px 13px;
-  border: 1px solid #ddd;
-  border-radius: 7px;
-  box-sizing: border-box;
+  max-width: 440px;
+  height: 43px;
+  padding: 0 15px;
+  outline: none;
+  border: 1px solid var(--pb-border);
+  border-radius: 9px;
+  background: var(--pb-white);
+  color: var(--pb-text);
+  font-family: inherit;
+  font-size: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.pb-list-toolbar input::placeholder {
+  color: #94a3b8;
+}
+
+.pb-list-toolbar input:focus {
+  border-color: var(--pb-green);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.09);
+}
+
+/* ======================================================
+   LOADING / ERROR / EMPTY STATES
+====================================================== */
+
 .pb-list-state {
-  padding: 40px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 170px;
+  width: 100%;
+  padding: 25px;
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius);
+  background: var(--pb-white);
+  color: var(--pb-muted);
+  font-size: 13px;
+  font-weight: 500;
   text-align: center;
-  color: #666;
+  box-shadow: var(--pb-shadow);
 }
 
 .pb-list-state.error {
-  color: #c62828;
+  min-height: 100px;
+  border-color: #fecaca;
+  background: #fffafa;
+  color: #dc2626;
 }
 
-/* The table scrolls inside this box, never on the page */
+/* ======================================================
+   TABLE WRAPPER
+====================================================== */
+
 .pb-list-table-wrapper {
   width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-x: contain;
+  overflow-y: hidden;
+  border: 1px solid var(--pb-border);
+  border-radius: 12px;
+  background: var(--pb-white);
+  box-shadow: var(--pb-shadow);
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
+
+.pb-list-table-wrapper::-webkit-scrollbar {
+  height: 7px;
+}
+
+.pb-list-table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.pb-list-table-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #cbd5e1;
+}
+
+/* ======================================================
+   TABLE
+====================================================== */
 
 .pb-list-table {
   width: 100%;
-  border-collapse: collapse;
-  background: #fff;
+  min-width: 1050px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
 }
 
-.pb-list-table th,
-.pb-list-table td {
-  padding: 13px 14px;
-  border-bottom: 1px solid #eee;
-  text-align: left;
-  white-space: nowrap;
+.pb-list-table thead {
+  background: #f8fafc;
 }
 
 .pb-list-table th {
-  font-weight: 600;
+  height: 48px;
+  padding: 0 17px;
+  border-bottom: 1px solid var(--pb-border);
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pb-list-table td {
+  height: 63px;
+  padding: 12px 17px;
+  border-bottom: 1px solid #edf0f4;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 450;
+  white-space: nowrap;
+  transition: background 0.15s ease;
 }
 
 .pb-list-table tbody tr {
   cursor: pointer;
+  transition: background 0.15s ease;
 }
 
-/* hover only on devices that really hover (mouse), so it
-   does not stay stuck after a tap on a touch screen */
-@media (hover: hover) {
-  .pb-list-table tbody tr:hover {
-    background: #f8f8f8;
-  }
+.pb-list-table tbody tr:hover {
+  background: #f8fdf9;
 }
 
-.pb-list-table .num {
+.pb-list-table tbody tr:hover td {
+  color: #334155;
+}
+
+.pb-list-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ======================================================
+   PURCHASE NUMBER
+====================================================== */
+
+.pb-list-table td.pb-list-number {
+  color: var(--pb-primary);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+/* ======================================================
+   NUMERIC COLUMNS
+====================================================== */
+
+.pb-list-table th.num,
+.pb-list-table td.num {
   text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-.pb-list-number {
-  font-weight: 600;
+.pb-list-table td.num {
+  color: var(--pb-primary);
+  font-weight: 700;
 }
+
+/* ======================================================
+   STATUS BADGES
+====================================================== */
 
 .pb-list-badge {
-  display: inline-block;
-  padding: 5px 9px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 25px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
-.pb-list-badge-pending {
-  background: #fff3cd;
-}
-
-.pb-list-badge-partial {
-  background: #e8f0fe;
-}
-
-.pb-list-badge-paid {
-  background: #e8f5e9;
-}
+/* Verified */
 
 .pb-list-badge-verified {
-  background: #e8f5e9;
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
 }
+
+/* Unverified */
 
 .pb-list-badge-unverified {
-  background: #f5f5f5;
+  border-color: #fed7aa;
+  background: #fff7ed;
+  color: #c2410c;
 }
 
-/* ==========================================================
-   TABLET  (641px - 900px)
-   Same table, tighter spacing. It keeps a min-width so the
-   columns stay readable and scrolls inside its wrapper.
-========================================================== */
+/* Pending */
 
-@media (max-width: 900px) {
+.pb-list-badge-pending {
+  border-color: #fde68a;
+  background: #fffbeb;
+  color: #b45309;
+}
 
+/* Partial */
+
+.pb-list-badge-partial {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+/* Paid */
+
+.pb-list-badge-paid {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+/* ======================================================
+   TABLE RESPONSIVE
+====================================================== */
+
+@media (max-width: 1200px) {
   .pb-list-page {
-    padding: 20px;
-  }
-
-  .pb-list-header {
-    margin-bottom: 20px;
-  }
-
-  .pb-list-header h1 {
-    font-size: 24px;
+    padding: 23px;
   }
 
   .pb-list-table {
-    min-width: 820px;
-  }
-
-  .pb-list-table th,
-  .pb-list-table td {
-    padding: 11px 12px;
+    min-width: 1000px;
   }
 }
 
-/* ==========================================================
-   MOBILE  (640px and below)
-   Each table row becomes a card. Labels come from CSS, in the
-   same order as the <th> cells, so no JSX change is needed.
-========================================================== */
-
-@media (max-width: 640px) {
-
+@media (max-width: 768px) {
   .pb-list-page {
-    padding: 12px;
+    padding: 18px 14px;
   }
 
   .pb-list-header {
-    flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 16px;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 21px;
   }
 
   .pb-list-header h1 {
-    font-size: 22px;
+    font-size: 23px;
+  }
+
+  .pb-list-header p {
+    font-size: 12px;
   }
 
   .pb-list-create {
     width: 100%;
-    min-height: 44px;
+    min-height: 42px;
   }
 
-  /* tabs: two per row, easy to tap */
+  .pb-list-tabs {
+    margin-bottom: 15px;
+  }
+
   .pb-list-tab {
-    flex: 1 1 calc(50% - 8px);
-    justify-content: center;
-    min-height: 44px;
+    padding: 0 12px;
+    font-size: 11px;
   }
 
-  /* 16px stops iOS Safari from zooming in on focus */
+  .pb-list-toolbar {
+    margin-bottom: 15px;
+  }
+
   .pb-list-toolbar input {
-    max-width: none;
-    min-height: 44px;
-    font-size: 16px;
+    max-width: 100%;
+    height: 42px;
+    font-size: 11px;
   }
 
-  /* ----- table -> cards ----- */
-
-  .pb-list-table-wrapper {
-    overflow-x: visible;
-  }
-
-  .pb-list-table,
-  .pb-list-table tbody,
-  .pb-list-table tr,
-  .pb-list-table td {
-    display: block;
-    box-sizing: border-box;
-  }
-
-  .pb-list-table {
-    min-width: 0;
-    background: transparent;
-  }
-
-  /* header row is hidden visually but kept for screen readers */
-  .pb-list-table thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-
-  .pb-list-table tbody tr {
-    margin-bottom: 12px;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    background: #fff;
-    overflow: hidden;
+  .pb-list-table th {
+    height: 45px;
+    padding: 0 13px;
+    font-size: 9px;
   }
 
   .pb-list-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    border-bottom: 1px solid #f1f1f1;
-    white-space: normal;
-    text-align: right;
-    overflow-wrap: anywhere;
+    height: 58px;
+    padding: 10px 13px;
+    font-size: 11px;
   }
 
-  .pb-list-table td:last-child {
-    border-bottom: none;
+  .pb-list-state {
+    min-height: 140px;
+    padding: 20px;
+    font-size: 12px;
+  }
+}
+
+/* ======================================================
+   SMALL MOBILE
+====================================================== */
+
+@media (max-width: 480px) {
+  .pb-list-page {
+    padding: 15px 11px;
   }
 
-  .pb-list-table td::before {
-    flex-shrink: 0;
-    font-weight: 600;
-    font-size: 13px;
-    color: #666;
-    text-align: left;
+  .pb-list-header h1 {
+    font-size: 21px;
   }
 
-  /* labels (keep in the same order as the <th> cells) */
-  .pb-list-table td:nth-child(2)::before { content: "Vendor"; }
-  .pb-list-table td:nth-child(3)::before { content: "Invoice number"; }
-  .pb-list-table td:nth-child(4)::before { content: "Items"; }
-  .pb-list-table td:nth-child(5)::before { content: "Total"; }
-  .pb-list-table td:nth-child(6)::before { content: "Verification"; }
-  .pb-list-table td:nth-child(7)::before { content: "Payment"; }
-  .pb-list-table td:nth-child(8)::before { content: "Created"; }
-
-  /* purchase number acts as the card title, so it has no label */
-  .pb-list-table td:first-child {
-    justify-content: flex-start;
-    text-align: left;
-    font-size: 15px;
-    background: #fafafa;
+  .pb-list-header p {
+    max-width: 290px;
+    font-size: 11px;
   }
 
-  .pb-list-table td:first-child::before {
-    content: none;
+  .pb-list-create {
+    font-size: 12px;
+  }
+
+  .pb-list-tabs {
+    gap: 4px;
+    padding: 5px;
+  }
+
+  .pb-list-tab {
+    min-height: 34px;
+    gap: 6px;
+    padding: 0 9px;
+    font-size: 10px;
+  }
+
+  .pb-list-tab-count {
+    min-width: 19px;
+    height: 19px;
+    font-size: 9px;
+  }
+
+  .pb-list-toolbar input {
+    padding: 0 11px;
+    font-size: 10px;
+  }
+
+  .pb-list-badge {
+    min-height: 23px;
+    padding: 4px 8px;
+    font-size: 9px;
   }
 }

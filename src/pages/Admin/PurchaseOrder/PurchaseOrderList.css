@@ -1,384 +1,576 @@
-/* ==========================================================
-   PURCHASE ORDER LIST
-   Breakpoints: desktop (> 900px), tablet (641-900px),
-   mobile (640px and below)
-========================================================== */
 
-.po-list-page {
-    width: 100%;
-    max-width: 1200px;
-    padding: 24px 28px;
-    box-sizing: border-box;
+/* =========================================================
+   PURCHASE ORDER LIST
+   Premium Admin Dashboard Design
+   Theme: Navy + Green
+========================================================= */
+
+:root {
+  --pol-primary: #16a34a;
+  --pol-primary-dark: #15803d;
+  --pol-primary-light: #f0fdf4;
+  --pol-navy: #172554;
+  --pol-bg: #f3f6fb;
+  --pol-white: #ffffff;
+  --pol-text: #1e293b;
+  --pol-muted: #64748b;
+  --pol-border: #e2e8f0;
+  --pol-danger: #dc2626;
+  --pol-radius: 13px;
+  --pol-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
 }
 
-/* Header */
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
+.po-list-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: clamp(16px, 2.5vw, 30px);
+  background: var(--pol-bg);
+  color: var(--pol-text);
+  font-family: "Inter", "Segoe UI", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.po-list-page *,
+.po-list-page *::before,
+.po-list-page *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
 .po-list-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 25px;
 }
 
 .po-list-header h1 {
-    margin: 0 0 4px;
-    font-size: 26px;
-    font-weight: 600;
-    color: #111827;
+  margin: 0 0 7px;
+  color: var(--pol-navy);
+  font-size: clamp(22px, 2vw, 29px);
+  font-weight: 750;
+  letter-spacing: -0.7px;
+  line-height: 1.3;
 }
 
 .po-list-header p {
-    margin: 0;
-    font-size: 14px;
-    color: #6b7280;
+  margin: 0;
+  color: var(--pol-muted);
+  font-size: 13px;
+  line-height: 1.6;
 }
 
+/* =========================================================
+   CREATE PURCHASE ORDER BUTTON
+========================================================= */
+
 .po-list-create {
-    padding: 10px 18px;
-    border: 1px solid #16a34a;
-    border-radius: 6px;
-    background: #16a34a;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 11px 19px;
+  border: 1px solid var(--pol-primary);
+  border-radius: 9px;
+  background: var(--pol-primary);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 3px 9px rgba(22, 163, 74, 0.17);
+  transition: all 0.2s ease;
 }
 
 .po-list-create:hover {
-    background: #15803d;
+  background: var(--pol-primary-dark);
+  border-color: var(--pol-primary-dark);
+  box-shadow: 0 5px 13px rgba(22, 163, 74, 0.22);
+  transform: translateY(-1px);
 }
 
-.po-list-create:focus-visible,
-.po-list-tab:focus-visible,
-.po-list-toolbar input:focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 2px;
+.po-list-create:active {
+  transform: translateY(0);
 }
 
-/* Status tabs (scroll sideways on narrow screens) */
+/* =========================================================
+   STATUS TABS
+========================================================= */
+
 .po-list-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid #e5e7eb;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  margin-bottom: 17px;
+  padding: 6px;
+  overflow-x: auto;
+  border: 1px solid var(--pol-border);
+  border-radius: 11px;
+  background: #ffffff;
+  box-shadow: var(--pol-shadow);
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
 }
 
 .po-list-tab {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border: none;
-    border-bottom: 2px solid transparent;
-    background: none;
-    color: #6b7280;
-    font-size: 14px;
-    cursor: pointer;
-    white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 39px;
+  padding: 8px 15px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.po-list-tab:hover {
-    color: #111827;
+.po-list-tab:hover:not(.active) {
+  background: #f8fafc;
+  color: var(--pol-navy);
 }
 
 .po-list-tab.active {
-    border-bottom-color: #16a34a;
-    color: #111827;
-    font-weight: 500;
+  border-color: #bbf7d0;
+  background: var(--pol-primary-light);
+  color: var(--pol-primary-dark);
 }
 
 .po-list-tab-count {
-    padding: 1px 8px;
-    border-radius: 999px;
-    background: #f3f4f6;
-    color: #4b5563;
-    font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 750;
 }
 
-/* Search */
+.po-list-tab.active .po-list-tab-count {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* =========================================================
+   SEARCH TOOLBAR
+========================================================= */
+
 .po-list-toolbar {
-    margin-bottom: 16px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 17px;
 }
 
 .po-list-toolbar input {
-    width: 100%;
-    max-width: 380px;
-    box-sizing: border-box;
-    padding: 9px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: #ffffff;
-    font-size: 14px;
-    color: #111827;
+  width: min(100%, 360px);
+  min-height: 44px;
+  padding: 11px 15px 11px 40px;
+  border: 1px solid var(--pol-border);
+  border-radius: 9px;
+  outline: none;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' fill='none' stroke='%2394a3b8' stroke-width='1.8' viewBox='0 0 24 24'%3E%3Ccircle cx='10.8' cy='10.8' r='6.8'/%3E%3Cpath d='m16 16 4.5 4.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 13px center;
+  background-size: 17px;
+  color: var(--pol-text);
+  font-family: inherit;
+  font-size: 12px;
+  transition: all 0.2s ease;
 }
 
-/* Table
-   The table scrolls inside this box, never on the page. */
-.po-list-table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
+.po-list-toolbar input::placeholder {
+  color: #94a3b8;
 }
+
+.po-list-toolbar input:hover {
+  border-color: #b6c5da;
+}
+
+.po-list-toolbar input:focus {
+  border-color: var(--pol-primary);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.09);
+}
+
+/* =========================================================
+   TABLE CONTAINER
+========================================================= */
+
+.po-list-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--pol-border);
+  border-radius: var(--pol-radius);
+  background: #ffffff;
+  box-shadow: var(--pol-shadow);
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.po-list-table-wrapper::-webkit-scrollbar {
+  height: 7px;
+}
+
+.po-list-table-wrapper::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+.po-list-table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
 
 .po-list-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
+  width: 100%;
+  min-width: 950px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
 }
 
-.po-list-table th {
-    padding: 12px 16px;
-    background: #f9fafb;
-    border-bottom: 1px solid #e5e7eb;
-    color: #6b7280;
-    font-size: 13px;
-    font-weight: 500;
-    text-align: left;
-    white-space: nowrap;
+/* Table header */
+
+.po-list-table thead {
+  background: #f8fafc;
 }
 
-.po-list-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #f3f4f6;
-    color: #111827;
-    white-space: nowrap;
+.po-list-table thead th {
+  padding: 16px 17px;
+  border-bottom: 1px solid var(--pol-border);
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.55px;
+  white-space: nowrap;
 }
+
+/* Table body */
 
 .po-list-table tbody tr {
-    cursor: pointer;
+  background: #ffffff;
+  cursor: pointer;
+  transition: background 0.18s ease;
 }
 
-/* hover only on devices that really hover (mouse), so it
-   does not stay stuck after a tap on a touch screen */
-@media (hover: hover) {
-    .po-list-table tbody tr:hover {
-        background: #f9fafb;
-    }
+.po-list-table tbody tr:hover {
+  background: #f5fcf7;
 }
 
-/* only for the real table layout (not the mobile cards) */
-@media (min-width: 641px) {
-    .po-list-table tbody tr:last-child td {
-        border-bottom: none;
-    }
+.po-list-table tbody td {
+  padding: 16px 17px;
+  border-bottom: 1px solid #edf1f6;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 500;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
-.po-list-table .num {
-    text-align: right;
+.po-list-table tbody tr:last-child td {
+  border-bottom: none;
 }
+
+/* Numeric alignment */
+
+.po-list-table th.num,
+.po-list-table td.num {
+  text-align: right;
+}
+
+/* =========================================================
+   PO NUMBER
+========================================================= */
 
 .po-list-number {
-    font-weight: 500;
+  color: var(--pol-navy) !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.1px;
 }
 
-.po-list-overdue {
-    margin-left: 8px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: #fee2e2;
-    color: #991b1b;
-    font-size: 12px;
-}
+/* =========================================================
+   STATUS BADGES
+========================================================= */
 
-/* Status badges */
 .po-list-badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 77px;
+  min-height: 26px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.1px;
 }
+
+/* Draft */
 
 .po-list-badge-draft {
-    background: #f3f4f6;
-    color: #4b5563;
+  border-color: #e2e8f0;
+  background: #f1f5f9;
+  color: #475569;
 }
+
+/* Ordered */
 
 .po-list-badge-ordered {
-    background: #dbeafe;
-    color: #1e40af;
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
 }
+
+/* Received */
 
 .po-list-badge-received {
-    background: #dcfce7;
-    color: #166534;
+  border-color: #bbf7d0;
+  background: #dcfce7;
+  color: #15803d;
 }
+
+/* Cancelled */
 
 .po-list-badge-cancelled {
-    background: #fee2e2;
-    color: #991b1b;
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
-/* Loading / empty / error */
+/* =========================================================
+   OVERDUE LABEL
+========================================================= */
+
+.po-list-overdue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  background: #fef2f2;
+  color: #dc2626;
+  font-size: 9px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
+}
+
+/* =========================================================
+   LOADING / ERROR / EMPTY STATE
+========================================================= */
+
 .po-list-state {
-    padding: 32px 0;
-    font-size: 15px;
-    color: #4b5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  padding: 25px;
+  border: 1px solid var(--pol-border);
+  border-radius: var(--pol-radius);
+  background: #ffffff;
+  color: var(--pol-muted);
+  font-size: 13px;
+  font-weight: 550;
+  line-height: 1.6;
+  text-align: center;
+  box-shadow: var(--pol-shadow);
 }
 
 .po-list-state.error {
-    color: #b91c1c;
+  border-color: #fecaca;
+  background: #fffafa;
+  color: #dc2626;
 }
 
-/* ==========================================================
-   TABLET  (641px - 900px)
-   Same table, tighter spacing. It keeps a min-width so the
-   columns stay readable and scrolls inside its wrapper.
-========================================================== */
+/* =========================================================
+   TABLET RESPONSIVE
+========================================================= */
 
 @media (max-width: 900px) {
 
-    .po-list-page {
-        padding: 20px;
-    }
+  .po-list-page {
+    padding: 20px;
+  }
 
-    .po-list-header h1 {
-        font-size: 24px;
-    }
+  .po-list-table {
+    min-width: 900px;
+  }
 
-    .po-list-table {
-        min-width: 760px;
-    }
-
-    .po-list-table th,
-    .po-list-table td {
-        padding: 11px 12px;
-    }
+  .po-list-table thead th,
+  .po-list-table tbody td {
+    padding: 14px 13px;
+  }
 }
 
-/* ==========================================================
-   MOBILE  (640px and below)
-   Each table row becomes a card. Labels come from CSS, in the
-   same order as the <th> cells, so no JSX change is needed.
-========================================================== */
+/* =========================================================
+   MOBILE RESPONSIVE
+========================================================= */
 
-@media (max-width: 640px) {
+@media (max-width: 600px) {
 
-    .po-list-page {
-        padding: 12px;
-    }
+  .po-list-page {
+    padding: 14px 12px;
+  }
 
-    .po-list-header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 14px;
-        margin-bottom: 16px;
-    }
+  .po-list-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 19px;
+  }
 
-    .po-list-header h1 {
-        font-size: 22px;
-    }
+  .po-list-header h1 {
+    font-size: 21px;
+  }
 
-    .po-list-create {
-        width: 100%;
-        min-height: 44px;
-    }
+  .po-list-header p {
+    font-size: 12px;
+  }
 
-    .po-list-tab {
-        min-height: 44px;
-    }
+  .po-list-create {
+    width: 100%;
+    min-height: 43px;
+  }
 
-    /* 16px stops iOS Safari from zooming in on focus */
-    .po-list-toolbar input {
-        max-width: none;
-        min-height: 44px;
-        font-size: 16px;
-    }
+  .po-list-tabs {
+    gap: 4px;
+    margin-bottom: 14px;
+    padding: 5px;
+  }
 
-    /* ----- table -> cards ----- */
+  .po-list-tab {
+    min-height: 36px;
+    padding: 7px 11px;
+    gap: 6px;
+    font-size: 11px;
+  }
 
-    .po-list-table-wrapper {
-        overflow-x: visible;
-        background: transparent;
-        border: none;
-        border-radius: 0;
-    }
+  .po-list-tab-count {
+    min-width: 19px;
+    height: 19px;
+    font-size: 9px;
+  }
 
-    .po-list-table,
-    .po-list-table tbody,
-    .po-list-table tr,
-    .po-list-table td {
-        display: block;
-        box-sizing: border-box;
-    }
+  .po-list-toolbar {
+    margin-bottom: 14px;
+  }
 
-    .po-list-table {
-        min-width: 0;
-    }
+  .po-list-toolbar input {
+    width: 100%;
+    min-height: 43px;
+    font-size: 12px;
+  }
 
-    /* header row is hidden visually but kept for screen readers */
-    .po-list-table thead {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        white-space: nowrap;
-    }
+  .po-list-table-wrapper {
+    border-radius: 10px;
+  }
 
-    .po-list-table tbody tr {
-        margin-bottom: 12px;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        background: #ffffff;
-        overflow: hidden;
-    }
+  .po-list-table {
+    min-width: 900px;
+  }
 
-    /* label on the left (margin-right: auto), value on the right */
-    .po-list-table td {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 14px;
-        border-bottom: 1px solid #f3f4f6;
-        white-space: normal;
-        text-align: right;
-        overflow-wrap: anywhere;
-    }
+  .po-list-table thead th {
+    padding: 13px 12px;
+    font-size: 9px;
+  }
 
-    .po-list-table td:last-child {
-        border-bottom: none;
-    }
+  .po-list-table tbody td {
+    padding: 14px 12px;
+    font-size: 11px;
+  }
 
-    .po-list-table td::before {
-        margin-right: auto;
-        padding-right: 8px;
-        flex-shrink: 0;
-        font-weight: 600;
-        font-size: 13px;
-        color: #6b7280;
-        text-align: left;
-    }
+  .po-list-number {
+    font-size: 11px !important;
+  }
 
-    /* labels (keep in the same order as the <th> cells) */
-    .po-list-table td:nth-child(2)::before { content: "Vendor"; }
-    .po-list-table td:nth-child(3)::before { content: "Items"; }
-    .po-list-table td:nth-child(4)::before { content: "Total"; }
-    .po-list-table td:nth-child(5)::before { content: "Expected delivery"; }
-    .po-list-table td:nth-child(6)::before { content: "Status"; }
-    .po-list-table td:nth-child(7)::before { content: "Created"; }
+  .po-list-badge {
+    min-width: 68px;
+    min-height: 24px;
+    font-size: 9px;
+  }
 
-    /* PO number acts as the card title, so it has no label */
-    .po-list-table td:first-child {
-        justify-content: flex-start;
-        text-align: left;
-        font-size: 15px;
-        background: #f9fafb;
-    }
+  .po-list-overdue {
+    margin-left: 5px;
+    font-size: 8px;
+  }
 
-    .po-list-table td:first-child::before {
-        content: none;
-    }
+  .po-list-state {
+    min-height: 180px;
+    padding: 20px 13px;
+    font-size: 12px;
+  }
+}
 
-    /* the flex gap already spaces the Overdue badge */
-    .po-list-overdue {
-        margin-left: 0;
-    }
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .po-list-page {
+    padding: 11px 9px;
+  }
+
+  .po-list-header h1 {
+    font-size: 19px;
+  }
+
+  .po-list-create {
+    font-size: 11px;
+  }
+
+  .po-list-tab {
+    padding: 7px 9px;
+    font-size: 10px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.po-list-page button:focus-visible,
+.po-list-page input:focus-visible,
+.po-list-page tr:focus-visible {
+  outline: 3px solid rgba(22, 163, 74, 0.25);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .po-list-page *,
+  .po-list-page *::before,
+  .po-list-page *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

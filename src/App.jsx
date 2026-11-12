@@ -359,7 +359,7 @@ import Shipping from "./pages/Legal/Shipping/Shipping";
 import RentalTerms from "./pages/Legal/RentalTerms/RentalTerms";
 import RepairTerms from "./pages/Legal/RepairTerms/RepairTerms";
 import TermsConditions from "./pages/TermsConditions/TermsConditions";
-
+import EditEmployee from "./pages/Admin/Employee/EditEmployee";
 import CorporateNotifications from "./pages/corporate/CorporateNotifications";
 import BranchManagement from "./pages/branch/BranchManagement";
 // =====================================================
@@ -538,6 +538,8 @@ function App() {
     location.pathname.startsWith("/edit-product/") ||
     location.pathname.startsWith("/view-product/") ||
     location.pathname.startsWith("/edit-subcategory/") ||
+      location.pathname.startsWith("/admin/edit-employee/") ||
+
     location.pathname.startsWith("/admin/orders/") ||
     location.pathname.startsWith("/shipment/") ||
 
@@ -682,7 +684,7 @@ const hideGlobalHeader =
 
             {/* ADD EMPLOYEE (same AddEmployee component as Admin) */}
             <Route path="employees/add" element={<AddEmployee />} />
-
+     
             {/* ADD SHIFTING (same ShiftManagement component as Admin) */}
             <Route path="shifting/add" element={<ShiftManagement />} />
 
@@ -777,6 +779,14 @@ const hideGlobalHeader =
 
             <Route path="/add-employee" element={<AddEmployee />} />
             <Route path="/employees" element={<EmployeeList />} />
+<Route path="/admin/employees" element={<EmployeeList />} />
+
+            {/* EDIT EMPLOYEE */}
+
+<Route
+  path="/admin/edit-employee/:id"
+  element={<EditEmployee />}
+/>
 
             {/* LEAVES */}
 
