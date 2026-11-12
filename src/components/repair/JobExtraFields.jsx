@@ -6,6 +6,7 @@ import {
   formatShortDate,
   getPersonLabel,
   getReasonLabel,
+  calcRepairAmounts,
 } from "./repairHelpers";
 
 import "./repairJobShared.css";
@@ -39,6 +40,49 @@ export default function JobExtraFields({
 
   return (
     <div className="rjx-fields">
+              {/* INVOICE TYPE (GST / NON-GST) */}
+
+      <div className="rjx-field">
+        <label htmlFor="rjxInvoiceType">
+          Invoice Type <span className="rjx-req">*</span>
+        </label>
+
+        <select
+          id="rjxInvoiceType"
+          name="invoiceType"
+          value={form.invoiceType || ""}
+          onChange={onChange}
+          required
+        >
+          <option value="">-- Select Invoice Type --</option>
+          <option value="GST">GST Invoice (Tax Invoice)</option>
+          <option value="NON_GST">Non-GST Invoice</option>
+        </select>
+
+        <span className="rjx-hint">
+          Estimated Cost base amount hai. GST invoice me GST upar se judega.
+        </span>
+      </div>
+
+      {form.invoiceType === "GST" && (
+        <div className="rjx-field">
+          <label htmlFor="rjxGstPercentage">
+            GST Percentage (%) <span className="rjx-req">*</span>
+          </label>
+
+          <input
+            id="rjxGstPercentage"
+            type="number"
+            name="gstPercentage"
+            min="0"
+            max="100"
+            step="0.01"
+            value={form.gstPercentage ?? ""}
+            onChange={onChange}
+            required
+          />
+        </div>
+      )}
       {/* WARRANTY STATUS */}
 
       <div className="rjx-field">
@@ -276,6 +320,18 @@ export function JobExtraSummary({
         {repair.salespersonName || "Not recorded"}
       </div>
 
+      
+      <div style={lineStyle}>
+        <strong>Invoice Type:</strong>{" "}
+        {(() => {
+          const amounts = calcRepairAmounts(repair);
+
+          return amounts.isGst
+            ? `GST Invoice (${amounts.pct}%)`
+            : "Non-GST";
+        })()}
+      </div>
+
       {showNotes && (
         <div style={{ ...lineStyle, whiteSpace: "pre-wrap" }}>
           <strong>Technician Notes:</strong>{" "}
@@ -310,6 +366,92 @@ export function JobExtraSummary({
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+// ======================================================
+// REPAIR GST SUMMARY
+// Receipt me base amount, CGST, SGST aur total payable.
+// Inline styles: print window me bhi sahi dikhta hai.
+// ======================================================
+
+export function RepairGstSummary({ repair }) {
+  if (!repair) return null;
+
+  const amounts = calcRepairAmounts(repair);
+
+  const rupee = (value) =>
+    `₹ ${Number(value || 0).toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
+  const box = {
+    margin: "14px 0",
+    padding: 12,
+    border: "1px solid #cbd5e1",
+    borderRadius: 8,
+    fontSize: 13,
+    lineHeight: 1.5,
+  };
+
+  const row = {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: 12,
+    margin: "3px 0",
+  };
+
+  return (
+    <div style={box}>
+      <strong style={{ display: "block", marginBottom: 6 }}>
+        {amounts.isGst
+          ? `TAX INVOICE - GST BREAKUP (${amounts.pct}%)`
+          : "NON-GST BILL"}
+      </strong>
+
+      <div style={row}>
+        <span>
+          {amounts.isGst
+            ? "Taxable Value (Service Amount)"
+            : "Service Amount"}
+        </span>
+
+        <strong>{rupee(amounts.base)}</strong>
+      </div>
+
+      {amounts.isGst ? (
+        <>
+          <div style={row}>
+            <span>CGST ({amounts.pct / 2}%)</span>
+            <strong>{rupee(amounts.cgst)}</strong>
+          </div>
+
+          <div style={row}>
+            <span>SGST ({amounts.pct / 2}%)</span>
+            <strong>{rupee(amounts.sgst)}</strong>
+          </div>
+        </>
+      ) : (
+        <div style={row}>
+          <span>GST</span>
+          <strong>Not applicable</strong>
+        </div>
+      )}
+
+      <div
+        style={{
+          ...row,
+          borderTop: "1px solid #cbd5e1",
+          paddingTop: 6,
+          marginTop: 6,
+          fontSize: 14,
+        }}
+      >
+        <strong>Total Payable</strong>
+        <strong>{rupee(amounts.total)}</strong>
+      </div>
     </div>
   );
 }

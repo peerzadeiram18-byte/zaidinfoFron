@@ -1,221 +1,297 @@
 
-/* =====================================================
+/* =========================================================
    TECHNICIAN WORKBENCH
-===================================================== */
+   TechnicianWorkOrders2.css
+   Fully Responsive - Desktop, Laptop, Tablet and Mobile
+========================================================= */
+
+/* ================= GLOBAL ================= */
+
+.tat-container,
+.tat-container * {
+  box-sizing: border-box;
+}
 
 .tat-container {
+  --tat-primary: #2563eb;
+  --tat-primary-dark: #1d4ed8;
+  --tat-text: #172033;
+  --tat-muted: #64748b;
+  --tat-border: #e2e8f0;
+  --tat-bg: #f4f7fb;
+  --tat-white: #ffffff;
+
   width: 100%;
+  max-width: 100%;
   min-width: 0;
-  padding: 24px;
-  color: #172033;
-  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 26px;
+  margin: 0;
+  background: var(--tat-bg);
+  color: var(--tat-text);
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
   overflow-x: hidden;
-  font-family: inherit;
 }
 
-.tat-container *,
-.tat-container *::before,
-.tat-container *::after {
-  box-sizing: border-box;
+.tat-container button,
+.tat-container input,
+.tat-container select,
+.tat-container textarea {
+  font: inherit;
 }
 
-/* =====================================================
-   HEADER
-===================================================== */
+.tat-container button {
+  cursor: pointer;
+}
+
+.tat-container button:disabled,
+.tat-container select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.tat-container input:focus-visible,
+.tat-container select:focus-visible,
+.tat-container textarea:focus-visible,
+.tat-container button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.18);
+  outline-offset: 2px;
+}
+
+/* ================= HEADER ================= */
 
 .tat-header {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 25px;
+  padding: 25px 28px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  border: 1px solid var(--tat-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.045);
+}
+
+.tat-header > div {
+  min-width: 0;
 }
 
 .tat-eyebrow {
-  display: inline-block;
-  margin-bottom: 7px;
-  color: #2563eb;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  color: var(--tat-primary);
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
 }
 
 .tat-header h1 {
-  margin: 0;
-  color: #172033;
-  font-size: clamp(22px, 3vw, 29px);
+  margin: 0 0 7px;
+  color: #111827;
+  font-size: clamp(22px, 2.2vw, 30px);
   font-weight: 800;
-  line-height: 1.3;
+  line-height: 1.25;
+  letter-spacing: -0.7px;
 }
 
 .tat-header p {
-  margin: 8px 0 0;
-  color: #718096;
+  margin: 0;
+  color: #64748b;
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
 }
 
 .tat-header p strong {
-  color: #273449;
+  color: #1e293b;
+  font-weight: 700;
 }
+
+/* ================= REFRESH BUTTON ================= */
 
 .tat-btn-refresh {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   gap: 9px;
-  min-height: 42px;
-  padding: 0 17px;
+  min-height: 44px;
+  padding: 11px 18px;
   border: 0;
   border-radius: 9px;
-  background: #2563eb;
-  color: #fff;
+  background: var(--tat-primary);
+  color: white;
   font-size: 13px;
   font-weight: 700;
-  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.18);
   transition: 0.2s ease;
-  white-space: nowrap;
 }
 
-.tat-btn-refresh:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
+.tat-btn-refresh:hover:not(:disabled) {
+  background: var(--tat-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 7px 15px rgba(37, 99, 235, 0.23);
 }
 
-.tat-btn-refresh:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+.tat-btn-refresh svg {
+  width: 17px;
+  height: 17px;
 }
+
+/* ================= ANIMATION ================= */
 
 .tat-spin {
-  animation: tat-spin 1s linear infinite;
+  animation: tat-spin-animation 1s linear infinite;
 }
 
-@keyframes tat-spin {
+@keyframes tat-spin-animation {
   to {
     transform: rotate(360deg);
   }
 }
 
-/* =====================================================
-   METRIC CARDS
-===================================================== */
+/* ================= SUMMARY METRICS ================= */
 
 .tat-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 17px;
-  margin-bottom: 23px;
+  gap: 18px;
+  width: 100%;
+  margin-bottom: 24px;
 }
 
 .tat-metric-card {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 17px;
   min-width: 0;
-  padding: 19px;
-  border: 1px solid #e9edf5;
-  border-radius: 13px;
-  background: #fff;
-  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+  min-height: 115px;
+  padding: 21px;
+  background: #ffffff;
+  border: 1px solid var(--tat-border);
+  border-radius: 14px;
+  box-shadow: 0 3px 13px rgba(15, 23, 42, 0.035);
+  transition: 0.2s ease;
+}
+
+.tat-metric-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.075);
 }
 
 .tat-metric-icon {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  font-size: 21px;
+  width: 53px;
+  height: 53px;
+  border-radius: 13px;
+  font-size: 24px;
 }
 
-.icon-blue {
-  background: #eaf2ff;
+.tat-metric-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.tat-metric-icon.icon-blue {
   color: #2563eb;
+  background: #eff6ff;
 }
 
-.icon-amber {
-  background: #fff5df;
+.tat-metric-icon.icon-amber {
   color: #d97706;
+  background: #fffbeb;
 }
 
-.icon-green {
-  background: #e8f9ef;
-  color: #16a34a;
+.tat-metric-icon.icon-green {
+  color: #059669;
+  background: #ecfdf5;
 }
 
 .tat-metric-label {
   display: block;
   margin-bottom: 5px;
-  color: #778397;
+  color: #64748b;
   font-size: 12px;
   font-weight: 600;
+  line-height: 1.4;
 }
 
 .tat-metric-count {
   display: block;
-  color: #172033;
-  font-size: 25px;
+  color: #111827;
+  font-size: 29px;
   font-weight: 800;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
 }
 
-/* =====================================================
-   MAIN CARD
-===================================================== */
+/* ================= MAIN CARD ================= */
 
 .tat-card {
   width: 100%;
   min-width: 0;
-  overflow: hidden;
-  border: 1px solid #e7ebf2;
-  border-radius: 13px;
-  background: #fff;
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.045);
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid var(--tat-border);
+  border-radius: 15px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
 }
 
-/* =====================================================
-   TOOLBAR
-===================================================== */
+/* ================= TOOLBAR ================= */
 
 .tat-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
-  padding: 17px;
-  border-bottom: 1px solid #edf0f5;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 17px;
 }
 
 .tat-search-wrap {
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
-  max-width: 480px;
+  flex: 1 1 380px;
+  min-width: 180px;
 }
 
 .tat-search-ico {
   position: absolute;
-  left: 13px;
-  color: #8491a5;
-  font-size: 17px;
+  left: 14px;
+  z-index: 1;
+  width: 17px;
+  height: 17px;
+  color: #94a3b8;
   pointer-events: none;
 }
 
 .tat-search-wrap input {
   width: 100%;
-  height: 42px;
-  padding: 0 14px 0 40px;
+  height: 45px;
+  padding: 0 14px 0 42px;
+  border: 1px solid #dbe2ea;
+  border-radius: 9px;
   outline: none;
-  border: 1px solid #e1e6ef;
-  border-radius: 8px;
-  background: #fff;
-  color: #263449;
+  background: #ffffff;
+  color: #1e293b;
   font-size: 13px;
   transition: 0.2s ease;
+}
+
+.tat-search-wrap input::placeholder {
+  color: #94a3b8;
 }
 
 .tat-search-wrap input:focus {
@@ -223,44 +299,230 @@
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.tat-search-wrap input::placeholder {
-  color: #9aa5b5;
+.tat-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
 }
 
 .tat-filter-wrap {
-  width: 190px;
-  flex-shrink: 0;
+  min-width: 145px;
 }
 
-.tat-select {
+.tat-sort-wrap {
+  min-width: 190px;
+}
+
+/* ================= SELECT ================= */
+
+.tat-select,
+.tat-status-changer {
   width: 100%;
-  height: 42px;
-  padding: 0 12px;
-  outline: none;
-  border: 1px solid #e1e6ef;
+  min-width: 0;
+  height: 43px;
+  padding: 0 32px 0 12px;
+  border: 1px solid #dbe2ea;
   border-radius: 8px;
-  background: #fff;
+  outline: none;
+  background-color: #ffffff;
   color: #334155;
   font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.tat-select:hover,
+.tat-status-changer:hover {
+  border-color: #94a3b8;
+}
+
+.tat-select:focus,
+.tat-status-changer:focus {
+  border-color: var(--tat-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.09);
+}
+
+.tat-select option,
+.tat-status-changer option {
+  background: #ffffff;
+  color: #1e293b;
+}
+
+/* ================= FILTER BUTTON ================= */
+
+.tat-btn-filter {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 43px;
+  padding: 0 15px;
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.tat-btn-filter:hover,
+.tat-btn-filter.is-open {
+  border-color: #93c5fd;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.tat-btn-filter svg {
+  width: 17px;
+  height: 17px;
+}
+
+.tat-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 20px;
+  background: #2563eb;
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* ================= ADVANCED FILTER PANEL ================= */
+
+.tat-filter-panel {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  padding: 19px;
+  margin-bottom: 20px;
+  border: 1px solid #e2e8f0;
+  border-radius: 11px;
+  background: #f8fafc;
+  animation: tat-filter-appear 0.2s ease;
+}
+
+@keyframes tat-filter-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tat-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.tat-filter-field > label {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tat-filter-field .tat-select {
+  background-color: #ffffff;
+}
+
+.tat-filter-check {
+  justify-content: flex-end;
+}
+
+.tat-check-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 43px;
+  padding: 0 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
   cursor: pointer;
 }
 
-/* =====================================================
-   TABLE WRAPPER
-===================================================== */
+.tat-check-label input {
+  width: 17px;
+  height: 17px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.tat-check-label span {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ================= CLEAR FILTER ================= */
+
+.tat-btn-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 43px;
+  padding: 9px 13px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fff1f2;
+  color: #dc2626;
+  font-size: 12px;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+.tat-btn-clear:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #f87171;
+}
+
+.tat-btn-clear:disabled {
+  opacity: 0.45;
+}
+
+.tat-btn-clear svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tat-btn-clear-inline {
+  width: auto;
+  margin-top: 12px;
+}
+
+/* ================= TABLE WRAPPER ================= */
 
 .tat-table-wrap {
   width: 100%;
   max-width: 100%;
   overflow-x: auto;
   overflow-y: visible;
-  -webkit-overflow-scrolling: touch;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #f1f5f9;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tat-table-wrap::-webkit-scrollbar {
-  height: 8px;
+  height: 9px;
 }
 
 .tat-table-wrap::-webkit-scrollbar-track {
@@ -268,146 +530,118 @@
 }
 
 .tat-table-wrap::-webkit-scrollbar-thumb {
-  border-radius: 20px;
   background: #cbd5e1;
+  border-radius: 10px;
 }
+
+.tat-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ================= TABLE ================= */
 
 .tat-table {
   width: 100%;
-  min-width: 1500px;
+  min-width: 1600px;
   border-collapse: separate;
   border-spacing: 0;
-  table-layout: fixed;
+  background: #ffffff;
+  table-layout: auto;
 }
 
-.tat-table thead th {
+.tat-table thead {
+  background: #f1f5f9;
+}
+
+.tat-table th {
   position: sticky;
   top: 0;
   z-index: 2;
-  padding: 14px 12px;
-  border-bottom: 1px solid #e8edf4;
-  background: #f8fafc;
-  color: #66758a;
-  font-size: 12px;
-  font-weight: 750;
+  padding: 15px 13px;
+  border-bottom: 1px solid #dbe3ec;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.45px;
   text-align: left;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
-.tat-table tbody td {
-  padding: 16px 12px;
-  border-bottom: 1px solid #edf1f6;
-  color: #344054;
+.tat-table td {
+  min-width: 110px;
+  padding: 15px 13px;
+  border-bottom: 1px solid #edf0f5;
+  color: #334155;
   font-size: 12px;
-  vertical-align: middle;
+  vertical-align: top;
   overflow-wrap: anywhere;
 }
 
-.tat-table tbody tr:last-child td {
-  border-bottom: 0;
+.tat-table tbody tr {
+  transition: background 0.18s ease;
 }
 
 .tat-table tbody tr:hover {
-  background: #fbfdff;
+  background: #f8fbff;
 }
 
-/* Column widths */
-
-.tat-table th:nth-child(1),
-.tat-table td:nth-child(1) {
-  width: 100px;
+.tat-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.tat-table th:nth-child(2),
-.tat-table td:nth-child(2) {
-  width: 190px;
+.tat-th-right,
+.tat-td-right {
+  text-align: right !important;
 }
 
-.tat-table th:nth-child(3),
-.tat-table td:nth-child(3) {
-  width: 155px;
-}
-
-.tat-table th:nth-child(4),
-.tat-table td:nth-child(4) {
-  width: 165px;
-}
-
-.tat-table th:nth-child(5),
-.tat-table td:nth-child(5) {
-  width: 250px;
-}
-
-.tat-table th:nth-child(6),
-.tat-table td:nth-child(6) {
-  width: 140px;
-}
-
-.tat-table th:nth-child(7),
-.tat-table td:nth-child(7) {
-  width: 120px;
-}
-
-.tat-table th:nth-child(8),
-.tat-table td:nth-child(8) {
-  width: 135px;
-}
-
-.tat-table th:nth-child(9),
-.tat-table td:nth-child(9) {
-  width: 125px;
-}
-
-.tat-table th:nth-child(10),
-.tat-table td:nth-child(10) {
-  width: 145px;
-}
-
-/* =====================================================
-   TICKET
-===================================================== */
+/* ================= TICKET NUMBER ================= */
 
 .tat-ticket-code {
   display: inline-flex;
   align-items: center;
-  padding: 6px 9px;
+  justify-content: center;
+  max-width: 150px;
+  min-height: 29px;
+  padding: 6px 10px;
+  border: 1px solid #bfdbfe;
   border-radius: 6px;
-  background: #edf4ff;
-  color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
   font-size: 11px;
   font-weight: 800;
-  white-space: nowrap;
+  letter-spacing: 0.4px;
+  overflow-wrap: anywhere;
 }
 
-/* =====================================================
-   CUSTOMER / DEVICE
-===================================================== */
+/* ================= CUSTOMER / DEVICE ================= */
 
 .tat-customer-cell {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-  min-width: 0;
+  gap: 7px;
+  min-width: 145px;
+  max-width: 220px;
 }
 
 .tat-customer-cell > strong {
-  color: #172033;
-  font-size: 12px;
+  color: #1e293b;
+  font-size: 13px;
   font-weight: 750;
-  line-height: 1.45;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .tat-device-name {
-  text-transform: capitalize;
+  color: #1d4ed8 !important;
 }
 
 .tat-sub-txt {
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  min-width: 0;
-  color: #8290a4;
+  color: #64748b;
   font-size: 11px;
   line-height: 1.5;
   overflow-wrap: anywhere;
@@ -415,30 +649,36 @@
 
 .tat-sub-txt svg {
   flex-shrink: 0;
+  width: 13px;
+  height: 13px;
   margin-top: 2px;
 }
 
-/* =====================================================
-   BRANCH
-===================================================== */
+/* ================= BRANCH DETAILS ================= */
 
 .tat-branch-cell {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  min-width: 0;
+  gap: 9px;
+  min-width: 175px;
+  max-width: 260px;
 }
 
 .tat-branch-icon {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  width: 27px;
-  height: 27px;
+  width: 29px;
+  height: 29px;
   border-radius: 7px;
-  background: #eef4ff;
+  background: #eff6ff;
   color: #2563eb;
+}
+
+.tat-branch-icon svg {
+  width: 15px;
+  height: 15px;
 }
 
 .tat-branch-details {
@@ -449,42 +689,53 @@
 }
 
 .tat-branch-details strong {
-  color: #344054;
-  font-size: 11px;
+  color: #1e293b;
+  font-size: 12px;
   font-weight: 750;
+}
+
+.tat-branch-details > span {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  color: #64748b;
+  font-size: 11px;
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
-.tat-branch-details > span,
+.tat-branch-details > span svg {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  margin-top: 2px;
+}
+
 .tat-branch-details small {
-  color: #8491a5;
-  font-size: 10px;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
+  color: #94a3b8;
+  font-size: 11px;
 }
 
-/* =====================================================
-   REPORTED ISSUE - MORE / LESS
-===================================================== */
+/* ================= REPORTED ISSUE ================= */
 
 .tat-issue-col {
-  vertical-align: top !important;
+  min-width: 210px !important;
+  max-width: 290px;
 }
 
 .tat-issue-box {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  width: 100%;
-  min-width: 0;
+  min-width: 180px;
 }
 
 .tat-issue-icon {
   flex-shrink: 0;
-  margin-top: 3px;
-  color: #f59e0b;
-  font-size: 14px;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  color: #d97706;
 }
 
 .tat-issue-content {
@@ -493,254 +744,381 @@
   align-items: flex-start;
   gap: 7px;
   min-width: 0;
-  width: 100%;
 }
 
 .tat-issue-text {
-  display: block;
-  width: 100%;
-  color: #46546a;
-  font-size: 11px;
-  line-height: 1.65;
-  white-space: pre-wrap;
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.7;
   overflow-wrap: anywhere;
-  word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .tat-more-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-height: 25px;
-  padding: 3px 9px;
-  border: 1px solid #dbe7ff;
-  border-radius: 6px;
-  background: #f1f6ff;
+  gap: 4px;
+  padding: 3px 0;
+  border: none;
+  background: transparent;
   color: #2563eb;
   font-size: 11px;
   font-weight: 750;
-  cursor: pointer;
-  transition: 0.2s ease;
 }
 
 .tat-more-btn:hover {
-  border-color: #2563eb;
-  background: #e6efff;
+  color: #1d4ed8;
+  text-decoration: underline;
 }
 
 .tat-more-btn svg {
-  font-size: 13px;
+  width: 13px;
+  height: 13px;
 }
 
-/* =====================================================
-   REMARKS
-===================================================== */
+/* ================= COUNTER REMARKS ================= */
+
+.tat-remarks-col {
+  min-width: 150px;
+  max-width: 230px;
+}
 
 .tat-remarks-tag {
   display: inline-block;
-  max-width: 100%;
-  padding: 6px 9px;
+  max-width: 220px;
+  padding: 7px 9px;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
-  background: #f1f5f9;
-  color: #64748b;
+  background: #f8fafc;
+  color: #475569;
   font-size: 11px;
-  line-height: 1.5;
+  line-height: 1.6;
   overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .tat-muted-dash {
-  color: #b0bac8;
+  color: #94a3b8;
+  font-size: 17px;
 }
 
-/* =====================================================
-   DATE
-===================================================== */
+/* ================= TECHNICIAN NOTES ================= */
+
+.tat-table td textarea {
+  display: block;
+  width: 100%;
+  min-width: 210px;
+  min-height: 75px;
+  padding: 10px;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+  outline: none;
+  background: #ffffff;
+  color: #334155;
+  font-size: 12px !important;
+  line-height: 1.6;
+  resize: vertical;
+  transition: 0.2s ease;
+}
+
+.tat-table td textarea::placeholder {
+  color: #94a3b8;
+}
+
+.tat-table td textarea:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.09);
+}
+
+/* ================= DATE BADGE ================= */
 
 .tat-date-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #64748b;
+  padding: 7px 9px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  background: #f8fafc;
+  color: #475569;
   font-size: 11px;
+  font-weight: 650;
   white-space: nowrap;
 }
 
 .tat-date-badge svg {
   flex-shrink: 0;
-  color: #8292a8;
+  width: 14px;
+  height: 14px;
+  color: #64748b;
 }
 
-/* =====================================================
-   STATUS
-===================================================== */
+.tat-overdue-tag {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 7px;
+  padding: 4px 8px;
+  border: 1px solid #fecaca;
+  border-radius: 20px;
+  background: #fef2f2;
+  color: #dc2626;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+/* ================= STATUS BADGES ================= */
 
 .tat-status-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 28px;
   padding: 6px 10px;
-  border-radius: 20px;
+  border: 1px solid transparent;
+  border-radius: 30px;
   font-size: 10px;
   font-weight: 800;
+  line-height: 1.3;
   white-space: nowrap;
 }
 
 .tat-status-received {
-  background: #fff2ce;
-  color: #a16207;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
 }
 
 .tat-status-assigned {
-  background: #e8efff;
-  color: #315cbb;
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+  color: #6d28d9;
 }
 
 .tat-status-in-progress {
-  background: #e0f2fe;
-  color: #0369a1;
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #b45309;
 }
 
 .tat-status-waiting-for-parts {
-  background: #fff0e5;
+  background: #fff7ed;
+  border-color: #fed7aa;
   color: #c2410c;
 }
 
 .tat-status-completed {
-  background: #dcfce7;
-  color: #15803d;
-}
-
-.tat-status-delivered {
-  background: #d1fae5;
+  background: #ecfdf5;
+  border-color: #a7f3d0;
   color: #047857;
 }
 
-.tat-status-cancelled {
-  background: #fee2e2;
-  color: #b91c1c;
+.tat-status-delivered {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #15803d;
 }
+
+.tat-status-cancelled {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+/* ================= STATUS CHANGER ================= */
 
 .tat-status-changer {
-  width: 100%;
-  min-width: 120px;
-  height: 35px;
-  padding: 0 8px;
-  outline: none;
-  border: 1px solid #dce3ed;
-  border-radius: 7px;
-  background: #fff;
-  color: #334155;
+  min-width: 145px;
+  max-width: 175px;
+  height: 38px;
   font-size: 11px;
-  cursor: pointer;
-}
-
-.tat-status-changer:focus {
-  border-color: #3b82f6;
-}
-
-.tat-status-changer:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
-
-.tat-th-right,
-.tat-td-right {
-  text-align: right !important;
+  font-weight: 650;
 }
 
 .tat-updating {
   margin-top: 5px;
+  color: #2563eb;
+  font-weight: 700;
 }
 
-/* =====================================================
-   LOADING / EMPTY
-===================================================== */
+/* ================= COMMON RJX BUTTONS ================= */
+
+.tat-container .rjx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.3;
+  transition: 0.2s ease;
+}
+
+.tat-container .rjx-btn-sm {
+  min-height: 32px;
+  padding: 7px 10px;
+  font-size: 11px;
+}
+
+.tat-container .rjx-btn-primary {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.tat-container .rjx-btn-primary:hover:not(:disabled) {
+  border-color: #1d4ed8;
+  background: #1d4ed8;
+}
+
+.tat-container .rjx-btn-outline {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.tat-container .rjx-btn-outline:hover:not(:disabled) {
+  border-color: #60a5fa;
+  background: #dbeafe;
+}
+
+/* ================= TABLE FOOTER ================= */
+
+.tat-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 50px;
+  padding: 12px 4px 0;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ================= LOADING / EMPTY STATES ================= */
 
 .tat-state-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 280px;
-  padding: 30px 20px;
+  min-height: 290px;
+  padding: 35px 20px;
   text-align: center;
+}
+
+.tat-spinner {
+  width: 42px;
+  height: 42px;
+  margin-bottom: 16px;
+  border: 4px solid #dbeafe;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: tat-spin-animation 0.8s linear infinite;
+}
+
+.tat-state-box p {
+  max-width: 470px;
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.7;
 }
 
 .tat-state-box h3 {
   margin: 12px 0 5px;
-  color: #273449;
-  font-size: 17px;
-}
-
-.tat-state-box p {
-  max-width: 400px;
-  margin: 0;
-  color: #8793a5;
-  font-size: 12px;
-  line-height: 1.7;
-}
-
-.tat-spinner {
-  width: 35px;
-  height: 35px;
-  border: 3px solid #e5eaf2;
-  border-top-color: #2563eb;
-  border-radius: 50%;
-  animation: tat-spin 0.8s linear infinite;
+  color: #1e293b;
+  font-size: 19px;
+  font-weight: 800;
 }
 
 .tat-empty-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 55px;
-  height: 55px;
-  border-radius: 15px;
-  background: #f1f5f9;
-  color: #94a3b8;
-  font-size: 25px;
+  width: 65px;
+  height: 65px;
+  border-radius: 18px;
+  background: #eff6ff;
+  color: #2563eb;
 }
 
-/* =====================================================
-   FOOTER
-===================================================== */
-
-.tat-table-footer {
-  padding: 12px 17px;
-  border-top: 1px solid #edf0f5;
-  background: #fbfcfe;
-  color: #8793a5;
-  font-size: 11px;
-  text-align: right;
+.tat-empty-icon svg {
+  width: 30px;
+  height: 30px;
 }
 
-/* =====================================================
-   TABLET
-===================================================== */
+/* =========================================================
+   RESPONSIVE DESIGN
+========================================================= */
 
-@media (max-width: 1024px) {
+/* ================= LARGE LAPTOP ================= */
+
+@media (max-width: 1200px) {
   .tat-container {
+    padding: 20px;
+  }
+
+  .tat-card {
     padding: 18px;
   }
 
-  .tat-metrics {
-    gap: 12px;
+  .tat-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
-  .tat-metric-card {
-    padding: 15px;
+  .tat-search-wrap {
+    width: 100%;
+    flex-basis: auto;
   }
 
-  .tat-metric-icon {
-    width: 40px;
-    height: 40px;
+  .tat-toolbar-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .tat-filter-panel {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tat-table {
+    min-width: 1500px;
   }
 }
 
-/* =====================================================
-   MOBILE
-===================================================== */
+/* ================= TABLET LANDSCAPE ================= */
+
+@media (max-width: 992px) {
+  .tat-container {
+    padding: 16px;
+  }
+
+  .tat-header {
+    padding: 21px;
+  }
+
+  .tat-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tat-metric-card:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .tat-filter-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tat-card {
+    padding: 16px;
+  }
+}
+
+/* ================= TABLET PORTRAIT ================= */
 
 @media (max-width: 768px) {
   .tat-container {
@@ -750,11 +1128,17 @@
   .tat-header {
     align-items: flex-start;
     flex-direction: column;
-    gap: 14px;
+    gap: 17px;
+    padding: 19px;
+    margin-bottom: 17px;
+  }
+
+  .tat-header > div {
+    width: 100%;
   }
 
   .tat-header h1 {
-    font-size: 22px;
+    font-size: 23px;
   }
 
   .tat-btn-refresh {
@@ -762,86 +1146,343 @@
   }
 
   .tat-metrics {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
+    margin-bottom: 17px;
   }
 
   .tat-metric-card {
-    padding: 14px;
+    min-height: 100px;
+    gap: 12px;
+    padding: 15px;
+  }
+
+  .tat-metric-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+
+  .tat-metric-icon svg {
+    width: 21px;
+    height: 21px;
   }
 
   .tat-metric-count {
-    font-size: 22px;
+    font-size: 25px;
   }
 
-  .tat-toolbar {
-    align-items: stretch;
-    flex-direction: column;
-    padding: 13px;
-  }
-
-  .tat-search-wrap {
-    max-width: 100%;
-  }
-
-  .tat-filter-wrap {
-    width: 100%;
-  }
-
-  .tat-table {
-    min-width: 1500px;
-  }
-
-  .tat-table thead th {
-    padding: 12px 10px;
+  .tat-metric-label {
     font-size: 11px;
   }
 
-  .tat-table tbody td {
-    padding: 13px 10px;
+  .tat-toolbar-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tat-filter-wrap,
+  .tat-sort-wrap {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .tat-btn-filter {
+    width: 100%;
+  }
+
+  .tat-card {
+    padding: 13px;
+    border-radius: 12px;
+  }
+
+  .tat-filter-panel {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .tat-table {
+    min-width: 1450px;
+  }
+
+  .tat-state-box {
+    min-height: 250px;
   }
 }
 
-/* =====================================================
-   SMALL MOBILE
-===================================================== */
+/* ================= MOBILE ================= */
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .tat-container {
     padding: 10px;
+    font-size: 13px;
+  }
+
+  .tat-header {
+    padding: 16px;
+    border-radius: 11px;
+  }
+
+  .tat-eyebrow {
+    font-size: 10px;
   }
 
   .tat-header h1 {
-    font-size: 20px;
+    font-size: 21px;
+    letter-spacing: -0.4px;
   }
 
   .tat-header p {
     font-size: 12px;
   }
 
-  .tat-metric-card {
+  .tat-btn-refresh {
+    min-height: 43px;
+    font-size: 12px;
+  }
+
+  .tat-metrics {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .tat-metric-card,
+  .tat-metric-card:last-child {
+    grid-column: auto;
+    min-height: 83px;
+    padding: 14px;
+  }
+
+  .tat-metric-icon {
+    width: 43px;
+    height: 43px;
+  }
+
+  .tat-metric-count {
+    font-size: 24px;
+  }
+
+  .tat-card {
+    padding: 11px;
+    border-radius: 11px;
+  }
+
+  .tat-toolbar {
+    gap: 11px;
+  }
+
+  .tat-search-wrap {
+    min-width: 0;
+  }
+
+  .tat-search-wrap input {
+    height: 44px;
+    font-size: 12px;
+  }
+
+  .tat-toolbar-actions {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .tat-toolbar-actions .tat-filter-wrap {
+    grid-column: span 1;
+  }
+
+  .tat-select {
+    height: 41px;
+    padding-left: 9px;
+    padding-right: 25px;
+    font-size: 11px;
+  }
+
+  .tat-btn-filter {
+    min-height: 41px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .tat-filter-panel {
+    grid-template-columns: 1fr;
     gap: 12px;
     padding: 12px;
   }
 
-  .tat-metric-icon {
-    width: 38px;
-    height: 38px;
-    font-size: 18px;
-  }
-
-  .tat-toolbar {
-    padding: 10px;
-  }
-
-  .tat-search-wrap input,
-  .tat-select {
-    height: 40px;
+  .tat-filter-field > label {
     font-size: 12px;
   }
 
-  .tat-table-footer {
-    padding: 11px;
+  .tat-check-label {
+    min-height: 42px;
+  }
+
+  .tat-table {
+    min-width: 1400px;
+  }
+
+  .tat-table th {
+    padding: 12px 10px;
     font-size: 10px;
+  }
+
+  .tat-table td {
+    padding: 12px 10px;
+    font-size: 11px;
+  }
+
+  .tat-table td textarea {
+    min-width: 190px;
+  }
+
+  .tat-table-footer {
+    justify-content: center;
+    text-align: center;
+    font-size: 11px;
+  }
+
+  .tat-state-box {
+    min-height: 230px;
+    padding: 25px 12px;
+  }
+
+  .tat-state-box h3 {
+    font-size: 17px;
+  }
+
+  .tat-state-box p {
+    font-size: 12px;
+  }
+}
+
+/* ================= SMALL MOBILE ================= */
+
+@media (max-width: 380px) {
+  .tat-container {
+    padding: 7px;
+  }
+
+  .tat-header {
+    padding: 13px;
+  }
+
+  .tat-header h1 {
+    font-size: 19px;
+  }
+
+  .tat-card {
+    padding: 8px;
+  }
+
+  .tat-metric-card {
+    padding: 11px;
+  }
+
+  .tat-toolbar-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .tat-toolbar-actions .tat-filter-wrap {
+    grid-column: auto;
+  }
+
+  .tat-search-wrap input {
+    font-size: 11px;
+  }
+
+  .tat-filter-panel {
+    padding: 10px;
+  }
+
+  .tat-btn-clear {
+    width: 100%;
+  }
+}
+
+/* ================= LARGE DESKTOP ================= */
+
+@media (min-width: 1600px) {
+  .tat-container {
+    padding: 30px;
+  }
+
+  .tat-header {
+    padding: 30px;
+  }
+
+  .tat-card {
+    padding: 26px;
+  }
+
+  .tat-metrics {
+    gap: 22px;
+  }
+
+  .tat-metric-card {
+    padding: 25px;
+  }
+
+  .tat-table th,
+  .tat-table td {
+    padding: 17px 15px;
+  }
+}
+
+/* ================= ACCESSIBILITY ================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .tat-container *,
+  .tat-container *::before,
+  .tat-container *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ================= PRINT ================= */
+
+@media print {
+  .tat-container {
+    padding: 0;
+    background: #ffffff;
+  }
+
+  .tat-btn-refresh,
+  .tat-toolbar,
+  .tat-filter-panel,
+  .tat-table-footer,
+  .tat-table td button,
+  .tat-table td select {
+    display: none !important;
+  }
+
+  .tat-header,
+  .tat-card,
+  .tat-metric-card {
+    box-shadow: none;
+  }
+
+  .tat-table-wrap {
+    overflow: visible;
+  }
+
+  .tat-table {
+    min-width: 0;
+    width: 100%;
+    font-size: 9px;
+  }
+
+  .tat-table th,
+  .tat-table td {
+    padding: 6px;
+    font-size: 8px;
+  }
+
+  .tat-table td textarea {
+    display: none;
+  }
+
+  .tat-table tr {
+    break-inside: avoid;
   }
 }

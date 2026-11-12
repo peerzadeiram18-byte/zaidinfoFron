@@ -8071,10 +8071,12 @@ import {
 import { toast } from "react-toastify";
 import "./CustomerTicket.css";
 import JobExtraFields, {
-    WarrantyBadge,
-    JobExtraSummary
+  WarrantyBadge,
+  JobExtraSummary,
+  RepairGstSummary,
 } from "../../components/repair/JobExtraFields";
 
+import { calcRepairAmounts } from "../../components/repair/repairHelpers";
 import TransferJobModal from "../../components/repair/TransferJobModal";
 
 import { getSalespersonNames } from "../../services/repairJobService";
@@ -8322,9 +8324,13 @@ const initialForm = {
   warrantyStatus: "",
   warrantyProvider: "",
   warrantyExpiryDate: "",
-  warrantyDetails: "",
+    warrantyDetails: "",
   salespersonName: "",
+
+  invoiceType: "",
+  gstPercentage: "18",
 };
+
 // =====================================================
 // COMPONENT
 // =====================================================
@@ -8373,6 +8379,8 @@ const CusromerTicket = () => {
       paidAmount: "",
       paymentMethod: "CASH",
       paymentId: "",
+      invoiceType: "NON_GST",
+      gstPercentage: "18",
     });
 
 
@@ -8798,6 +8806,24 @@ const CusromerTicket = () => {
         "Please select Warranty Status (Under Warranty / Out of Warranty)."
       );
     }
+
+    
+    if (!form.invoiceType) {
+      return toast.error(
+        "Please select Invoice Type (GST / Non-GST)."
+      );
+    }
+
+    if (
+      form.invoiceType === "GST" &&
+      (!Number.isFinite(Number(form.gstPercentage)) ||
+        Number(form.gstPercentage) < 0 ||
+        Number(form.gstPercentage) > 100)
+    ) {
+      return toast.error(
+        "GST percentage must be between 0 and 100."
+      );
+    }
     // NOTE: "How did you come to know about ZAID Infotech?" is OPTIONAL,
     // so there is intentionally no validation for customerSource here.
 
@@ -8860,6 +8886,11 @@ const CusromerTicket = () => {
 
         salespersonName: form.salespersonName.trim(),
 
+        invoiceType: form.invoiceType,
+
+        ...(form.invoiceType === "GST"
+          ? { gstPercentage: Number(form.gstPercentage) }
+          : {}),
       };
 
 
@@ -9246,7 +9277,6 @@ const CusromerTicket = () => {
 
     });
 
-
     setPaymentForm({
 
       paidAmount:
@@ -9261,6 +9291,14 @@ const CusromerTicket = () => {
       paymentId:
         repairItem.paymentId ||
         "",
+
+      invoiceType:
+        repairItem.invoiceType ||
+        "NON_GST",
+
+      gstPercentage: String(
+        repairItem.gstPercentage ?? 18
+      ),
 
     });
 
@@ -9288,7 +9326,7 @@ const CusromerTicket = () => {
   // UPDATE REPAIR PAYMENT
   // ===================================================
 
-  const handleUpdatePayment =
+   const handleUpdatePayment =
     async () => {
 
       if (!selectedInvoice?._id) {
@@ -9302,12 +9340,61 @@ const CusromerTicket = () => {
       }
 
 
-      const repairCost =
-        Number(
-          selectedInvoice.repairCost ||
-            0
+      // =================================================
+      // INVOICE TYPE (GST / NON-GST)
+      // =================================================
+
+      const newType =
+        paymentForm.invoiceType ||
+        selectedInvoice.invoiceType ||
+        "NON_GST";
+
+      const newPercentage =
+        Number(paymentForm.gstPercentage);
+
+      if (
+        newType === "GST" &&
+        (
+          !Number.isFinite(newPercentage) ||
+          newPercentage < 0 ||
+          newPercentage > 100
+        )
+      ) {
+
+        toast.error(
+          "GST percentage must be between 0 and 100."
         );
 
+        return;
+
+      }
+
+      const oldType =
+        selectedInvoice.invoiceType ||
+        "NON_GST";
+
+      const typeChanged =
+        newType !== oldType ||
+        (
+          newType === "GST" &&
+          newPercentage !==
+            Number(
+              selectedInvoice.gstPercentage ?? 18
+            )
+        );
+
+      const totals =
+        calcRepairAmounts({
+          repairCost:
+            selectedInvoice.repairCost,
+          invoiceType: newType,
+          gstPercentage: newPercentage,
+        });
+
+
+      // =================================================
+      // PAID AMOUNT (total payable ke against)
+      // =================================================
 
       const paidAmount =
         Number(
@@ -9333,11 +9420,11 @@ const CusromerTicket = () => {
 
       if (
         paidAmount >
-        repairCost
+        totals.total
       ) {
 
         toast.error(
-          `Paid amount cannot be greater than ₹${repairCost.toFixed(
+          `Paid amount cannot be greater than ₹${totals.total.toFixed(
             2
           )}.`
         );
@@ -9350,6 +9437,28 @@ const CusromerTicket = () => {
       try {
 
         setPaymentSubmitting(true);
+
+
+        // Type badla hai to pehle repair update (total recalculate)
+        if (typeChanged) {
+
+          await axios.put(
+
+            `${BASE_URL}/${selectedInvoice._id}`,
+
+            {
+              invoiceType: newType,
+
+              ...(newType === "GST"
+                ? { gstPercentage: newPercentage }
+                : {}),
+            },
+
+            getAuthConfig()
+
+          );
+
+        }
 
 
         const res =
@@ -9380,22 +9489,6 @@ const CusromerTicket = () => {
           null;
 
 
-        if (updatedRepair) {
-
-          setSelectedInvoice(
-            (prev) => ({
-              ...prev,
-              ...updatedRepair,
-              technicianName:
-                getTechnicianName(
-                  updatedRepair
-                ),
-            })
-          );
-
-        }
-
-
         toast.success(
           res.data?.message ||
           "Repair payment updated successfully."
@@ -9405,7 +9498,7 @@ const CusromerTicket = () => {
         await fetchRepairs();
 
 
-        // Keep receipt open.
+        // Keep receipt open with fresh data.
         if (updatedRepair) {
 
           openReceipt(
@@ -9465,11 +9558,12 @@ const CusromerTicket = () => {
   // CALCULATED SELECTED PAYMENT VALUES
   // ===================================================
 
+  // Total payable = base + GST (GST invoice ho to)
+  const selectedAmounts =
+    calcRepairAmounts(selectedInvoice || {});
+
   const selectedRepairCost =
-    Number(
-      selectedInvoice?.repairCost ||
-        0
-    );
+    selectedAmounts.total;
 
 
   const selectedPaidAmount =
@@ -9480,16 +9574,22 @@ const CusromerTicket = () => {
 
 
   const selectedBalanceAmount =
-    selectedInvoice?.balanceAmount !==
-    undefined
-      ? Number(
-          selectedInvoice.balanceAmount
-        )
-      : Math.max(
-          selectedRepairCost -
-            selectedPaidAmount,
-          0
-        );
+    Math.max(
+      selectedRepairCost -
+        selectedPaidAmount,
+      0
+    );
+
+  // Payment section me type badalne par live total
+  const previewAmounts =
+    calcRepairAmounts({
+      repairCost:
+        selectedInvoice?.repairCost,
+      invoiceType:
+        paymentForm.invoiceType,
+      gstPercentage:
+        paymentForm.gstPercentage,
+    });
 
 
   const selectedPaymentStatus =
@@ -11456,7 +11556,112 @@ const CusromerTicket = () => {
                   </div>
 
                 </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                      "repeat(auto-fit, minmax(180px, 1fr))",
+                    gap: "12px",
+                    marginBottom: "14px",
+                    alignItems: "end",
+                  }}
+                >
 
+                  <div className="rc-input-field">
+
+                    <label>
+                      Invoice Type
+                    </label>
+
+                    <select
+                      name="invoiceType"
+                      value={
+                        paymentForm.invoiceType
+                      }
+                      onChange={
+                        handlePaymentChange
+                      }
+                      className="rc-select"
+                    >
+
+                      <option value="GST">
+                        GST Invoice
+                      </option>
+
+                      <option value="NON_GST">
+                        Non-GST Invoice
+                      </option>
+
+                    </select>
+
+                  </div>
+
+
+                  {paymentForm.invoiceType ===
+                    "GST" && (
+
+                    <div className="rc-input-field">
+
+                      <label>
+                        GST (%)
+                      </label>
+
+                      <input
+                        type="number"
+                        name="gstPercentage"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value={
+                          paymentForm.gstPercentage
+                        }
+                        onChange={
+                          handlePaymentChange
+                        }
+                      />
+
+                    </div>
+
+                  )}
+
+
+                  <div>
+
+                    <small>
+                      Payable Total
+                    </small>
+
+                    <strong
+                      style={{
+                        display: "block",
+                        fontSize: "17px",
+                      }}
+                    >
+
+                      ₹
+                      {
+                        previewAmounts.total.toFixed(
+                          2
+                        )
+                      }
+
+                    </strong>
+
+                    <small>
+
+                      {previewAmounts.isGst
+                        ? `Base ₹${previewAmounts.base.toFixed(
+                            2
+                          )} + GST ₹${previewAmounts.gst.toFixed(
+                            2
+                          )}`
+                        : "No GST"}
+
+                    </small>
+
+                  </div>
+
+                </div>
 
                 <div
                   style={{
@@ -11480,8 +11685,8 @@ const CusromerTicket = () => {
                     <input
                       type="number"
                       min="0"
-                      max={
-                        selectedRepairCost
+                                           max={
+                        previewAmounts.total
                       }
                       step="0.01"
                       name="paidAmount"
@@ -11620,7 +11825,9 @@ const CusromerTicket = () => {
                 <div className="invoice-badge-block">
 
                   <h3>
-                    SERVICE RECEIPT
+                    {selectedInvoice.invoiceType === "GST"
+                      ? "TAX INVOICE"
+                      : "SERVICE RECEIPT"}
                   </h3>
 
                   <div>
@@ -12226,7 +12433,7 @@ const CusromerTicket = () => {
                 </table>
 
               </div>
-
+              <RepairGstSummary repair={selectedInvoice} />
 
               {/* =========================================
                   PAYMENT SUMMARY

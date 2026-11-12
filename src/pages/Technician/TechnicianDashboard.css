@@ -1,53 +1,97 @@
 
 /* =========================================================
-   TECHNICIAN DASHBOARD — SIDEBAR DESIGN
-   Reference: Dark navy sidebar with emerald active state
-   ========================================================= */
+   TECHNICIAN DASHBOARD - COMPLETE RESPONSIVE CSS
+   Fixed Sidebar | Sticky Header | Responsive Layout
+========================================================= */
 
 :root {
-  --tech-sidebar-width: 272px;
+  --tech-sidebar-width: 260px;
   --tech-sidebar-bg: #061c2b;
-  --tech-sidebar-bg-light: #092536;
+  --tech-sidebar-light: #092536;
+  --tech-primary: #078f72;
+  --tech-primary-light: #0aa482;
+  --tech-text: #172b3c;
+  --tech-muted: #718096;
+  --tech-border: #e5edf3;
+  --tech-page-bg: #f3f6fa;
+  --tech-white: #ffffff;
+  --tech-danger: #e5484d;
   --tech-sidebar-text: #f1f5f9;
   --tech-sidebar-muted: #b8c7d5;
-  --tech-sidebar-active: #078b70;
-  --tech-sidebar-active-light: #079b7b;
-  --tech-sidebar-border: rgba(255, 255, 255, 0.09);
 }
 
-/* Main layout */
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+  background: var(--tech-page-bg);
+  color: var(--tech-text);
+}
+
+button {
+  font-family: inherit;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* =========================================================
+   MAIN DASHBOARD LAYOUT
+========================================================= */
+
 .tech-container {
   display: flex;
   width: 100%;
   min-height: 100vh;
-  background: #f4f7fb;
-  font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+  background: var(--tech-page-bg);
 }
 
 /* =========================================================
-   SIDEBAR
-   ========================================================= */
+   FIXED SIDEBAR
+========================================================= */
 
 .tech-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+
   width: var(--tech-sidebar-width);
-  min-width: var(--tech-sidebar-width);
-  min-height: 100vh;
   height: 100vh;
+  height: 100dvh;
+  min-width: var(--tech-sidebar-width);
 
   display: flex;
   flex-direction: column;
 
-  position: sticky;
-  top: 0;
-  z-index: 100;
-
+  z-index: 1000;
   overflow: hidden;
+
+  color: var(--tech-sidebar-text);
 
   background:
     radial-gradient(
       ellipse at 80% 100%,
-      rgba(0, 142, 116, 0.12),
-      transparent 35%
+      rgba(0, 142, 116, 0.15),
+      transparent 38%
     ),
     linear-gradient(
       165deg,
@@ -56,32 +100,35 @@
       #041827 100%
     );
 
-  border-right: 1px solid rgba(255, 255, 255, 0.04);
-  color: var(--tech-sidebar-text);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 5px 0 25px rgba(15, 35, 50, 0.06);
 }
 
-/* Subtle decorative wave effect at bottom */
+/* Decorative background */
+
 .tech-sidebar::after {
   content: "";
   position: absolute;
-  bottom: 34px;
-  left: -40px;
-  width: 360px;
-  height: 145px;
+  bottom: 25px;
+  left: -55px;
+
+  width: 350px;
+  height: 150px;
+
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.65;
 
   background:
     radial-gradient(
       ellipse at 65% 100%,
       transparent 42%,
-      rgba(0, 170, 140, 0.2) 43%,
+      rgba(0, 170, 140, 0.20) 43%,
       transparent 44%
     ),
     radial-gradient(
       ellipse at 45% 100%,
       transparent 48%,
-      rgba(0, 133, 123, 0.22) 49%,
+      rgba(0, 133, 123, 0.20) 49%,
       transparent 50%
     );
 
@@ -89,22 +136,23 @@
 }
 
 /* =========================================================
-   PROFILE / BRAND AREA
-   ========================================================= */
+   PROFILE SECTION
+========================================================= */
 
 .tech-profile {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 
-  min-height: 112px;
-  padding: 22px 20px;
+  min-height: 105px;
+  padding: 20px 18px;
 
   display: flex;
   align-items: center;
   gap: 13px;
 
-  background: transparent;
-  border-bottom: 1px solid var(--tech-sidebar-border);
+  flex-shrink: 0;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
 }
 
 .tech-profile-img {
@@ -114,23 +162,27 @@
   width: 48px;
   height: 48px;
 
-  border-radius: 50%;
   object-fit: cover;
+  border-radius: 50%;
 
-  border: 2px solid rgba(255, 255, 255, 0.16);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   background: #102f40;
 }
 
 .tech-profile-info {
   min-width: 0;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 5px;
+
   overflow: hidden;
 }
 
 .tech-profile-info h3 {
+  margin: 0;
+
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -139,7 +191,7 @@
   color: #ffffff;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .tech-badge {
@@ -147,23 +199,24 @@
   align-items: center;
 
   max-width: 100%;
-  padding: 3px 8px;
+  padding: 4px 9px;
 
   color: #69e0c0;
-  background: rgba(0, 153, 119, 0.14);
-  border: 1px solid rgba(45, 212, 168, 0.15);
+  background: rgba(0, 153, 119, 0.15);
+
+  border: 1px solid rgba(45, 212, 168, 0.2);
   border-radius: 5px;
 
   font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.65px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
 /* =========================================================
-   NAVIGATION
-   ========================================================= */
+   SIDEBAR NAVIGATION
+========================================================= */
 
 .tech-nav-list {
   position: relative;
@@ -176,12 +229,13 @@
   flex-direction: column;
   gap: 7px;
 
-  padding: 20px 14px 18px;
+  padding: 22px 14px 20px;
+
   overflow-x: hidden;
   overflow-y: auto;
 
   scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
 }
 
 .tech-nav-list::-webkit-scrollbar {
@@ -193,11 +247,10 @@
 }
 
 .tech-nav-list::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
+  background: rgba(148, 163, 184, 0.35);
   border-radius: 10px;
 }
 
-/* Individual navigation link */
 .tech-nav-item {
   position: relative;
 
@@ -215,27 +268,26 @@
   background: transparent;
 
   border: 1px solid transparent;
-  border-radius: 11px;
+  border-radius: 10px;
 
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
   line-height: 1.4;
 
   transition:
-    background 0.22s ease,
-    color 0.22s ease,
-    border-color 0.22s ease,
-    transform 0.22s ease;
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 }
 
-/* Icon + label */
 .nav-item-left {
   min-width: 0;
 
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 14px;
 }
 
 .nav-icon {
@@ -247,10 +299,10 @@
   align-items: center;
   justify-content: center;
 
-  color: #e4edf5;
-  font-size: 19px;
+  color: #dce8f1;
+  font-size: 18px;
 
-  transition: color 0.22s ease;
+  transition: color 0.2s ease;
 }
 
 .nav-label {
@@ -259,18 +311,20 @@
   white-space: nowrap;
 }
 
-/* Hover state */
+/* Hover */
+
 .tech-nav-item:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.075);
-  border-color: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.05);
 }
 
 .tech-nav-item:hover .nav-icon {
   color: #55d6b1;
 }
 
-/* Active navigation item — reference image green */
+/* Active */
+
 .tech-nav-item.active {
   color: #ffffff;
 
@@ -280,11 +334,11 @@
     #079a78 100%
   );
 
-  border-color: rgba(45, 212, 168, 0.16);
+  border-color: rgba(45, 212, 168, 0.18);
 
   box-shadow:
-    0 5px 16px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    0 5px 16px rgba(0, 0, 0, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 
   font-weight: 600;
 }
@@ -293,20 +347,18 @@
   color: #ffffff;
 }
 
-/* Keyboard accessibility */
-.tech-nav-item:focus-visible,
-.topbar-bell-btn:focus-visible,
-.topbar-logout-btn:focus-visible {
+.tech-nav-item:focus-visible {
   outline: 2px solid #4adeb5;
   outline-offset: 3px;
 }
 
-/* Notification counter in sidebar */
+/* Sidebar notification badge */
+
 .nav-unread-badge {
   flex-shrink: 0;
 
-  min-width: 20px;
-  height: 20px;
+  min-width: 21px;
+  height: 21px;
   padding: 0 5px;
 
   display: inline-flex;
@@ -325,45 +377,65 @@
 }
 
 /* =========================================================
-   MAIN CONTENT
-   ========================================================= */
+   MAIN CONTENT AREA
+========================================================= */
 
 .tech-main-content {
   flex: 1;
   min-width: 0;
+  min-height: 100vh;
 
   display: flex;
   flex-direction: column;
+
+  margin-left: var(--tech-sidebar-width);
+  width: calc(100% - var(--tech-sidebar-width));
 }
+
+/* =========================================================
+   STICKY TOP HEADER
+========================================================= */
 
 .tech-topbar {
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: 900;
 
-  min-height: 80px;
-  padding: 15px 30px;
+  min-height: 82px;
+  padding: 15px 28px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
 
-  background: #ffffff;
-  border-bottom: 1px solid #e6edf3;
+  background: rgba(255, 255, 255, 0.97);
+  border-bottom: 1px solid var(--tech-border);
+
+  box-shadow: 0 3px 12px rgba(15, 35, 50, 0.025);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.tech-topbar-left {
+  min-width: 0;
 }
 
 .tech-topbar-left h2 {
+  margin: 0;
+
   color: #122638;
-  font-size: clamp(17px, 1.25vw, 21px);
+  font-size: clamp(17px, 1.3vw, 21px);
   font-weight: 700;
   line-height: 1.4;
 }
 
 .tech-topbar-left p {
-  margin-top: 4px;
+  margin: 4px 0 0;
+
   color: #718096;
-  font-size: 13px;
+  font-size: 12.5px;
   line-height: 1.5;
 }
 
@@ -371,14 +443,20 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 20px;
+  gap: 17px;
+
+  flex-shrink: 0;
 }
+
+/* =========================================================
+   NOTIFICATION BUTTON
+========================================================= */
 
 .topbar-bell-btn {
   position: relative;
 
-  width: 40px;
-  height: 40px;
+  width: 41px;
+  height: 41px;
   flex-shrink: 0;
 
   display: inline-flex;
@@ -389,10 +467,11 @@
   background: #f8fafc;
 
   border: 1px solid #e7edf3;
-  border-radius: 12px;
+  border-radius: 11px;
 
   cursor: pointer;
   font-size: 18px;
+
   transition: all 0.2s ease;
 }
 
@@ -402,13 +481,22 @@
   border-color: #a7f3d0;
 }
 
+.topbar-bell-btn:focus-visible {
+  outline: 2px solid #078f72;
+  outline-offset: 3px;
+}
+
+.topbar-bell-icon {
+  font-size: 17px;
+}
+
 .topbar-bell-badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -6px;
+  right: -6px;
 
-  min-width: 18px;
-  height: 18px;
+  min-width: 19px;
+  height: 19px;
   padding: 0 4px;
 
   display: flex;
@@ -425,31 +513,48 @@
   font-weight: 700;
 }
 
+/* =========================================================
+   DATE
+========================================================= */
+
 .tech-topbar-date {
   color: #64748b;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
   white-space: nowrap;
 }
 
+/* =========================================================
+   LOGOUT BUTTON
+========================================================= */
+
 .topbar-logout-btn {
+  min-height: 40px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 
-  padding: 10px 14px;
+  padding: 9px 15px;
 
   color: #526579;
   background: #ffffff;
+
   border: 1px solid #e2e8f0;
   border-radius: 9px;
 
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12.5px;
+  font-weight: 600;
+
   cursor: pointer;
+  white-space: nowrap;
 
   transition: all 0.2s ease;
+}
+
+.topbar-logout-btn svg {
+  font-size: 14px;
 }
 
 .topbar-logout-btn:hover {
@@ -458,28 +563,66 @@
   border-color: #fecdd3;
 }
 
-.tech-content-body {
-  flex: 1;
-  min-width: 0;
-  padding: 28px 32px;
+.topbar-logout-btn:focus-visible {
+  outline: 2px solid #078f72;
+  outline-offset: 3px;
 }
 
 /* =========================================================
-   TABLET
-   ========================================================= */
+   ROUTE CONTENT
+========================================================= */
 
-@media (max-width: 1000px) {
+.tech-content-body {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+
+  padding: 26px 28px;
+
+  overflow-x: auto;
+}
+
+/* Prevent nested pages from breaking layout */
+
+.tech-content-body > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1500px) {
   :root {
-    --tech-sidebar-width: 230px;
+    --tech-sidebar-width: 280px;
+  }
+
+  .tech-topbar {
+    padding-left: 36px;
+    padding-right: 36px;
+  }
+
+  .tech-content-body {
+    padding: 32px 36px;
+  }
+}
+
+/* =========================================================
+   LAPTOP / SMALL DESKTOP
+========================================================= */
+
+@media (max-width: 1100px) {
+  :root {
+    --tech-sidebar-width: 235px;
   }
 
   .tech-profile {
     padding: 18px 15px;
-    gap: 10px;
   }
 
   .tech-nav-list {
-    padding: 16px 11px;
+    padding: 18px 11px;
     gap: 6px;
   }
 
@@ -490,7 +633,7 @@
   }
 
   .nav-item-left {
-    gap: 12px;
+    gap: 11px;
   }
 
   .nav-icon {
@@ -502,39 +645,23 @@
   }
 
   .tech-content-body {
-    padding: 24px 20px;
+    padding: 22px 20px;
   }
 }
 
 /* =========================================================
-   MOBILE — HORIZONTAL NAVIGATION
-   ========================================================= */
+   TABLET
+========================================================= */
 
-@media (max-width: 700px) {
-  .tech-container {
-    flex-direction: column;
-  }
-
-  .tech-sidebar {
-    width: 100%;
-    min-width: 0;
-    min-height: auto;
-    height: auto;
-
-    position: relative;
-    top: auto;
-
-    overflow: visible;
-  }
-
-  .tech-sidebar::after {
-    display: none;
+@media (max-width: 768px) {
+  :root {
+    --tech-sidebar-width: 205px;
   }
 
   .tech-profile {
-    min-height: 76px;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--tech-sidebar-border);
+    min-height: 90px;
+    padding: 15px 12px;
+    gap: 10px;
   }
 
   .tech-profile-img {
@@ -543,27 +670,22 @@
   }
 
   .tech-profile-info h3 {
-    font-size: 14px;
+    font-size: 12.5px;
+  }
+
+  .tech-badge {
+    font-size: 9px;
   }
 
   .tech-nav-list {
-    flex: none;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-
-    padding: 10px 12px 12px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    padding: 15px 9px;
+    gap: 5px;
   }
 
   .tech-nav-item {
-    width: auto;
     min-height: 42px;
-    min-width: max-content;
-
-    padding: 0 13px;
-    border-radius: 9px;
+    padding: 0 10px;
+    font-size: 12px;
   }
 
   .nav-item-left {
@@ -571,24 +693,27 @@
   }
 
   .nav-icon {
-    width: 18px;
-    height: 18px;
+    width: 19px;
     font-size: 16px;
   }
 
   .tech-topbar {
-    position: relative;
-    min-height: 68px;
-    padding: 12px 16px;
-    gap: 12px;
-  }
-
-  .tech-topbar-left h2 {
-    font-size: 16px;
+    min-height: 72px;
+    padding: 12px 15px;
+    gap: 10px;
   }
 
   .tech-topbar-info {
-    gap: 10px;
+    gap: 9px;
+  }
+
+  .tech-topbar-date {
+    font-size: 11px;
+  }
+
+  .topbar-logout-btn {
+    padding: 8px 10px;
+    font-size: 11px;
   }
 
   .tech-content-body {
@@ -597,67 +722,319 @@
 }
 
 /* =========================================================
-   SMALL MOBILE
-   ========================================================= */
+   MOBILE - HORIZONTAL NAVIGATION
+========================================================= */
 
-@media (max-width: 420px) {
-  .tech-profile {
-    min-height: 68px;
-    padding: 10px 12px;
+@media (max-width: 600px) {
+  .tech-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
 
-  .tech-profile-img {
-    width: 38px;
-    height: 38px;
+  .tech-sidebar {
+    position: sticky;
+    top: 0;
+    left: auto;
+    bottom: auto;
+
+    width: 100%;
+    min-width: 0;
+
+    height: auto;
+    min-height: auto;
+
+    flex-shrink: 0;
+
+    overflow: visible;
+
+    z-index: 1000;
+
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .tech-nav-list {
-    padding: 8px 10px 10px;
-  }
-
-  .tech-nav-item {
-    min-height: 39px;
-    padding: 0 11px;
-    font-size: 12px;
-  }
-
-  .tech-topbar {
-    padding: 12px;
-  }
-
-  .tech-topbar-left h2 {
-    font-size: 14px;
-  }
-
-  .tech-topbar-date,
-  .tech-topbar-left p {
+  .tech-sidebar::after {
     display: none;
   }
 
+  .tech-profile {
+    min-height: 68px;
+    padding: 10px 15px;
+  }
+
+  .tech-profile-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .tech-profile-info h3 {
+    font-size: 13px;
+  }
+
+  .tech-nav-list {
+    flex: none;
+
+    flex-direction: row;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 9px 12px 11px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+  }
+
+  .tech-nav-list::-webkit-scrollbar {
+    height: 3px;
+    width: auto;
+  }
+
+  .tech-nav-item {
+    width: auto;
+    min-width: max-content;
+    min-height: 39px;
+
+    padding: 0 12px;
+
+    border-radius: 8px;
+    font-size: 12px;
+  }
+
+  .nav-item-left {
+    gap: 8px;
+  }
+
+  .nav-icon {
+    width: 17px;
+    height: 17px;
+    font-size: 15px;
+  }
+
+  .nav-unread-badge {
+    min-width: 18px;
+    height: 18px;
+    font-size: 9px;
+  }
+
+  /* Main content */
+
+  .tech-main-content {
+    width: 100%;
+    min-width: 0;
+    min-height: calc(100vh - 120px);
+
+    margin-left: 0;
+  }
+
+  .tech-topbar {
+    position: sticky;
+    top: 0;
+
+    min-height: 66px;
+    padding: 10px 14px;
+
+    gap: 8px;
+  }
+
+  .tech-topbar-left h2 {
+    font-size: 15px;
+  }
+
+  .tech-topbar-left p {
+    font-size: 11px;
+  }
+
+  .tech-topbar-info {
+    gap: 8px;
+  }
+
   .topbar-bell-btn {
-    width: 35px;
-    height: 35px;
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .tech-topbar-date {
+    display: none;
   }
 
   .topbar-logout-btn {
-    padding: 8px 10px;
+    min-height: 36px;
+    padding: 7px 10px;
+    gap: 6px;
+    font-size: 11px;
+  }
+
+  .topbar-logout-btn svg {
     font-size: 12px;
   }
 
   .tech-content-body {
-    padding: 14px 10px;
+    padding: 16px 12px;
   }
 }
 
 /* =========================================================
-   REDUCED MOTION
-   ========================================================= */
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+  .tech-profile {
+    min-height: 62px;
+    padding: 8px 11px;
+  }
+
+  .tech-profile-img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .tech-nav-list {
+    padding: 8px 9px;
+    gap: 6px;
+  }
+
+  .tech-nav-item {
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 11px;
+  }
+
+  .nav-item-left {
+    gap: 7px;
+  }
+
+  .nav-icon {
+    font-size: 14px;
+  }
+
+  .tech-topbar {
+    padding: 9px 10px;
+  }
+
+  .tech-topbar-left h2 {
+    font-size: 13px;
+  }
+
+  .tech-topbar-left p {
+    display: none;
+  }
+
+  .tech-topbar-info {
+    gap: 6px;
+  }
+
+  .topbar-bell-btn {
+    width: 33px;
+    height: 33px;
+  }
+
+  .topbar-logout-btn {
+    min-height: 33px;
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+
+  .tech-content-body {
+    padding: 12px 9px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
+
+@media (max-width: 320px) {
+  .tech-topbar-left h2 {
+    font-size: 12px;
+  }
+
+  .tech-topbar-info {
+    gap: 5px;
+  }
+
+  .topbar-logout-btn {
+    padding: 6px;
+  }
+
+  .topbar-logout-btn span {
+    display: none;
+  }
+
+  .tech-content-body {
+    padding: 10px 7px;
+  }
+}
+
+/* =========================================================
+   LANDSCAPE MOBILE
+========================================================= */
+
+@media (max-height: 500px) and (max-width: 900px) {
+  .tech-sidebar {
+    max-height: 100vh;
+  }
+
+  .tech-profile {
+    min-height: 55px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .tech-nav-list {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .tech-nav-item,
-  .nav-icon,
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+  .tech-sidebar {
+    display: none !important;
+  }
+
+  .tech-main-content {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .tech-topbar {
+    position: static;
+    box-shadow: none;
+  }
+
   .topbar-bell-btn,
   .topbar-logout-btn {
-    transition: none;
+    display: none !important;
+  }
+
+  .tech-content-body {
+    padding: 0 !important;
+    overflow: visible !important;
   }
 }

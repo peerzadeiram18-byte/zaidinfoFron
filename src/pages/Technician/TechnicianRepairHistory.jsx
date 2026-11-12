@@ -625,8 +625,12 @@ import { FaRupeeSign } from "react-icons/fa";
 import { toast } from "react-toastify";
 import "./TechnicianRepairHistory.css";
 
-import { JobExtraSummary } from "../../components/repair/JobExtraFields";
+import {
+  JobExtraSummary,
+  RepairGstSummary,
+} from "../../components/repair/JobExtraFields";
 
+import { calcRepairAmounts } from "../../components/repair/repairHelpers";
 // ======================================================
 // API CONFIG
 // ======================================================
@@ -3711,6 +3715,8 @@ const getBranchLabel = useCallback(
 
 
               <JobExtraSummary repair={selectedInvoice} />
+
+                            <RepairGstSummary repair={selectedInvoice} />
               {/* SERVICE TABLE */}
 
               <div className="invoice-table-section">
@@ -3841,9 +3847,9 @@ const getBranchLabel = useCallback(
                         Total Amount Due / Paid:
                       </th>
 
-                      <th className="text-right total-cell">
+                                            <th className="text-right total-cell">
                         {formatINR(
-                          selectedInvoice.repairCost
+                          calcRepairAmounts(selectedInvoice).total
                         )}
                       </th>
                     </tr>

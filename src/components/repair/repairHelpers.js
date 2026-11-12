@@ -124,3 +124,41 @@ export const getWarrantyInfo = (repair = {}) => {
     details: repair?.warrantyDetails || "",
   };
 };
+
+// ==========================================
+// REPAIR GST AMOUNTS
+// repairCost = base amount. GST invoice me GST upar se judta hai.
+// Backend ke formula jaisa hi hai.
+// ==========================================
+
+const round2 = (value) =>
+  Math.round((Number(value || 0) + Number.EPSILON) * 100) /
+  100;
+
+export const calcRepairAmounts = (repair = {}) => {
+  const base = Math.max(Number(repair?.repairCost) || 0, 0);
+
+  const isGst =
+    String(repair?.invoiceType || "").toUpperCase() === "GST";
+
+  const rawPercentage = repair?.gstPercentage;
+
+  const hasPercentage =
+    rawPercentage !== undefined &&
+    rawPercentage !== null &&
+    rawPercentage !== "" &&
+    Number.isFinite(Number(rawPercentage));
+
+  const pct = isGst
+    ? hasPercentage
+      ? Number(rawPercentage)
+      : 18
+    : 0;
+
+  const gst = round2((base * pct) / 100);
+  const total = round2(base + gst);
+  const cgst = round2(gst / 2);
+  const sgst = round2(gst - cgst);
+
+  return { base, isGst, pct, gst, cgst, sgst, total };
+};
