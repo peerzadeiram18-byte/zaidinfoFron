@@ -86,21 +86,21 @@ const NAV_SECTIONS = [
       },
     ],
   },
-  {
-    title: "REPAIR & SERVICES",
-    links: [
-      {
-        name: "Repair Customers",
-        icon: FaPeopleCarry,
-        path: `${BASE}/repair-customers`,
-      },
-      {
-        name: "Repair Rate Cards",
-        icon: FaReceipt,
-        path: `${BASE}/repair-rates`,
-      },
-    ],
-  },
+  // {
+  //   title: "REPAIR & SERVICES",
+  //   links: [
+  //     {
+  //       name: "Repair Customers",
+  //       icon: FaPeopleCarry,
+  //       path: `${BASE}/repair-customers`,
+  //     },
+  //     {
+  //       name: "Repair Rate Cards",
+  //       icon: FaReceipt,
+  //       path: `${BASE}/repair-rates`,
+  //     },
+  //   ],
+  // },
   {
     title: "PRODUCTS",
     links: [
@@ -150,11 +150,11 @@ const NAV_SECTIONS = [
         icon: FaPlusCircle,
         path: `${BASE}/add-offer`,
       },
-      {
-        name: "Reviews",
-        icon: FaStar,
-        path: `${BASE}/reviews`,
-      },
+      // {
+      //   name: "Reviews",
+      //   icon: FaStar,
+      //   path: `${BASE}/reviews`,
+      // },
     ],
   },
   {
