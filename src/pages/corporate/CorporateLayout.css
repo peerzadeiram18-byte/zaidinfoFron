@@ -1,6 +1,6 @@
 /* =====================================================
    CORPORATE LAYOUT — Zaid Infotech
-   Same look as the HR layout (logo-charcoal sidebar + logo-green accent)
+   Same look as the HR / IT Support layouts (logo-charcoal sidebar + logo-green accent)
    Desktop  (>= 1025px): fixed sidebar, topbar + content beside it
    Tablet + Mobile (<= 1024px): off-canvas drawer
 
@@ -41,7 +41,20 @@
   /* Sidebar sizing scales with screen HEIGHT so the menu (12 items)
      stays usable on short laptop screens */
   --corp-item-h: clamp(38px, 5vh, 46px);
-  --corp-logo-h: clamp(48px, 7.2vh, 66px);
+
+  /* Target logo height. Width is derived from it (height x 1742/903 = 1.93),
+     so the ratio is identical on every screen. Max logo size ~170 x 88px.
+     Same values as the IT Support layout. */
+  --corp-logo-h: clamp(72px, 10.5vh, 88px);
+
+  /* Horizontal optical-centring offset for the logo artwork */
+  --corp-logo-nudge: -4%;
+
+  /* The PNG has empty white margin around the artwork. This trims that margin
+     from the card (as a fraction of logo height). The image itself is never
+     scaled, stretched or edited, so its 1742:903 ratio is untouched.
+     Tune: 0 = no trim, 0.18 = tighter card. Stop before the artwork clips. */
+  --corp-logo-trim-y: 0.14;
 
   /* Menu icons */
   --corp-icon-rest: rgba(255, 255, 255, 0.72);
@@ -316,26 +329,31 @@
 
   display: flex;
   align-items: center;
+  justify-content: center;   /* card hugs the logo and sits centred */
   gap: 10px;
 
   padding: clamp(14px, 2.4vh, 22px) 16px clamp(10px, 1.6vh, 16px);
 }
 
-/* Light card that holds the logo, so it keeps its original colours */
+/* Light card that holds the logo, so it keeps its original colours.
+   BEFORE: flex: 1 stretched the card across the whole sidebar and
+   padding 12px 18px made it tall, so the logo looked small inside it.
+   NOW: the card is only as big as the logo (same as the IT Support layout). */
 .corp-brand {
-  flex: 1;
+  flex: 0 1 auto;            /* was flex: 1 */
   min-width: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 12px 18px;
+  padding: 4px 6px;          /* was 12px 18px; the PNG already has built-in margin */
+  overflow: hidden;          /* clips only the trimmed empty margin of the PNG */
 
   border: none;
-  border-radius: 16px;
+  border-radius: 14px;
   background: #ffffff;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.26);
 
   line-height: 0;
   cursor: pointer;
@@ -347,12 +365,24 @@
   transform: scale(0.98);
 }
 
+/* Official logo: original file, original shape (1742 x 903 = 1.93).
+   SIZE IS DRIVEN BY WIDTH, HEIGHT IS ALWAYS auto.
+   BEFORE: width:auto + max-height 48-66px capped the logo at about 127px wide,
+   and the markup said 1332x446 (ratio 2.99), which is not the real file.
+   Never set a fixed width AND a fixed height here. */
 .corp-logo {
   display: block;
-  width: auto;
-  max-width: 100%;
+  width: min(100%, calc(var(--corp-logo-h) * 1742 / 903));
   height: auto;
-  max-height: var(--corp-logo-h);
+  margin-inline: auto;
+
+  /* Negative block margin shrinks the card around the artwork, not the logo */
+  margin-block: calc(var(--corp-logo-h) * var(--corp-logo-trim-y) * -1);
+
+  /* Optical centring (positioning only; file and ratio untouched) */
+  translate: var(--corp-logo-nudge) 0;
+
+  aspect-ratio: 1742 / 903;
   object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
@@ -663,6 +693,11 @@
 
   .corp-sidebar-close {
     display: inline-flex;
+    margin-left: auto;
+  }
+
+  .corp-sidebar-header {
+    justify-content: flex-start;   /* logo left, close button right */
   }
 
   /* Dim overlay */
@@ -766,10 +801,11 @@
 @media (max-height: 760px) and (min-width: 641px) {
   .corp-layout {
     --corp-item-h: 38px;
+    --corp-logo-h: 68px;
   }
 
   .corp-brand {
-    padding: 8px 14px;
+    padding: 4px 8px;
   }
 
   .corp-menu-item,
@@ -783,6 +819,29 @@
 
   .corp-sidebar-footer {
     padding-bottom: 12px;
+  }
+}
+
+/* =====================================================
+   VERY SHORT VIEWPORTS (landscape phones, <= 520px tall)
+===================================================== */
+
+@media (max-height: 520px) {
+  .corp-layout {
+    --corp-item-h: 38px;
+    --corp-logo-h: 56px;
+  }
+
+  .corp-sidebar-header {
+    padding-block: 10px 6px;
+  }
+
+  .corp-menu-item {
+    margin: 2px 0;
+  }
+
+  .corp-sidebar-footer {
+    padding-bottom: 10px;
   }
 }
 

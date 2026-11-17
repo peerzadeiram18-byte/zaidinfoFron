@@ -1,14 +1,14 @@
-
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
-:root {
-  --sb-bg-top: #0b2024;
-  --sb-bg-bottom: #08181b;
-  --sb-text: #d5dfdd;
-  --sb-text-muted: #7f9593;
-  --sb-active: #0d7a58;
-  --brand-green: #2fd58a;
+/* =====================================================
+   IT SUPPORT LAYOUT — Zaid Infotech
+   Same look as the HR layout (logo-charcoal sidebar + logo-green accent)
+   Desktop  (>= 1025px): fixed sidebar, topbar + content beside it
+   Tablet + Mobile (<= 1024px): off-canvas drawer
+===================================================== */
 
+:root {
+  /* ---- Original shared variables (kept: IT pages inside <Outlet /> use them) ---- */
   --accent: #0e7d5c;
   --accent-text: #0e8a63;
   --title: #0f1a1c;
@@ -23,423 +23,192 @@
   --navbar-h: 84px;
   --radius: 16px;
   --shadow-dropdown: 0 16px 40px rgba(15, 23, 42, 0.12), 0 4px 10px rgba(15, 23, 42, 0.05);
+
+  /* ---- Layout variables (same values as the HR layout) ---- */
+  --it-sidebar-w: 272px;
+  --it-topbar-h: 80px;
+
+  /* Page */
+  --it-bg: #f6f8f4;
+  --it-surface: #ffffff;
+  --it-border: #e3e8de;
+  --it-text: #383f45;
+  --it-text-muted: #6b747d;
+
+  /* Sidebar (charcoal, taken from the logo's dark colour) */
+  --it-nav-top: #383f47;
+  --it-nav-bottom: #262b31;
+  --it-nav-text: rgba(255, 255, 255, 0.92);
+  --it-nav-muted: rgba(255, 255, 255, 0.7);
+  --it-nav-hover: rgba(87, 164, 29, 0.18);
+  --it-nav-divider: rgba(255, 255, 255, 0.08);
+
+  /* Brand green — sampled from the Zaid Infotech logo */
+  --it-green: #57a41d;
+  --it-green-dark: #3f7d14;
+  --it-green-rgb: 87, 164, 29;
+
+  --it-nav-active-from: #3f7d14;
+  --it-nav-active-to: #57a41d;
+
+  --it-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Sidebar sizing that scales with the screen HEIGHT */
+  --it-item-h: clamp(40px, 5.4vh, 46px);
+
+  /* Target logo height. Width is derived from it (height x 1742/903 = 1.93),
+     so the ratio is identical on every screen. Max logo size ~170 x 88px. */
+  --it-logo-h: clamp(72px, 10.5vh, 88px);
+
+  /* Horizontal optical-centring offset for the logo artwork */
+  --it-logo-nudge: -4%;
+
+  /* The PNG has empty white margin around the artwork. These trim that margin
+     from the card (as a fraction of logo height). The image itself is never scaled,
+     stretched or edited, so its 1742:903 ratio is untouched.
+     Tune: 0 = no trim, 0.18 = tighter card. Stop before the artwork clips. */
+  --it-logo-trim-y: 0.14;
+
+  /* Menu icons */
+  --it-icon-rest: rgba(255, 255, 255, 0.72);
+  --it-icon-hover: #9be15d;
 }
 
-* {
-  box-sizing: border-box;
-}
-
+/* Only the page margin stays global; everything else is scoped to .it-layout
+   so this file no longer restyles the HR or other pages. */
 html,
 body {
   margin: 0;
-  background-color: var(--page-bg);
-  color: var(--title);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
 }
 
-button,
-input {
+.it-layout,
+.it-layout *,
+.it-layout *::before,
+.it-layout *::after {
+  box-sizing: border-box;
+}
+
+.it-layout button,
+.it-layout input {
   font-family: inherit;
 }
 
-/* ============ SHELL ============ */
-.tail-wrapper {
-  display: flex;
+/* =====================================================
+   ROOT
+===================================================== */
+
+.it-layout {
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
+  display: flex;
+  background: var(--it-bg);
+  color: var(--it-text);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
 }
 
-.tail-backdrop {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(3, 12, 13, 0.55);
-  backdrop-filter: blur(3px);
-  z-index: 99;
-}
+/* =====================================================
+   TOPBAR
+===================================================== */
 
-/* ============ SIDEBAR ============ */
-.tail-sidebar {
+.it-topbar {
   position: fixed;
   top: 0;
-  bottom: 0;
-  left: 0;
-  width: var(--sidebar-w);
-  background: linear-gradient(180deg, var(--sb-bg-top) 0%, var(--sb-bg-bottom) 100%);
-  color: var(--sb-text);
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
-  overflow: hidden;
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Faint teal wave decoration at the bottom of the sidebar */
-.tail-sidebar::before {
-  content: "";
-  position: absolute;
-  left: 0;
+  left: var(--it-sidebar-w);
   right: 0;
-  bottom: 0;
-  height: 260px;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 272 260' preserveAspectRatio='none'><g fill='none' stroke='%231fa878' stroke-opacity='0.35' stroke-width='1'><path d='M-10 150 C 60 110, 120 200, 180 150 S 270 120, 300 160'/><path d='M-10 162 C 60 122, 120 212, 180 162 S 270 132, 300 172'/><path d='M-10 174 C 60 134, 120 224, 180 174 S 270 144, 300 184'/><path d='M-10 186 C 60 146, 120 236, 180 186 S 270 156, 300 196'/><path d='M-10 198 C 60 158, 120 248, 180 198 S 270 168, 300 208'/><path d='M-10 210 C 60 170, 120 260, 180 210 S 270 180, 300 220'/><path d='M-10 222 C 60 182, 120 272, 180 222 S 270 192, 300 232'/><path d='M-10 234 C 60 194, 120 284, 180 234 S 270 204, 300 244'/></g></svg>");
-  background-repeat: no-repeat;
-  background-position: bottom left;
-  background-size: 100% 100%;
-  opacity: 0.9;
-  z-index: 0;
-}
+  z-index: 900;
 
-.tail-brand {
-  height: var(--navbar-h);
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
-  margin-top: 30px;
-  margin-bottom: 10px;
-}
-
-.brand-logo-gem {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.brand-title {
-  /* font-size: 1.2rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: white; */
-  padding: 10px 10px;
-  margin-top: 30px ;
-
-  white-space: nowrap;
-
-}
-
-.brand-title .brand-image {
-   border-radius: 12px;
-  border: none;
-  /* margin-top: 30px; */
-}
-/* .brand-title span {
-  color: var(--brand-green);
-} */
-
-.tail-sidebar-close {
-  display: none;
-  margin-left: auto;
-  width: 36px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: var(--sb-text);
-  cursor: pointer;
-}
-
-.tail-nav-container {
-  flex: 1;
-  padding: 18px 0 0;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  position: relative;
-  z-index: 1;
-  scrollbar-width: none;
-}
-
-.tail-nav-container::-webkit-scrollbar {
-  display: none;
-}
-
-.tail-group-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px 10px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.tail-group-title {
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--sb-text-muted);
-  letter-spacing: 0.01em;
-}
-
-.tail-group-caret {
-  color: var(--sb-text-muted);
-  display: flex;
-}
-
-.tail-nav-links {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 0 16px;
-}
-
-.tail-nav-link {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 18px;
-  border-radius: 10px;
-  color: var(--sb-text);
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  background: transparent;
-  border: none;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  transition: background 0.16s ease, color 0.16s ease;
-}
-
-.tail-nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
-}
-
-.tail-nav-link.active {
-  background: var(--sb-active);
-  color: #ffffff;
-  font-weight: 600;
-  box-shadow: 0 6px 18px rgba(13, 122, 88, 0.3);
-}
-
-.nav-item-icon {
-  font-size: 17px;
-  width: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.nav-item-text {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tail-chip {
-  background: var(--brand-green);
-  color: #072219;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-.tail-sidebar-footer {
-  padding: 16px 16px 28px;
-  margin-top: auto;
-  position: relative;
-  z-index: 1;
-}
-
-.tail-logout {
-  color: #eef4f3;
-  font-size: 1.02rem;
-  padding: 14px 18px;
-}
-
-/* ============ MAIN + TOPBAR ============ */
-.tail-content-area {
-  flex: 1;
-  margin-left: var(--sidebar-w);
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.tail-navbar {
-  height: var(--navbar-h);
-  background-color: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+  height: var(--it-topbar-h);
   padding: 0 28px;
-  position: sticky;
-  top: 0;
-  z-index: 30;
-}
 
-.navbar-left {
   display: flex;
   align-items: center;
-  gap: 22px;
-  flex: 1;
-  min-width: 0;
+  gap: 20px;
+
+  background: var(--it-surface);
+  border-bottom: 1px solid var(--it-border);
+  transition: left 0.28s var(--it-ease);
 }
 
-/* .navbar-toggle-btn {
-  display: flex;
+.it-menu-toggle {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  background: transparent;
+
   border: none;
-  color: var(--title);
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0;
-} */
-
-
-.navbar-toggle-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  flex-shrink: 0;
-  background: transparent;
-  border: none;
-  color: var(--title);
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0;
-}
-
-/* Search */
-.tail-search-bar {
-  display: flex;
-  align-items: center;
-  background-color: #f2f5f4;
-  border: 1px solid transparent;
   border-radius: 10px;
-  padding: 0 16px;
-  height: 44px;
-  gap: 12px;
-  width: 100%;
-  max-width: 450px;
-  transition: all 0.2s ease;
-}
-
-.tail-search-bar:focus-within {
-  background-color: #ffffff;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(14, 125, 92, 0.12);
-}
-
-.search-icon {
-  color: #8b9697;
-  font-size: 15px;
-  flex-shrink: 0;
-}
-
-.tail-search-bar input {
-  border: none;
   background: transparent;
-  outline: none;
-  font-size: 0.92rem;
-  width: 100%;
-  min-width: 0;
-  color: var(--title);
+  color: var(--it-text);
+
+  font-size: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--it-ease);
 }
 
-.tail-search-bar input::placeholder {
-  color: #8b9697;
+.it-menu-toggle:active {
+  transform: scale(0.95);
 }
 
 /* Right side */
-.navbar-right {
+.it-topbar-right {
+  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 22px;
-  flex-shrink: 0;
 }
 
-.nav-icon-action {
-  position: relative;
-  width: 40px;
-  height: 40px;
-  background: transparent;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--title);
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0;
-}
-
-.bell-count {
-  position: absolute;
-  top: -2px;
-  right: -4px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background-color: var(--danger);
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 18px;
-  text-align: center;
-  box-shadow: 0 0 0 2px #ffffff;
-}
-
-/* User trigger */
-.user-profile-menu {
+.it-user-menu {
   position: relative;
 }
 
-.user-btn-trigger {
+.it-user {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: transparent;
-  border: none;
   cursor: pointer;
-  padding: 4px 4px;
-  border-radius: 10px;
-  transition: background 0.15s;
+
+  padding: 4px 8px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--it-ease);
 }
 
-.user-btn-trigger:hover {
-  background: var(--page-bg);
-}
-
-.avatar-wrapper {
+.it-avatar-wrapper {
   position: relative;
   flex-shrink: 0;
 }
 
-.user-nav-avatar {
+.it-user-avatar {
   width: 44px;
   height: 44px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
   display: block;
-  border: 1px solid var(--border);
 }
 
-.status-online {
+.it-user-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--it-green), var(--it-green-dark));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.it-status-online {
   position: absolute;
   bottom: 1px;
   right: 1px;
@@ -450,54 +219,53 @@ input {
   border-radius: 50%;
 }
 
-.user-nav-info {
+.it-user-meta {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
-.user-nav-name {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--title);
+.it-user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--it-text);
   white-space: nowrap;
 }
 
-.user-nav-role {
-  font-size: 0.8rem;
-  color: var(--body);
-  white-space: nowrap;
-}
-
-.chevron {
+.it-user-role {
   font-size: 12px;
-  color: var(--subtle);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--it-text-muted);
+  white-space: nowrap;
 }
 
-.chevron.rotated {
+.it-user-chevron {
+  font-size: 11px;
+  color: var(--it-text-muted);
+  transition: transform 0.2s var(--it-ease);
+}
+
+.it-user-chevron.rotated {
   transform: rotate(180deg);
 }
 
 /* User dropdown */
-.tail-dropdown-modal {
+.it-dropdown {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
   width: 240px;
   max-width: calc(100vw - 24px);
-  background: var(--surface);
-  border: 1px solid var(--border);
+
+  background: var(--it-surface);
+  border: 1px solid var(--it-border);
   border-radius: 14px;
   box-shadow: var(--shadow-dropdown);
   padding: 8px;
-  z-index: 120;
-  animation: dropdownIn 0.16s ease forwards;
+  z-index: 1200;
+  animation: itDropdownIn 0.16s ease forwards;
 }
 
-@keyframes dropdownIn {
+@keyframes itDropdownIn {
   from {
     opacity: 0;
     transform: translateY(-4px);
@@ -508,68 +276,441 @@ input {
   }
 }
 
-.dropdown-meta {
+.it-dropdown-meta {
   padding: 8px 12px 10px;
 }
 
-.meta-name {
+.it-meta-name {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--title);
+  color: var(--it-text);
 }
 
-.meta-email {
+.it-meta-email {
   margin: 2px 0 0;
   font-size: 0.78rem;
-  color: var(--body);
+  color: var(--it-text-muted);
   word-break: break-all;
 }
 
-.dropdown-divider {
+.it-dropdown-divider {
   height: 1px;
-  background-color: var(--border);
+  background-color: var(--it-border);
   margin: 4px 0;
 }
 
-.dropdown-link {
+.it-dropdown-link {
   display: flex;
   align-items: center;
   gap: 12px;
   width: 100%;
   padding: 10px 12px;
+
   background: transparent;
   border: none;
+  border-radius: 8px;
+
   font-size: 0.87rem;
   font-weight: 500;
-  color: var(--body);
-  border-radius: 8px;
-  cursor: pointer;
+  color: var(--it-text-muted);
   text-align: left;
+  cursor: pointer;
   transition: background 0.12s;
 }
 
-.dropdown-link:hover {
-  background: var(--page-bg);
-  color: var(--title);
+.it-dropdown-link:hover {
+  background: var(--it-bg);
+  color: var(--it-text);
 }
 
-.dropdown-link.text-danger {
+.it-dropdown-link.text-danger {
   color: var(--danger);
 }
 
-.dropdown-link.text-danger:hover {
+.it-dropdown-link.text-danger:hover {
   background: #fef2f2;
 }
 
-/* Page outlet */
-.tail-viewport {
-  flex: 1;
-  padding: 28px 32px;
-  min-width: 0;
+/* Overlay behind the drawer */
+.it-overlay {
+  display: none;
 }
 
-/* ============ SHARED CARD HELPERS (for page content in <Outlet />) ============ */
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.it-sidebar {
+  width: var(--it-sidebar-w);
+  min-width: var(--it-sidebar-w);
+  height: 100vh;
+  height: 100dvh;
+
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+
+  background: linear-gradient(180deg, var(--it-nav-top) 0%, var(--it-nav-bottom) 100%);
+  color: var(--it-nav-text);
+  overflow: hidden;
+
+  transition: transform 0.28s var(--it-ease);
+}
+
+/* Decorative green wave near the bottom */
+.it-sidebar-wave path {
+  stroke: var(--it-green);
+}
+
+.it-sidebar-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 70px;
+  width: 100%;
+  height: 260px;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 35%, transparent 100%);
+}
+
+.it-sidebar > *:not(.it-sidebar-wave) {
+  position: relative;
+  z-index: 1;
+}
+
+.it-sidebar-header {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* card hugs the logo and sits centred */
+  gap: 10px;
+
+  padding: clamp(14px, 2.4vh, 22px) 16px clamp(10px, 1.6vh, 16px);
+}
+
+/* Light card that holds the logo, so it keeps its original colours */
+.it-brand {
+  flex: 0 1 auto;            /* was flex: 1 (stretched to full sidebar width); now fits the logo */
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 6px;          /* was 6px 10px; the PNG already has built-in margin */
+  overflow: hidden;          /* clips only the trimmed empty margin of the PNG */
+
+  border: none;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.26);
+
+  line-height: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.18s var(--it-ease), box-shadow 0.18s var(--it-ease);
+}
+
+.it-brand:active {
+  transform: scale(0.98);
+}
+
+/* Official logo: original file, original shape.
+   SIZE IS DRIVEN BY WIDTH, HEIGHT IS ALWAYS auto.
+   Never set a fixed width AND a fixed height here. */
+.it-logo {
+  display: block;
+  width: min(100%, calc(var(--it-logo-h) * 1742 / 903));
+  height: auto;
+  margin-inline: auto;
+  /* Negative block margin shrinks the card around the artwork, not the logo */
+  margin-block: calc(var(--it-logo-h) * var(--it-logo-trim-y) * -1);
+
+  /* Optical centring (positioning only; file and ratio untouched) */
+  translate: var(--it-logo-nudge) 0;
+
+  aspect-ratio: 1742 / 903;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Close (X) button — only visible inside the drawer */
+.it-sidebar-close {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--it-nav-text);
+
+  font-size: 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =====================================================
+   MENU
+===================================================== */
+
+/* Scrollable area holding both menu groups */
+.it-nav-container {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.it-nav-container::-webkit-scrollbar {
+  display: none;
+}
+
+.it-nav-group {
+  flex-shrink: 0;
+}
+
+.it-menu-title {
+  margin: 6px 24px 8px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--it-nav-divider);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--it-nav-muted);
+}
+
+/* The first group title is a toggle button */
+.it-menu-title-btn {
+  width: calc(100% - 48px);
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.it-menu-title-caret {
+  transition: transform 0.2s var(--it-ease);
+}
+
+.it-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 0 14px 8px;
+}
+
+.it-menu-item {
+  position: relative;
+  flex-shrink: 0;
+  min-height: var(--it-item-h);
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  margin: 4px 0;
+  padding: 0 18px;
+
+  border-radius: 10px;
+  text-decoration: none;
+
+  color: var(--it-nav-text);
+  font-size: 15.5px;
+  font-weight: 500;
+
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--it-ease), box-shadow 0.18s var(--it-ease),
+    transform 0.18s var(--it-ease);
+}
+
+.it-menu-item.active {
+  background: linear-gradient(90deg, var(--it-nav-active-from) 0%, var(--it-nav-active-to) 100%);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(var(--it-green-rgb), 0.3);
+}
+
+.it-menu-icon {
+  width: 22px;
+  min-width: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+  color: var(--it-icon-rest);
+  transition: color 0.18s var(--it-ease), transform 0.18s var(--it-ease);
+}
+
+.it-menu-item.active .it-menu-icon {
+  color: #fff;
+}
+
+.it-menu-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* "NEW" chip */
+.it-menu-badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #9be15d;
+  color: #1c3a08;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+
+/* =====================================================
+   FOOTER / LOGOUT
+===================================================== */
+
+.it-sidebar-footer {
+  margin-top: auto;
+  flex-shrink: 0;
+  margin-inline: 14px;
+  border-top: 1px solid var(--it-nav-divider);
+  padding: 12px 0 0;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+}
+
+.it-logout-btn {
+  width: 100%;
+  min-height: var(--it-item-h);
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--it-nav-text);
+
+  font-size: 15.5px;
+  font-weight: 500;
+  font-family: inherit;
+  text-align: left;
+
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--it-ease), color 0.18s var(--it-ease);
+}
+
+.it-logout-btn svg {
+  font-size: 18px;
+  width: 22px;
+}
+
+/* Hover effects only on devices that really hover */
+@media (hover: hover) {
+  .it-menu-toggle:hover,
+  .it-user:hover {
+    background: #f1f3f5;
+  }
+
+  .it-menu-item:hover {
+    background: var(--it-nav-hover);
+    transform: translateX(2px);
+  }
+
+  .it-menu-item:hover .it-menu-icon {
+    color: var(--it-icon-hover);
+  }
+
+  .it-menu-item.active:hover {
+    transform: none;
+    background: linear-gradient(90deg, var(--it-nav-active-from) 0%, var(--it-nav-active-to) 100%);
+  }
+
+  .it-menu-item.active:hover .it-menu-icon {
+    color: #fff;
+  }
+
+  .it-brand:hover {
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.36);
+  }
+
+  .it-logout-btn:hover,
+  .it-sidebar-close:hover {
+    background: rgba(239, 68, 68, 0.14);
+    color: #fca5a5;
+  }
+}
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.it-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  margin-left: var(--it-sidebar-w);
+  padding-top: var(--it-topbar-h);
+  background: var(--it-bg);
+  transition: margin-left 0.28s var(--it-ease);
+}
+
+.it-main-content {
+  width: 100%;
+  max-width: 1600px;
+
+  margin: 0 auto;
+  padding: 24px 28px;
+}
+
+.it-main-content > * {
+  max-width: 100%;
+}
+
+.it-main-content img,
+.it-main-content video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* =====================================================
+   SHARED CARD HELPERS (for page content in <Outlet />)
+===================================================== */
+
 .dash-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -578,9 +719,11 @@ input {
   padding: 24px;
 }
 
+/* Intrinsic grid: as many 220px+ columns as fit (4 -> 3 -> 2 -> 1),
+   no breakpoint chain needed. min(100%, 220px) stops overflow on tiny screens. */
 .dash-stat-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 20px;
 }
 
@@ -590,39 +733,97 @@ input {
   gap: 20px;
 }
 
-/* ============ RESPONSIVE ============ */
+/* =====================================================
+   FOCUS (keyboard accessibility)
+===================================================== */
 
-/* Large laptops */
-@media (max-width: 1280px) {
-  .tail-viewport {
-    padding: 24px;
-  }
-  .dash-stat-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.it-menu-item:focus-visible,
+.it-menu-title-btn:focus-visible,
+.it-logout-btn:focus-visible,
+.it-brand:focus-visible,
+.it-menu-toggle:focus-visible,
+.it-sidebar-close:focus-visible,
+.it-user:focus-visible {
+  outline: 2px solid var(--it-green);
+  outline-offset: 2px;
 }
 
-/* Tablet & below: sidebar becomes a drawer */
+/* =====================================================
+   TABLET + MOBILE  (<= 1024px) — DRAWER MODE
+===================================================== */
+
 @media (max-width: 1024px) {
-  .tail-sidebar {
+  :root {
+    --it-topbar-h: 64px;
+  }
+
+  .it-topbar {
+    left: 0;
+    height: calc(var(--it-topbar-h) + env(safe-area-inset-top, 0px));
+    padding: env(safe-area-inset-top, 0px) 16px 0;
+    gap: 12px;
+  }
+
+  /* Drawer (closed) */
+  .it-sidebar {
+    width: min(300px, 84vw);
+    min-width: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+
     transform: translateX(-100%);
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+    visibility: hidden;
+    transition: transform 0.28s var(--it-ease), visibility 0s linear 0.28s;
   }
 
-  .tail-sidebar.open {
+  /* Drawer (open) */
+  .it-sidebar.is-open {
     transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.28s var(--it-ease), visibility 0s;
+    box-shadow: 0 20px 40px rgba(2, 8, 20, 0.45);
   }
 
-  .tail-sidebar-close {
-    display: flex;
+  .it-sidebar-close {
+    display: inline-flex;
+    margin-left: auto;
   }
 
-  .tail-content-area {
+  .it-sidebar-header {
+    justify-content: flex-start;   /* logo left, close button right */
+  }
+
+  /* Dim overlay */
+  .it-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 950;
+
+    background: rgba(15, 23, 42, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s var(--it-ease);
+  }
+
+  .it-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .it-main {
     margin-left: 0;
+    width: 100%;
+    padding-top: calc(var(--it-topbar-h) + env(safe-area-inset-top, 0px));
   }
 
-  .tail-navbar {
-    padding: 0 20px;
+  .it-main-content {
+    padding: 20px;
+  }
+
+  /* Stop the page scrolling behind the open drawer (no JS needed) */
+  html:has(.it-sidebar.is-open),
+  body:has(.it-sidebar.is-open) {
+    overflow: hidden;
   }
 
   .dash-two-col {
@@ -630,71 +831,47 @@ input {
   }
 }
 
-/* Mobile landscape / large phones */
-@media (max-width: 768px) {
-  :root {
-    --navbar-h: 72px;
+/* =====================================================
+   MOBILE (<= 640px)
+===================================================== */
+
+@media (max-width: 640px) {
+  .it-topbar {
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
-  .tail-search-bar {
+  .it-topbar-right {
+    gap: 10px;
+  }
+
+  .it-user-meta,
+  .it-user-chevron {
     display: none;
   }
 
-  .navbar-left {
-    flex: 0 0 auto;
-  }
-
-  .navbar-right {
-    gap: 14px;
-  }
-
-  .user-nav-info,
-  .chevron {
-    display: none;
-  }
-
-  .tail-viewport {
-    padding: 20px 16px;
-  }
-}
-
-/* Phones */
-@media (max-width: 480px) {
-  :root {
-    --navbar-h: 64px;
-  }
-
-  .tail-navbar {
-    padding: 0 14px;
-  }
-
-  .navbar-left {
-    gap: 12px;
-  }
-
-  .user-nav-avatar {
+  .it-user-avatar {
     width: 38px;
     height: 38px;
   }
 
-  .tail-sidebar {
-    width: min(84vw, 290px);
+  .it-main-content {
+    padding: 16px 14px 28px;
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
   }
 
-  .tail-brand {
-    padding: 0 18px;
+  .it-menu-item,
+  .it-logout-btn {
+    min-height: 48px;
   }
+}
 
-  .brand-title {
-    font-size: 1.05rem;
-  }
+/* =====================================================
+   PHONES (<= 480px)
+===================================================== */
 
-  .tail-viewport {
-    padding: 16px 12px;
-  }
-
+@media (max-width: 480px) {
   .dash-stat-grid {
-    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
   }
 
@@ -703,13 +880,135 @@ input {
   }
 }
 
-/* Desktop: never show the drawer backdrop */
-@media (min-width: 1025px) {
-  .tail-backdrop {
-    display: none;
+/* =====================================================
+   SMALL PHONES (<= 380px)
+===================================================== */
+
+@media (max-width: 380px) {
+  .it-main-content {
+    padding: 14px 10px 24px;
+  }
+}
+
+/* =====================================================
+   LARGE SCREENS (>= 1600px)
+===================================================== */
+
+@media (min-width: 1600px) {
+  :root {
+    --it-sidebar-w: 288px;
   }
 
-  .navbar-toggle-btn {
-    display: flex;
+  .it-main-content {
+    padding: 32px 40px;
+  }
+}
+
+/* =====================================================
+   SHORT SCREENS (laptops <= 760px tall, not phones)
+===================================================== */
+
+@media (max-height: 760px) and (min-width: 641px) {
+  :root {
+    --it-item-h: 40px;
+    --it-logo-h: 68px;
+  }
+
+  .it-brand {
+    padding: 4px 8px;
+  }
+
+  .it-menu-item,
+  .it-logout-btn {
+    font-size: 15px;
+  }
+
+  .it-menu-item {
+    margin: 2px 0;
+  }
+
+  .it-sidebar-footer {
+    padding-bottom: 12px;
+  }
+}
+
+/* =====================================================
+   DESKTOP (>= 1025px)
+   The sidebar is always visible, so the hamburger would be a dead button.
+===================================================== */
+
+@media (min-width: 1025px) {
+  .it-menu-toggle {
+    display: none;
+  }
+}
+
+/* =====================================================
+   TOUCH DEVICES — 44px minimum tap targets
+===================================================== */
+
+@media (pointer: coarse) {
+  .it-menu-toggle,
+  .it-sidebar-close {
+    width: 44px;
+    height: 44px;
+  }
+
+  .it-menu-item,
+  .it-logout-btn {
+    min-height: 48px;
+  }
+
+  .it-dropdown-link {
+    min-height: 44px;
+  }
+}
+
+/* =====================================================
+   VERY SHORT VIEWPORTS (landscape phones, <= 520px tall)
+===================================================== */
+
+@media (max-height: 520px) {
+  :root {
+    --it-item-h: 38px;
+    --it-logo-h: 56px;
+  }
+
+  .it-sidebar-header {
+    padding-block: 10px 6px;
+  }
+
+  .it-menu-item {
+    margin: 2px 0;
+  }
+
+  .it-sidebar-footer {
+    padding-bottom: 10px;
+  }
+}
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .it-sidebar,
+  .it-overlay,
+  .it-topbar,
+  .it-main,
+  .it-menu-item,
+  .it-logout-btn,
+  .it-menu-toggle,
+  .it-brand,
+  .it-menu-icon {
+    transition: none !important;
+  }
+
+  .it-menu-item:hover {
+    transform: none !important;
+  }
+
+  .it-dropdown {
+    animation: none;
   }
 }

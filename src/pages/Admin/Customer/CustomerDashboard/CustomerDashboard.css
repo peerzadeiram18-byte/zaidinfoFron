@@ -47,7 +47,20 @@
 
   /* Sidebar sizing follows screen HEIGHT so all items stay usable on laptops */
   --cd-item-h: clamp(38px, 5vh, 46px);
-  --cd-logo-h: clamp(48px, 7.2vh, 66px);
+
+  /* Target logo height. Width is derived from it (height x 1742/903 = 1.93),
+     so the ratio is identical on every screen. Max logo size ~170 x 88px.
+     Same values as the HR / IT Support / Corporate layouts. */
+  --cd-logo-h: clamp(72px, 10.5vh, 88px);
+
+  /* Horizontal optical-centring offset for the logo artwork */
+  --cd-logo-nudge: -4%;
+
+  /* The PNG has empty white margin around the artwork. This trims that margin
+     from the card (as a fraction of logo height). The image itself is never
+     scaled, stretched or edited, so its 1742:903 ratio is untouched.
+     Tune: 0 = no trim, 0.18 = tighter card. Stop before the artwork clips. */
+  --cd-logo-trim-y: 0.14;
 
   min-height: 100vh;
   min-height: 100dvh;
@@ -281,31 +294,48 @@ body.customer-dashboard-sidebar-open {
 .customer-dashboard-brand {
   display: flex;
   align-items: center;
+  justify-content: center;   /* card hugs the logo and sits centred */
   gap: 10px;
 }
 
+/* Light card that holds the logo, so it keeps its original colours.
+   BEFORE: flex: 1 stretched the card across the whole sidebar and
+   padding 12px 18px made it tall, so the logo looked small inside it.
+   NOW: the card is only as big as the logo (same as the IT Support layout). */
 .customer-dashboard-brand-card {
-  flex: 1;
+  flex: 0 1 auto;            /* was flex: 1 */
   min-width: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 12px 18px;
+  padding: 4px 6px;          /* was 12px 18px; the PNG already has built-in margin */
+  overflow: hidden;          /* clips only the trimmed empty margin of the PNG */
 
-  border-radius: 16px;
+  border-radius: 14px;
   background: #ffffff;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.26);
   line-height: 0;
 }
 
+/* Official logo: original file, original shape (1742 x 903 = 1.93).
+   SIZE IS DRIVEN BY WIDTH, HEIGHT IS ALWAYS auto.
+   BEFORE: width:auto + max-height 48-66px capped the logo at about 127px wide.
+   Never set a fixed width AND a fixed height here. */
 .customer-dashboard-logo {
   display: block;
-  width: auto;
-  max-width: 100%;
+  width: min(100%, calc(var(--cd-logo-h) * 1742 / 903));
   height: auto;
-  max-height: var(--cd-logo-h);
+  margin-inline: auto;
+
+  /* Negative block margin shrinks the card around the artwork, not the logo */
+  margin-block: calc(var(--cd-logo-h) * var(--cd-logo-trim-y) * -1);
+
+  /* Optical centring (positioning only; file and ratio untouched) */
+  translate: var(--cd-logo-nudge) 0;
+
+  aspect-ratio: 1742 / 903;
   object-fit: contain;
   user-select: none;
   -webkit-user-drag: none;
@@ -1345,6 +1375,11 @@ body.customer-dashboard-sidebar-open {
 
   .customer-dashboard-sidebar-close {
     display: inline-flex;
+    margin-left: auto;
+  }
+
+  .customer-dashboard-brand {
+    justify-content: flex-start;   /* logo left, close button right */
   }
 
   /* Dim overlay */
@@ -1487,10 +1522,11 @@ body.customer-dashboard-sidebar-open {
 @media (max-height: 760px) and (min-width: 641px) {
   .customer-dashboard-root {
     --cd-item-h: 38px;
+    --cd-logo-h: 68px;
   }
 
   .customer-dashboard-brand-card {
-    padding: 8px 14px;
+    padding: 4px 8px;
   }
 
   .customer-dashboard-menu-item,
@@ -1504,6 +1540,35 @@ body.customer-dashboard-sidebar-open {
 
   .customer-dashboard-sidebar-footer {
     padding-bottom: 12px;
+  }
+}
+
+
+/* =====================================================
+   VERY SHORT VIEWPORTS (landscape phones, <= 520px tall)
+===================================================== */
+
+@media (max-height: 520px) {
+  .customer-dashboard-root {
+    --cd-item-h: 38px;
+    --cd-logo-h: 56px;
+  }
+
+  .customer-dashboard-sidebar-header {
+    padding-top: 10px;
+  }
+
+  .customer-dashboard-user-card {
+    margin-top: 8px;
+    padding: 8px 12px;
+  }
+
+  .customer-dashboard-menu-item {
+    margin: 2px 0;
+  }
+
+  .customer-dashboard-sidebar-footer {
+    padding-bottom: 10px;
   }
 }
 

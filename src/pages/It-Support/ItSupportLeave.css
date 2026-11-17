@@ -1,288 +1,614 @@
 /* ======================================================
-   CONTAINER & LAYOUT
+   IT SUPPORT — LEAVE
+   Matches the IT-support layout: logo-charcoal + logo-green.
+   Class names are unchanged, so the JSX needs no edits.
+
+   Every rule is scoped under .leave-wrapper. The old names (.tab,
+   .btn-submit, .btn-cancel, .alert-box, .table-responsive, .badge-status ...)
+   are generic, and some (.table-responsive) are also Bootstrap class names,
+   so unscoped rules could restyle or be restyled by other pages.
+
+   Breakpoints: >= 1025 desktop | <= 1024 tablet | <= 760 table -> cards | <= 520 phone
    ====================================================== */
+
 .leave-wrapper {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 1.5rem 1rem;
-  font-family: inherit;
-  color: #1e293b;
+  /* Brand tokens (same values as the IT sidebar and the other IT pages) */
+  --lv-surface: #ffffff;
+  --lv-surface-soft: #f3f6ef;
+  --lv-border: #e3e8de;
+  --lv-border-strong: #cfd7c6;
+
+  --lv-text: #383f45;
+  --lv-text-strong: #262b31;
+  --lv-text-muted: #6b747d;
+
+  --lv-green: #57a41d;
+  --lv-primary: #3f7d14;            /* darker green: passes contrast for text on white */
+  --lv-primary-hover: #326310;
+  --lv-green-rgb: 87, 164, 29;
+  --lv-tint: #eef6e6;
+
+  --lv-radius: 14px;
+  --lv-shadow: 0 1px 2px rgba(38, 43, 49, 0.05), 0 4px 12px -2px rgba(38, 43, 49, 0.06);
+  --lv-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --lv-ring: 0 0 0 3px rgba(var(--lv-green-rgb), 0.22);
+
+  width: 100%;
+  padding: 0;                       /* the IT layout already pads its content area */
+  box-sizing: border-box;
+  color: var(--lv-text);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* The old max-width: 1000px + margin: auto left this page narrower and centred
+     while every other IT page fills the content area. */
+}
+
+.leave-wrapper *,
+.leave-wrapper *::before,
+.leave-wrapper *::after {
+  box-sizing: border-box;
 }
 
 /* ======================================================
    NAVIGATION TABS
    ====================================================== */
-.leave-tab-bar {
+
+.leave-wrapper .leave-tab-bar {
   display: flex;
-  gap: 0.5rem;
-  border-bottom: 2px solid #e2e8f0;
-  margin-bottom: 1.5rem;
+  gap: 0.25rem;
+
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--lv-border);
+
+  /* Scrolls sideways on small screens instead of wrapping or overflowing */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
 }
 
-.leave-tab-bar .tab {
-  background: transparent;
+.leave-wrapper .leave-tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.leave-wrapper .leave-tab-bar .tab {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+
+  min-height: 44px;
+  margin-bottom: -1px;
+  padding: 0.7rem 1.15rem;
+
   border: none;
-  outline: none;
-  padding: 0.75rem 1.25rem;
-  font-size: 0.95rem;
+  border-bottom: 3px solid transparent;
+  border-radius: 10px 10px 0 0;
+  background: transparent;
+  color: var(--lv-text-muted);
+
+  font-family: inherit;
+  font-size: 0.925rem;
   font-weight: 600;
-  color: #64748b;
+  white-space: nowrap;
   cursor: pointer;
-  border-radius: 8px 8px 0 0;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  transition: all 0.2s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.18s var(--lv-ease), background 0.18s var(--lv-ease),
+    border-color 0.18s var(--lv-ease);
 }
 
-.leave-tab-bar .tab:hover {
-  color: #3b82f6;
-  background-color: #f8fafc;
+.leave-wrapper .leave-tab-bar .tab.active {
+  background: var(--lv-tint);
+  border-bottom-color: var(--lv-green);
+  color: var(--lv-primary);
 }
 
-.leave-tab-bar .tab.active {
-  color: #2563eb;
-  border-bottom: 2px solid #2563eb;
-  background-color: #ffffff;
+@media (hover: hover) {
+  .leave-wrapper .leave-tab-bar .tab:not(.active):hover {
+    background: var(--lv-surface-soft);
+    color: var(--lv-text-strong);
+  }
+}
+
+.leave-wrapper .leave-tab-bar .tab:focus-visible {
+  outline: 2px solid var(--lv-green);
+  outline-offset: -2px;
 }
 
 /* ======================================================
    CARD WRAPPER
    ====================================================== */
-.leave-card {
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  padding: 1.75rem;
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+
+.leave-wrapper .leave-card {
+  padding: clamp(1rem, 2.5vw, 1.75rem);
+
+  background: var(--lv-surface);
+  border: 1px solid var(--lv-border);
+  border-radius: var(--lv-radius);
+  box-shadow: var(--lv-shadow);
 }
 
 /* ======================================================
    ALERTS
    ====================================================== */
-.alert-box {
-  padding: 0.9rem 1.2rem;
-  border-radius: 8px;
+
+.leave-wrapper .alert-box {
   margin-bottom: 1.25rem;
+  padding: 0.85rem 1.1rem;
+
+  border: 1px solid transparent;
+  border-left-width: 4px;
+  border-radius: 10px;
+
   font-size: 0.9rem;
   font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
-.alert-box.error {
-  background-color: #fef2f2;
+.leave-wrapper .alert-box.error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  border-left-color: #dc2626;
   color: #b91c1c;
-  border: 1px solid #fecaca;
 }
 
-.alert-box.success {
-  background-color: #f0fdf4;
-  color: #15803d;
-  border: 1px solid #bbf7d0;
+.leave-wrapper .alert-box.success {
+  background: var(--lv-tint);
+  border-color: #cfe5bb;
+  border-left-color: var(--lv-green);
+  color: #2a5e0b;
 }
 
 /* ======================================================
    FORM CONTROLS
    ====================================================== */
-.apply-form {
+
+.leave-wrapper .apply-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
-  max-width: 600px;
+  max-width: 640px;
 }
 
-.field-grid {
+.leave-wrapper .field-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  /* min(100%, 240px) stops the columns overflowing on very narrow phones */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
   gap: 1.25rem;
 }
 
-.field-group {
+.leave-wrapper .field-group {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  min-width: 0;
 }
 
-.field-group label {
-  font-size: 0.875rem;
+.leave-wrapper .field-group label {
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--lv-text);
 }
 
-.field-group input,
-.field-group select,
-.field-group textarea {
+.leave-wrapper .field-group input,
+.leave-wrapper .field-group select,
+.leave-wrapper .field-group textarea {
   width: 100%;
+  min-height: 44px;
   padding: 0.65rem 0.85rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 0.925rem;
-  color: #0f172a;
+
+  border: 1px solid var(--lv-border-strong);
+  border-radius: 10px;
   background-color: #ffffff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  box-sizing: border-box;
+  color: var(--lv-text-strong);
+
+  font-family: inherit;
+  font-size: 0.925rem;
+  transition: border-color 0.18s var(--lv-ease), box-shadow 0.18s var(--lv-ease);
 }
 
-.field-group input:focus,
-.field-group select:focus,
-.field-group textarea:focus {
+/* Same dropdown arrow in every browser */
+.leave-wrapper .field-group select {
+  padding-right: 2.5rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b747d' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  cursor: pointer;
+}
+
+.leave-wrapper .field-group input::placeholder,
+.leave-wrapper .field-group textarea::placeholder {
+  color: #98a1a9;
+}
+
+.leave-wrapper .field-group input:focus,
+.leave-wrapper .field-group select:focus,
+.leave-wrapper .field-group textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  border-color: var(--lv-green);
+  box-shadow: var(--lv-ring);
 }
 
-.field-group textarea {
+.leave-wrapper .field-group textarea {
+  min-height: 96px;
   resize: vertical;
-  min-height: 80px;
 }
 
 /* ======================================================
    BUTTONS
    ====================================================== */
-.btn-submit {
+
+.leave-wrapper .btn-submit {
   align-self: flex-start;
-  background-color: #2563eb;
-  color: #ffffff;
+  min-height: 44px;
+  padding: 0.7rem 1.75rem;
+
   border: none;
-  padding: 0.75rem 1.75rem;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #3f7d14 0%, #4c9318 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 16px -4px rgba(var(--lv-green-rgb), 0.55);
+
+  font-family: inherit;
   font-size: 0.95rem;
   font-weight: 600;
-  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--lv-ease), box-shadow 0.18s var(--lv-ease),
+    transform 0.18s var(--lv-ease);
 }
 
-.btn-submit:hover {
-  background-color: #1d4ed8;
+.leave-wrapper .btn-submit:active {
+  transform: translateY(1px);
 }
 
-.btn-submit:active {
-  transform: scale(0.98);
-}
+.leave-wrapper .btn-cancel {
+  min-height: 34px;
+  padding: 0.35rem 0.85rem;
 
-.btn-cancel {
-  background-color: transparent;
-  color: #dc2626;
   border: 1px solid #fca5a5;
-  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  background: transparent;
+  color: #b91c1c;
+
+  font-family: inherit;
   font-size: 0.8rem;
   font-weight: 600;
-  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.18s var(--lv-ease), border-color 0.18s var(--lv-ease);
 }
 
-.btn-cancel:hover {
-  background-color: #fee2e2;
-  border-color: #ef4444;
+@media (hover: hover) {
+  .leave-wrapper .btn-submit:hover {
+    background: linear-gradient(90deg, #326310 0%, #3f7d14 100%);
+    box-shadow: 0 8px 20px -4px rgba(var(--lv-green-rgb), 0.65);
+  }
+
+  .leave-wrapper .btn-cancel:hover {
+    background: #fee2e2;
+    border-color: #ef4444;
+  }
+}
+
+.leave-wrapper .btn-submit:focus-visible,
+.leave-wrapper .btn-cancel:focus-visible {
+  outline: 2px solid var(--lv-green);
+  outline-offset: 2px;
 }
 
 /* ======================================================
-   TABLE STYLES
+   TABLE
    ====================================================== */
-.table-responsive {
-  overflow-x: auto;
+
+.leave-wrapper .table-responsive {
   width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 
-.leave-table {
+.leave-wrapper .leave-table {
   width: 100%;
+  min-width: 760px;
   border-collapse: collapse;
   text-align: left;
   font-size: 0.9rem;
 }
 
-.leave-table th {
-  background-color: #f8fafc;
-  color: #475569;
-  font-weight: 600;
+.leave-wrapper .leave-table th {
   padding: 0.85rem 1rem;
-  border-bottom: 2px solid #e2e8f0;
+
+  background: var(--lv-surface-soft);
+  border-bottom: 1px solid var(--lv-border);
+
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
+  color: var(--lv-text-muted);
+  white-space: nowrap;
 }
 
-.leave-table td {
+.leave-wrapper .leave-table td {
   padding: 0.9rem 1rem;
-  border-bottom: 1px solid #f1f5f9;
-  color: #334155;
+
+  border-bottom: 1px solid #eef1ea;
+  color: var(--lv-text);
   vertical-align: middle;
 }
 
-.leave-table tbody tr:hover {
-  background-color: #f8fafc;
+.leave-wrapper .leave-table td strong {
+  color: var(--lv-text-strong);
+}
+
+.leave-wrapper .leave-table tbody tr {
+  transition: background 0.15s var(--lv-ease);
+}
+
+.leave-wrapper .leave-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.leave-wrapper .leave-table tbody tr:hover {
+  background: #f9fbf6;
 }
 
 /* ======================================================
    STATUS BADGES
    ====================================================== */
-.badge-status {
-  display: inline-block;
-  padding: 0.25rem 0.65rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
+
+.leave-wrapper .badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  padding: 0.28rem 0.7rem;
+
+  border-radius: 999px;
+  font-size: 0.72rem;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.badge-status.pending {
-  background-color: #fef9c3;
-  color: #854d0e;
+.leave-wrapper .badge-status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
-.badge-status.approved {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-.badge-status.rejected {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
-.badge-status.cancelled {
-  background-color: #f1f5f9;
-  color: #64748b;
-}
+.leave-wrapper .badge-status.pending   { background: #fef3c7; color: #92400e; }
+.leave-wrapper .badge-status.approved  { background: #d4efbf; color: #2a5e0b; }
+.leave-wrapper .badge-status.rejected  { background: #fee2e2; color: #991b1b; }
+.leave-wrapper .badge-status.cancelled { background: #eceff1; color: #4b5563; }
 
 /* ======================================================
    HOLIDAYS GRID
    ====================================================== */
-.holidays-grid {
+
+.leave-wrapper .holidays-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr));
   gap: 1rem;
 }
 
-.holiday-chip {
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-left: 4px solid #3b82f6;
-  border-radius: 8px;
-  padding: 0.9rem 1.1rem;
+.leave-wrapper .holiday-chip {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+
+  padding: 0.95rem 1.1rem;
+
+  background: var(--lv-surface-soft);
+  border: 1px solid var(--lv-border);
+  border-left: 4px solid var(--lv-green);
+  border-radius: 10px;
 }
 
-.holiday-name {
-  font-weight: 600;
+.leave-wrapper .holiday-name {
   font-size: 0.95rem;
-  color: #0f172a;
+  font-weight: 600;
+  color: var(--lv-text-strong);
+  overflow-wrap: anywhere;
 }
 
-.holiday-date {
+.leave-wrapper .holiday-date {
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--lv-text-muted);
 }
 
 /* ======================================================
    FEEDBACK & EMPTY STATES
    ====================================================== */
-.loading-text,
-.empty-text {
+
+.leave-wrapper .loading-text,
+.leave-wrapper .empty-text {
+  margin: 0;
+  padding: 2.5rem 1rem;
+
   text-align: center;
-  color: #94a3b8;
   font-size: 0.95rem;
-  padding: 2rem 0;
+  color: var(--lv-text-muted);
+}
+
+/* CSS-only spinner above the loading text (no JSX change needed) */
+.leave-wrapper .loading-text::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 0.75rem;
+
+  border: 3px solid var(--lv-border);
+  border-top-color: var(--lv-green);
+  border-radius: 50%;
+  animation: lv-spin 0.8s linear infinite;
+}
+
+@keyframes lv-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ======================================================
+   TABLET (<= 1024px)
+   ====================================================== */
+
+@media (max-width: 1024px) {
+  .leave-wrapper .leave-table {
+    min-width: 700px;
+  }
+
+  .leave-wrapper .leave-table th,
+  .leave-wrapper .leave-table td {
+    padding-inline: 0.85rem;
+  }
+}
+
+/* ======================================================
+   TABLE -> CARDS (<= 760px)
+   The JSX has no data-label attributes, so the labels come from the
+   column position. If you reorder the columns, update the list below.
+   ====================================================== */
+
+@media (max-width: 760px) {
+  .leave-wrapper .table-responsive {
+    overflow-x: visible;
+  }
+
+  .leave-wrapper .leave-table,
+  .leave-wrapper .leave-table tbody,
+  .leave-wrapper .leave-table tr,
+  .leave-wrapper .leave-table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Visually hidden, still announced by screen readers */
+  .leave-wrapper .leave-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .leave-wrapper .leave-table tbody tr {
+    margin-bottom: 0.75rem;
+    padding: 0.25rem 0;
+
+    border: 1px solid var(--lv-border);
+    border-radius: var(--lv-radius);
+    background: var(--lv-surface);
+    box-shadow: var(--lv-shadow);
+  }
+
+  .leave-wrapper .leave-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .leave-wrapper .leave-table td,
+  .leave-wrapper .leave-table tbody tr:last-child td {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+
+    padding: 0.55rem 1rem;
+    border-bottom: none;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .leave-wrapper .leave-table td::before {
+    flex-shrink: 0;
+    padding-top: 0.1rem;
+
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--lv-text-muted);
+  }
+
+  .leave-wrapper .leave-table td:nth-child(2)::before { content: "From"; }
+  .leave-wrapper .leave-table td:nth-child(3)::before { content: "To"; }
+  .leave-wrapper .leave-table td:nth-child(4)::before { content: "Reason"; }
+  .leave-wrapper .leave-table td:nth-child(5)::before { content: "Status"; }
+  .leave-wrapper .leave-table td:nth-child(6)::before { content: "Admin remark"; }
+
+  /* First cell = card title (leave type); last cell = action, neither needs a label */
+  .leave-wrapper .leave-table td:first-child {
+    justify-content: flex-start;
+    padding-top: 0.85rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--lv-border);
+    text-align: left;
+  }
+
+  .leave-wrapper .leave-table td:first-child::before,
+  .leave-wrapper .leave-table td:last-child::before {
+    content: none;
+  }
+
+  .leave-wrapper .leave-table td:last-child {
+    justify-content: stretch;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--lv-border);
+  }
+
+  /* Only requests that are still pending render a Cancel button; the others
+     leave this cell empty, so hide it instead of showing a blank footer. */
+  .leave-wrapper .leave-table td:last-child:empty {
+    display: none;
+  }
+
+  .leave-wrapper .leave-table .btn-cancel {
+    flex: 1 1 auto;
+    min-height: 42px;
+  }
+}
+
+/* ======================================================
+   PHONE (<= 520px)
+   ====================================================== */
+
+@media (max-width: 520px) {
+  .leave-wrapper .leave-tab-bar .tab {
+    padding-inline: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .leave-wrapper .leave-card {
+    border-radius: 12px;
+  }
+
+  .leave-wrapper .btn-submit {
+    align-self: stretch;
+    width: 100%;
+  }
+}
+
+/* ======================================================
+   REDUCED MOTION
+   ====================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .leave-wrapper .leave-tab-bar .tab,
+  .leave-wrapper .leave-table tbody tr,
+  .leave-wrapper .btn-submit,
+  .leave-wrapper .btn-cancel,
+  .leave-wrapper .field-group input,
+  .leave-wrapper .field-group select,
+  .leave-wrapper .field-group textarea {
+    transition: none;
+  }
+
+  .leave-wrapper .loading-text::before {
+    animation-duration: 2s;      /* slower, still shows activity */
+  }
 }

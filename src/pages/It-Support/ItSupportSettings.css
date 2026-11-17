@@ -1,55 +1,129 @@
-/* ItSupportSettings.css */
+/* ItSupportSettings.css
+   Matches the IT Support layout (It-support.css):
+   logo green #57a41d, charcoal sidebar #383f47, Inter font, same radii/easing.
+   The layout's .it-main-content already provides page padding and the
+   page background, so this wrapper adds neither. */
 
+/* ==========================================================
+   1. DESIGN TOKENS (values copied from the sidebar CSS)
+   ========================================================== */
 .its-settings-wrapper {
+  /* Brand green (logo) */
+  --its-green: #57a41d;
+  --its-green-dark: #3f7d14;
+  --its-green-light: #9be15d;
+  --its-green-rgb: 87, 164, 29;
+  --its-green-ring: rgba(var(--its-green-rgb), 0.2);
+  --its-green-tint: rgba(var(--its-green-rgb), 0.1);
+
+  /* Charcoal (sidebar) */
+  --its-charcoal: #383f47;
+  --its-charcoal-dark: #262b31;
+
+  /* Surfaces */
+  --its-surface: #ffffff;
+  --its-field-bg: #fafbf8;
+  --its-field-disabled: #f1f3ee;
+  --its-border: #e3e8de;
+  --its-border-field: #d6ddd0;
+  --its-border-field-hover: #b9c5ae;
+
+  /* Text */
+  --its-text: #383f45;
+  --its-text-heading: #22282d;
+  --its-text-muted: #6b747d;
+  --its-placeholder: #a3acb3;
+
+  /* Status */
+  --its-success-text: #3f7d14;
+  --its-success-bg: #f1f8ea;
+  --its-success-border: #cfe6b8;
+  --its-error-text: #b42318;
+  --its-error-bg: #fef3f2;
+  --its-error-border: #fecaca;
+
+  /* Shape, depth, motion (same as sidebar) */
+  --its-radius-card: 16px;
+  --its-radius-control: 10px;
+  --its-shadow-card: 0 1px 2px rgba(34, 40, 45, 0.04),
+    0 8px 28px rgba(34, 40, 45, 0.06);
+  --its-shadow-card-hover: 0 2px 4px rgba(34, 40, 45, 0.05),
+    0 14px 36px rgba(34, 40, 45, 0.1);
+  --its-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --its-control-height: 46px; /* >= 44px touch target on every screen */
+}
+
+/* ==========================================================
+   2. WRAPPER
+   container-type: the layout switches based on the content-area
+   width (viewport minus sidebar), not on the window width.
+   ========================================================== */
+.its-settings-wrapper {
+  container-type: inline-size;
+  container-name: its;
   width: 100%;
-  min-height: 100%;
-  padding: 28px;
-  background: #f5f8f6;
-  color: #17231d;
+  color: var(--its-text);
+  font-family: inherit; /* Inter, inherited from .it-layout */
+}
+
+.its-settings-wrapper *,
+.its-settings-wrapper *::before,
+.its-settings-wrapper *::after {
   box-sizing: border-box;
 }
 
+/* ==========================================================
+   3. TITLE
+   ========================================================== */
 .its-settings-title {
-  margin-bottom: 24px;
+  margin-bottom: clamp(18px, 2.5vw, 26px);
 }
 
 .its-settings-title h2 {
   margin: 0;
-  font-size: 26px;
+  font-size: clamp(21px, 1.15rem + 0.6vw, 28px);
   font-weight: 700;
-  letter-spacing: -0.5px;
-  color: #17231d;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--its-text-heading);
 }
 
 .its-settings-title p {
   margin: 6px 0 0;
-  color: #728078;
+  color: var(--its-text-muted);
   font-size: 14px;
   line-height: 1.5;
 }
 
+/* ==========================================================
+   4. BANNER
+   ========================================================== */
 .its-banner {
   width: 100%;
   margin-bottom: 20px;
   padding: 13px 16px;
-  border-radius: 10px;
+  border: 1px solid transparent;
+  border-left-width: 4px;
+  border-radius: var(--its-radius-control);
   font-size: 14px;
   font-weight: 500;
-  box-sizing: border-box;
-  border: 1px solid transparent;
-  animation: itsBannerShow 0.25s ease;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  animation: itsBannerShow 0.25s var(--its-ease);
 }
 
 .its-banner-success {
-  color: #166534;
-  background: #ecfdf3;
-  border-color: #bbf7d0;
+  color: var(--its-success-text);
+  background: var(--its-success-bg);
+  border-color: var(--its-success-border);
+  border-left-color: var(--its-green);
 }
 
 .its-banner-error {
-  color: #b42318;
-  background: #fef3f2;
-  border-color: #fecaca;
+  color: var(--its-error-text);
+  background: var(--its-error-bg);
+  border-color: var(--its-error-border);
+  border-left-color: #ef4444;
 }
 
 @keyframes itsBannerShow {
@@ -57,67 +131,85 @@
     opacity: 0;
     transform: translateY(-5px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
+/* ==========================================================
+   5. GRID + CARDS
+   ========================================================== */
 .its-grid-layout {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
+  gap: clamp(16px, 2vw, 24px);
+  align-items: start; /* cards keep their own height */
   width: 100%;
 }
 
 .its-card-box {
   position: relative;
   min-width: 0;
-  padding: 24px;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid #e2ebe5;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(28, 55, 40, 0.06);
-  box-sizing: border-box;
+  padding: clamp(18px, 2vw, 28px);
+  background: var(--its-surface);
+  border: 1px solid var(--its-border);
+  border-radius: var(--its-radius-card);
+  box-shadow: var(--its-shadow-card);
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s var(--its-ease),
+    box-shadow 0.25s var(--its-ease);
 }
 
+/* Top accent bar: same green gradient as the active menu item */
 .its-card-box::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  inset: 0 0 auto 0;
   height: 3px;
-  background: #22a06b;
-}
-
-.its-card-box:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(28, 55, 40, 0.09);
+  background: linear-gradient(90deg, var(--its-green-dark), var(--its-green));
 }
 
 .its-card-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 22px;
+}
+
+/* Icon tile, same family as the sidebar icons */
+.its-card-icon {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--its-green-tint);
+  color: var(--its-green-dark);
+  font-size: 17px;
 }
 
 .its-card-head h3 {
   margin: 0;
-  color: #17231d;
-  font-size: 18px;
+  color: var(--its-text-heading);
+  font-size: clamp(16px, 0.95rem + 0.2vw, 18px);
   font-weight: 650;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .its-card-head p {
-  margin: 5px 0 0;
-  color: #7a8780;
+  margin: 3px 0 0;
+  color: var(--its-text-muted);
   font-size: 13px;
   line-height: 1.5;
 }
 
+/* ==========================================================
+   6. FORM CONTROLS
+   ========================================================== */
 .its-form-group {
   display: flex;
   flex-direction: column;
@@ -128,90 +220,91 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
+  min-width: 0;
 }
 
 .its-input-row label {
-  color: #34423a;
+  color: var(--its-text);
   font-size: 13px;
   font-weight: 600;
 }
 
 .its-input-row input {
   width: 100%;
-  height: 44px;
-  padding: 0 13px;
-  border: 1px solid #d8e2dc;
-  border-radius: 9px;
+  height: var(--its-control-height);
+  padding: 0 14px;
+  border: 1px solid var(--its-border-field);
+  border-radius: var(--its-radius-control);
   outline: none;
-  background: #fbfdfc;
-  color: #17231d;
-  font-size: 14px;
+  background: var(--its-field-bg);
+  color: var(--its-text-heading);
   font-family: inherit;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease,
-    background 0.2s ease;
+  font-size: 14px;
+  transition: border-color 0.2s var(--its-ease),
+    box-shadow 0.2s var(--its-ease), background-color 0.2s var(--its-ease);
 }
 
 .its-input-row input::placeholder {
-  color: #a1aba5;
+  color: var(--its-placeholder);
 }
 
 .its-input-row input:hover {
-  border-color: #b8c9be;
+  border-color: var(--its-border-field-hover);
 }
 
-.its-input-row input:focus {
-  border-color: #22a06b;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(34, 160, 107, 0.1);
+.its-input-row input:focus,
+.its-input-row input:focus-visible {
+  border-color: var(--its-green);
+  background: var(--its-surface);
+  box-shadow: 0 0 0 3px var(--its-green-ring);
 }
 
 .its-input-row input:disabled {
   cursor: not-allowed;
   opacity: 0.7;
-  background: #f1f4f2;
+  background: var(--its-field-disabled);
 }
 
+/* ==========================================================
+   7. BUTTONS
+   ========================================================== */
 .its-action-btn {
   width: 100%;
-  min-height: 44px;
+  min-height: var(--its-control-height);
   margin-top: 4px;
   padding: 0 18px;
   border: 0;
-  border-radius: 9px;
+  border-radius: var(--its-radius-control);
   color: #ffffff;
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease,
-    opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.2s var(--its-ease), box-shadow 0.2s var(--its-ease),
+    filter 0.2s var(--its-ease), opacity 0.2s var(--its-ease);
 }
 
+/* Primary = the sidebar's active-item green gradient */
 .its-action-btn.primary {
-  background: #188b5b;
-  box-shadow: 0 5px 14px rgba(24, 139, 91, 0.2);
+  background: linear-gradient(90deg, var(--its-green-dark) 0%, var(--its-green) 100%);
+  box-shadow: 0 6px 18px rgba(var(--its-green-rgb), 0.3);
 }
 
-.its-action-btn.primary:hover {
-  background: #147a50;
-  transform: translateY(-1px);
-  box-shadow: 0 7px 18px rgba(24, 139, 91, 0.25);
-}
-
+/* Secondary = the sidebar's charcoal */
 .its-action-btn.success {
-  background: #24372c;
-  box-shadow: 0 5px 14px rgba(36, 55, 44, 0.16);
-}
-
-.its-action-btn.success:hover {
-  background: #18291f;
-  transform: translateY(-1px);
-  box-shadow: 0 7px 18px rgba(36, 55, 44, 0.22);
+  background: linear-gradient(180deg, var(--its-charcoal) 0%, var(--its-charcoal-dark) 100%);
+  box-shadow: 0 6px 18px rgba(38, 43, 49, 0.25);
 }
 
 .its-action-btn:active {
   transform: translateY(0);
+}
+
+.its-action-btn:focus-visible {
+  outline: 2px solid var(--its-green);
+  outline-offset: 3px;
 }
 
 .its-action-btn:disabled {
@@ -221,12 +314,15 @@
   box-shadow: none;
 }
 
+/* ==========================================================
+   8. LOADING
+   ========================================================== */
 .its-loading {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 240px;
-  color: #75837b;
+  color: var(--its-text-muted);
   font-size: 14px;
 }
 
@@ -235,8 +331,8 @@
   width: 17px;
   height: 17px;
   margin-right: 9px;
-  border: 2px solid #d7e4dc;
-  border-top-color: #22a06b;
+  border: 2px solid var(--its-border);
+  border-top-color: var(--its-green);
   border-radius: 50%;
   animation: itsSpin 0.7s linear infinite;
 }
@@ -247,76 +343,50 @@
   }
 }
 
-/* Large desktop */
-@media (min-width: 1440px) {
-  .its-settings-wrapper {
-    padding: 32px 38px;
+/* ==========================================================
+   9. HOVER ONLY ON DEVICES THAT HAVE HOVER
+   ========================================================== */
+@media (hover: hover) and (pointer: fine) {
+  .its-card-box:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--its-shadow-card-hover);
   }
 
-  .its-grid-layout {
-    gap: 26px;
+  .its-action-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
   }
 
-  .its-card-box {
-    padding: 28px;
+  .its-action-btn.primary:hover:not(:disabled) {
+    box-shadow: 0 8px 22px rgba(var(--its-green-rgb), 0.38);
   }
 
-  .its-settings-title h2 {
-    font-size: 28px;
-  }
-}
-
-/* Desktop / laptop */
-@media (max-width: 1200px) {
-  .its-settings-wrapper {
-    padding: 24px;
-  }
-
-  .its-grid-layout {
-    gap: 18px;
-  }
-
-  .its-card-box {
-    padding: 22px;
+  .its-action-btn.success:hover:not(:disabled) {
+    box-shadow: 0 8px 22px rgba(38, 43, 49, 0.32);
   }
 }
 
-/* Tablet */
-@media (max-width: 900px) {
-  .its-settings-wrapper {
-    padding: 20px;
-  }
+/* ==========================================================
+   10. RESPONSIVE (container queries)
+   ========================================================== */
 
+/* Tablet / narrow content area: single column */
+@container its (max-width: 760px) {
   .its-grid-layout {
     grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .its-card-box {
-    padding: 22px;
-  }
-
-  .its-card-box:hover {
-    transform: none;
   }
 }
 
-/* Small tablet / large mobile */
-@media (max-width: 600px) {
-  .its-settings-wrapper {
-    padding: 16px;
+/* Phone */
+@container its (max-width: 520px) {
+  .its-card-box {
+    border-radius: 13px;
   }
 
-  .its-settings-title {
-    margin-bottom: 18px;
-  }
-
-  .its-settings-title h2 {
-    font-size: 22px;
-  }
-
-  .its-settings-title p {
-    font-size: 13px;
+  .its-card-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
   }
 
   .its-banner {
@@ -325,100 +395,44 @@
     font-size: 13px;
   }
 
-  .its-card-box {
-    padding: 18px;
-    border-radius: 13px;
-  }
-
   .its-card-head {
-    margin-bottom: 19px;
-  }
-
-  .its-card-head h3 {
-    font-size: 17px;
-  }
-
-  .its-card-head p {
-    font-size: 12px;
+    margin-bottom: 18px;
+    gap: 12px;
   }
 
   .its-form-group {
     gap: 15px;
   }
 
-  .its-input-row {
-    gap: 6px;
-  }
-
-  .its-input-row label {
-    font-size: 12px;
-  }
-
+  /* 16px stops iOS Safari zooming the page on focus */
   .its-input-row input {
-    height: 43px;
-    font-size: 13px;
-  }
-
-  .its-action-btn {
-    min-height: 43px;
-    font-size: 13px;
-  }
-}
-
-/* Mobile */
-@media (max-width: 400px) {
-  .its-settings-wrapper {
-    padding: 12px;
-  }
-
-  .its-settings-title h2 {
-    font-size: 20px;
-  }
-
-  .its-card-box {
-    padding: 15px;
-    border-radius: 11px;
-  }
-
-  .its-card-head h3 {
     font-size: 16px;
   }
+}
 
-  .its-input-row input {
-    height: 42px;
-    padding: 0 11px;
+/* Fallback for browsers without container query support */
+@supports not (container-type: inline-size) {
+  @media (max-width: 900px) {
+    .its-grid-layout {
+      grid-template-columns: 1fr;
+    }
   }
 
-  .its-action-btn {
-    min-height: 42px;
+  @media (max-width: 600px) {
+    .its-input-row input {
+      font-size: 16px;
+    }
   }
 }
 
-/* Very small mobile */
-@media (max-width: 320px) {
-  .its-settings-wrapper {
-    padding: 10px;
-  }
-
-  .its-card-box {
-    padding: 13px;
-  }
-
-  .its-settings-title h2 {
-    font-size: 19px;
-  }
-}
-
-/* Accessibility */
+/* ==========================================================
+   11. REDUCED MOTION
+   ========================================================== */
 @media (prefers-reduced-motion: reduce) {
-  .its-card-box,
-  .its-action-btn,
-  .its-input-row input {
-    transition: none;
-  }
-
-  .its-banner,
-  .its-loading::before {
-    animation: none;
+  .its-settings-wrapper *,
+  .its-settings-wrapper *::before,
+  .its-settings-wrapper *::after {
+    transition: none !important;
+    animation: none !important;
   }
 }
