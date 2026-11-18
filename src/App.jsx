@@ -365,7 +365,7 @@ import BranchManagement from "./pages/branch/BranchManagement";
 // =====================================================
 // APP
 // =====================================================
-
+import ItDashboard from "./pages/It-Support/ItDashboard";
 function App() {
   const fixedHeaderRef = useRef(null);
 
@@ -1296,7 +1296,9 @@ const hideGlobalHeader =
           ===================================================== */}
 
           <Route path="/itsupport-dashboard" element={<ItSupport />}>
-            <Route index element={<>Dashboard</>} />
+            {/* <Route index element={<>Dashboard</>} /> */}
+                        <Route index element={<ItDashboard />} />
+
             <Route path="charges" element={<RepairRates />} />
             <Route path="add-new-ticket" element={<CusromerTicket />} />
             <Route path="leave" element={<ItSupportLeave />} />

@@ -1,0 +1,858 @@
+/* ===== IT Support Dashboard (responsive: desktop / tablet / mobile) ===== */
+.dash-page {
+  --green: #3f8f1a;
+  --green-dark: #2f6f12;
+  --green-soft: #e8f3df;
+  --ink: #1f2933;
+  --muted: #6b7785;
+  --line: #e4e9df;
+  --card: #ffffff;
+  --bg: #f5f7f2;
+  --radius-lg: 20px;
+  --radius-md: 18px;
+
+  /* fluid spacing: scales smoothly between phone and desktop */
+  --gutter: clamp(14px, 3vw, 36px);
+  --gap: clamp(14px, 1.8vw, 20px);
+
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  padding: clamp(16px, 2.5vw, 28px) var(--gutter) clamp(32px, 4vw, 48px);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 24px);
+  box-sizing: border-box; /* FIX: padding was added on top of width */
+  overflow-x: clip;       /* a stray wide child can never create page-level scroll */
+}
+
+.dash-page *,
+.dash-page *::before,
+.dash-page *::after {
+  box-sizing: border-box;
+}
+
+/* visible keyboard focus on every control */
+.dash-page :where(button, a):focus-visible {
+  outline: 3px solid rgba(63, 143, 26, 0.45);
+  outline-offset: 2px;
+}
+
+/* ---------- Hero ---------- */
+.dash-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: clamp(18px, 2.5vw, 28px) clamp(18px, 3vw, 32px);
+  background: linear-gradient(120deg, #f1f8ea 0%, #ffffff 70%);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--green);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 6px 24px rgba(40, 70, 20, 0.06);
+}
+
+.dash-hero-text {
+  min-width: 0;
+}
+
+.dash-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--green);
+}
+
+.dash-hero h1 {
+  margin: 6px 0 8px;
+  font-size: clamp(24px, 3vw, 32px); /* fluid heading, no breakpoint jump */
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.dash-hero p {
+  margin: 0;
+  max-width: 560px;
+  color: var(--muted);
+  font-size: clamp(14px, 1.4vw, 15px);
+  line-height: 1.55;
+}
+
+.dash-date {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 5px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--green-dark);
+  background: var(--green-soft);
+  border-radius: 999px;
+}
+
+.dash-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.dash-btn-primary,
+.dash-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px; /* comfortable touch target */
+  padding: 12px 22px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease, color 0.15s ease;
+}
+
+.dash-btn-primary {
+  border: none;
+  background: linear-gradient(180deg, var(--green), var(--green-dark));
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(63, 143, 26, 0.35);
+}
+
+.dash-btn-secondary {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+
+.dash-btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dash-btn-primary svg,
+.dash-btn-secondary svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.dash-spin {
+  animation: dash-rotate 0.9s linear infinite;
+}
+
+@keyframes dash-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Stat cards ---------- */
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)); /* minmax(0) stops overflow */
+  gap: var(--gap);
+}
+
+.dash-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: clamp(14px, 2vw, 22px);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 14px rgba(30, 50, 20, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dash-stat-card > div:last-child {
+  min-width: 0; /* lets long labels wrap instead of pushing the card wider */
+}
+
+.dash-stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.dash-stat-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.tone-green { background: #e5f2dc; color: #3f8f1a; }
+.tone-slate { background: #e9edf2; color: #3c4a5c; }
+.tone-amber { background: #fdf0d9; color: #c26a0a; }
+.tone-mint  { background: #dff3e6; color: #1f9254; }
+.tone-blue  { background: #dbeafe; color: #1d4ed8; }
+.tone-red   { background: #fde4e4; color: #c0392b; }
+
+.dash-stat-label {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+.dash-stat-value {
+  display: block;
+  font-size: clamp(26px, 3vw, 32px);
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+/* ---------- Cards / grids ---------- */
+.dash-grid {
+  display: grid;
+  gap: var(--gap);
+}
+
+/* minmax(0, ...) is the key fix: plain 1fr = minmax(auto, 1fr), which let the
+   wide tickets table stretch its column and break the whole layout. */
+.dash-grid-2 {
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+}
+
+.dash-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.dash-span-2 {
+  grid-column: span 2;
+}
+
+.dash-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  min-width: 0; /* FIX: was missing, flex/grid child could not shrink */
+}
+
+.dash-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: clamp(16px, 2vw, 22px) clamp(16px, 2.2vw, 24px);
+  box-shadow: 0 4px 14px rgba(30, 50, 20, 0.05);
+  min-width: 0;
+}
+
+.dash-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap; /* heading + hint wrap instead of colliding on narrow cards */
+  gap: 4px 12px;
+  margin-bottom: 18px;
+}
+
+.dash-card-head h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.dash-muted {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.dash-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 4px;
+  background: none;
+  border: none;
+  color: var(--green);
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dash-empty-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.dash-empty svg {
+  width: 30px;
+  height: 30px;
+}
+
+.dash-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ---------- Bar chart ----------
+   Structure: .dash-bar-col > .dash-bar-track > (count + bar), then the day label.
+   The bar height is a ratio (--h, 0..1) of the space left after the count label,
+   so the tallest bar always fits and never pokes out of the card. */
+.dash-bars {
+  --count-space: 22px; /* count label height + gap */
+  height: clamp(190px, 28vw, 240px);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: clamp(6px, 1.4vw, 14px);
+  padding-top: 4px;
+}
+
+.dash-bar-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-bar-track {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.dash-bar {
+  width: 100%;
+  max-width: 44px;
+  height: calc((100% - var(--count-space)) * var(--h, 0));
+  min-height: 6px;
+  border-radius: 10px 10px 4px 4px;
+  background: linear-gradient(180deg, #6bbd3a, var(--green));
+  transition: opacity 0.15s ease, height 0.35s ease;
+}
+
+.dash-bar-count {
+  height: 16px;
+  margin-bottom: 6px;
+  line-height: 16px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.dash-bar-day {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1;
+}
+
+/* ---------- Donut ---------- */
+.dash-donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 28px);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dash-donut {
+  width: clamp(140px, 18vw, 170px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
+.dash-donut-hole {
+  width: 66%; /* proportional hole, scales with the ring */
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dash-donut-hole strong {
+  font-size: clamp(24px, 3vw, 30px);
+  line-height: 1;
+}
+
+.dash-donut-hole span {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.dash-legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1 1 150px;
+  min-width: 0;
+}
+
+.dash-legend li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.dash-legend b {
+  margin-left: auto;
+}
+
+.dash-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ---------- Table ---------- */
+.dash-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dash-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.dash-table th {
+  text-align: left;
+  padding: 12px 14px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #55624d;
+  background: #f3f6ee;
+  white-space: nowrap;
+}
+
+.dash-table th:first-child { border-radius: 10px 0 0 10px; }
+.dash-table th:last-child  { border-radius: 0 10px 10px 0; }
+
+.dash-table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+.dash-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.dash-mono {
+  font-family: "JetBrains Mono", Consolas, monospace;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.dash-strong {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.dash-chip {
+  display: inline-block;
+  max-width: 100%;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #f1f4ee;
+  border: 1px solid var(--line);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+.dash-status {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.st-received          { background: #fdf0d9; color: #a96300; }
+.st-assigned          { background: #ede9fe; color: #6d28d9; }
+.st-in-progress       { background: #dbeafe; color: #1d4ed8; }
+.st-waiting-for-parts { background: #ffedd5; color: #c2410c; }
+.st-ready-for-delivery{ background: #ccfbf1; color: #0f766e; }
+.st-completed         { background: #dff3e6; color: #1f7a44; }
+.st-delivered         { background: #dff3e6; color: #1f7a44; }
+.st-cancelled         { background: #f1f2f4; color: #5b6470; }
+
+/* ---------- Quick actions ---------- */
+.dash-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dash-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fbfcfa;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease, transform 0.15s ease;
+}
+
+/* ---------- Bar lists (workload, categories, warranty) ---------- */
+.dash-tech-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dash-tech-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 14px;
+  margin-bottom: 7px;
+  text-transform: capitalize;
+}
+
+.dash-tech-top span {
+  min-width: 0;
+  overflow-wrap: anywhere; /* long technician / category names wrap, not overflow */
+}
+
+.dash-tech-top b {
+  color: var(--muted);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.dash-progress {
+  height: 8px;
+  background: #edf1e8;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.dash-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #6bbd3a, var(--green));
+  transition: width 0.35s ease;
+}
+
+.dash-sub-title {
+  margin: 4px 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #55624d;
+}
+
+/* FIX: :not(:first-of-type) depended on sibling <p> order (the empty-state <p>
+   is also a <p>). Target "a sub-title that follows a list/empty text" instead. */
+.dash-tech-list + .dash-sub-title,
+.dash-empty-text + .dash-sub-title {
+  margin-top: 22px;
+}
+
+/* ---------- Payments ---------- */
+.dash-money {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.dash-money-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.dash-money-row b {
+  font-size: clamp(17px, 2vw, 20px);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+.dash-money-row b.dash-green { color: #1f7a44; }
+.dash-money-row b.dash-red   { color: #c0392b; }
+
+.dash-pay-split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Hover effects: only on devices that really hover ----------
+   On touch screens :hover sticks after a tap, so we scope it. */
+@media (hover: hover) and (pointer: fine) {
+  .dash-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(30, 50, 20, 0.09);
+  }
+
+  .dash-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(63, 143, 26, 0.4);
+  }
+
+  .dash-btn-secondary:hover:not(:disabled) {
+    border-color: #bfdcab;
+    color: var(--green-dark);
+  }
+
+  .dash-link:hover {
+    color: var(--green-dark);
+  }
+
+  .dash-bar-col:hover .dash-bar {
+    opacity: 0.8;
+  }
+
+  .dash-table tbody tr:hover {
+    background: #fafcf8;
+  }
+
+  .dash-action:hover {
+    background: var(--green-soft);
+    border-color: #bfdcab;
+    color: var(--green-dark);
+    transform: translateX(3px);
+  }
+}
+
+/* pressed feedback for touch */
+.dash-btn-primary:active,
+.dash-btn-secondary:active:not(:disabled),
+.dash-action:active {
+  transform: scale(0.98);
+}
+
+/* =====================================================
+   RESPONSIVE
+   Desktop  : >= 1100px
+   Tablet   : 701px - 1099px
+   Mobile   : <= 700px  (compact <= 480px)
+   ===================================================== */
+
+/* ---------- Tablet (and small laptops) ---------- */
+@media (max-width: 1099px) {
+  .dash-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dash-grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dash-grid-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* tickets table + side panels take the full row */
+  .dash-span-2,
+  .dash-grid-3 > .dash-side {
+    grid-column: 1 / -1;
+  }
+
+  /* Quick actions + Workload sit side by side instead of a tall stack */
+  .dash-side {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* an odd last card (e.g. 3rd insight card) spans the row, no orphan gap */
+  .dash-grid-3 > .dash-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 700px) {
+  .dash-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dash-hero-actions {
+    justify-content: stretch;
+  }
+
+  .dash-hero-actions > button {
+    flex: 1 1 0; /* buttons share the row equally, large tap targets */
+  }
+
+  .dash-grid-3,
+  .dash-side {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dash-side {
+    display: flex;
+  }
+
+  .dash-bars {
+    gap: 6px;
+  }
+
+  /* Tickets table -> stacked cards (each <td> shows its data-label) */
+  .dash-table-wrap {
+    overflow-x: visible;
+  }
+
+  .dash-table thead {
+    /* hidden visually but still read by screen readers */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .dash-table,
+  .dash-table tbody,
+  .dash-table tr,
+  .dash-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .dash-table tr {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .dash-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .dash-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 6px 0;
+    border-bottom: none;
+    text-align: right;
+    overflow-wrap: anywhere;
+  }
+
+  .dash-table td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #55624d;
+    text-align: left;
+  }
+}
+
+/* ---------- Small phones: compact 2-column stat tiles ---------- */
+@media (max-width: 480px) {
+  .dash-stats {
+    gap: 10px;
+  }
+
+  .dash-stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .dash-stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .dash-stat-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .dash-stat-label {
+    font-size: 12.5px;
+  }
+
+  .dash-hero-actions > button {
+    flex-basis: 100%; /* stack the two buttons on very narrow screens */
+  }
+
+  .dash-donut-wrap {
+    flex-direction: column;
+  }
+
+  .dash-legend {
+    width: 100%;
+    flex-basis: auto;
+  }
+}
+
+/* ---------- Respect "reduce motion" ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .dash-page *,
+  .dash-page *::before,
+  .dash-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
